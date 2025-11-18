@@ -1,4 +1,4 @@
-UNLOCK TABLES;
+
 
 DROP DATABASE IF EXISTS `big_market`;
 
@@ -49,15 +49,24 @@ CREATE TABLE `strategy_rule` (
   KEY `idx_strategy_id_award_id` (`strategy_id`,`award_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖策略规则表：定义抽奖策略及奖品规则逻辑';
 
-LOCK TABLES `strategy` WRITE;
+CREATE TABLE `award` (
+    `id`              bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+    `award_id`        int(8)           NOT NULL COMMENT '抽奖奖品ID（策略内流转使用）',
+    `award_key`       varchar(32)      NOT NULL COMMENT '奖品对接标识（对应发奖策略）',
+    `award_config`    varchar(32)      NOT NULL COMMENT '奖品配置值（数量/模型/积分范围等）',
+    `award_desc`      varchar(128)     NOT NULL COMMENT '奖品内容描述',
+    `create_time`     datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`     datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+KEY `idx_award_id` (`award_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='奖品定义表：配置具体奖品的发放方式、配置信息和描述';
+
 INSERT INTO `strategy`
 (`id`, `strategy_id`, `strategy_desc`, `create_time`, `update_time`)
 VALUES
 (1,100001,'抽奖策略','2023-12-09 09:37:19','2023-12-09 09:37:19');
-UNLOCK TABLES;
 
 
-LOCK TABLES `strategy_award` WRITE;
 INSERT INTO `strategy_award` (`id`, `strategy_id`, `award_id`, `award_title`, `award_subtitle`, `award_count`, `award_count_surplus`, `award_rate`, `rule_models`, `sort`, `create_time`, `update_time`)
 VALUES
 	(1,100001,101,'随机积分',NULL,80000,80000,80.0000,'rule_random,rule_luck_award',1,'2023-12-09 09:38:31','2023-12-09 10:58:06'),
@@ -69,9 +78,8 @@ VALUES
 	(7,100001,107,'增加dall-e-3画图模型','抽奖1次后解锁',200,200,0.2000,'rule_lock,rule_luck_award',7,'2023-12-09 09:45:38','2023-12-09 10:30:59'),
 	(8,100001,108,'增加100次使用','抽奖2次后解锁',199,199,0.1999,'rule_lock,rule_luck_award',8,'2023-12-09 09:46:02','2023-12-09 12:20:52'),
 	(9,100001,109,'解锁全部模型','抽奖6次后解锁',1,1,0.0001,'rule_lock,rule_luck_award',9,'2023-12-09 09:46:39','2023-12-09 12:20:50');
-UNLOCK TABLES;
 
-LOCK TABLES `strategy_rule` WRITE;
+
 INSERT INTO `strategy_rule` (`id`, `strategy_id`, `award_id`, `rule_type`, `rule_model`, `rule_value`, `rule_desc`, `create_time`, `update_time`)
 VALUES
 	(1,100001,101,2,'rule_random','1,1000','随机积分策略','2023-12-09 10:05:30','2023-12-09 12:55:52'),
@@ -88,4 +96,16 @@ VALUES
 	(12,100001,106,2,'rule_luck_award','1,60','兜底奖品60以内随机积分','2023-12-09 10:30:43','2023-12-09 12:56:00'),
 	(13,100001,NULL,1,'rule_weight','6000,102,103,104,105,106,107,108,109','消耗6000分，必中奖范围','2023-12-09 10:30:43','2023-12-09 12:58:21'),
 	(14,100001,NULL,1,'rule_blacklist','1','黑名单抽奖，积分兜底','2023-12-09 12:59:45','2023-12-09 13:42:23');
-UNLOCK TABLES;
+
+
+INSERT INTO `award` (`id`, `award_id`, `award_key`, `award_config`, `award_desc`, `create_time`, `update_time`)
+VALUES
+    (1, 101, 'user_credit_random', '1100', '用户积分【优先透彻规则范围，如果没有则走配置】', '2023-12-09 11:07:06', '2023-12-09 11:21:31'),
+    (2, 102, 'openai_use_count', '5', 'OpenAI增加使用次数', '2023-12-09 11:07:06', '2023-12-09 11:12:59'),
+    (3, 103, 'openai_use_conut', '10', 'OpenAI增加使用次数', '2023-12-09 11:07:06', '2023-12-09 11:12:59'),
+    (4, 104, 'openai_use_conut', '20', 'OpenAI增加使用次数', '2023-12-09 11:07:06', '2023-12-09 11:12:58'),
+    (5, 105, 'openai_model', 'gpt-4', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:01'),
+    (6, 106, 'openai_model', 'dall-e-2', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:08'),
+    (7, 107, 'openai_model', 'dall-e-3', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:10'),
+    (8, 108, 'openai_use_conut', '100', 'OpenAI增加使用次数', '2023-12-09 11:07:06', '2023-12-09 11:12:55'),
+    (9, 109, 'openai_model', 'gpt-4,dall-e-2,dall-e-3', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:39');
