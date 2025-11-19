@@ -1,8 +1,178 @@
-25-11-18.20:34:16.596 [main            ] INFO  AwardDaoTest           - Starting AwardDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 83409 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-25-11-18.20:34:16.597 [main            ] INFO  AwardDaoTest           - The following 1 profile is active: "dev"
-25-11-18.20:34:17.760 [main            ] INFO  AwardDaoTest           - Started AwardDaoTest in 1.405 seconds (JVM running for 2.092)
-25-11-18.20:34:18.091 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Starting...
-25-11-18.20:34:18.384 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
-25-11-18.20:34:18.522 [main            ] INFO  AwardDaoTest           - 测试结果：[{"awardConfig":"1100","awardDesc":"用户积分【优先透彻规则范围，如果没有则走配置】","awardId":101,"awardKey":"user_credit_random"},{"awardConfig":"5","awardDesc":"OpenAI增加使用次数","awardId":102,"awardKey":"openai_use_count"},{"awardConfig":"10","awardDesc":"OpenAI增加使用次数","awardId":103,"awardKey":"openai_use_conut"},{"awardConfig":"20","awardDesc":"OpenAI增加使用次数","awardId":104,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4","awardDesc":"OpenAI增加模型","awardId":105,"awardKey":"openai_model"},{"awardConfig":"dall-e-2","awardDesc":"OpenAI增加模型","awardId":106,"awardKey":"openai_model"},{"awardConfig":"dall-e-3","awardDesc":"OpenAI增加模型","awardId":107,"awardKey":"openai_model"},{"awardConfig":"100","awardDesc":"OpenAI增加使用次数","awardId":108,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4,dall-e-2,dall-e-3","awardDesc":"OpenAI增加模型","awardId":109,"awardKey":"openai_model"}]
-25-11-18.20:34:18.532 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
-25-11-18.20:34:18.554 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.
+25-11-19.13:38:43.387 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 90433 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.13:38:43.388 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.13:38:44.417 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.13:38:44.456 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.13:38:44.597 [redisson-netty-2-6] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:38:44.607 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:38:45.243 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 2.114 seconds (JVM running for 2.661)
+25-11-19.13:38:45.430 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Starting...
+25-11-19.13:38:45.772 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
+25-11-19.13:38:45.850 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
+25-11-19.13:38:45.851 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.
+25-11-19.13:41:23.688 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 90585 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.13:41:23.688 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.13:41:24.619 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.13:41:24.653 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.13:41:24.782 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:41:24.791 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:41:25.274 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.839 seconds (JVM running for 2.327)
+25-11-19.13:44:30.769 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 90680 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.13:44:30.770 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.13:44:31.721 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.13:44:31.757 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.13:44:31.881 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:44:31.897 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:44:32.403 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.879 seconds (JVM running for 2.397)
+25-11-19.13:44:32.576 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Starting...
+25-11-19.13:44:32.872 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
+25-11-19.13:44:32.964 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
+25-11-19.13:44:32.966 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.
+25-11-19.13:44:36.179 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 90685 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.13:44:36.180 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.13:44:37.077 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.13:44:37.111 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.13:44:37.242 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:44:37.254 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.13:44:37.757 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.902 seconds (JVM running for 2.401)
+25-11-19.14:08:52.741 [main            ] INFO  ApiTest                - Starting ApiTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91428 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:08:52.741 [main            ] INFO  ApiTest                - The following 1 profile is active: "dev"
+25-11-19.14:08:53.708 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:08:53.746 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:08:53.875 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:08:53.884 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:08:54.429 [main            ] INFO  ApiTest                - Started ApiTest in 1.941 seconds (JVM running for 2.511)
+25-11-19.14:08:54.703 [main            ] INFO  ApiTest                - 测试结果：101
+25-11-19.14:09:59.385 [main            ] INFO  ApiTest                - Starting ApiTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91492 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:09:59.386 [main            ] INFO  ApiTest                - The following 1 profile is active: "dev"
+25-11-19.14:10:00.637 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:10:00.677 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:10:00.825 [redisson-netty-2-6] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:00.834 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:01.355 [main            ] INFO  ApiTest                - Started ApiTest in 2.224 seconds (JVM running for 2.737)
+25-11-19.14:10:01.542 [main            ] INFO  ApiTest                - 测试结果：101
+25-11-19.14:10:42.223 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91540 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:10:42.224 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:10:43.192 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:10:43.229 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:10:43.349 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:43.359 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:43.836 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.852 seconds (JVM running for 2.352)
+25-11-19.14:10:47.730 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91546 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:10:47.730 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:10:48.642 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:10:48.689 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:10:48.831 [redisson-netty-2-7] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:48.838 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:10:49.361 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.868 seconds (JVM running for 2.397)
+25-11-19.14:20:28.845 [main            ] INFO  ApiTest                - Starting ApiTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91882 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:20:28.846 [main            ] INFO  ApiTest                - The following 1 profile is active: "dev"
+25-11-19.14:20:29.855 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:20:29.894 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:20:30.015 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:20:30.027 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:20:30.500 [main            ] INFO  ApiTest                - Started ApiTest in 1.902 seconds (JVM running for 2.394)
+25-11-19.14:20:30.709 [main            ] INFO  ApiTest                - 测试结果：101
+25-11-19.14:20:53.767 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91898 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:20:53.768 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:20:54.732 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:20:54.774 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:20:54.924 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:20:54.938 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:20:55.443 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.918 seconds (JVM running for 2.488)
+25-11-19.14:21:34.931 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 91924 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:21:34.931 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:21:35.874 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:21:35.911 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:21:36.042 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:21:36.052 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:21:36.622 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.932 seconds (JVM running for 2.48)
+25-11-19.14:21:36.844 [main            ] INFO  StrategyArmoryTest     - 抽奖结果：奖品 ID = 101
+25-11-19.14:21:36.845 [main            ] INFO  StrategyArmoryTest     - 抽奖结果：奖品 ID = 101
+25-11-19.14:21:36.847 [main            ] INFO  StrategyArmoryTest     - 抽奖结果：奖品 ID = 101
+25-11-19.14:21:36.848 [main            ] INFO  StrategyArmoryTest     - 抽奖结果：奖品 ID = 101
+25-11-19.14:21:36.849 [main            ] INFO  StrategyArmoryTest     - 抽奖结果：奖品 ID = 102
+25-11-19.14:31:14.262 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 92271 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:31:14.262 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:31:15.236 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:31:15.274 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:31:15.402 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:31:15.418 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:31:15.989 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.982 seconds (JVM running for 2.5)
+25-11-19.14:31:16.284 [redisson-netty-2-2] ERROR CommandDecoder         - Unable to decode data. channel: [id: 0xa062e084, L:/127.0.0.1:54239 - R:127.0.0.1/127.0.0.1:6379], reply: ReplayingDecoderByteBuf(ridx=160, widx=160), command: (GET), promise: java.util.concurrent.CompletableFuture@1132cd98[Not completed, 1 dependents], params: [big_market_strategy_award_key_100002]
+com.alibaba.fastjson.JSONException: offset 1, character , line 1, column 2, fastjson-version 2.0.28  java.util.ArrayLis�com.dasi.domain.strategy.model.entity.StrategyAwardEntit� �java.math.BigDecima��Ě��Ě�dĚ
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:711)
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:625)
+	at com.dasi.config.RedisClientConfig$RedisCodec.lambda$new$1(RedisClientConfig.java:66)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:394)
+	at org.redisson.client.handler.CommandDecoder.decodeCommand(CommandDecoder.java:205)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:144)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:120)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:529)
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:366)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: com.alibaba.fastjson2.JSONException: offset 1, character , line 1, column 2, fastjson-version 2.0.28  java.util.ArrayLis�com.dasi.domain.strategy.model.entity.StrategyAwardEntit� �java.math.BigDecima��Ě��Ě�dĚ
+	at com.alibaba.fastjson2.reader.ObjectReaderImplObject.readObject(ObjectReaderImplObject.java:290)
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:701)
+	... 25 common frames omitted
+25-11-19.14:31:16.290 [redisson-netty-2-2] ERROR ErrorsLoggingHandler   - Exception occured. Channel: [id: 0xa062e084, L:/127.0.0.1:54239 - R:127.0.0.1/127.0.0.1:6379]
+io.netty.handler.codec.DecoderException: com.alibaba.fastjson.JSONException: offset 1, character , line 1, column 2, fastjson-version 2.0.28  java.util.ArrayLis�com.dasi.domain.strategy.model.entity.StrategyAwardEntit� �java.math.BigDecima��Ě��Ě�dĚ
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:421)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: com.alibaba.fastjson.JSONException: offset 1, character , line 1, column 2, fastjson-version 2.0.28  java.util.ArrayLis�com.dasi.domain.strategy.model.entity.StrategyAwardEntit� �java.math.BigDecima��Ě��Ě�dĚ
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:711)
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:625)
+	at com.dasi.config.RedisClientConfig$RedisCodec.lambda$new$1(RedisClientConfig.java:66)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:394)
+	at org.redisson.client.handler.CommandDecoder.decodeCommand(CommandDecoder.java:205)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:144)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:120)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:529)
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:366)
+	... 17 common frames omitted
+Caused by: com.alibaba.fastjson2.JSONException: offset 1, character , line 1, column 2, fastjson-version 2.0.28  java.util.ArrayLis�com.dasi.domain.strategy.model.entity.StrategyAwardEntit� �java.math.BigDecima��Ě��Ě�dĚ
+	at com.alibaba.fastjson2.reader.ObjectReaderImplObject.readObject(ObjectReaderImplObject.java:290)
+	at com.alibaba.fastjson.JSON.parseObject(JSON.java:701)
+	... 25 common frames omitted
+25-11-19.14:32:14.178 [main            ] INFO  StrategyArmoryTest     - Starting StrategyArmoryTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 92302 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.14:32:14.179 [main            ] INFO  StrategyArmoryTest     - The following 1 profile is active: "dev"
+25-11-19.14:32:15.144 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.14:32:15.188 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.14:32:15.316 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:32:15.325 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.14:32:15.854 [main            ] INFO  StrategyArmoryTest     - Started StrategyArmoryTest in 1.924 seconds (JVM running for 2.526)
+25-11-19.14:32:16.111 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Starting...
+25-11-19.14:32:16.443 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
+25-11-19.14:32:16.586 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
+25-11-19.14:32:16.589 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.

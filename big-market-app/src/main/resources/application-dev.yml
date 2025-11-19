@@ -1,7 +1,8 @@
+# 端口号
 server:
   port: 8091
 
-# 线程池配置
+# 线程池
 thread:
   pool:
     executor:
@@ -12,7 +13,7 @@ thread:
         block-queue-size: 5000
         policy: CallerRunsPolicy
 
-# 数据库配置；启动时配置数据库资源信息
+# MySQL
 spring:
   datasource:
     username: root
@@ -30,9 +31,27 @@ spring:
       connection-timeout: 30000 # 数据库连接超时时间
       connection-test-query: SELECT 1 # 测试语句
 
+# MyBatis
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
   config-location:  classpath:/mybatis/config/mybatis-config.xml
+
+# Redis
+redis:
+  sdk:
+    config:
+      password: jason2004
+      host: 127.0.0.1
+      port: 6379
+      database: 1
+      pool-size: 10
+      min-idle-size: 5
+      idle-timeout: 30000
+      connect-timeout: 5000
+      retry-attempts: 3
+      retry-interval: 1000
+      ping-interval: 60000
+      keep-alive: true
 
 # 日志
 logging:
