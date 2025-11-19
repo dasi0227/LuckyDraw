@@ -2,6 +2,8 @@ package com.dasi.domain.strategy.repository;
 
 
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
+import com.dasi.domain.strategy.model.entity.StrategyEntity;
+import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -9,9 +11,13 @@ import java.util.Map;
 public interface IStrategyRepository {
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
-    void storeStrategyAwardRate(Long strategyId, Integer rateRange, Map<String, String> strategyAwardMap);
+    void storeStrategyAwardRate(String key, Integer rateRange, Map<String, String> strategyAwardMap);
 
-    int getRateRange(Long strategyId);
+    int getRateRange(String key);
 
-    Integer getStrategyAwardAssemble(Long strategyId, int randomNum);
+    Integer getStrategyAwardAssemble(String key, int randomNum);
+
+    StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
+
+    StrategyRuleEntity queryStrategyRuleByRuleModel(Long strategyId, String ruleModel);
 }

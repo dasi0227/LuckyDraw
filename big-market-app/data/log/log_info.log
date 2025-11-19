@@ -176,3 +176,69 @@ Caused by: com.alibaba.fastjson2.JSONException: offset 1, character , line 1, c
 25-11-19.14:32:16.443 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
 25-11-19.14:32:16.586 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
 25-11-19.14:32:16.589 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.
+25-11-19.16:59:54.363 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6643 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+25-11-19.16:59:54.363 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+25-11-19.16:59:55.402 [main            ] INFO  Version                - Redisson 3.23.4
+25-11-19.16:59:55.443 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+25-11-19.16:59:55.575 [redisson-netty-2-6] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.16:59:55.585 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+25-11-19.16:59:56.102 [main            ] INFO  StrategyTest           - Started StrategyTest in 2.007 seconds (JVM running for 2.567)
+25-11-19.16:59:56.273 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Starting...
+25-11-19.16:59:56.576 [main            ] INFO  HikariDataSource       - Retail_HikariCP - Start completed.
+25-11-19.16:59:56.839 [main            ] INFO  StrategyTest           - success: true
+25-11-19.16:59:56.859 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown initiated...
+25-11-19.16:59:56.874 [SpringApplicationShutdownHook] INFO  HikariDataSource       - Retail_HikariCP - Shutdown completed.
+2025-11-19 17:02:36 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6738 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:02:36 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:02:37 [main            ] INFO  Version                - Redisson 3.23.4
+2025-11-19 17:02:37 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2025-11-19 17:02:37 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:02:37 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:02:37 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.825 seconds (JVM running for 2.383)
+2025-11-19 17:03:02 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6747 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:03:02 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:03:03 [main            ] INFO  Version                - Redisson 3.23.4
+2025-11-19 17:03:03 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2025-11-19 17:03:03 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:03:03 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:03:04 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.861 seconds (JVM running for 2.495)
+2025-11-19 17:03:16 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6764 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:03:16 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:03:17 [main            ] INFO  Version                - Redisson 3.23.4
+2025-11-19 17:03:17 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2025-11-19 17:03:17 [redisson-netty-2-5] INFO  MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:03:17 [redisson-netty-2-13] INFO  MasterConnectionPool   - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-11-19 17:03:18 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.812 seconds (JVM running for 2.298)
+2025-11-19 17:05:07 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6836 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:05:07 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:05:08 [main            ] WARN  DnsServerAddressStreamProviders - Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2025-11-19 17:05:09 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.852 seconds (JVM running for 2.395)
+2025-11-19 17:08:10 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6943 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:08:10 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:08:11 [main            ] ERROR DnsServerAddressStreamProviders - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2025-11-19 17:08:12 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.887 seconds (JVM running for 2.371)
+2025-11-19 17:09:01 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6975 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:09:01 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:09:02 [main            ] ERROR DnsServerAddressStreamProviders - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2025-11-19 17:09:03 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.862 seconds (JVM running for 2.387)
+2025-11-19 17:09:21 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 6990 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:09:21 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:09:22 [main            ] ERROR DnsServerAddressStreamProviders - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2025-11-19 17:09:22 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.841 seconds (JVM running for 2.375)
+2025-11-19 17:10:00 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 7024 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:10:00 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:10:02 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.925 seconds (JVM running for 2.419)
+2025-11-19 17:12:45 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 7101 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:12:45 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:12:47 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.892 seconds (JVM running for 2.422)
+2025-11-19 17:12:48 [main            ] INFO  StrategyTest           - success: true
+2025-11-19 17:12:52 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 7108 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:12:52 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:12:54 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.854 seconds (JVM running for 2.346)
+2025-11-19 17:12:54 [main            ] INFO  StrategyTest           - success: true
+2025-11-19 17:14:27 [main            ] INFO  StrategyTest           - Starting StrategyTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 7140 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-19 17:14:27 [main            ] INFO  StrategyTest           - The following 1 profile is active: "dev"
+2025-11-19 17:14:29 [main            ] INFO  StrategyTest           - Started StrategyTest in 1.99 seconds (JVM running for 2.554)
+2025-11-19 17:14:29 [main            ] INFO  StrategyTest           - 4000 策略配置抽奖：awardId = 105
+2025-11-19 17:14:29 [main            ] INFO  StrategyTest           - 5000 策略配置抽奖：awardId = 104
+2025-11-19 17:14:29 [main            ] INFO  StrategyTest           - 6000 策略配置抽奖：awardId = 103
