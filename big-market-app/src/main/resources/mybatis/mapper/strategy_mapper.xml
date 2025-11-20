@@ -17,5 +17,11 @@
         where strategy_id = #{strategyId}
     </select>
 
+    <select id="queryStrategyRuleModels" parameterType="com.dasi.infrastructure.persistent.po.Strategy" resultType="java.lang.String">
+        select rule_models
+        from strategy
+        where strategy_id = #{strategyId}
+    </select>
+
 
 </mapper>

@@ -35,11 +35,11 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         assembleLotteryStrategy(String.valueOf(strategyId), strategyAwardEntities);
 
 
-        StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
         // ====================
         // 权重策略配置
         // ====================
         // 1. 查询当前策略
+        StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
         // 2. 查询策略中的权重策略规则
         StrategyRuleEntity strategyRuleEntity = repository.queryStrategyRuleByRuleModel(strategyId, Constants.RuleModel.RULE_WEIGHT);

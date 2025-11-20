@@ -3,7 +3,6 @@ package com.dasi.domain.strategy.service.rule.impl;
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.entity.RuleContextEntity;
 import com.dasi.domain.strategy.model.entity.RuleResultEntity;
-import com.dasi.domain.strategy.model.vo.RuleDecisionVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.IRuleFilter;
 import com.dasi.domain.strategy.service.rule.factory.RuleFactory;
@@ -18,7 +17,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RuleConfig(ruleModel = RuleFactory.RuleModel.RULE_WEIGHT)
-public class RuleWeightFilter implements IRuleFilter<RuleResultEntity.RuleDataBeforeEntity> {
+public class RuleWeightFilter implements IRuleFilter<RuleResultEntity.RuleBeforeEntity> {
 
     @Resource
     private IStrategyRepository repository;
@@ -28,16 +27,14 @@ public class RuleWeightFilter implements IRuleFilter<RuleResultEntity.RuleDataBe
 
     // 示例：4000:101,102,103 5000:101,102,103,104 6000:101,102,103,104,105
     @Override
-    public RuleResultEntity<RuleResultEntity.RuleDataBeforeEntity> filter(RuleContextEntity ruleContextEntity) {
-        log.info("【规则过滤-权重】context = {}", ruleContextEntity);
-
-        // 得到权重规则对应的值
+    public RuleResultEntity<RuleResultEntity.RuleBeforeEntity> filter(RuleContextEntity ruleContextEntity) {
+        // 1. 找到规则对应的值
         String ruleValue = repository.queryStrategyRuleValue(ruleContextEntity.getStrategyId(), ruleContextEntity.getAwardId(), ruleContextEntity.getRuleModel());
         if (StringUtils.isBlank(ruleValue)) {
             return RuleResultEntity.allow();
         }
 
-        // 解析得到积分阈值和对应的奖品列表
+        // 2. 解析得到积分阈值和对应的奖品列表
         Map<Long, String> weightMap = new HashMap<>();
         for (String group : ruleValue.split(Constants.SPACE)) {
             if (StringUtils.isBlank(group)) continue;
@@ -49,11 +46,11 @@ public class RuleWeightFilter implements IRuleFilter<RuleResultEntity.RuleDataBe
             return RuleResultEntity.allow();
         }
 
-        // 按积分阈值从高到低排序
+        // 3. 按积分阈值从高到低排序
         List<Long> thresholds = new ArrayList<>(weightMap.keySet());
         thresholds.sort(Comparator.reverseOrder());
 
-        // 根据用户积分判断能够到达的积分阈值
+        // 4. 根据用户积分判断能够到达的积分阈值
         Long matchedThreshold = thresholds.stream()
                 .filter(key -> userScore >= key)
                 .findFirst()
@@ -62,15 +59,11 @@ public class RuleWeightFilter implements IRuleFilter<RuleResultEntity.RuleDataBe
             return RuleResultEntity.allow();
         }
 
-        // 得到最终匹配的积分
-        return RuleResultEntity.<RuleResultEntity.RuleDataBeforeEntity>builder()
-                .ruleModel(RuleFactory.RuleModel.RULE_WEIGHT.getName())
-                .code(RuleDecisionVO.TAKE_OVER.getCode())
-                .info(RuleDecisionVO.TAKE_OVER.getInfo())
-                .data(RuleResultEntity.RuleDataBeforeEntity.builder()
-                        .strategyId(ruleContextEntity.getStrategyId())
-                        .ruleWeight(String.valueOf(matchedThreshold))
-                        .build())
+        // 5. 得到最终匹配的积分
+        RuleResultEntity.RuleBeforeEntity result = RuleResultEntity.RuleBeforeEntity.builder()
+                .strategyId(ruleContextEntity.getStrategyId())
+                .ruleWeight(String.valueOf(matchedThreshold))
                 .build();
+        return RuleResultEntity.takeOver(RuleFactory.RuleModel.RULE_WEIGHT.getName(), result);
     }
 }
