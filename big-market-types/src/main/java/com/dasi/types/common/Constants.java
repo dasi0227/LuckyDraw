@@ -4,7 +4,7 @@ package com.dasi.types.common;
 public class Constants {
 
     public static final String COMMA = ",";
-    public static final String BLANK = "\\s+";
+    public static final String SPACE = "\\s+";
     public static final String COLON = ":";
     public static final String UNDERSCORE = "_";
 

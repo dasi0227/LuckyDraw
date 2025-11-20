@@ -47,8 +47,8 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
             throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
         }
         // 3. 查询权重策略规则中的积分值和奖品列表
-        Map<String, List<Integer>> ruleWeightValue = strategyRuleEntity.getRuleWeightValue();
-        for (Entry<String, List<Integer>> entry : ruleWeightValue.entrySet()) {
+        Map<String, List<Integer>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
+        for (Entry<String, List<Integer>> entry : ruleWeight.entrySet()) {
             // 4. 去除不在奖品列表的奖品
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesClone.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));

@@ -1,17 +1,21 @@
 package com.dasi.infrastructure.persistent.repository;
 
+import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
+import com.dasi.infrastructure.persistent.dao.IAwardDao;
 import com.dasi.infrastructure.persistent.dao.IStrategyAwardDao;
 import com.dasi.infrastructure.persistent.dao.IStrategyDao;
 import com.dasi.infrastructure.persistent.dao.IStrategyRuleDao;
+import com.dasi.infrastructure.persistent.po.Award;
 import com.dasi.infrastructure.persistent.po.Strategy;
 import com.dasi.infrastructure.persistent.po.StrategyAward;
 import com.dasi.infrastructure.persistent.po.StrategyRule;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.common.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Repository
 public class StrategyRepository implements IStrategyRepository {
 
@@ -31,6 +36,9 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Resource
     private IStrategyRuleDao strategyRuleDao;
+
+    @Resource
+    private IAwardDao awardDao;
 
     @Resource
     private IRedisService redisService;
@@ -120,6 +128,26 @@ public class StrategyRepository implements IStrategyRepository {
                 .ruleModel(strategyRuleResponse.getRuleModel())
                 .ruleValue(strategyRuleResponse.getRuleValue())
                 .ruleDesc(strategyRuleResponse.getRuleDesc())
+                .build();
+    }
+
+    @Override
+    public String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel) {
+        StrategyRule strategyRule = new StrategyRule();
+        strategyRule.setStrategyId(strategyId);
+        strategyRule.setAwardId(awardId);
+        strategyRule.setRuleModel(ruleModel);
+        return strategyRuleDao.queryStrategyRuleValue(strategyRule);
+    }
+
+    @Override
+    public AwardEntity queryAwardEntityByAwardId(Integer awardId) {
+        Award award = awardDao.queryAwardByAwardId(awardId);
+        return AwardEntity.builder()
+                .awardId(award.getAwardId())
+                .awardKey(award.getAwardKey())
+                .awardConfig(award.getAwardConfig())
+                .awardDesc(award.getAwardDesc())
                 .build();
     }
 

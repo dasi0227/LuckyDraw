@@ -41,11 +41,11 @@ public class StrategyRuleEntity {
         Map<String, List<Integer>> ruleWeightValue = new HashMap<>();
 
         // 分割空格：得到不同【积分-奖品】组
-        String[] groups = ruleValue.trim().split(Constants.BLANK);
+        String[] groups = ruleValue.trim().split(Constants.SPACE);
         for (String group : groups) {
             // 分割冒号：得到【左侧积分】和【右侧奖品列表】
             String[] parts = group.split(Constants.COLON);
-            if (parts.length != 2) throw new IllegalArgumentException("rule_weight invalid" + group);
+            if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
 
             // 分割积分值和规则值
             String weight = parts[0];
