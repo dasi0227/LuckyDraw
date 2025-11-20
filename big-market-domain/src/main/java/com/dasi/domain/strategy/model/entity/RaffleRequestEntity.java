@@ -17,4 +17,8 @@ public class RaffleRequestEntity {
     /** 策略 ID */
     private Long strategyId;
 
+    /** 奖品 ID */
+    private Integer awardId;
+
+
 }

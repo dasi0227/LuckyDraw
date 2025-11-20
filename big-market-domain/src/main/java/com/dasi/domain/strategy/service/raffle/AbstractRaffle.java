@@ -30,38 +30,54 @@ public abstract class AbstractRaffle implements IRaffle {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
 
-        // 2. 策略查询
-        StrategyEntity strategy = repository.queryStrategyEntityByStrategyId(strategyId);
-        if (strategy == null) {
-            throw new AppException(ResponseCode.NOT_FOUND.getCode(), ResponseCode.NOT_FOUND.getInfo());
-        }
-
-        // 3. 抽奖前的规则过滤
-        RuleResultEntity<RuleResultEntity.RuleDataBeforeEntity> ruleResultEntity = this.doCheckRaffleBeforeRule(
+        // 2. 查询【单独策略】对应的所有规则，并执行前置规则检查
+        String[] beforeRuleModels = repository.queryStrategyRuleModels(strategyId).getBeforeRuleModels();
+        RuleResultEntity<RuleResultEntity.RuleBeforeEntity> ruleBeforeEntity = this.checkBeforeRule(
                 raffleRequestEntity,
-                strategy.ruleModels()
+                beforeRuleModels
         );
 
-        // 4. 如果规则命中了，需要处理
-        if (RuleDecisionVO.TAKE_OVER.getCode().equals(ruleResultEntity.getCode())) {
+        // 3. 解析前置规则的返回结果
+        if (RuleDecisionVO.TAKE_OVER.getCode().equals(ruleBeforeEntity.getCode())) {
             // 黑名单命中，直接返回固定的奖品 ID
-            if (RuleFactory.RuleModel.RULE_BLACKLIST.getName().equals(ruleResultEntity.getRuleModel())) {
-                Integer awardId = ruleResultEntity.getData().getAwardId();
-                return RaffleResponseEntity.buildAward(strategyId, awardId, repository);
+            if (RuleFactory.RuleModel.RULE_BLACKLIST.getName().equals(ruleBeforeEntity.getRuleModel())) {
+                Integer awardId = ruleBeforeEntity.getData().getAwardId();
+                AwardEntity awardEntity = repository.queryAwardEntityByAwardId(awardId);
+                return RaffleResponseEntity.buildAward(strategyId, awardEntity);
             }
             // 权重命中，返回权重抽奖的奖品 ID
-            else if (RuleFactory.RuleModel.RULE_WEIGHT.getName().equals(ruleResultEntity.getRuleModel())) {
-                String ruleWeight = ruleResultEntity.getData().getRuleWeight();
+            else if (RuleFactory.RuleModel.RULE_WEIGHT.getName().equals(ruleBeforeEntity.getRuleModel())) {
+                String ruleWeight = ruleBeforeEntity.getData().getRuleWeight();
                 Integer awardId = strategyDispatch.getRandomAwardId(strategyId, ruleWeight);
-                return RaffleResponseEntity.buildAward(strategyId, awardId, repository);
+                AwardEntity awardEntity = repository.queryAwardEntityByAwardId(awardId);
+                return RaffleResponseEntity.buildAward(strategyId, awardEntity);
             }
         }
 
-        // 5. 没有一个规则命中，返回默认抽奖的奖品 ID
+        // 4. 执行默认抽奖
         Integer awardId = strategyDispatch.getRandomAwardId(strategyId);
-        return RaffleResponseEntity.buildAward(strategyId, awardId, repository);
+
+        // 5. 查询【策略-奖品】对应的所有规则，并执行中置规则检查
+        String[] duringRuleModels = repository.queryStrategyAwardRuleModels(strategyId, awardId).getDuringRuleModels();
+        raffleRequestEntity.setAwardId(awardId);
+        RuleResultEntity<RuleResultEntity.RuleDuringEntity> ruleDuringEntity = this.checkDuringRule(
+                raffleRequestEntity,
+                duringRuleModels
+        );
+
+        // 6. 解析中置规则的返回结果
+        if (RuleDecisionVO.TAKE_OVER.getCode().equals(ruleDuringEntity.getCode())) {
+            log.info("【临时处理】中置规则成功拦截");
+            return RaffleResponseEntity.builder().awardDesc("临时处理，中置规则成功拦截").build();
+        }
+
+        // x. 根据 awardId 包装结果返回
+        AwardEntity awardEntity = repository.queryAwardEntityByAwardId(awardId);
+        return RaffleResponseEntity.buildAward(strategyId, awardEntity);
     }
 
-    protected abstract RuleResultEntity<RuleResultEntity.RuleDataBeforeEntity> doCheckRaffleBeforeRule(RaffleRequestEntity request, String... ruleModels);
+    protected abstract RuleResultEntity<RuleResultEntity.RuleBeforeEntity> checkBeforeRule(RaffleRequestEntity request, String... ruleModels);
+
+    protected abstract RuleResultEntity<RuleResultEntity.RuleDuringEntity> checkDuringRule(RaffleRequestEntity request, String... ruleModels);
 
 }

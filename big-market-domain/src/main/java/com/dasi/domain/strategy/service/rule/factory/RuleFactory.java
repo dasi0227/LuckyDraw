@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings({"unchecked", "unused"})
 @Service
 public class RuleFactory {
 
@@ -39,13 +40,28 @@ public class RuleFactory {
     @AllArgsConstructor
     public enum RuleModel {
 
-        RULE_WEIGHT("rule_weight","【抽奖前规则】根据抽奖权重，返回可抽奖范围"),
-        RULE_BLACKLIST("rule_blacklist","【抽奖前规则】根据黑名单，过滤用户"),
+        RULE_WEIGHT("rule_weight","【抽奖前规则】根据抽奖权重，返回可抽奖范围", "before"),
+        RULE_BLACKLIST("rule_blacklist","【抽奖前规则】根据黑名单，过滤用户", "before"),
+        RULE_LOCK("rule_lock","【抽奖中规则】根据抽奖次数，解锁抽奖奖品", "during"),
+        RULE_LUCK("rule_luck","【抽奖后规则】幸运奖都低", "after"),
         ;
 
         private final String name;
         private final String info;
+        private final String type;
 
+
+        public static boolean isBefore(String ruleModel) {
+            return "before".equals(RuleModel.valueOf(ruleModel.toUpperCase()).type);
+        }
+
+        public static boolean isDuring(String ruleModel) {
+            return "during".equals(RuleModel.valueOf(ruleModel.toUpperCase()).type);
+        }
+
+        public static boolean isAfter(String ruleModel) {
+            return "after".equals(RuleModel.valueOf(ruleModel.toUpperCase()).type);
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package com.dasi.domain.strategy.model.entity;
 
 
-import com.dasi.domain.strategy.repository.IStrategyRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +27,9 @@ public class RaffleResponseEntity {
     /** 奖品描述 */
     private String awardDesc;
 
-    public static RaffleResponseEntity buildAward(Long strategyId, Integer awardId, IStrategyRepository repository) {
-        AwardEntity awardEntity = repository.queryAwardEntityByAwardId(awardId);
+
+    // ---------------------- 静态方法 ----------------------
+    public static RaffleResponseEntity buildAward(Long strategyId, AwardEntity awardEntity) {
         return RaffleResponseEntity.builder()
                 .strategyId(strategyId)
                 .awardId(awardEntity.getAwardId())

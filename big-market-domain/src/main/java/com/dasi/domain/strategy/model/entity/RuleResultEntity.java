@@ -3,6 +3,7 @@ package com.dasi.domain.strategy.model.entity;
 import com.dasi.domain.strategy.model.vo.RuleDecisionVO;
 import lombok.*;
 
+@SuppressWarnings("unused")
 @Data
 @Builder
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class RuleResultEntity<T extends RuleResultEntity.RuleDataEntity> {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    static public class RuleDataBeforeEntity extends RuleDataEntity {
+    static public class RuleBeforeEntity extends RuleDataEntity {
         /** 策略 ID */
         private Long strategyId;
 
@@ -39,8 +40,18 @@ public class RuleResultEntity<T extends RuleResultEntity.RuleDataEntity> {
         private String ruleWeight;
     }
 
-    /** 后置结果数据 */
-    static public class RuleDataAfterEntity extends RuleDataEntity {}
+//    /** 后置结果数据 */
+//    @EqualsAndHashCode(callSuper = true)
+//    @Data
+//    @Builder
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    static public class RuleAfterEntity extends RuleDataEntity {}
+
+    /** 中置结果数据 */
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    static public class RuleDuringEntity extends RuleDataEntity {}
 
 
     // ---------------------- 静态方法 ----------------------
@@ -51,8 +62,16 @@ public class RuleResultEntity<T extends RuleResultEntity.RuleDataEntity> {
                 .build();
     }
 
-    public static <T extends RuleDataEntity> RuleResultEntity<T> allow(T data) {
-        RuleResultEntity<T> result = allow();
+    public static <T extends RuleDataEntity> RuleResultEntity<T> takeOver(String ruleModel) {
+        return RuleResultEntity.<T>builder()
+                .ruleModel(ruleModel)
+                .code(RuleDecisionVO.TAKE_OVER.getCode())
+                .info(RuleDecisionVO.TAKE_OVER.getInfo())
+                .build();
+    }
+
+    public static <T extends RuleDataEntity> RuleResultEntity<T> takeOver(String ruleModel, T data) {
+        RuleResultEntity<T> result = takeOver(ruleModel);
         result.data = data;
         return result;
     }

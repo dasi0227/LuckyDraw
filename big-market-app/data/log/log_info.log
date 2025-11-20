@@ -360,3 +360,76 @@ ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the a
 2025-11-20 15:51:37 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
 2025-11-20 15:51:37 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
 2025-11-20 15:51:37 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
+2025-11-20 19:15:44 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87575 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:15:44 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.964 seconds (JVM running for 2.628)
+2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
+2025-11-20 19:17:44 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87637 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:17:44 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.91 seconds (JVM running for 2.477)
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
+2025-11-20 19:17:46 [main            ] INFO  DefaultRaffle          - 【规则过滤-rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
+2025-11-20 19:17:46 [main            ] INFO  DefaultRaffle          - 【规则过滤-rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
+2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
+2025-11-20 19:18:33 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87675 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:18:33 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.031 seconds (JVM running for 2.572)
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
+2025-11-20 19:18:35 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
+2025-11-20 19:18:35 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
+2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
+2025-11-20 19:23:12 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87773 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:23:12 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:23:13 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.035 seconds (JVM running for 2.63)
+2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
+2025-11-20 19:23:14 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
+2025-11-20 19:23:14 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=rule_lock, code=0001, info=接管：受规则引擎影响, data=null)
+2025-11-20 19:23:14 [main            ] INFO  AbstractRaffle         - 【临时处理】中置规则成功拦截
+2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=null, awardKey=null, awardConfig=null, awardDesc=临时处理，中置规则成功拦截)
+2025-11-20 19:24:37 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87810 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:24:37 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:24:38 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.972 seconds (JVM running for 2.479)
+2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
+2025-11-20 19:24:39 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
+2025-11-20 19:24:39 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
+2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
+2025-11-20 19:25:29 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87844 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:25:29 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:25:31 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.945 seconds (JVM running for 2.439)
+2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100002, awardId=null)
+2025-11-20 19:27:27 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87895 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:27:27 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:27:29 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.11 seconds (JVM running for 2.619)
+2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001, awardId=null)
+2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
+2025-11-20 19:48:02 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 88701 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-20 19:48:02 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.016 seconds (JVM running for 2.602)
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001, awardId=null)
+2025-11-20 19:48:04 [main            ] INFO  DefaultRaffle          - 【执行 rule_blacklist】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
+2025-11-20 19:48:04 [main            ] INFO  DefaultRaffle          - 【执行 rule_blacklist】result = RuleResultEntity(ruleModel=rule_blacklist, code=0001, info=接管：受规则引擎影响, data=RuleResultEntity.RuleBeforeEntity(strategyId=100001, awardId=100, ruleWeight=null))
+2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)

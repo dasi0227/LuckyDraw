@@ -4,6 +4,7 @@ import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
+import com.dasi.domain.strategy.model.vo.RuleModelsVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.infrastructure.persistent.dao.IAwardDao;
 import com.dasi.infrastructure.persistent.dao.IStrategyAwardDao;
@@ -149,6 +150,23 @@ public class StrategyRepository implements IStrategyRepository {
                 .awardConfig(award.getAwardConfig())
                 .awardDesc(award.getAwardDesc())
                 .build();
+    }
+
+    @Override
+    public RuleModelsVO queryStrategyAwardRuleModels(Long strategyId, Integer awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        String ruleModels = strategyAwardDao.queryStrategyAwardRuleModel(strategyAward);
+        return RuleModelsVO.builder().ruleModels(ruleModels).build();
+    }
+
+    @Override
+    public RuleModelsVO queryStrategyRuleModels(Long strategyId) {
+        Strategy strategy = new Strategy();
+        strategy.setStrategyId(strategyId);
+        String ruleModels = strategyDao.queryStrategyRuleModels(strategy);
+        return RuleModelsVO.builder().ruleModels(ruleModels).build();
     }
 
 

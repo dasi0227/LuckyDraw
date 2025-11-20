@@ -3,7 +3,6 @@ package com.dasi.domain.strategy.service.rule.impl;
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.entity.RuleResultEntity;
 import com.dasi.domain.strategy.model.entity.RuleContextEntity;
-import com.dasi.domain.strategy.model.vo.RuleDecisionVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.IRuleFilter;
 import com.dasi.domain.strategy.service.rule.factory.RuleFactory;
@@ -16,21 +15,19 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 
 
-// 黑名单规则类：ruleModel 是 RULE_BLACKLIST，结果类型是 RuleDataBeforeEntity
+// 黑名单规则类：ruleModel 是 RULE_BLACKLIST，结果类型是 RuleBeforeEntity
 @Slf4j
 @Component
 @RuleConfig(ruleModel = RuleFactory.RuleModel.RULE_BLACKLIST)
-public class RuleBlacklistFilter implements IRuleFilter<RuleResultEntity.RuleDataBeforeEntity> {
+public class RuleBlacklistFilter implements IRuleFilter<RuleResultEntity.RuleBeforeEntity> {
 
     @Resource
     private IStrategyRepository repository;
 
     // 示例：101:user001,user002,user003
     @Override
-    public RuleResultEntity<RuleResultEntity.RuleDataBeforeEntity> filter(RuleContextEntity ruleContextEntity) {
-        log.info("【规则过滤-黑名单】context = {}", ruleContextEntity);
-
-        // 1. 得到黑名单规则对应的值
+    public RuleResultEntity<RuleResultEntity.RuleBeforeEntity> filter(RuleContextEntity ruleContextEntity) {
+        // 1. 找到规则对应的值
         String ruleValue = repository.queryStrategyRuleValue(ruleContextEntity.getStrategyId(), ruleContextEntity.getAwardId(), ruleContextEntity.getRuleModel());
         if (StringUtils.isBlank(ruleValue)) {
             return RuleResultEntity.allow();
@@ -44,16 +41,11 @@ public class RuleBlacklistFilter implements IRuleFilter<RuleResultEntity.RuleDat
         // 3. 查看当前用户是否在黑名单Ids里面
         String userId = ruleContextEntity.getUserId();
         if (Arrays.asList(blackIds).contains(userId)) {
-            log.info("<UNK>-<UNK>userId = {}", userId);
-            return RuleResultEntity.<RuleResultEntity.RuleDataBeforeEntity>builder()
-                    .ruleModel(RuleFactory.RuleModel.RULE_BLACKLIST.getName())
-                    .data(RuleResultEntity.RuleDataBeforeEntity.builder()
-                            .strategyId(ruleContextEntity.getStrategyId())
-                            .awardId(awardId)
-                            .build())
-                    .code(RuleDecisionVO.TAKE_OVER.getCode())
-                    .info(RuleDecisionVO.TAKE_OVER.getInfo())
+            RuleResultEntity.RuleBeforeEntity result = RuleResultEntity.RuleBeforeEntity.builder()
+                    .strategyId(ruleContextEntity.getStrategyId())
+                    .awardId(awardId)
                     .build();
+            return RuleResultEntity.takeOver(RuleFactory.RuleModel.RULE_BLACKLIST.getName(), result);
         }
 
         return RuleResultEntity.allow();

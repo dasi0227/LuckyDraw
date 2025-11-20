@@ -22,7 +22,7 @@ public class StrategyEntity {
     /** 抽奖规则模型 */
     private String ruleModels;
 
-    public String[] ruleModels() {
+    public String[] getRuleModels() {
         if (StringUtils.isBlank(ruleModels)) {
             return null;
         } else {
@@ -31,7 +31,7 @@ public class StrategyEntity {
     }
 
     public boolean hasRuleWeight() {
-        String[] ruleModels = this.ruleModels();
+        String[] ruleModels = this.getRuleModels();
         if (ruleModels == null) {
             return false;
         }

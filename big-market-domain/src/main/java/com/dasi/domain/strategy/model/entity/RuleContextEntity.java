@@ -23,4 +23,13 @@ public class RuleContextEntity {
     /** 抽奖规则模型 */
     private String ruleModel;
 
+    public static RuleContextEntity buildRuleContext(RaffleRequestEntity request, String ruleModel) {
+        return RuleContextEntity.builder()
+                .userId(request.getUserId())
+                .strategyId(request.getStrategyId())
+                .awardId(request.getAwardId())
+                .ruleModel(ruleModel)
+                .build();
+    }
+
 }
