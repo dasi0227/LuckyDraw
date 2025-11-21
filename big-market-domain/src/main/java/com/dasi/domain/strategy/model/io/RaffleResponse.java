@@ -1,6 +1,7 @@
-package com.dasi.domain.strategy.model.entity;
+package com.dasi.domain.strategy.model.io;
 
 
+import com.dasi.domain.strategy.model.entity.AwardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleResponseEntity {
+public class RaffleResponse {
 
     /** 策略 ID */
     private Long strategyId;
@@ -29,8 +30,8 @@ public class RaffleResponseEntity {
 
 
     // ---------------------- 静态方法 ----------------------
-    public static RaffleResponseEntity buildAward(Long strategyId, AwardEntity awardEntity) {
-        return RaffleResponseEntity.builder()
+    public static RaffleResponse buildAward(Long strategyId, AwardEntity awardEntity) {
+        return RaffleResponse.builder()
                 .strategyId(strategyId)
                 .awardId(awardEntity.getAwardId())
                 .awardKey(awardEntity.getAwardKey())

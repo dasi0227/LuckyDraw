@@ -19,13 +19,13 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatch {
+public class StrategyArmoryLottery implements IStrategyArmory, IStrategyLottery {
 
     @Resource
     private IStrategyRepository repository;
 
     @Override
-    public boolean assembleLotteryStrategy(Long strategyId) {
+    public boolean assembleStrategy(Long strategyId) {
         // ====================
         // 查询策略配置
         // ====================
@@ -96,18 +96,18 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
     }
 
     @Override
-    public Integer getRandomAwardId(Long strategyId) {
+    public Integer doLottery(Long strategyId) {
         String key = String.valueOf(strategyId);
-        return getRandomAwardId(key);
+        return doLottery(key);
     }
 
     @Override
-    public Integer getRandomAwardId(Long strategyId, String ruleWeight) {
+    public Integer doLottery(Long strategyId, String ruleWeight) {
         String key = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(ruleWeight);
-        return getRandomAwardId(key);
+        return doLottery(key);
     }
 
-    private Integer getRandomAwardId(String key) {
+    private Integer doLottery(String key) {
         // 1. 获取概率长度
         int rateRange = repository.getRateRange(key);
         // 2. 生成随机数，找到对应的概率奖品

@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
 import com.dasi.domain.strategy.service.armory.IStrategyArmory;
-import com.dasi.domain.strategy.service.armory.IStrategyDispatch;
+import com.dasi.domain.strategy.service.armory.IStrategyLottery;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,18 +19,18 @@ public class StrategyTest {
     private IStrategyArmory strategyArmory;
 
     @Resource
-    private IStrategyDispatch strategyDispatch;
+    private IStrategyLottery strategyLottery;
 
     @Test
     public void test_armory() {
-        log.info("success: {}", strategyArmory.assembleLotteryStrategy(100001L));
+        log.info("success: {}", strategyArmory.assembleStrategy(100001L));
     }
 
     @Test
     public void test_dispatch() {
-        log.info("4000 策略配置抽奖：awardId = {}", strategyDispatch.getRandomAwardId(100001L, "4000"));
-        log.info("5000 策略配置抽奖：awardId = {}", strategyDispatch.getRandomAwardId(100001L, "5000"));
-        log.info("6000 策略配置抽奖：awardId = {}", strategyDispatch.getRandomAwardId(100001L, "6000"));
+        log.info("4000 策略配置抽奖：awardId = {}", strategyLottery.doLottery(100001L, "4000"));
+        log.info("5000 策略配置抽奖：awardId = {}", strategyLottery.doLottery(100001L, "5000"));
+        log.info("6000 策略配置抽奖：awardId = {}", strategyLottery.doLottery(100001L, "6000"));
     }
 
 }

@@ -1,18 +1,19 @@
 package com.dasi.domain.strategy.service.raffle;
 
-import com.dasi.domain.strategy.model.entity.RaffleRequestEntity;
-import com.dasi.domain.strategy.model.entity.RuleContextEntity;
-import com.dasi.domain.strategy.model.entity.RuleResultEntity;
-import com.dasi.domain.strategy.model.vo.RuleDecisionVO;
+import com.dasi.domain.strategy.model.io.RaffleRequest;
+import com.dasi.domain.strategy.model.io.FilterRequest;
+import com.dasi.domain.strategy.model.io.FilterResponse;
+import com.dasi.domain.strategy.model.enumeration.FilterDecision;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.armory.IStrategyDispatch;
-import com.dasi.domain.strategy.service.rule.IRuleFilter;
-import com.dasi.domain.strategy.service.rule.factory.RuleFactory;
+import com.dasi.domain.strategy.service.armory.IStrategyLottery;
+import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
+import com.dasi.domain.strategy.service.rule.chain.RuleChainFactory;
+import com.dasi.domain.strategy.service.rule.filter.IRuleFilter;
+import com.dasi.domain.strategy.service.rule.filter.RuleFilterFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j
@@ -20,88 +21,52 @@ import java.util.Map;
 public class DefaultRaffle extends AbstractRaffle {
 
     @Resource
-    private RuleFactory ruleFactory;
+    private RuleFilterFactory ruleFilterFactory;
 
-    public DefaultRaffle(IStrategyRepository repository, IStrategyDispatch strategyDispatch) {
+    @Resource
+    private RuleChainFactory ruleChainFactory;
+
+    public DefaultRaffle(IStrategyRepository repository, IStrategyLottery strategyDispatch) {
         super(repository, strategyDispatch);
     }
 
     @Override
-    protected RuleResultEntity<RuleResultEntity.RuleBeforeEntity> checkBeforeRule(RaffleRequestEntity raffleRequestEntity, String... ruleModels) {
-        // 1. 空规直接放行
-        RuleResultEntity<RuleResultEntity.RuleBeforeEntity> checkResult = checkRuleModelsExist(ruleModels);
-        if (checkResult != null) return checkResult;
-
-        // 2. 获取所有规则过滤器
-        Map<String, IRuleFilter<RuleResultEntity.RuleBeforeEntity>> ruleFilterMap = ruleFactory.openLogicFilter();
-        IRuleFilter<RuleResultEntity.RuleBeforeEntity> ruleFilter;
-        RuleResultEntity<RuleResultEntity.RuleBeforeEntity> ruleResultEntity = null;
-
-        // 3. 黑名单优先执行
-        String blacklist = RuleFactory.RuleModel.RULE_BLACKLIST.getName();
-        if (Arrays.asList(ruleModels).contains(blacklist)) {
-            ruleFilter = ruleFilterMap.get(blacklist);
-            ruleResultEntity = doRuleFilter(raffleRequestEntity, ruleFilter, blacklist);
-            if (!RuleDecisionVO.ALLOW.getCode().equals(ruleResultEntity.getCode())) {
-                return ruleResultEntity;
-            }
-        }
-        ruleModels = Arrays.stream(ruleModels)
-                .filter(r -> !r.equals(blacklist))
-                .toArray(String[]::new);
-
-        // 4. 执行其他规则
-        for (String ruleModel : ruleModels) {
-            ruleFilter = ruleFilterMap.get(ruleModel);
-            ruleResultEntity = doRuleFilter(raffleRequestEntity, ruleFilter, ruleModel);
-            if (!RuleDecisionVO.ALLOW.getCode().equals(ruleResultEntity.getCode())) {
-                return ruleResultEntity;
-            }
-        }
-
-        return ruleResultEntity;
+    protected Integer beforeCheck(RaffleRequest raffleRequest) {
+        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(raffleRequest.getStrategyId());
+        return firstRuleChain.logic(raffleRequest.getUserId(), raffleRequest.getStrategyId());
     }
 
-    @Override
-    protected RuleResultEntity<RuleResultEntity.RuleDuringEntity> checkDuringRule(RaffleRequestEntity raffleRequestEntity, String... ruleModels) {
-        // 1. 先检查 ruleModels 是否存在，然后获取在工厂中注册的所有规则
-        RuleResultEntity<RuleResultEntity.RuleDuringEntity> check = checkRuleModelsExist(ruleModels);
-        if (check != null) return check;
-
-        // 2. 获取所有规则过滤器
-        Map<String, IRuleFilter<RuleResultEntity.RuleDuringEntity>> ruleFilterMap = ruleFactory.openLogicFilter();
-        IRuleFilter<RuleResultEntity.RuleDuringEntity> ruleFilter;
-        RuleResultEntity<RuleResultEntity.RuleDuringEntity> ruleResultEntity;
-
-        // 3. 执行规则
-        for (String ruleModel : ruleModels) {
-            ruleFilter = ruleFilterMap.get(ruleModel);
-            ruleResultEntity = doRuleFilter(raffleRequestEntity, ruleFilter, ruleModel);
-            if (!RuleDecisionVO.ALLOW.getCode().equals(ruleResultEntity.getCode())) {
-                return ruleResultEntity;
-            }
-        }
-
-        return null;
-    }
-
-    // 执行单个 RuleFilter
-    private <T extends RuleResultEntity.RuleDataEntity> RuleResultEntity<T> doRuleFilter(
-            RaffleRequestEntity raffleRequestEntity,
-            IRuleFilter<T> filter,
-            String ruleModel
-    ) {
-        RuleContextEntity ruleContextEntity = RuleContextEntity.buildRuleContext(raffleRequestEntity, ruleModel);
-        log.info("【执行 {}】context = {}", ruleModel, ruleContextEntity);
-        RuleResultEntity<T> ruleResultEntity = filter.filter(ruleContextEntity);
-        log.info("【执行 {}】result = {}", ruleModel, ruleResultEntity);
-        return ruleResultEntity;
-    }
+//    // TODO：重构 during check，暂时先测试前置规则
+//    @Override
+//    protected FilterResponse<FilterResponse.FilterDuringEntity> checkDuringRule(RaffleRequest raffleRequest, String... ruleModels) {
+//        // 1. 先检查 ruleModels 是否存在，然后获取在工厂中注册的所有规则
+//        FilterResponse<FilterResponse.FilterDuringEntity> check = checkRuleModelsExist(ruleModels);
+//        if (check != null) return check;
+//
+//        // 2. 获取所有规则过滤器
+//        Map<String, IRuleFilter<FilterResponse.FilterDuringEntity>> ruleFilterMap = ruleFilterFactory.openLogicFilter();
+//        IRuleFilter<FilterResponse.FilterDuringEntity> ruleFilter;
+//        FilterResponse<FilterResponse.FilterDuringEntity> filterResponse;
+//
+//        // 3. 执行规则
+//        for (String ruleModel : ruleModels) {
+//            ruleFilter = ruleFilterMap.get(ruleModel);
+//            FilterRequest filterRequest = FilterRequest.buildFilterRequest(raffleRequest, ruleModel);
+//            log.info("【执行 {}】context = {}", ruleModel, filterRequest);
+//            filterResponse = ruleFilter.filter(filterRequest);
+//            log.info("【执行 {}】result = {}", ruleModel, filterResponse);
+//            if (!FilterDecision.ALLOW.getCode().equals(filterResponse.getCode())) {
+//                return filterResponse;
+//            }
+//        }
+//
+//        return null;
+//    }
 
     // 检查 ruleModels 是否存在
-    private <T extends RuleResultEntity.RuleDataEntity> RuleResultEntity<T> checkRuleModelsExist(String[] ruleModels) {
+    private <T extends FilterResponse.FilterDataEntity> FilterResponse<T> checkRuleModelsExist(String[] ruleModels) {
         if (ruleModels == null || ruleModels.length == 0) {
-            return RuleResultEntity.allow();
+            return FilterResponse.allow();
         }
         return null;
     }

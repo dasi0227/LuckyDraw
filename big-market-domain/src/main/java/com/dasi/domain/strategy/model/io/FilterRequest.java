@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.entity;
+package com.dasi.domain.strategy.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RuleContextEntity {
+public class FilterRequest {
 
     /** 用户 ID */
     private String userId;
@@ -23,8 +23,8 @@ public class RuleContextEntity {
     /** 抽奖规则模型 */
     private String ruleModel;
 
-    public static RuleContextEntity buildRuleContext(RaffleRequestEntity request, String ruleModel) {
-        return RuleContextEntity.builder()
+    public static FilterRequest buildFilterRequest(RaffleRequest request, String ruleModel) {
+        return FilterRequest.builder()
                 .userId(request.getUserId())
                 .strategyId(request.getStrategyId())
                 .awardId(request.getAwardId())

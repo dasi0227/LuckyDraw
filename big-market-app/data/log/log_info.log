@@ -1,435 +1,142 @@
-2025-11-20 15:10:48 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59485 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:10:48 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:10:50 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.155 seconds (JVM running for 2.735)
-2025-11-20 15:14:13 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59576 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:14:13 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:14:15 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.922 seconds (JVM running for 2.481)
-2025-11-20 15:15:24 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59611 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:15:24 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:15:26 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.981 seconds (JVM running for 2.534)
-2025-11-20 15:15:26 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=dasi, strategyId=100001)
-2025-11-20 15:15:26 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=102, awardKey=null, awardConfig=null, awardDesc=null)
-2025-11-20 15:16:20 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59642 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:16:20 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:16:22 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.955 seconds (JVM running for 2.467)
-2025-11-20 15:16:22 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:16:22 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=100, awardKey=null, awardConfig=null, awardDesc=null)
-2025-11-20 15:19:04 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59704 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:19:04 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:19:05 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.912 seconds (JVM running for 2.394)
-2025-11-20 15:19:06 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=dasi, strategyId=100001)
-2025-11-20 15:19:06 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=104, awardKey=null, awardConfig=null, awardDesc=null)
-2025-11-20 15:20:32 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 59758 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:20:32 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:20:34 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.922 seconds (JVM running for 2.429)
-2025-11-20 15:20:34 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:20:34 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:20:34 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=dasi, strategyId=100001)
-2025-11-20 15:20:34 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=103, awardKey=null, awardConfig=null, awardDesc=null)
-2025-11-20 15:35:11 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60224 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:35:11 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:35:13 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.103 seconds (JVM running for 2.681)
-2025-11-20 15:35:13 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:35:13 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:36:24 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60267 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:36:24 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:36:26 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.923 seconds (JVM running for 2.458)
-2025-11-20 15:36:26 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:36:26 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:37:11 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60298 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:37:11 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:37:12 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.933 seconds (JVM running for 2.458)
-2025-11-20 15:37:13 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:37:13 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:38:25 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60336 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:38:25 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:38:27 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.947 seconds (JVM running for 2.451)
-2025-11-20 15:38:27 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:38:28 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:40:43 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60389 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:40:43 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:40:45 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.01 seconds (JVM running for 2.587)
-2025-11-20 15:40:45 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:40:45 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:40:45 [main            ] INFO  StrategyRepository     - 查到的 Award：null
-2025-11-20 15:42:55 [main            ] INFO  AwardDaoTest           - Starting AwardDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60448 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:42:55 [main            ] INFO  AwardDaoTest           - The following 1 profile is active: "dev"
-2025-11-20 15:42:57 [main            ] INFO  AwardDaoTest           - Started AwardDaoTest in 1.913 seconds (JVM running for 2.451)
-2025-11-20 15:42:57 [main            ] INFO  AwardDaoTest           - 测试结果：[{"awardConfig":"1100","awardDesc":"用户积分【优先透彻规则范围，如果没有则走配置】","awardId":101,"awardKey":"user_credit_random"},{"awardConfig":"5","awardDesc":"OpenAI增加使用次数","awardId":102,"awardKey":"openai_use_count"},{"awardConfig":"10","awardDesc":"OpenAI增加使用次数","awardId":103,"awardKey":"openai_use_conut"},{"awardConfig":"20","awardDesc":"OpenAI增加使用次数","awardId":104,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4","awardDesc":"OpenAI增加模型","awardId":105,"awardKey":"openai_model"},{"awardConfig":"dall-e-2","awardDesc":"OpenAI增加模型","awardId":106,"awardKey":"openai_model"},{"awardConfig":"dall-e-3","awardDesc":"OpenAI增加模型","awardId":107,"awardKey":"openai_model"},{"awardConfig":"100","awardDesc":"OpenAI增加使用次数","awardId":108,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4,dall-e-2,dall-e-3","awardDesc":"OpenAI增加模型","awardId":109,"awardKey":"openai_model"},{"awardConfig":"1","awardDesc":"黑名单的 1 积分保底","awardId":100,"awardKey":"blacklist_award"}]
-2025-11-20 15:43:12 [main            ] INFO  AwardDaoTest           - Starting AwardDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60462 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:43:12 [main            ] INFO  AwardDaoTest           - The following 1 profile is active: "dev"
-2025-11-20 15:43:14 [main            ] INFO  AwardDaoTest           - Started AwardDaoTest in 1.931 seconds (JVM running for 2.451)
-2025-11-20 15:43:14 [main            ] INFO  AwardDaoTest           - 测试结果：[{"awardConfig":"1100","awardDesc":"用户积分【优先透彻规则范围，如果没有则走配置】","awardId":101,"awardKey":"user_credit_random"},{"awardConfig":"5","awardDesc":"OpenAI增加使用次数","awardId":102,"awardKey":"openai_use_count"},{"awardConfig":"10","awardDesc":"OpenAI增加使用次数","awardId":103,"awardKey":"openai_use_conut"},{"awardConfig":"20","awardDesc":"OpenAI增加使用次数","awardId":104,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4","awardDesc":"OpenAI增加模型","awardId":105,"awardKey":"openai_model"},{"awardConfig":"dall-e-2","awardDesc":"OpenAI增加模型","awardId":106,"awardKey":"openai_model"},{"awardConfig":"dall-e-3","awardDesc":"OpenAI增加模型","awardId":107,"awardKey":"openai_model"},{"awardConfig":"100","awardDesc":"OpenAI增加使用次数","awardId":108,"awardKey":"openai_use_conut"},{"awardConfig":"gpt-4,dall-e-2,dall-e-3","awardDesc":"OpenAI增加模型","awardId":109,"awardKey":"openai_model"},{"awardConfig":"1","awardDesc":"黑名单的 1 积分保底","awardId":100,"awardKey":"blacklist_award"}]
-2025-11-20 15:43:16 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60465 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:43:16 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:43:17 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.879 seconds (JVM running for 2.411)
-2025-11-20 15:43:18 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:43:18 [main            ] INFO  RuleWeightFilter       - 【规则过滤-权重】context = RuleContextEntity(userId=dasi, strategyId=100001, awardId=null, ruleModel=rule_weight)
-2025-11-20 15:43:18 [main            ] INFO  StrategyRepository     - 查到的 Award：Award(id=null, awardId=102, awardKey=openai_use_count, awardConfig=5, awardDesc=OpenAI增加使用次数, createTime=null, updateTime=null)
-2025-11-20 15:43:18 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=dasi, strategyId=100001)
-2025-11-20 15:43:18 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=102, awardKey=openai_use_count, awardConfig=5, awardDesc=OpenAI增加使用次数)
-2025-11-20 15:44:36 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60502 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:44:36 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:44:38 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.089 seconds (JVM running for 2.612)
-2025-11-20 15:44:38 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:44:38 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:44:38 [main            ] INFO  StrategyRepository     - 查到的 Award：Award(id=null, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底, createTime=null, updateTime=null)
-2025-11-20 15:44:38 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:44:38 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:47:04 [main            ] ERROR SpringApplication      - Application run failed
-java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to instantiate converter class [ch.qos.logback.classic.pattern.MethodOfCallerConverter] as a composite converter for keyword [M] ch.qos.logback.core.util.IncompatibleClassException
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to create converter for [%M] keyword
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:344)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:176)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:169)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:143)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:131)
-	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:85)
-	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:66)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:120)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:114)
-	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:65)
-	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:343)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:301)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:136)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:141)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:90)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
-	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:69)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
-	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
-	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
-	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-Caused by: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to instantiate converter class [ch.qos.logback.classic.pattern.MethodOfCallerConverter] as a composite converter for keyword [M] ch.qos.logback.core.util.IncompatibleClassException
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to create converter for [%M] keyword
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:179)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:66)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:57)
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
-	... 45 common frames omitted
-2025-11-20 15:47:04 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.RaffleTest@687ef2e0]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
-	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:69)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
-	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
-	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
-	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-Caused by: java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to instantiate converter class [ch.qos.logback.classic.pattern.MethodOfCallerConverter] as a composite converter for keyword [M] ch.qos.logback.core.util.IncompatibleClassException
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to create converter for [%M] keyword
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:344)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:176)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:169)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:143)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:131)
-	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:85)
-	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:66)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:120)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:114)
-	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:65)
-	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:343)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:301)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:136)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:141)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:90)
-	... 27 common frames omitted
-Caused by: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to instantiate converter class [ch.qos.logback.classic.pattern.MethodOfCallerConverter] as a composite converter for keyword [M] ch.qos.logback.core.util.IncompatibleClassException
-ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to create converter for [%M] keyword
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:179)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:66)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:57)
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
-	... 45 common frames omitted
-2025-11-20 15:47:45 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60588 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:47:45 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:47:47 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.102 seconds (JVM running for 2.669)
-2025-11-20 15:47:47 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:47:47 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:47:47 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:47:47 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:48:44 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60614 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:48:44 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:48:46 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.898 seconds (JVM running for 2.435)
-2025-11-20 15:48:46 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:48:46 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:48:46 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:48:46 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:49:40 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60638 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:49:40 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:49:42 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.981 seconds (JVM running for 2.536)
-2025-11-20 15:49:42 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:49:43 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:49:43 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:49:43 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:50:01 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60650 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:50:01 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:50:02 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.859 seconds (JVM running for 2.337)
-2025-11-20 15:50:02 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:50:03 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:50:03 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:50:03 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:50:42 [main            ] ERROR SpringApplication      - Application run failed
-java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.joran.spi.Interpreter@24:19 - RuntimeException in Action for tag [encoder] java.lang.NumberFormatException: For input string: "-"
-ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the appender named "CONSOLE".
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:344)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:176)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:169)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:143)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:131)
-	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:85)
-	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:66)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:120)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:114)
-	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:65)
-	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:343)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:301)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:136)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:141)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:90)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
-	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:69)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
-	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
-	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
-	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-Caused by: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.joran.spi.Interpreter@24:19 - RuntimeException in Action for tag [encoder] java.lang.NumberFormatException: For input string: "-"
-ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the appender named "CONSOLE".
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:179)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:66)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:57)
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
-	... 45 common frames omitted
-2025-11-20 15:50:42 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.RaffleTest@62727399]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
-	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
-	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:69)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
-	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
-	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
-	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
-	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-Caused by: java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.joran.spi.Interpreter@24:19 - RuntimeException in Action for tag [encoder] java.lang.NumberFormatException: For input string: "-"
-ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the appender named "CONSOLE".
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:344)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:176)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:169)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:143)
-	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:131)
-	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:85)
-	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:66)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:120)
-	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:114)
-	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:65)
-	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:343)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:301)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:136)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:141)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:90)
-	... 27 common frames omitted
-Caused by: java.lang.IllegalStateException: Logback configuration error detected: 
-ERROR in ch.qos.logback.core.joran.spi.Interpreter@24:19 - RuntimeException in Action for tag [encoder] java.lang.NumberFormatException: For input string: "-"
-ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the appender named "CONSOLE".
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:179)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:66)
-	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:57)
-	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
-	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
-	... 45 common frames omitted
-2025-11-20 15:51:14 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60696 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:51:14 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:51:16 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.039 seconds (JVM running for 2.593)
-2025-11-20 15:51:16 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:51:16 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:51:16 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:51:16 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 15:51:35 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 60712 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 15:51:35 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 15:51:36 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.919 seconds (JVM running for 2.401)
-2025-11-20 15:51:37 [main            ] INFO  RuleBlacklistFilter    - 【规则过滤-黑名单】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 15:51:37 [main            ] INFO  RuleBlacklistFilter    - <UNK>-<UNK>userId = user001
-2025-11-20 15:51:37 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001)
-2025-11-20 15:51:37 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 19:15:44 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87575 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:15:44 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.964 seconds (JVM running for 2.628)
-2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:15:46 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
-2025-11-20 19:17:44 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87637 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:17:44 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.91 seconds (JVM running for 2.477)
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
-2025-11-20 19:17:46 [main            ] INFO  DefaultRaffle          - 【规则过滤-rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
-2025-11-20 19:17:46 [main            ] INFO  DefaultRaffle          - 【规则过滤-rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
-2025-11-20 19:17:46 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
-2025-11-20 19:18:33 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87675 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:18:33 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.031 seconds (JVM running for 2.572)
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
-2025-11-20 19:18:35 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
-2025-11-20 19:18:35 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
-2025-11-20 19:18:35 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
-2025-11-20 19:23:12 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87773 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:23:12 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:23:13 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.035 seconds (JVM running for 2.63)
-2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
-2025-11-20 19:23:14 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
-2025-11-20 19:23:14 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=rule_lock, code=0001, info=接管：受规则引擎影响, data=null)
-2025-11-20 19:23:14 [main            ] INFO  AbstractRaffle         - 【临时处理】中置规则成功拦截
-2025-11-20 19:23:14 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=null, awardId=null, awardKey=null, awardConfig=null, awardDesc=临时处理，中置规则成功拦截)
-2025-11-20 19:24:37 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87810 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:24:37 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:24:38 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.972 seconds (JVM running for 2.479)
-2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100003, awardId=null)
-2025-11-20 19:24:39 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】context = RuleContextEntity(userId=user001, strategyId=100003, awardId=107, ruleModel=rule_lock)
-2025-11-20 19:24:39 [main            ] INFO  DefaultRaffle          - 【执行 rule_lock】result = RuleResultEntity(ruleModel=null, code=0000, info=放行：不受规则引擎影响, data=null)
-2025-11-20 19:24:39 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100003, awardId=107, awardKey=openai_model, awardConfig=dall-e-3, awardDesc=OpenAI增加模型)
-2025-11-20 19:25:29 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87844 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:25:29 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:25:31 [main            ] INFO  RaffleTest             - Started RaffleTest in 1.945 seconds (JVM running for 2.439)
-2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:25:32 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100002, awardId=null)
-2025-11-20 19:27:27 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 87895 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:27:27 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:27:29 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.11 seconds (JVM running for 2.619)
-2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001, awardId=null)
-2025-11-20 19:27:30 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
-2025-11-20 19:48:02 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 88701 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-20 19:48:02 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.016 seconds (JVM running for 2.602)
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - success: true
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - 请求参数：RaffleRequestEntity(userId=user001, strategyId=100001, awardId=null)
-2025-11-20 19:48:04 [main            ] INFO  DefaultRaffle          - 【执行 rule_blacklist】context = RuleContextEntity(userId=user001, strategyId=100001, awardId=null, ruleModel=rule_blacklist)
-2025-11-20 19:48:04 [main            ] INFO  DefaultRaffle          - 【执行 rule_blacklist】result = RuleResultEntity(ruleModel=rule_blacklist, code=0001, info=接管：受规则引擎影响, data=RuleResultEntity.RuleBeforeEntity(strategyId=100001, awardId=100, ruleWeight=null))
-2025-11-20 19:48:04 [main            ] INFO  RaffleTest             - 响应结果：RaffleResponseEntity(strategyId=100001, awardId=100, awardKey=blacklist_award, awardConfig=1, awardDesc=黑名单的 1 积分保底)
+2025-11-21 14:58:05 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99778 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 14:58:05 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 14:58:07 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.347 seconds (JVM running for 2.982)
+2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:08 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_weight】接管：黑名单用户=user001
+2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - awardId: 100
+2025-11-21 14:58:22 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99791 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 14:58:22 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.07 seconds (JVM running for 2.651)
+2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:58:24 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 14:58:24 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=105
+2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - awardId: 105
+2025-11-21 14:59:28 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99821 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 14:59:28 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 14:59:30 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.207 seconds (JVM running for 2.809)
+2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 14:59:31 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 14:59:31 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - awardId: 102
+2025-11-21 15:00:52 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99858 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:00:52 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:00:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.445 seconds (JVM running for 3.453)
+2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:02:49 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m24s725ms).
+2025-11-21 15:02:49 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:02:51 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99936 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:02:51 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.551 seconds (JVM running for 3.643)
+2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:03:20 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:03:20 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=106
+2025-11-21 15:03:20 [main            ] INFO  RaffleTest             - awardId: 106
+2025-11-21 15:03:22 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99973 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:03:22 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:03:24 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.408 seconds (JVM running for 3.213)
+2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:03:52 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:03:52 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=101
+2025-11-21 15:03:54 [main            ] INFO  RaffleTest             - awardId: 101
+2025-11-21 15:04:05 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 100 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:04:05 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:04:06 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.099 seconds (JVM running for 2.634)
+2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:04:07 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:04:07 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=101
+2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - awardId: 101
+2025-11-21 15:05:16 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 236 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:05:16 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:05:18 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.64 seconds (JVM running for 3.691)
+2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:23 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:05:23 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-21 15:05:23 [main            ] INFO  RaffleTest             - awardId: 102
+2025-11-21 15:05:52 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 298 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:05:52 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:05:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.221 seconds (JVM running for 3.024)
+2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:05:55 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:05:55 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=103
+2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - awardId: 103
+2025-11-21 15:06:06 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 314 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:06:06 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:06:08 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.203 seconds (JVM running for 3.048)
+2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:07:45 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m6s94ms).
+2025-11-21 15:07:45 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:07:48 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 384 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:07:48 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.406 seconds (JVM running for 3.258)
+2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:08:22 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:08:22 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=106
+2025-11-21 15:08:22 [main            ] INFO  RaffleTest             - awardId: 106
+2025-11-21 15:08:23 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 404 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:08:23 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:08:25 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.225 seconds (JVM running for 3.205)
+2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:09:34 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m1s51ms).
+2025-11-21 15:09:44 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:09:44 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-21 15:09:44 [main            ] INFO  RaffleTest             - awardId: 102
+2025-11-21 15:10:25 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 463 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:10:25 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.171 seconds (JVM running for 2.714)
+2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:27 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:10:27 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - awardId: 102
+2025-11-21 15:10:38 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 474 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:10:38 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:10:40 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.303 seconds (JVM running for 3.038)
+2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:10:51 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:11:28 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=103
+2025-11-21 15:11:28 [main            ] INFO  RaffleTest             - awardId: 103
+2025-11-21 15:11:31 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 507 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:11:31 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:11:33 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.472 seconds (JVM running for 3.3)
+2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:34 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:11:34 [main            ] INFO  RuleWeightChain        - 【抽奖责任链 - rule_weight】接管：匹配积分=4000
+2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - awardId: 104
+2025-11-21 15:11:50 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 527 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-21 15:11:50 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.056 seconds (JVM running for 2.59)
+2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
+2025-11-21 15:11:52 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
+2025-11-21 15:11:52 [main            ] INFO  RuleWeightChain        - 【抽奖责任链 - rule_weight】接管：匹配积分=5000
+2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - awardId: 103
