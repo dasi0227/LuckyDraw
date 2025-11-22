@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.rule.filter;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.io.FilterResponse;
+import com.dasi.domain.strategy.model.dto.FilterResponse;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 

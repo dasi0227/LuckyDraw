@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.io.RaffleRequest;
-import com.dasi.domain.strategy.model.io.RaffleResponse;
+import com.dasi.domain.strategy.model.dto.RaffleRequestDTO;
+import com.dasi.domain.strategy.model.dto.RaffleResponseDTO;
 import com.dasi.domain.strategy.service.armory.IStrategyArmory;
 import com.dasi.domain.strategy.service.raffle.IRaffle;
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
@@ -61,13 +61,13 @@ public class RaffleTest {
     @Test
     public void test_doRaffle() {
         ReflectionTestUtils.setField(ruleLockFilter, "userRaffleCount", 0L);
-        RaffleRequest request = RaffleRequest.builder()
+        RaffleRequestDTO request = RaffleRequestDTO.builder()
                 .userId("user001")
                 .strategyId(100001L)
                 .build();
 
         log.info("请求参数：{}", request);
-        RaffleResponse response = raffle.doRaffle(request);
+        RaffleResponseDTO response = raffle.doRaffle(request);
         log.info("响应结果：{}", response);
     }
 

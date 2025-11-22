@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.io;
+package com.dasi.domain.strategy.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class FilterRequest {
     /** 抽奖规则模型 */
     private String ruleModel;
 
-    public static FilterRequest buildFilterRequest(RaffleRequest request, String ruleModel) {
+    public static FilterRequest buildFilterRequest(RaffleRequestDTO request, String ruleModel) {
         return FilterRequest.builder()
                 .userId(request.getUserId())
                 .strategyId(request.getStrategyId())

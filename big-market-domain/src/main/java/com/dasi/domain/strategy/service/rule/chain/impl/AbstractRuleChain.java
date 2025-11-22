@@ -1,5 +1,7 @@
-package com.dasi.domain.strategy.service.rule.chain;
+package com.dasi.domain.strategy.service.rule.chain.impl;
 
+
+import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 
 public abstract class AbstractRuleChain implements IRuleChain {
 

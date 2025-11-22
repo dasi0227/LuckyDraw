@@ -1,20 +1,16 @@
 package com.dasi.domain.strategy.service.raffle;
 
-import com.dasi.domain.strategy.model.io.RaffleRequest;
-import com.dasi.domain.strategy.model.io.FilterRequest;
-import com.dasi.domain.strategy.model.io.FilterResponse;
-import com.dasi.domain.strategy.model.enumeration.FilterDecision;
+import com.dasi.domain.strategy.model.dto.RaffleRequestDTO;
+import com.dasi.domain.strategy.model.dto.FilterResponse;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.armory.IStrategyLottery;
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 import com.dasi.domain.strategy.service.rule.chain.RuleChainFactory;
-import com.dasi.domain.strategy.service.rule.filter.IRuleFilter;
 import com.dasi.domain.strategy.service.rule.filter.RuleFilterFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -31,14 +27,14 @@ public class DefaultRaffle extends AbstractRaffle {
     }
 
     @Override
-    protected Integer beforeCheck(RaffleRequest raffleRequest) {
-        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(raffleRequest.getStrategyId());
-        return firstRuleChain.logic(raffleRequest.getUserId(), raffleRequest.getStrategyId());
+    protected Integer beforeCheck(RaffleRequestDTO raffleRequestDTO) {
+        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(raffleRequestDTO.getStrategyId());
+        return firstRuleChain.logic(raffleRequestDTO.getUserId(), raffleRequestDTO.getStrategyId());
     }
 
 //    // TODO：重构 during check，暂时先测试前置规则
 //    @Override
-//    protected FilterResponse<FilterResponse.FilterDuringEntity> checkDuringRule(RaffleRequest raffleRequest, String... ruleModels) {
+//    protected FilterResponse<FilterResponse.FilterDuringEntity> checkDuringRule(RaffleRequestDTO raffleRequest, String... ruleModels) {
 //        // 1. 先检查 ruleModels 是否存在，然后获取在工厂中注册的所有规则
 //        FilterResponse<FilterResponse.FilterDuringEntity> check = checkRuleModelsExist(ruleModels);
 //        if (check != null) return check;
@@ -55,7 +51,7 @@ public class DefaultRaffle extends AbstractRaffle {
 //            log.info("【执行 {}】context = {}", ruleModel, filterRequest);
 //            filterResponse = ruleFilter.filter(filterRequest);
 //            log.info("【执行 {}】result = {}", ruleModel, filterResponse);
-//            if (!FilterDecision.ALLOW.getCode().equals(filterResponse.getCode())) {
+//            if (!RuleCheckResult.ALLOW.getCode().equals(filterResponse.getCode())) {
 //                return filterResponse;
 //            }
 //        }

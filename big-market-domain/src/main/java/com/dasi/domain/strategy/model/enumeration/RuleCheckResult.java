@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum FilterDecision {
+public enum RuleCheckResult {
 
-    ALLOW("0000", "放行：不受规则引擎影响"),
-    TAKE_OVER("0001", "接管：受规则引擎影响"),
+    PERMIT("0000", "放行：不受规则引擎影响"),
+    CAPTURE("0001", "捕获：受规则引擎影响"),
     ;
 
     private final String code;

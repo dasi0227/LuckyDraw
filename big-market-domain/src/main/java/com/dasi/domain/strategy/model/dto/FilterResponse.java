@@ -1,6 +1,6 @@
-package com.dasi.domain.strategy.model.io;
+package com.dasi.domain.strategy.model.dto;
 
-import com.dasi.domain.strategy.model.enumeration.FilterDecision;
+import com.dasi.domain.strategy.model.enumeration.RuleCheckResult;
 import lombok.*;
 
 @SuppressWarnings("unused")
@@ -57,16 +57,16 @@ public class FilterResponse<T extends FilterResponse.FilterDataEntity> {
     // ---------------------- 静态方法 ----------------------
     public static <T extends FilterDataEntity> FilterResponse<T> allow() {
         return FilterResponse.<T>builder()
-                .code(FilterDecision.ALLOW.getCode())
-                .info(FilterDecision.ALLOW.getInfo())
+                .code(RuleCheckResult.PERMIT.getCode())
+                .info(RuleCheckResult.PERMIT.getInfo())
                 .build();
     }
 
     public static <T extends FilterDataEntity> FilterResponse<T> takeOver(String ruleModel) {
         return FilterResponse.<T>builder()
                 .ruleModel(ruleModel)
-                .code(FilterDecision.TAKE_OVER.getCode())
-                .info(FilterDecision.TAKE_OVER.getInfo())
+                .code(RuleCheckResult.CAPTURE.getCode())
+                .info(RuleCheckResult.CAPTURE.getInfo())
                 .build();
     }
 
