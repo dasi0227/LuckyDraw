@@ -4,7 +4,6 @@ import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.enumeration.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.armory.IStrategyLottery;
-import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
 import com.dasi.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

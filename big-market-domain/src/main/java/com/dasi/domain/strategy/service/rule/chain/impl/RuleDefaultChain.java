@@ -3,7 +3,6 @@ package com.dasi.domain.strategy.service.rule.chain.impl;
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.enumeration.RuleModel;
 import com.dasi.domain.strategy.service.armory.IStrategyLottery;
-import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

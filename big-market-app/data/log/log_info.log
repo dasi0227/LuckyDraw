@@ -1,142 +1,21 @@
-2025-11-21 14:58:05 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99778 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 14:58:05 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 14:58:07 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.347 seconds (JVM running for 2.982)
-2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:08 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_weight】接管：黑名单用户=user001
-2025-11-21 14:58:08 [main            ] INFO  RaffleTest             - awardId: 100
-2025-11-21 14:58:22 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99791 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 14:58:22 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.07 seconds (JVM running for 2.651)
-2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:58:24 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 14:58:24 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=105
-2025-11-21 14:58:24 [main            ] INFO  RaffleTest             - awardId: 105
-2025-11-21 14:59:28 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99821 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 14:59:28 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 14:59:30 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.207 seconds (JVM running for 2.809)
-2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 14:59:31 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 14:59:31 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
-2025-11-21 14:59:31 [main            ] INFO  RaffleTest             - awardId: 102
-2025-11-21 15:00:52 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99858 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:00:52 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:00:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.445 seconds (JVM running for 3.453)
-2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:00:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:02:49 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m24s725ms).
-2025-11-21 15:02:49 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:02:51 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99936 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:02:51 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.551 seconds (JVM running for 3.643)
-2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:02:54 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:03:20 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:03:20 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=106
-2025-11-21 15:03:20 [main            ] INFO  RaffleTest             - awardId: 106
-2025-11-21 15:03:22 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 99973 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:03:22 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:03:24 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.408 seconds (JVM running for 3.213)
-2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:03:25 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:03:52 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:03:52 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=101
-2025-11-21 15:03:54 [main            ] INFO  RaffleTest             - awardId: 101
-2025-11-21 15:04:05 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 100 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:04:05 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:04:06 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.099 seconds (JVM running for 2.634)
-2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:04:07 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:04:07 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=101
-2025-11-21 15:04:07 [main            ] INFO  RaffleTest             - awardId: 101
-2025-11-21 15:05:16 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 236 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:05:16 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:05:18 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.64 seconds (JVM running for 3.691)
-2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:19 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:23 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:05:23 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
-2025-11-21 15:05:23 [main            ] INFO  RaffleTest             - awardId: 102
-2025-11-21 15:05:52 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 298 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:05:52 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:05:54 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.221 seconds (JVM running for 3.024)
-2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:05:55 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:05:55 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=103
-2025-11-21 15:05:55 [main            ] INFO  RaffleTest             - awardId: 103
-2025-11-21 15:06:06 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 314 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:06:06 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:06:08 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.203 seconds (JVM running for 3.048)
-2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:06:09 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:07:45 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m6s94ms).
-2025-11-21 15:07:45 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:07:48 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 384 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:07:48 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.406 seconds (JVM running for 3.258)
-2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:07:50 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:08:22 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:08:22 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=106
-2025-11-21 15:08:22 [main            ] INFO  RaffleTest             - awardId: 106
-2025-11-21 15:08:23 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 404 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:08:23 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:08:25 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.225 seconds (JVM running for 3.205)
-2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:08:26 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:09:34 [Retail_HikariCP housekeeper] WARN  HikariPool             - Retail_HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m1s51ms).
-2025-11-21 15:09:44 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:09:44 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
-2025-11-21 15:09:44 [main            ] INFO  RaffleTest             - awardId: 102
-2025-11-21 15:10:25 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 463 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:10:25 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.171 seconds (JVM running for 2.714)
-2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:27 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:10:27 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
-2025-11-21 15:10:27 [main            ] INFO  RaffleTest             - awardId: 102
-2025-11-21 15:10:38 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 474 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:10:38 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:10:40 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.303 seconds (JVM running for 3.038)
-2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:41 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:10:51 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:11:28 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=103
-2025-11-21 15:11:28 [main            ] INFO  RaffleTest             - awardId: 103
-2025-11-21 15:11:31 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 507 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:11:31 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:11:33 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.472 seconds (JVM running for 3.3)
-2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:34 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:11:34 [main            ] INFO  RuleWeightChain        - 【抽奖责任链 - rule_weight】接管：匹配积分=4000
-2025-11-21 15:11:34 [main            ] INFO  RaffleTest             - awardId: 104
-2025-11-21 15:11:50 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 527 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-21 15:11:50 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
-2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.056 seconds (JVM running for 2.59)
-2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - success: true
-2025-11-21 15:11:52 [main            ] INFO  RuleBlacklistChain     - 【抽奖责任链 - rule_blacklist】放行
-2025-11-21 15:11:52 [main            ] INFO  RuleWeightChain        - 【抽奖责任链 - rule_weight】接管：匹配积分=5000
-2025-11-21 15:11:52 [main            ] INFO  RaffleTest             - awardId: 103
+2025-11-22 13:23:16 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 10172 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-22 13:23:16 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
+2025-11-22 13:23:18 [main            ] INFO  TreeTest               - Started TreeTest in 2.236 seconds (JVM running for 2.803)
+2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=PERMIT, awardId=null, ruleModel=null)
+2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=null, ruleModel=null)
+2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-22 13:23:18 [main            ] INFO  TreeTest               - 测试结果：RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-22 13:24:27 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 10217 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-22 13:24:27 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
+2025-11-22 13:24:28 [main            ] INFO  TreeTest               - Started TreeTest in 1.999 seconds (JVM running for 2.555)
+2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_lock，RuleResult = RuleTreeResultVO(ruleResultType=PERMIT, awardId=null, ruleModel=null)
+2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_stock，RuleResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=null, ruleModel=null)
+2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_luck，RuleResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-22 13:24:28 [main            ] INFO  TreeTest               - 测试结果：RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-22 13:58:41 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 11736 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-22 13:58:41 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
+2025-11-22 13:58:43 [main            ] INFO  TreeTest               - Started TreeTest in 2.098 seconds (JVM running for 2.686)
+2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_lock，RuleResult = TreeResult(ruleCheckResult=PERMIT, awardId=null, ruleModel=null)
+2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_stock，RuleResult = TreeResult(ruleCheckResult=CAPTURE, awardId=null, ruleModel=null)
+2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_luck，RuleResult = TreeResult(ruleCheckResult=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-22 13:58:43 [main            ] INFO  TreeTest               - 测试结果：TreeResult(ruleCheckResult=CAPTURE, awardId=101, ruleModel=1,100)

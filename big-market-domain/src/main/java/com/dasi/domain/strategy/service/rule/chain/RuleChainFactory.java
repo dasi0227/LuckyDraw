@@ -32,6 +32,7 @@ public class RuleChainFactory {
         });
     }
 
+    // 根据 strategyId，构造责任链，并返回第一个 RuleChain
     public IRuleChain getFirstRuleChain(Long strategyId) {
         // 当前策略包含的所有前置规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);

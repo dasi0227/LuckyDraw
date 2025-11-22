@@ -1,8 +1,8 @@
 package com.dasi.domain.strategy.service.rule.filter.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.io.FilterRequest;
-import com.dasi.domain.strategy.model.io.FilterResponse;
+import com.dasi.domain.strategy.model.dto.FilterRequest;
+import com.dasi.domain.strategy.model.dto.FilterResponse;
 import com.dasi.domain.strategy.model.enumeration.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.filter.IRuleFilter;
