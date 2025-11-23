@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.model.tree;
 
-import com.dasi.domain.strategy.model.enumeration.RuleCheckResult;
-import com.dasi.domain.strategy.model.enumeration.RuleCheckType;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.check.RuleCheckType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeEdge {
+public class RuleEdgeVO {
 
     /** 规则树 ID */
-    private Integer treeId;
+    private String treeId;
 
     /** 规则连线头 */
     private String ruleNodeFrom;

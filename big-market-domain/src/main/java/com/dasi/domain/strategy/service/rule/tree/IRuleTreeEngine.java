@@ -1,9 +1,9 @@
 package com.dasi.domain.strategy.service.rule.tree;
 
-import com.dasi.domain.strategy.model.tree.TreeResult;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
 
 public interface IRuleTreeEngine {
 
-    TreeResult process(String userId, Long strategyId, Integer awardId);
+    RuleCheckResponse process(String userId, Long strategyId, Integer awardId);
 
 }

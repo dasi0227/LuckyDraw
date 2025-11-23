@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleResponseDTO {
-
-    /** 策略 ID */
-    private Long strategyId;
+public class RaffleResponse {
 
     /** 奖品 ID */
     private Integer awardId;
@@ -22,7 +19,7 @@ public class RaffleResponseDTO {
     /** 奖品类型 */
     private String awardKey;
 
-    /** 奖品熟悉 */
+    /** 奖品信息 */
     private String awardConfig;
 
     /** 奖品描述 */
@@ -30,9 +27,8 @@ public class RaffleResponseDTO {
 
 
     // ---------------------- 静态方法 ----------------------
-    public static RaffleResponseDTO buildAward(Long strategyId, AwardEntity awardEntity) {
-        return RaffleResponseDTO.builder()
-                .strategyId(strategyId)
+    public static RaffleResponse buildAward(AwardEntity awardEntity) {
+        return RaffleResponse.builder()
                 .awardId(awardEntity.getAwardId())
                 .awardKey(awardEntity.getAwardKey())
                 .awardConfig(awardEntity.getAwardConfig())

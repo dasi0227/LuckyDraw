@@ -1,22 +1,23 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.enumeration.RuleCheckResult;
-import com.dasi.domain.strategy.model.enumeration.RuleModel;
-import com.dasi.domain.strategy.model.tree.TreeResult;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.check.RuleCheckModel;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleModel.RULE_LOCK)
+@RuleConfig(ruleModel = RuleCheckModel.RULE_LOCK)
 public class RuleLockTree implements IRuleTree {
 
     @Override
-    public TreeResult logic(String userId, Long strategyId, Integer awardId) {
-        return TreeResult.builder()
+    public RuleCheckResponse logic(String userId, Long strategyId, Integer awardId) {
+        return RuleCheckResponse.builder()
                 .ruleCheckResult(RuleCheckResult.PERMIT)
+                .ruleCheckModel(RuleCheckModel.RULE_LOCK)
                 .build();
     }
 

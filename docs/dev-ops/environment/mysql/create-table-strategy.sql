@@ -1,5 +1,3 @@
-
-
 DROP DATABASE IF EXISTS `big_market`;
 
 CREATE DATABASE IF NOT EXISTS `big_market`
@@ -109,3 +107,50 @@ VALUES
     (7, 107, 'openai_model', 'dall-e-3', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:10'),
     (8, 108, 'openai_use_conut', '100', 'OpenAI增加使用次数', '2023-12-09 11:07:06', '2023-12-09 11:12:55'),
     (9, 109, 'openai_model', 'gpt-4,dall-e-2,dall-e-3', 'OpenAI增加模型', '2023-12-09 11:07:06', '2023-12-09 11:12:39');
+
+DROP TABLE rule_tree;
+CREATE TABLE rule_tree (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '自增主键',
+    tree_id         INT NOT NULL UNIQUE COMMENT '规则树业务ID',
+    tree_name       VARCHAR(128) COMMENT '规则树名称',
+    tree_desc       VARCHAR(255) COMMENT '规则树描述',
+    tree_root       VARCHAR(64) NOT NULL COMMENT '规则树根节点的规则模型',
+    create_time     DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time     DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+);
+
+DROP TABLE rule_node;
+CREATE TABLE rule_node (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '自增主键',
+    tree_id     INT NOT NULL COMMENT '规则树ID',
+    rule_model  VARCHAR(64) NOT NULL COMMENT '规则模型',
+    rule_desc   VARCHAR(255) COMMENT '规则描述',
+    rule_value  VARCHAR(255) COMMENT '规则值',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+);
+
+DROP TABLE rule_edge;
+CREATE TABLE rule_edge (
+    id                BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '自增主键',
+    tree_id           INT NOT NULL COMMENT '规则树ID',
+    rule_node_from    VARCHAR(64) NOT NULL COMMENT '规则边起点',
+    rule_node_to      VARCHAR(64) NOT NULL COMMENT '规则边终点',
+    rule_check_type   VARCHAR(32) NOT NULL COMMENT '规则检查类型',
+    rule_check_result VARCHAR(32) NOT NULL COMMENT '规则检查结果',
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+);
+
+INSERT INTO rule_tree (tree_id, tree_name, tree_desc, tree_root) VALUES
+(1001, '规则树', '规则树', 'rule_lock');
+
+INSERT INTO rule_node (tree_id, rule_model, rule_desc, rule_value) VALUES
+(1001, 'rule_lock', '限定用户已完成N次抽奖后解锁', '1'),
+(1001, 'rule_luck', '兜底奖品随机积分', '1,100'),
+(1001, 'rule_stock', '库存扣减规则', NULL);
+
+INSERT INTO rule_edge (tree_id, rule_node_from, rule_node_to, rule_check_type, rule_check_result) VALUES
+(1001, 'rule_lock', 'rule_stock', 'EQUAL', 'PERMIT'),
+(1001, 'rule_lock', 'rule_luck', 'EQUAL', 'CAPTURE'),
+(1001, 'rule_stock', 'rule_luck', 'EQUAL', 'CAPTURE');

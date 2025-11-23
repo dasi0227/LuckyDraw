@@ -11,21 +11,15 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeRoot {
+public class RuleTreeVO {
 
     /** 规则树 ID */
-    private Integer id;
-
-    /** 规则树名称 */
-    private String treeName;
-
-    /** 规则树描述 */
-    private String treeDesc;
+    private String treeId;
 
     /** 规则树根 */
     private String treeRoot;
 
     /** 规则节点 */
-    private Map<String, TreeNode> treeNodeMap;
+    private Map<String, RuleNodeVO> treeNodeMap;
 
 }

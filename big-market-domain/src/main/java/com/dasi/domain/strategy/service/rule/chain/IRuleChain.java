@@ -1,10 +1,12 @@
 package com.dasi.domain.strategy.service.rule.chain;
 
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
 
 // 过滤器的执行责任链
 public interface IRuleChain {
 
-    Integer logic(String userId, Long strategyId);
+    // 执行当前责任链节点
+    RuleCheckResponse logic(String userId, Long strategyId);
 
     // 获取链的下一个节点
     IRuleChain next();

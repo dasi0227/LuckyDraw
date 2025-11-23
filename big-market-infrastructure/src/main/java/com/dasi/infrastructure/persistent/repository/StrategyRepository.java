@@ -4,15 +4,14 @@ import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.check.RuleCheckType;
+import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
+import com.dasi.domain.strategy.model.tree.RuleNodeVO;
+import com.dasi.domain.strategy.model.tree.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.infrastructure.persistent.dao.IAwardDao;
-import com.dasi.infrastructure.persistent.dao.IStrategyAwardDao;
-import com.dasi.infrastructure.persistent.dao.IStrategyDao;
-import com.dasi.infrastructure.persistent.dao.IStrategyRuleDao;
-import com.dasi.infrastructure.persistent.po.Award;
-import com.dasi.infrastructure.persistent.po.Strategy;
-import com.dasi.infrastructure.persistent.po.StrategyAward;
-import com.dasi.infrastructure.persistent.po.StrategyRule;
+import com.dasi.infrastructure.persistent.dao.*;
+import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,10 +41,19 @@ public class StrategyRepository implements IStrategyRepository {
     private IAwardDao awardDao;
 
     @Resource
+    private IRuleTreeDao ruleTreeDao;
+
+    @Resource
+    private IRuleEdgeDao ruleEdgeDao;
+
+    @Resource
+    private IRuleNodeDao ruleNodeDao;
+
+    @Resource
     private IRedisService redisService;
 
     @Override
-    public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
+    public List<StrategyAwardEntity> queryStrategyAwardListByStrategyId(Long strategyId) {
 
         // 先看缓存是否有【策略奖品】列表
         String key = Constants.RedisKey.STRATEGY_AWARD_KEY + strategyId;
@@ -116,7 +125,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public StrategyRuleEntity queryStrategyRuleByRuleModel(Long strategyId, String ruleModel) {
+    public StrategyRuleEntity queryStrategyRuleByStrategyIDAndRuleModel(Long strategyId, String ruleModel) {
         StrategyRule strategyRuleRequest = new StrategyRule();
         strategyRuleRequest.setStrategyId(strategyId);
         strategyRuleRequest.setRuleModel(ruleModel);
@@ -154,6 +163,65 @@ public class StrategyRepository implements IStrategyRepository {
                 .awardConfig(award.getAwardConfig())
                 .awardDesc(award.getAwardDesc())
                 .build();
+    }
+
+    @Override
+    public RuleTreeVO queryRuleTreeVOByTreeId(String treeId) {
+        // 1. 查缓存
+        String cacheKey = Constants.RedisKey.RULE_TREE_VO_KEY + treeId;
+        RuleTreeVO ruleTreeVOCache = redisService.getValue(cacheKey);
+        if (null != ruleTreeVOCache) return ruleTreeVOCache;
+
+        // 2. 建立 RuleNodeVO 到 RuleEdgeVO 列表的映射
+        List<RuleEdge> ruleEdgeList = ruleEdgeDao.queryRuleEdgeListByTreeId(treeId);
+        Map<String, List<RuleEdgeVO>> ruleNode2EdgeMap = new HashMap<>();
+        for (RuleEdge ruleEdge : ruleEdgeList) {
+            RuleEdgeVO ruleEdgeVO = RuleEdgeVO.builder()
+                    .treeId(ruleEdge.getTreeId())
+                    .ruleNodeFrom(ruleEdge.getRuleNodeFrom())
+                    .ruleNodeTo(ruleEdge.getRuleNodeTo())
+                    .ruleCheckType(RuleCheckType.valueOf(ruleEdge.getRuleCheckType()))
+                    .ruleCheckResult(RuleCheckResult.valueOf(ruleEdge.getRuleCheckResult()))
+                    .build();
+
+            List<RuleEdgeVO> ruleEdgeVOList = ruleNode2EdgeMap.computeIfAbsent(ruleEdgeVO.getRuleNodeFrom(), k -> new ArrayList<>());
+            ruleEdgeVOList.add(ruleEdgeVO);
+        }
+
+        // 3. 建立 RuleTreeVO 到 RuleNodeVO 列表的映射
+        List<RuleNode> ruleNodeList = ruleNodeDao.queryRuleNodeListByTreeId(treeId);
+        Map<String, RuleNodeVO> ruleTree2NodeMap = new HashMap<>();
+        for (RuleNode ruleNode : ruleNodeList) {
+            RuleNodeVO ruleNodeVO = RuleNodeVO.builder()
+                    .treeId(ruleNode.getTreeId())
+                    .ruleModel(ruleNode.getRuleModel())
+                    .ruleValue(ruleNode.getRuleValue())
+                    .ruleEdgeList(ruleNode2EdgeMap.get(ruleNode.getRuleModel()))
+                    .build();
+            ruleTree2NodeMap.put(ruleNode.getRuleModel(), ruleNodeVO);
+        }
+
+        // 4. 构造 RuleTreeVO
+        RuleTree ruleTree = ruleTreeDao.queryRuleTreeByTreeId(treeId);
+        RuleTreeVO ruleTreeVO = RuleTreeVO.builder()
+                .treeId(ruleTree.getTreeId())
+                .treeRoot(ruleTree.getTreeRoot())
+                .treeNodeMap(ruleTree2NodeMap)
+                .build();
+
+        // 5. 放入缓存
+        redisService.setValue(cacheKey, ruleTreeVO);
+
+        return ruleTreeVO;
+    }
+
+    @Override
+    public String[] queryStrategyRuleModelByStrategyIdAndAwardId(Long strategyId, Integer awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        String ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
+        return ruleModels.split(Constants.COMMA);
     }
 
 }
