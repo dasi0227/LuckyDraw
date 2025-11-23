@@ -1,6 +1,6 @@
-package com.dasi.domain.strategy.service.armory;
+package com.dasi.domain.strategy.service.lottery;
 
-public interface IStrategyLottery {
+public interface ILottery {
 
     Integer doLottery(Long strategyId);
 

@@ -1,9 +1,11 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.enumeration.RuleModel;
+import com.dasi.domain.strategy.model.check.RuleCheckModel;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.armory.IStrategyLottery;
+import com.dasi.domain.strategy.service.lottery.ILottery;
 import com.dasi.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,21 +16,21 @@ import java.util.*;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleModel.RULE_WEIGHT)
+@RuleConfig(ruleModel = RuleCheckModel.RULE_WEIGHT)
 public class RuleWeightChain extends AbstractRuleChain {
 
     @Resource
     private IStrategyRepository strategyRepository;
 
     @Resource
-    private IStrategyLottery strategyLottery;
+    private ILottery lottery;
 
     public Long userScore = 0L;
 
     @Override
-    public Integer logic(String userId, Long strategyId) {
+    public RuleCheckResponse logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, myRuleModel());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleCheckModel.RULE_WEIGHT.getName());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
@@ -57,18 +59,18 @@ public class RuleWeightChain extends AbstractRuleChain {
 
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
-            log.info("【抽奖责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
-            return strategyLottery.doLottery(strategyId, String.valueOf(matchedThreshold));
+            log.info("【责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
+            Integer awardId = lottery.doLottery(strategyId, String.valueOf(matchedThreshold));
+            return RuleCheckResponse.builder()
+                    .awardId(awardId)
+                    .ruleCheckModel(RuleCheckModel.RULE_WEIGHT)
+                    .ruleCheckResult(RuleCheckResult.CAPTURE)
+                    .build();
         }
 
         // 6. 放行走下一条规则
-        log.info("【抽奖责任链 - rule_weight】放行");
+        log.info("【责任链 - rule_weight】放行");
         return next().logic(userId, strategyId);
-    }
-
-    @Override
-    protected String myRuleModel() {
-        return RuleModel.RULE_WEIGHT.getName();
     }
 
 }

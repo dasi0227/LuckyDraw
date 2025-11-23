@@ -1,7 +1,9 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.enumeration.RuleModel;
+import com.dasi.domain.strategy.model.check.RuleCheckModel;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -13,16 +15,16 @@ import java.util.Arrays;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleModel.RULE_BLACKLIST)
+@RuleConfig(ruleModel = RuleCheckModel.RULE_BLACKLIST)
 public class RuleBlacklistChain extends AbstractRuleChain {
 
     @Resource
     private IStrategyRepository strategyRepository;
 
     @Override
-    public Integer logic(String userId, Long strategyId) {
+    public RuleCheckResponse logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, myRuleModel());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleCheckModel.RULE_BLACKLIST.getName());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
@@ -34,18 +36,17 @@ public class RuleBlacklistChain extends AbstractRuleChain {
 
         // 3. 判断是否位于黑名单之中
         if (Arrays.asList(blackIds).contains(userId)) {
-            log.info("【抽奖责任链 - rule_weight】接管：黑名单用户={}", userId);
-            return awardId;
+            log.info("【责任链 - rule_weight】接管：黑名单用户={}", userId);
+            return RuleCheckResponse.builder()
+                    .awardId(awardId)
+                    .ruleCheckModel(RuleCheckModel.RULE_BLACKLIST)
+                    .ruleCheckResult(RuleCheckResult.CAPTURE)
+                    .build();
         }
 
         // 4. 放行走下一条规则
-        log.info("【抽奖责任链 - rule_blacklist】放行");
+        log.info("【责任链 - rule_blacklist】放行");
         return next().logic(userId, strategyId);
-    }
-
-    @Override
-    protected String myRuleModel() {
-        return RuleModel.RULE_BLACKLIST.getName();
     }
 
 }

@@ -18,5 +18,4 @@ public abstract class AbstractRuleChain implements IRuleChain {
         return next;
     }
 
-    protected abstract String myRuleModel();
 }

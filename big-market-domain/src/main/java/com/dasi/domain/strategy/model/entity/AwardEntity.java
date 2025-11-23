@@ -17,7 +17,7 @@ public class AwardEntity {
     /** 奖品类型 */
     private String awardKey;
 
-    /** 奖品熟悉 */
+    /** 奖品信息 */
     private String awardConfig;
 
     /** 奖品描述 */

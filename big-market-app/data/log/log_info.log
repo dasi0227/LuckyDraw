@@ -1,21 +1,239 @@
-2025-11-22 13:23:16 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 10172 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-22 13:23:16 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
-2025-11-22 13:23:18 [main            ] INFO  TreeTest               - Started TreeTest in 2.236 seconds (JVM running for 2.803)
-2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=PERMIT, awardId=null, ruleModel=null)
-2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=null, ruleModel=null)
-2025-11-22 13:23:18 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：treeResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
-2025-11-22 13:23:18 [main            ] INFO  TreeTest               - 测试结果：RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
-2025-11-22 13:24:27 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 10217 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-22 13:24:27 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
-2025-11-22 13:24:28 [main            ] INFO  TreeTest               - Started TreeTest in 1.999 seconds (JVM running for 2.555)
-2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_lock，RuleResult = RuleTreeResultVO(ruleResultType=PERMIT, awardId=null, ruleModel=null)
-2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_stock，RuleResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=null, ruleModel=null)
-2025-11-22 13:24:28 [main            ] INFO  DecisionTreeEngine     - 【决策树引擎】：RuleModel = rule_luck，RuleResult = RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
-2025-11-22 13:24:28 [main            ] INFO  TreeTest               - 测试结果：RuleTreeResultVO(ruleResultType=CAPTURE, awardId=101, ruleModel=1,100)
-2025-11-22 13:58:41 [main            ] INFO  TreeTest               - Starting TreeTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 11736 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
-2025-11-22 13:58:41 [main            ] INFO  TreeTest               - The following 1 profile is active: "dev"
-2025-11-22 13:58:43 [main            ] INFO  TreeTest               - Started TreeTest in 2.098 seconds (JVM running for 2.686)
-2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_lock，RuleResult = TreeResult(ruleCheckResult=PERMIT, awardId=null, ruleModel=null)
-2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_stock，RuleResult = TreeResult(ruleCheckResult=CAPTURE, awardId=null, ruleModel=null)
-2025-11-22 13:58:43 [main            ] INFO  RuleTreeEngine         - 【决策树引擎】：RuleModel = rule_luck，RuleResult = TreeResult(ruleCheckResult=CAPTURE, awardId=101, ruleModel=1,100)
-2025-11-22 13:58:43 [main            ] INFO  TreeTest               - 测试结果：TreeResult(ruleCheckResult=CAPTURE, awardId=101, ruleModel=1,100)
+2025-11-23 13:57:52 [main            ] INFO  TreeDaoTest            - Starting TreeDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 16616 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 13:57:52 [main            ] INFO  TreeDaoTest            - The following 1 profile is active: "dev"
+2025-11-23 13:57:53 [main            ] INFO  TreeDaoTest            - Started TreeDaoTest in 2.044 seconds (JVM running for 2.608)
+2025-11-23 13:57:54 [main            ] INFO  TreeDaoTest            - 【rule_edge 列表】size=3 data=[RuleEdge(id=null, treeId=1001, ruleNodeFrom=rule_lock, ruleNodeTo=rule_stock, ruleCheckType=EQUAL, ruleCheckResult=PERMIT, createTime=null, updateTime=null), RuleEdge(id=null, treeId=1001, ruleNodeFrom=rule_lock, ruleNodeTo=rule_luck, ruleCheckType=EQUAL, ruleCheckResult=CAPTURE, createTime=null, updateTime=null), RuleEdge(id=null, treeId=1001, ruleNodeFrom=rule_stock, ruleNodeTo=rule_luck, ruleCheckType=EQUAL, ruleCheckResult=CAPTURE, createTime=null, updateTime=null)]
+2025-11-23 13:57:54 [main            ] INFO  TreeDaoTest            - 【rule_node 列表】size=3 data=[RuleNode(id=null, treeId=1001, ruleModel=rule_lock, ruleDesc=null, ruleValue=1, createTime=null, updateTime=null), RuleNode(id=null, treeId=1001, ruleModel=rule_luck, ruleDesc=null, ruleValue=1,100, createTime=null, updateTime=null), RuleNode(id=null, treeId=1001, ruleModel=rule_stock, ruleDesc=null, ruleValue=null, createTime=null, updateTime=null)]
+2025-11-23 13:57:54 [main            ] INFO  TreeDaoTest            - 【rule_tree 信息】data=RuleTree(id=null, treeId=1001, treeName=null, treeDesc=null, treeRoot=rule_lock, createTime=null, updateTime=null)
+2025-11-23 15:04:41 [main            ] INFO  TreeDaoTest            - Starting TreeDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 18644 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 15:04:41 [main            ] INFO  TreeDaoTest            - The following 1 profile is active: "dev"
+2025-11-23 15:04:43 [main            ] INFO  TreeDaoTest            - Started TreeDaoTest in 2.408 seconds (JVM running for 2.986)
+2025-11-23 15:04:44 [main            ] INFO  TreeDaoTest            - ruleTreeVO = RuleTreeVO(treeId=1001, treeRoot=rule_lock, treeNodeMap={rule_lock=RuleNodeVO(treeId=1001, ruleModel=rule_lock, ruleValue=1, ruleEdgeList=[RuleEdgeVO(treeId=1001, ruleNodeFrom=rule_lock, ruleNodeTo=rule_stock, ruleCheckType=EQUAL, ruleCheckResult=PERMIT), RuleEdgeVO(treeId=1001, ruleNodeFrom=rule_lock, ruleNodeTo=rule_luck, ruleCheckType=EQUAL, ruleCheckResult=CAPTURE)]), rule_stock=RuleNodeVO(treeId=1001, ruleModel=rule_stock, ruleValue=null, ruleEdgeList=[RuleEdgeVO(treeId=1001, ruleNodeFrom=rule_stock, ruleNodeTo=rule_luck, ruleCheckType=EQUAL, ruleCheckResult=CAPTURE)]), rule_luck=RuleNodeVO(treeId=1001, ruleModel=rule_luck, ruleValue=1,100, ruleEdgeList=null)})
+2025-11-23 16:33:17 [main            ] INFO  TreeDaoTest            - Starting TreeDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 21636 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 16:33:17 [main            ] INFO  TreeDaoTest            - The following 1 profile is active: "dev"
+2025-11-23 16:33:19 [main            ] INFO  TreeDaoTest            - Started TreeDaoTest in 2.153 seconds (JVM running for 2.739)
+2025-11-23 16:37:47 [main            ] INFO  TreeDaoTest            - Starting TreeDaoTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 21745 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 16:37:47 [main            ] INFO  TreeDaoTest            - The following 1 profile is active: "dev"
+2025-11-23 16:37:49 [main            ] INFO  TreeDaoTest            - Started TreeDaoTest in 2.136 seconds (JVM running for 2.719)
+2025-11-23 16:37:50 [main            ] INFO  TreeDaoTest            - ruleTreeVO = RuleTreeVO(treeId=tree_lock, treeRoot=rule_lock, treeNodeMap={rule_lock=RuleNodeVO(treeId=tree_lock, ruleModel=rule_lock, ruleValue=1, ruleEdgeList=[RuleEdgeVO(treeId=tree_lock, ruleNodeFrom=rule_lock, ruleNodeTo=rule_stock, ruleCheckType=EQUAL, ruleCheckResult=PERMIT), RuleEdgeVO(treeId=tree_lock, ruleNodeFrom=rule_lock, ruleNodeTo=rule_luck, ruleCheckType=EQUAL, ruleCheckResult=CAPTURE)]), rule_stock=RuleNodeVO(treeId=tree_lock, ruleModel=rule_stock, ruleValue=null, ruleEdgeList=null), rule_luck=RuleNodeVO(treeId=tree_lock, ruleModel=rule_luck, ruleValue=1,100, ruleEdgeList=null)})
+2025-11-23 17:09:39 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 22873 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:09:39 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:09:41 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.284 seconds (JVM running for 2.854)
+2025-11-23 17:09:42 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:09:42 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:09:42 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-23 17:09:42 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:09:42 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=null, ruleCheckModel=null, ruleCheckResult=null)
+2025-11-23 17:11:59 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 22938 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:11:59 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:12:02 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.492 seconds (JVM running for 3.153)
+2025-11-23 17:12:02 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:12:02 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:12:02 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-23 17:12:02 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:12:02 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=null, ruleCheckModel=null, ruleCheckResult=null)
+2025-11-23 17:13:24 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 22995 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:13:24 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:13:26 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.265 seconds (JVM running for 2.998)
+2025-11-23 17:13:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:13:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:13:26 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-23 17:13:26 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:13:27 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=null, ruleCheckModel=null, ruleCheckResult=null)
+2025-11-23 17:13:43 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 23018 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:13:43 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:13:45 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.133 seconds (JVM running for 2.69)
+2025-11-23 17:13:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:13:46 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:13:46 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-23 17:13:46 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:13:46 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=null, ruleCheckResult=null)
+2025-11-23 17:13:46 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=102, awardKey=openai_use_count, awardConfig=5, awardDesc=OpenAI增加使用次数)
+2025-11-23 17:32:51 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 23832 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:32:51 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:32:53 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.107 seconds (JVM running for 2.761)
+2025-11-23 17:32:53 [redisson-netty-2-2] ERROR CommandDecoder         - Unable to decode data. channel: [id: 0xf6aa952d, L:/127.0.0.1:56023 - R:127.0.0.1/127.0.0.1:6379], reply: ReplayingDecoderByteBuf(ridx=1923, widx=1923), command: (GET), promise: java.util.concurrent.CompletableFuture@65b4391[Not completed, 1 dependents], params: [big_market_strategy_award_key_100001]
+com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve type id 'com.dasi.domain.strategy.model.raffle.StrategyAwardEntity' as a subtype of `java.lang.Object`: no such class found
+ at [Source: (io.netty.buffer.ByteBufInputStream); line: 1, column: 35] (through reference chain: java.util.ArrayList[0])
+	at com.fasterxml.jackson.databind.exc.InvalidTypeIdException.from(InvalidTypeIdException.java:43)
+	at com.fasterxml.jackson.databind.DeserializationContext.invalidTypeIdException(DeserializationContext.java:2073)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleUnknownTypeId(DeserializationContext.java:1564)
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver._typeFromId(ClassNameIdResolver.java:76)
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver.typeFromId(ClassNameIdResolver.java:66)
+	at com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase._findDeserializer(TypeDeserializerBase.java:159)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedForId(AsPropertyTypeDeserializer.java:125)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:110)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:213)
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla.deserializeWithType(UntypedObjectDeserializer.java:781)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:357)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:244)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:28)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsArrayTypeDeserializer._deserialize(AsArrayTypeDeserializer.java:120)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsArrayTypeDeserializer.deserializeTypedFromArray(AsArrayTypeDeserializer.java:53)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:211)
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla.deserializeWithType(UntypedObjectDeserializer.java:781)
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4674)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3666)
+	at org.redisson.codec.JsonJacksonCodec$2.decode(JsonJacksonCodec.java:99)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:394)
+	at org.redisson.client.handler.CommandDecoder.decodeCommand(CommandDecoder.java:205)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:144)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:120)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:529)
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:366)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+2025-11-23 17:32:53 [redisson-netty-2-2] ERROR ErrorsLoggingHandler   - Exception occured. Channel: [id: 0xf6aa952d, L:/127.0.0.1:56023 - R:127.0.0.1/127.0.0.1:6379]
+io.netty.handler.codec.DecoderException: com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve type id 'com.dasi.domain.strategy.model.raffle.StrategyAwardEntity' as a subtype of `java.lang.Object`: no such class found
+ at [Source: (io.netty.buffer.ByteBufInputStream); line: 1, column: 35] (through reference chain: java.util.ArrayList[0])
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:421)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve type id 'com.dasi.domain.strategy.model.raffle.StrategyAwardEntity' as a subtype of `java.lang.Object`: no such class found
+ at [Source: (io.netty.buffer.ByteBufInputStream); line: 1, column: 35] (through reference chain: java.util.ArrayList[0])
+	at com.fasterxml.jackson.databind.exc.InvalidTypeIdException.from(InvalidTypeIdException.java:43)
+	at com.fasterxml.jackson.databind.DeserializationContext.invalidTypeIdException(DeserializationContext.java:2073)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleUnknownTypeId(DeserializationContext.java:1564)
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver._typeFromId(ClassNameIdResolver.java:76)
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver.typeFromId(ClassNameIdResolver.java:66)
+	at com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase._findDeserializer(TypeDeserializerBase.java:159)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedForId(AsPropertyTypeDeserializer.java:125)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:110)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:213)
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla.deserializeWithType(UntypedObjectDeserializer.java:781)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:357)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:244)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:28)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsArrayTypeDeserializer._deserialize(AsArrayTypeDeserializer.java:120)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsArrayTypeDeserializer.deserializeTypedFromArray(AsArrayTypeDeserializer.java:53)
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:211)
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla.deserializeWithType(UntypedObjectDeserializer.java:781)
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4674)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3666)
+	at org.redisson.codec.JsonJacksonCodec$2.decode(JsonJacksonCodec.java:99)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:394)
+	at org.redisson.client.handler.CommandDecoder.decodeCommand(CommandDecoder.java:205)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:144)
+	at org.redisson.client.handler.CommandDecoder.decode(CommandDecoder.java:120)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:529)
+	at io.netty.handler.codec.ReplayingDecoder.callDecode(ReplayingDecoder.java:366)
+	... 17 common frames omitted
+2025-11-23 17:33:26 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 23856 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:33:26 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:33:28 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.097 seconds (JVM running for 2.673)
+2025-11-23 17:33:29 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:33:29 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:33:29 [main            ] INFO  RuleDefaultChain       - 【抽奖责任链 - rule_default】接管：awardId=102
+2025-11-23 17:33:29 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:33:29 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:33:29 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:33:29 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:33:29 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:33:29 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=102, awardKey=openai_use_count, awardConfig=5, awardDesc=OpenAI增加使用次数)
+2025-11-23 17:39:00 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 24024 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:39:00 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:39:02 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.238 seconds (JVM running for 2.785)
+2025-11-23 17:39:03 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:39:03 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:39:03 [main            ] INFO  RuleDefaultChain       - 【责任链 - rule_default】接管：awardId=102
+2025-11-23 17:39:03 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:39:03 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:39:03 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:39:03 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:39:03 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:39:03 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=102, awardKey=openai_use_count, awardConfig=5, awardDesc=OpenAI增加使用次数)
+2025-11-23 17:40:23 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 24080 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:40:23 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:40:25 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.237 seconds (JVM running for 2.788)
+2025-11-23 17:40:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:40:26 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:40:26 [main            ] INFO  RuleDefaultChain       - 【责任链 - rule_default】接管：awardId=102
+2025-11-23 17:40:26 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:40:26 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:40:26 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:40:26 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:40:26 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:40:26 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=101, awardKey=user_credit_random, awardConfig=1100, awardDesc=用户积分【优先透彻规则范围，如果没有则走配置】)
+2025-11-23 17:41:45 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 24130 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:41:45 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:41:47 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.183 seconds (JVM running for 2.787)
+2025-11-23 17:41:47 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:41:47 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:41:47 [main            ] INFO  RuleDefaultChain       - 【责任链 - rule_default】接管：awardId=102
+2025-11-23 17:41:47 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:41:47 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:41:47 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:41:47 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:41:47 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:41:47 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=101, awardKey=user_credit_random, awardConfig=1,100, awardDesc=用户积分【优先透彻规则范围，如果没有则走配置】)
+2025-11-23 17:46:26 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 24345 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:46:26 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:46:27 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.128 seconds (JVM running for 2.654)
+2025-11-23 17:46:28 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:46:28 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:46:28 [main            ] INFO  RuleDefaultChain       - 【责任链 - rule_default】接管：awardId=102
+2025-11-23 17:46:28 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:46:28 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:46:28 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:46:28 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:46:28 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:46:28 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=101, awardKey=user_credit_random, awardConfig=1,100, awardDesc=用户积分【优先透彻规则范围，如果没有则走配置】)
+2025-11-23 17:56:37 [main            ] INFO  RaffleTest             - Starting RaffleTest using Java 1.8.0_472 on wyws-MacBook-Air.local with PID 25395 (started by wyw in /Users/wyw/Desktop/BackEnd/BigMarket/big-market/big-market-app)
+2025-11-23 17:56:37 [main            ] INFO  RaffleTest             - The following 1 profile is active: "dev"
+2025-11-23 17:56:39 [main            ] INFO  RaffleTest             - Started RaffleTest in 2.313 seconds (JVM running for 2.907)
+2025-11-23 17:56:40 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:56:40 [main            ] INFO  RaffleTest             - success: true
+2025-11-23 17:56:40 [main            ] INFO  RuleDefaultChain       - 【责任链 - rule_default】接管：awardId=102
+2025-11-23 17:56:40 [main            ] INFO  AbstractRaffle         - 责任链-前置检查结果：RuleCheckResponse(awardId=102, ruleCheckModel=RULE_DEFAULT, ruleCheckResult=PERMIT)
+2025-11-23 17:56:40 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_LOCK, ruleCheckResult=PERMIT)
+2025-11-23 17:56:40 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=null, ruleCheckModel=RULE_STOCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:56:40 [main            ] INFO  RuleTreeEngine         - 【决策树】：RuleCheckResponse = RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:56:40 [main            ] INFO  AbstractRaffle         - 决策树-后置检查结果：RuleCheckResponse(awardId=101, ruleCheckModel=RULE_LUCK, ruleCheckResult=CAPTURE)
+2025-11-23 17:56:40 [main            ] INFO  RaffleTest             - 
+RaffleRequest = RaffleRequest(userId=dasi, strategyId=100006, awardId=null)
+RaffleResponse = RaffleResponse(awardId=101, awardKey=user_credit_random, awardConfig=1,100, awardDesc=用户积分【优先透彻规则范围，如果没有则走配置】)

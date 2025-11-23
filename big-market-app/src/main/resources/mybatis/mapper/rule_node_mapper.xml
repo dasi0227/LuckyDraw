@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRuleNodeDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RuleNode">
+        <id     property="id"        column="id"/>
+        <result property="treeId"    column="tree_id"/>
+        <result property="ruleModel" column="rule_model"/>
+        <result property="ruleDesc"  column="rule_desc"/>
+        <result property="ruleValue" column="rule_value"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="queryRuleNodeListByTreeId" parameterType="java.lang.String" resultMap="dataMap">
+        select tree_id, rule_model, rule_value
+        from rule_node
+        where tree_id = #{treeId}
+    </select>
+
+</mapper>

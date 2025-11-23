@@ -1,11 +1,11 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 
-import com.dasi.domain.strategy.model.enumeration.RuleCheckResult;
-import com.dasi.domain.strategy.model.tree.TreeEdge;
-import com.dasi.domain.strategy.model.tree.TreeNode;
-import com.dasi.domain.strategy.model.tree.TreeResult;
-import com.dasi.domain.strategy.model.tree.TreeRoot;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
+import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
+import com.dasi.domain.strategy.model.tree.RuleNodeVO;
+import com.dasi.domain.strategy.model.tree.RuleTreeVO;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTreeEngine;
 import lombok.extern.slf4j.Slf4j;
@@ -18,52 +18,51 @@ public class RuleTreeEngine implements IRuleTreeEngine {
 
     private final Map<String, IRuleTree> ruleTreeMap;
 
-    private final TreeRoot treeRoot;
+    private final RuleTreeVO ruleTreeVO;
 
-    public RuleTreeEngine(Map<String, IRuleTree> ruleTreeMap, TreeRoot treeRoot) {
+    public RuleTreeEngine(Map<String, IRuleTree> ruleTreeMap, RuleTreeVO ruleTreeVO) {
         this.ruleTreeMap = ruleTreeMap;
-        this.treeRoot = treeRoot;
+        this.ruleTreeVO = ruleTreeVO;
     }
 
     @Override
-    public TreeResult process(String userId, Long strategyId, Integer awardId) {
+    public RuleCheckResponse process(String userId, Long strategyId, Integer awardId) {
 
         // 获取基础信息
-        String treeRoot = this.treeRoot.getTreeRoot();
-        Map<String, TreeNode> treeNodeMap = this.treeRoot.getTreeNodeMap();
+        String treeRoot = this.ruleTreeVO.getTreeRoot();
+        Map<String, RuleNodeVO> treeNodeMap = this.ruleTreeVO.getTreeNodeMap();
 
-        TreeResult treeResult = null;
-        TreeNode curTreeNode = treeNodeMap.get(treeRoot);
+        RuleCheckResponse ruleCheckResponse = null;
+        RuleNodeVO curTreeNode = treeNodeMap.get(treeRoot);
         while (curTreeNode != null) {
             IRuleTree ruleTree = ruleTreeMap.get(curTreeNode.getRuleModel());
-            treeResult = ruleTree.logic(userId, strategyId, awardId);
-            log.info("【决策树引擎】：RuleModel = {}，RuleResult = {}", curTreeNode.getRuleModel(), treeResult);
-            String nextTreeNode = next(treeResult.getRuleCheckResult(), curTreeNode.getTreeLineList());
+            ruleCheckResponse = ruleTree.logic(userId, strategyId, awardId);
+            log.info("【决策树】：RuleCheckResponse = {}", ruleCheckResponse);
+            String nextTreeNode = next(ruleCheckResponse.getRuleCheckResult(), curTreeNode.getRuleEdgeList());
             curTreeNode = treeNodeMap.get(nextTreeNode);
         }
 
-
-        return treeResult;
+        return ruleCheckResponse;
     }
 
-    private String next(RuleCheckResult value, List<TreeEdge> treeEdgeList) {
-        if (treeEdgeList == null || treeEdgeList.isEmpty()) {
+    private String next(RuleCheckResult value, List<RuleEdgeVO> ruleEdgeVOList) {
+        if (ruleEdgeVOList == null || ruleEdgeVOList.isEmpty()) {
             return null;
         }
 
-        for (TreeEdge treeEdge : treeEdgeList) {
-            if (decide(value, treeEdge)) {
-                return treeEdge.getRuleNodeTo();
+        for (RuleEdgeVO ruleEdgeVO : ruleEdgeVOList) {
+            if (decide(value, ruleEdgeVO)) {
+                return ruleEdgeVO.getRuleNodeTo();
             }
         }
 
         throw new RuntimeException("配置错误，未找到可执行节点");
     }
 
-    public boolean decide(RuleCheckResult value, TreeEdge treeEdge) {
-        switch (treeEdge.getRuleCheckType()) {
+    public boolean decide(RuleCheckResult value, RuleEdgeVO ruleEdgeVO) {
+        switch (ruleEdgeVO.getRuleCheckType()) {
             case EQUAL:
-                return value.equals(treeEdge.getRuleCheckResult());
+                return value.equals(ruleEdgeVO.getRuleCheckResult());
             case GT:
             case LT:
             case GE:

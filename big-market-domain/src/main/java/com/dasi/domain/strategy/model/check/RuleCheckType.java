@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.enumeration;
+package com.dasi.domain.strategy.model.check;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

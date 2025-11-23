@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleRequestDTO {
+public class RaffleRequest {
 
     /** 用户 ID */
     private String userId;

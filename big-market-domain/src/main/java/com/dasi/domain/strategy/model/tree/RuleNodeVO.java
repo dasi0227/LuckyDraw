@@ -1,21 +1,28 @@
 package com.dasi.domain.strategy.model.tree;
 
-import com.dasi.domain.strategy.model.enumeration.RuleCheckResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeResult {
+public class RuleNodeVO {
 
-    private RuleCheckResult ruleCheckResult;
+    /** 规则树 ID */
+    private String treeId;
 
-    private Integer awardId;
-
+    /** 规则模型 */
     private String ruleModel;
+
+    /** 规则值 */
+    private String ruleValue;
+
+    /** 规则连线 */
+    private List<RuleEdgeVO> ruleEdgeList;
 
 }

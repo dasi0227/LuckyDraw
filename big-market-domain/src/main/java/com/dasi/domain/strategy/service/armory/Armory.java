@@ -13,52 +13,43 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.security.SecureRandom;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 
 @Slf4j
 @Service
-public class StrategyArmoryLottery implements IStrategyArmory, IStrategyLottery {
+public class Armory implements IArmory {
 
     @Resource
-    private IStrategyRepository repository;
+    private IStrategyRepository strategyRepository;
 
     @Override
     public boolean assembleStrategy(Long strategyId) {
-        // ====================
-        // 查询策略配置
-        // ====================
         // 1. 查询当前策略的奖品列表
-        List<StrategyAwardEntity> strategyAwardEntities = repository.queryStrategyAwardList(strategyId);
+        List<StrategyAwardEntity> strategyAwardEntities = strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
+
         // 2. 直接将策略id作为key，然后装配奖品，此时没有任何规则应用，只有单纯的概率模型
-        assembleLotteryStrategy(String.valueOf(strategyId), strategyAwardEntities);
+        assembleStrategyAward(String.valueOf(strategyId), strategyAwardEntities);
 
-
-        // ====================
-        // 权重策略配置
-        // ====================
-        // 1. 查询当前策略
-        StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
+        // 3. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
+        StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
-        // 2. 查询策略中的权重策略规则
-        StrategyRuleEntity strategyRuleEntity = repository.queryStrategyRuleByRuleModel(strategyId, Constants.RuleModel.RULE_WEIGHT);
-        if (null == strategyRuleEntity) {
-            throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
-        }
-        // 3. 查询权重策略规则中的积分值和奖品列表
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, Constants.RULE_WEIGHT);
+        if (null == strategyRuleEntity) throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
+
+        // 4. 根据规则值分档装配
         Map<String, List<Integer>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
         for (Entry<String, List<Integer>> entry : ruleWeight.entrySet()) {
-            // 4. 去除不在奖品列表的奖品
-            ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
-            strategyAwardEntitiesClone.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
-            assembleLotteryStrategy(String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(entry.getKey()), strategyAwardEntitiesClone);
+            ArrayList<StrategyAwardEntity> strategyAwardEntitiesUnderWeight = new ArrayList<>(strategyAwardEntities);
+            strategyAwardEntitiesUnderWeight.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
+            String cacheKey = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(entry.getKey());
+            assembleStrategyAward(cacheKey, strategyAwardEntitiesUnderWeight);
         }
 
         return true;
     }
 
-    private void assembleLotteryStrategy(String key, List<StrategyAwardEntity> entities) {
+    private void assembleStrategyAward(String key, List<StrategyAwardEntity> entities) {
         // 1. 获取最小概率
         BigDecimal minValue = entities.stream()
                 .map(StrategyAwardEntity::getAwardRate)
@@ -92,26 +83,7 @@ public class StrategyArmoryLottery implements IStrategyArmory, IStrategyLottery 
         }
 
         // 7. 将 Map 存储到 Redis
-        repository.storeStrategyAwardRate(key, strategyAwardMap.size(), strategyAwardMap);
-    }
-
-    @Override
-    public Integer doLottery(Long strategyId) {
-        String key = String.valueOf(strategyId);
-        return doLottery(key);
-    }
-
-    @Override
-    public Integer doLottery(Long strategyId, String ruleWeight) {
-        String key = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(ruleWeight);
-        return doLottery(key);
-    }
-
-    private Integer doLottery(String key) {
-        // 1. 获取概率长度
-        int rateRange = repository.getRateRange(key);
-        // 2. 生成随机数，找到对应的概率奖品
-        return repository.getStrategyAwardAssemble(key, new SecureRandom().nextInt(rateRange));
+        strategyRepository.storeStrategyAwardRate(key, strategyAwardMap.size(), strategyAwardMap);
     }
 
 }

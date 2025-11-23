@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.armory;
 
 
-public interface IStrategyArmory {
+public interface IArmory {
 
     boolean assembleStrategy(Long strategyId);
 

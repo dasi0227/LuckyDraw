@@ -1,12 +1,14 @@
 package com.dasi.domain.strategy.service.raffle;
 
-import com.dasi.domain.strategy.model.dto.RaffleRequestDTO;
-import com.dasi.domain.strategy.model.dto.FilterResponse;
+import com.dasi.domain.strategy.model.check.RuleCheckRequest;
+import com.dasi.domain.strategy.model.check.RuleCheckResponse;
+import com.dasi.domain.strategy.model.tree.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.armory.IStrategyLottery;
+import com.dasi.domain.strategy.service.lottery.ILottery;
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 import com.dasi.domain.strategy.service.rule.chain.RuleChainFactory;
-import com.dasi.domain.strategy.service.rule.filter.RuleFilterFactory;
+import com.dasi.domain.strategy.service.rule.tree.IRuleTreeEngine;
+import com.dasi.domain.strategy.service.rule.tree.RuleTreeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,53 +19,41 @@ import javax.annotation.Resource;
 public class DefaultRaffle extends AbstractRaffle {
 
     @Resource
-    private RuleFilterFactory ruleFilterFactory;
+    private IStrategyRepository strategyRepository;
 
     @Resource
     private RuleChainFactory ruleChainFactory;
 
-    public DefaultRaffle(IStrategyRepository repository, IStrategyLottery strategyDispatch) {
+    @Resource
+    private RuleTreeFactory ruleTreeFactory;
+
+    public DefaultRaffle(IStrategyRepository repository, ILottery strategyDispatch) {
         super(repository, strategyDispatch);
     }
 
     @Override
-    protected Integer beforeCheck(RaffleRequestDTO raffleRequestDTO) {
-        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(raffleRequestDTO.getStrategyId());
-        return firstRuleChain.logic(raffleRequestDTO.getUserId(), raffleRequestDTO.getStrategyId());
+    protected RuleCheckResponse beforeCheck(RuleCheckRequest ruleCheckRequest) {
+        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(ruleCheckRequest.getStrategyId());
+        return firstRuleChain.logic(ruleCheckRequest.getUserId(), ruleCheckRequest.getStrategyId());
     }
 
-//    // TODO：重构 during check，暂时先测试前置规则
-//    @Override
-//    protected FilterResponse<FilterResponse.FilterDuringEntity> checkDuringRule(RaffleRequestDTO raffleRequest, String... ruleModels) {
-//        // 1. 先检查 ruleModels 是否存在，然后获取在工厂中注册的所有规则
-//        FilterResponse<FilterResponse.FilterDuringEntity> check = checkRuleModelsExist(ruleModels);
-//        if (check != null) return check;
-//
-//        // 2. 获取所有规则过滤器
-//        Map<String, IRuleFilter<FilterResponse.FilterDuringEntity>> ruleFilterMap = ruleFilterFactory.openLogicFilter();
-//        IRuleFilter<FilterResponse.FilterDuringEntity> ruleFilter;
-//        FilterResponse<FilterResponse.FilterDuringEntity> filterResponse;
-//
-//        // 3. 执行规则
-//        for (String ruleModel : ruleModels) {
-//            ruleFilter = ruleFilterMap.get(ruleModel);
-//            FilterRequest filterRequest = FilterRequest.buildFilterRequest(raffleRequest, ruleModel);
-//            log.info("【执行 {}】context = {}", ruleModel, filterRequest);
-//            filterResponse = ruleFilter.filter(filterRequest);
-//            log.info("【执行 {}】result = {}", ruleModel, filterResponse);
-//            if (!RuleCheckResult.ALLOW.getCode().equals(filterResponse.getCode())) {
-//                return filterResponse;
-//            }
-//        }
-//
-//        return null;
-//    }
-
-    // 检查 ruleModels 是否存在
-    private <T extends FilterResponse.FilterDataEntity> FilterResponse<T> checkRuleModelsExist(String[] ruleModels) {
+    @Override
+    protected RuleCheckResponse afterCheck(RuleCheckRequest ruleCheckRequest) {
+        String[] ruleModels = strategyRepository.queryStrategyRuleModelByStrategyIdAndAwardId(ruleCheckRequest.getStrategyId(), ruleCheckRequest.getAwardId());
         if (ruleModels == null || ruleModels.length == 0) {
-            return FilterResponse.allow();
+            return RuleCheckResponse.builder()
+                    .awardId(ruleCheckRequest.getAwardId())
+                    .ruleCheckModel(null)
+                    .build();
         }
-        return null;
+
+        String ruleModel = ruleModels[0];
+        RuleTreeVO ruleTreeVO = strategyRepository.queryRuleTreeVOByTreeId(ruleModel);
+        if (ruleTreeVO == null) {
+            throw new RuntimeException("规则树配置错误");
+        }
+        IRuleTreeEngine ruleTreeEngine = ruleTreeFactory.getTreeEngine(ruleTreeVO);
+        return ruleTreeEngine.process(ruleCheckRequest.getUserId(), ruleCheckRequest.getStrategyId(), ruleCheckRequest.getAwardId());
     }
+
 }

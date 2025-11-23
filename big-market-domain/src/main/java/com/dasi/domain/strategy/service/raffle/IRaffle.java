@@ -1,11 +1,11 @@
 package com.dasi.domain.strategy.service.raffle;
 
 
-import com.dasi.domain.strategy.model.dto.RaffleRequestDTO;
-import com.dasi.domain.strategy.model.dto.RaffleResponseDTO;
+import com.dasi.domain.strategy.model.dto.RaffleRequest;
+import com.dasi.domain.strategy.model.dto.RaffleResponse;
 
 public interface IRaffle {
 
-    RaffleResponseDTO doRaffle(RaffleRequestDTO raffleRequestDTO);
+    RaffleResponse doRaffle(RaffleRequest raffleRequest);
 
 }

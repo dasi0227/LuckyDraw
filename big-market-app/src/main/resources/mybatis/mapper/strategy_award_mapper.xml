@@ -22,11 +22,10 @@
         where strategy_id = #{strategyId}
    </select>
 
-    <select id="queryStrategyAwardRuleModel" parameterType="com.dasi.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
+    <select id="queryStrategyAwardRuleModels" parameterType="com.dasi.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
         select rule_models
         from strategy_award
         where strategy_id = #{strategyId} and award_id = #{awardId}
     </select>
-
 
 </mapper>
