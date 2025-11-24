@@ -33,7 +33,6 @@ public abstract class AbstractRaffle implements IRaffle {
 
         // 2. 执行前置检查
         ruleCheckResponse = beforeCheck(ruleCheckRequest);
-        log.info("责任链-前置检查结果：{}", ruleCheckResponse);
 
         // 3. 判断是否需要继续
         if (ruleCheckResponse.getRuleCheckResult() == RuleCheckResult.CAPTURE) {
@@ -45,7 +44,6 @@ public abstract class AbstractRaffle implements IRaffle {
 
         // 4. 执行后置检查
         ruleCheckResponse = afterCheck(ruleCheckRequest);
-        log.info("决策树-后置检查结果：{}", ruleCheckResponse);
 
         // 5. 返回结果
         AwardEntity awardEntity = strategyRepository.queryAwardEntityByAwardId(ruleCheckResponse.getAwardId());

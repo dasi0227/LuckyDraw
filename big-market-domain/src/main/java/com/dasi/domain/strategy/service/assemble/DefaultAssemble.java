@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.service.armory;
+package com.dasi.domain.strategy.service.assemble;
 
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 
 @Slf4j
 @Service
-public class Armory implements IArmory {
+public class DefaultAssemble implements IAssemble {
 
     @Resource
     private IStrategyRepository strategyRepository;
@@ -28,28 +28,31 @@ public class Armory implements IArmory {
         // 1. 查询当前策略的奖品列表
         List<StrategyAwardEntity> strategyAwardEntities = strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
 
-        // 2. 直接将策略id作为key，然后装配奖品，此时没有任何规则应用，只有单纯的概率模型
-        assembleStrategyAward(String.valueOf(strategyId), strategyAwardEntities);
+        // 2. 装配库存
+        assembleStrategyAwardStock(strategyId, strategyAwardEntities);
 
-        // 3. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
+        // 3. 直接将策略id作为key，然后装配奖品，此时没有任何规则应用，只有单纯的概率模型
+        assembleStrategyAwardRate(String.valueOf(strategyId), strategyAwardEntities);
+
+        // 4. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
         StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, Constants.RULE_WEIGHT);
         if (null == strategyRuleEntity) throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
 
-        // 4. 根据规则值分档装配
+        // 5. 根据规则值分档装配
         Map<String, List<Integer>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
         for (Entry<String, List<Integer>> entry : ruleWeight.entrySet()) {
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesUnderWeight = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesUnderWeight.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
             String cacheKey = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(entry.getKey());
-            assembleStrategyAward(cacheKey, strategyAwardEntitiesUnderWeight);
+            assembleStrategyAwardRate(cacheKey, strategyAwardEntitiesUnderWeight);
         }
 
         return true;
     }
 
-    private void assembleStrategyAward(String key, List<StrategyAwardEntity> entities) {
+    private void assembleStrategyAwardRate(String cacheKey, List<StrategyAwardEntity> entities) {
         // 1. 获取最小概率
         BigDecimal minValue = entities.stream()
                 .map(StrategyAwardEntity::getAwardRate)
@@ -76,14 +79,23 @@ public class Armory implements IArmory {
         // 5. 打乱概率奖品数组
         Collections.shuffle(strategyAwardArray);
 
-        // 6. 将 Array 变成 Map，并将索引作为 key，从而利用 Redis 的 HSET 提升查找性能
+        // 6. 将 Array 变成 Map，并将索引作为 cacheKey，从而利用 Redis 的 HSET 提升查找性能
         Map<String, String> strategyAwardMap = new HashMap<>();
         for (int i = 0; i < strategyAwardArray.size(); i++) {
             strategyAwardMap.put(String.valueOf(i), String.valueOf(strategyAwardArray.get(i)));
         }
 
         // 7. 将 Map 存储到 Redis
-        strategyRepository.storeStrategyAwardRate(key, strategyAwardMap.size(), strategyAwardMap);
+        strategyRepository.cacheStrategyAwardRate(cacheKey, strategyAwardMap.size(), strategyAwardMap);
+        log.info("【装配器 - rate】cacheKey = {}", cacheKey);
+    }
+
+    private void assembleStrategyAwardStock(Long strategyId, List<StrategyAwardEntity> strategyAwardEntities) {
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
+            String cacheKey = Constants.RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Constants.UNDERSCORE + strategyAwardEntity.getAwardId();
+            strategyRepository.cacheStrategyAwardStock(cacheKey, strategyAwardEntity.getAwardCount());
+            log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, strategyAwardEntity.getAwardCount());
+        }
     }
 
 }

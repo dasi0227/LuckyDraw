@@ -1,6 +1,7 @@
 package com.dasi.domain.strategy.repository;
 
 
+import com.dasi.domain.strategy.model.dto.StockUpdateRequest;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
@@ -13,11 +14,11 @@ import java.util.Map;
 public interface IStrategyRepository {
     List<StrategyAwardEntity> queryStrategyAwardListByStrategyId(Long strategyId);
 
-    void storeStrategyAwardRate(String key, Integer rateRange, Map<String, String> strategyAwardMap);
+    void cacheStrategyAwardRate(String cacheKey, Integer rateRange, Map<String, String> strategyAwardMap);
 
-    int getRateRange(String key);
+    int getRateRange(String cacheKey);
 
-    Integer getStrategyAwardAssemble(String key, int randomNum);
+    Integer getStrategyAwardAssemble(String cacheKey, int randomNum);
 
     StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
 
@@ -32,4 +33,14 @@ public interface IStrategyRepository {
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 
     String[] queryStrategyRuleModelByStrategyIdAndAwardId(Long strategyId, Integer awardId);
+
+    void cacheStrategyAwardStock(String cacheKey, Integer awardCount);
+
+    long subStrategyAwardCount(String cacheKey);
+
+    void sendStockConsumeToQueue(StockUpdateRequest stockUpdateRequest);
+
+    StockUpdateRequest getQueueValue();
+
+    void updateStrategyAwardStock(Long strategyId, Integer awardId);
 }
