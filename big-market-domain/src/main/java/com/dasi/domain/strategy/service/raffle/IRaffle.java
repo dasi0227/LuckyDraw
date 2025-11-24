@@ -1,11 +1,15 @@
 package com.dasi.domain.strategy.service.raffle;
 
+import com.dasi.domain.strategy.model.dto.RaffleContext;
+import com.dasi.domain.strategy.model.dto.RaffleResult;
+import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 
-import com.dasi.domain.strategy.model.dto.RaffleRequest;
-import com.dasi.domain.strategy.model.dto.RaffleResponse;
+import java.util.List;
 
 public interface IRaffle {
 
-    RaffleResponse doRaffle(RaffleRequest raffleRequest);
+    RaffleResult doRaffle(RaffleContext raffleContext);
+
+    List<StrategyAwardEntity> queryRaffleStrategyAwardList(Long strategyId);
 
 }

@@ -1,8 +1,8 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 
-import com.dasi.domain.strategy.model.check.RuleCheckResponse;
-import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
 import com.dasi.domain.strategy.model.tree.RuleNodeVO;
 import com.dasi.domain.strategy.model.tree.RuleTreeVO;
@@ -26,26 +26,26 @@ public class RuleTreeEngine implements IRuleTreeEngine {
     }
 
     @Override
-    public RuleCheckResponse process(String userId, Long strategyId, Integer awardId) {
+    public RuleCheckResult process(String userId, Long strategyId, Integer awardId) {
 
         // 获取基础信息
         String treeRoot = this.ruleTreeVO.getTreeRoot();
         Map<String, RuleNodeVO> treeNodeMap = this.ruleTreeVO.getTreeNodeMap();
 
-        RuleCheckResponse ruleCheckResponse = null;
+        RuleCheckResult ruleCheckResult = null;
         RuleNodeVO curTreeNode = treeNodeMap.get(treeRoot);
         while (curTreeNode != null) {
             IRuleTree ruleTree = ruleTreeMap.get(curTreeNode.getRuleModel());
             String ruleValue = curTreeNode.getRuleValue();
-            ruleCheckResponse = ruleTree.logic(userId, strategyId, awardId, ruleValue);
-            String nextTreeNode = next(ruleCheckResponse.getRuleCheckResult(), curTreeNode.getRuleEdgeList());
+            ruleCheckResult = ruleTree.logic(userId, strategyId, awardId, ruleValue);
+            String nextTreeNode = next(ruleCheckResult.getRuleCheckOutcome(), curTreeNode.getRuleEdgeList());
             curTreeNode = treeNodeMap.get(nextTreeNode);
         }
 
-        return ruleCheckResponse;
+        return ruleCheckResult;
     }
 
-    private String next(RuleCheckResult value, List<RuleEdgeVO> ruleEdgeVOList) {
+    private String next(RuleCheckOutcome value, List<RuleEdgeVO> ruleEdgeVOList) {
         if (ruleEdgeVOList == null || ruleEdgeVOList.isEmpty()) {
             return null;
         }
@@ -59,10 +59,10 @@ public class RuleTreeEngine implements IRuleTreeEngine {
         return null;
     }
 
-    public boolean decide(RuleCheckResult value, RuleEdgeVO ruleEdgeVO) {
+    public boolean decide(RuleCheckOutcome value, RuleEdgeVO ruleEdgeVO) {
         switch (ruleEdgeVO.getRuleCheckType()) {
             case EQUAL:
-                return value.equals(ruleEdgeVO.getRuleCheckResult());
+                return value.equals(ruleEdgeVO.getRuleCheckOutcome());
             case GT:
             case LT:
             case GE:

@@ -9,16 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleRequest {
+public class RaffleContext {
 
-    /** 用户 ID */
     private String userId;
 
-    /** 策略 ID */
     private Long strategyId;
-
-    /** 奖品 ID */
-    private Integer awardId;
-
 
 }

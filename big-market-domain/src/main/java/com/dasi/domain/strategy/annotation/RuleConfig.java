@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.annotation;
 
-import com.dasi.domain.strategy.model.check.RuleCheckModel;
+import com.dasi.domain.strategy.model.rule.RuleModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RuleConfig {
-    RuleCheckModel ruleModel();
+    RuleModel ruleModel();
 }

@@ -20,7 +20,13 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <!-- 系统模块 -->
+        <dependency>
+            <groupId>com.dasi</groupId>
+            <artifactId>big-market-types</artifactId>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>

@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.lottery;
 
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.types.common.Constants;
+import com.dasi.types.constant.Character;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class DefaultLottery implements ILottery{
 
     @Override
     public Integer doLottery(Long strategyId, String ruleWeight) {
-        String key = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(ruleWeight);
+        String key = String.valueOf(strategyId).concat(Character.UNDERSCORE).concat(ruleWeight);
         return doLottery(key);
     }
 

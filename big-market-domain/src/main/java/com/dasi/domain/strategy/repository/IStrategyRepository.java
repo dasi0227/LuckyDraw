@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.repository;
 
 
-import com.dasi.domain.strategy.model.dto.StockUpdateRequest;
+import com.dasi.domain.strategy.model.message.StockUpdateMessage;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
@@ -38,9 +38,9 @@ public interface IStrategyRepository {
 
     long subStrategyAwardCount(String cacheKey);
 
-    void sendStockConsumeToQueue(StockUpdateRequest stockUpdateRequest);
+    void sendStockConsumeToQueue(StockUpdateMessage stockUpdateMessage);
 
-    StockUpdateRequest getQueueValue();
+    StockUpdateMessage getQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
 }

@@ -1,12 +1,12 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.check.RuleCheckModel;
-import com.dasi.domain.strategy.model.check.RuleCheckResponse;
-import com.dasi.domain.strategy.model.check.RuleCheckResult;
+import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.rule.RuleModel;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.ILottery;
-import com.dasi.types.common.Constants;
+import com.dasi.types.constant.Character;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleCheckModel.RULE_WEIGHT)
+@RuleConfig(ruleModel = RuleModel.RULE_WEIGHT)
 public class RuleWeightChain extends AbstractRuleChain {
 
     @Resource
@@ -28,18 +28,18 @@ public class RuleWeightChain extends AbstractRuleChain {
     public Long userScore = 0L;
 
     @Override
-    public RuleCheckResponse logic(String userId, Long strategyId) {
+    public RuleCheckResult logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleCheckModel.RULE_WEIGHT.getName());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.getName());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
 
         // 2. 解析得到积分阈值和对应的奖品列表
         Map<Long, String> weightMap = new HashMap<>();
-        for (String group : ruleValue.split(Constants.SPACE)) {
+        for (String group : ruleValue.split(Character.SPACE)) {
             if (StringUtils.isBlank(group)) continue;
-            String[] parts = group.split(Constants.COLON);
+            String[] parts = group.split(Character.COLON);
             if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
             weightMap.put(Long.parseLong(parts[0]), parts[1]);
         }
@@ -61,10 +61,10 @@ public class RuleWeightChain extends AbstractRuleChain {
         if (matchedThreshold != null) {
             log.info("【责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
             Integer awardId = lottery.doLottery(strategyId, String.valueOf(matchedThreshold));
-            return RuleCheckResponse.builder()
+            return RuleCheckResult.builder()
                     .awardId(awardId)
-                    .ruleCheckModel(RuleCheckModel.RULE_WEIGHT)
-                    .ruleCheckResult(RuleCheckResult.CAPTURE)
+                    .ruleModel(RuleModel.RULE_WEIGHT)
+                    .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
                     .build();
         }
 

@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.model.dto;
 
-
 import com.dasi.domain.strategy.model.entity.AwardEntity;
+import com.dasi.domain.strategy.repository.IStrategyRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,29 +11,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleResponse {
+public class RaffleResult {
 
-    /** 奖品 ID */
     private Integer awardId;
 
-    /** 奖品类型 */
-    private String awardKey;
-
-    /** 奖品信息 */
     private String awardConfig;
 
-    /** 奖品描述 */
     private String awardDesc;
 
-
-    // ---------------------- 静态方法 ----------------------
-    public static RaffleResponse buildAward(AwardEntity awardEntity) {
-        return RaffleResponse.builder()
-                .awardId(awardEntity.getAwardId())
-                .awardKey(awardEntity.getAwardKey())
+    public static RaffleResult build(Integer awardId, IStrategyRepository strategyRepository) {
+        AwardEntity awardEntity = strategyRepository.queryAwardEntityByAwardId(awardId);
+        return RaffleResult.builder()
+                .awardId(awardId)
                 .awardConfig(awardEntity.getAwardConfig())
                 .awardDesc(awardEntity.getAwardDesc())
                 .build();
     }
-
 }

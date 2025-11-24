@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.check;
+package com.dasi.domain.strategy.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RuleCheckRequest {
+public class RuleCheckContext {
 
     /** 用户 ID */
     private String userId;

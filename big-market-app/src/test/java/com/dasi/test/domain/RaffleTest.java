@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.dto.RaffleRequest;
-import com.dasi.domain.strategy.model.dto.RaffleResponse;
+import com.dasi.domain.strategy.model.dto.RaffleContext;
+import com.dasi.domain.strategy.model.dto.RaffleResult;
 import com.dasi.domain.strategy.service.assemble.IAssemble;
 import com.dasi.domain.strategy.service.raffle.IRaffle;
 import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
@@ -43,17 +43,15 @@ public class RaffleTest {
 
     @Test
     public void testRaffle() throws InterruptedException {
-        RaffleRequest raffleRequest = RaffleRequest.builder()
-                .userId("dasi")
-                .strategyId(100006L)
-                .build();
-
-        for (int i = 0; i < 5; i++) {
+        RaffleContext raffleContext = new RaffleContext();
+        raffleContext.setUserId("dasi");
+        raffleContext.setStrategyId(100006L);
+        for (int i = 1; i <= 5; i++) {
             ReflectionTestUtils.setField(ruleLockTree, "userRaffleCount", (long) i);
-            log.info("============================== 第 {} 次抽奖 ==============================", i + 1);
-            log.info("RaffleRequest = {}", raffleRequest);
-            RaffleResponse raffleResponse = raffle.doRaffle(raffleRequest);
-            log.info("RaffleResponse = {}", raffleResponse);
+            log.info("============================== 第 {} 次抽奖 ==============================", i);
+            log.info("【抽奖请求】RaffleContext {}", raffleContext);
+            RaffleResult raffleResult = raffle.doRaffle(raffleContext);
+            log.info("【抽奖结果】RaffleResult = {}", raffleResult);
         }
 
         new CountDownLatch(1).await();

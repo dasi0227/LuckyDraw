@@ -19,6 +19,15 @@ public class StrategyAwardEntity {
     /** 抽奖奖品ID */
     private Integer awardId;
 
+    /** 抽奖奖品标题 */
+    private String awardTitle;
+
+    /** 抽奖奖品副标题 */
+    private String awardSubtitle;
+
+    /** 抽奖奖品排序 */
+    private Integer sort;
+
     /** 奖品库存总量 */
     private Integer awardCount;
 

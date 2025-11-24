@@ -3,9 +3,10 @@ package com.dasi.domain.strategy.service.assemble;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
+import com.dasi.domain.strategy.model.rule.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.types.common.Constants;
-import com.dasi.types.enums.ResponseCode;
+import com.dasi.types.constant.Character;
+import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,15 +38,15 @@ public class DefaultAssemble implements IAssemble {
         // 4. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, Constants.RULE_WEIGHT);
-        if (null == strategyRuleEntity) throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.name());
+        if (null == strategyRuleEntity) throw new AppException("权重规则没有配置");
 
         // 5. 根据规则值分档装配
         Map<String, List<Integer>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
         for (Entry<String, List<Integer>> entry : ruleWeight.entrySet()) {
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesUnderWeight = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesUnderWeight.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
-            String cacheKey = String.valueOf(strategyId).concat(Constants.UNDERSCORE).concat(entry.getKey());
+            String cacheKey = String.valueOf(strategyId).concat(Character.UNDERSCORE).concat(entry.getKey());
             assembleStrategyAwardRate(cacheKey, strategyAwardEntitiesUnderWeight);
         }
 
@@ -92,7 +93,7 @@ public class DefaultAssemble implements IAssemble {
 
     private void assembleStrategyAwardStock(Long strategyId, List<StrategyAwardEntity> strategyAwardEntities) {
         for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
-            String cacheKey = Constants.RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Constants.UNDERSCORE + strategyAwardEntity.getAwardId();
+            String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Character.UNDERSCORE + strategyAwardEntity.getAwardId();
             strategyRepository.cacheStrategyAwardStock(cacheKey, strategyAwardEntity.getAwardCount());
             log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, strategyAwardEntity.getAwardCount());
         }

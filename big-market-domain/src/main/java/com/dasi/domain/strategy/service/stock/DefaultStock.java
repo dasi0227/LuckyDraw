@@ -1,8 +1,9 @@
 package com.dasi.domain.strategy.service.stock;
 
-import com.dasi.domain.strategy.model.dto.StockUpdateRequest;
+import com.dasi.domain.strategy.model.message.StockUpdateMessage;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.types.common.Constants;
+import com.dasi.types.constant.Character;
+import com.dasi.types.constant.RedisKey;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,18 +16,18 @@ public class DefaultStock implements IStock{
 
     @Override
     public long subStrategyAwardCount(Long strategyId, Integer awardId) {
-        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Constants.UNDERSCORE + awardId;
+        String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Character.UNDERSCORE + awardId;
         return strategyRepository.subStrategyAwardCount(cacheKey);
     }
 
     @Override
-    public StockUpdateRequest getQueueValue() {
+    public StockUpdateMessage getQueueValue() {
         return strategyRepository.getQueueValue();
     }
 
     @Override
-    public void updateStrategyAwardStock(StockUpdateRequest stockUpdateRequest) {
-        strategyRepository.updateStrategyAwardStock(stockUpdateRequest.getStrategyId(), stockUpdateRequest.getAwardId());
+    public void updateStrategyAwardStock(StockUpdateMessage stockUpdateMessage) {
+        strategyRepository.updateStrategyAwardStock(stockUpdateMessage.getStrategyId(), stockUpdateMessage.getAwardId());
     }
 
 }

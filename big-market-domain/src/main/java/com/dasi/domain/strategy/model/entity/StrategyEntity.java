@@ -1,6 +1,7 @@
 package com.dasi.domain.strategy.model.entity;
 
-import com.dasi.types.common.Constants;
+import com.dasi.domain.strategy.model.rule.RuleModel;
+import com.dasi.types.constant.Character;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,17 +27,17 @@ public class StrategyEntity {
         if (StringUtils.isBlank(ruleModels)) {
             return null;
         } else {
-            return ruleModels.split(Constants.COMMA);
+            return ruleModels.split(Character.COMMA);
         }
     }
 
     public boolean hasRuleWeight() {
-        String[] ruleModels = this.splitRuleModels();
+        String[] ruleModels = splitRuleModels();
         if (ruleModels == null) {
             return false;
         }
         for (String ruleModel : ruleModels) {
-            if (Constants.RULE_WEIGHT.equals(ruleModel)) {
+            if (RuleModel.RULE_WEIGHT.name().equals(ruleModel)) {
                 return true;
             }
         }

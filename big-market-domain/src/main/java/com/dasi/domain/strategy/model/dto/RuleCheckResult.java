@@ -1,5 +1,7 @@
-package com.dasi.domain.strategy.model.check;
+package com.dasi.domain.strategy.model.dto;
 
+import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.rule.RuleModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +11,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RuleCheckResponse {
+public class RuleCheckResult {
 
     /** 奖品 ID */
     private Integer awardId;
 
     /** 最后应用的规则模型 */
-    private RuleCheckModel ruleCheckModel;
+    private RuleModel ruleModel;
 
     /** 最后应用的检查结果 */
-    private RuleCheckResult ruleCheckResult;
+    private RuleCheckOutcome ruleCheckOutcome;
 
 }
