@@ -36,8 +36,8 @@ public class RuleTreeEngine implements IRuleTreeEngine {
         RuleNodeVO curTreeNode = treeNodeMap.get(treeRoot);
         while (curTreeNode != null) {
             IRuleTree ruleTree = ruleTreeMap.get(curTreeNode.getRuleModel());
-            ruleCheckResponse = ruleTree.logic(userId, strategyId, awardId);
-            log.info("【决策树】：RuleCheckResponse = {}", ruleCheckResponse);
+            String ruleValue = curTreeNode.getRuleValue();
+            ruleCheckResponse = ruleTree.logic(userId, strategyId, awardId, ruleValue);
             String nextTreeNode = next(ruleCheckResponse.getRuleCheckResult(), curTreeNode.getRuleEdgeList());
             curTreeNode = treeNodeMap.get(nextTreeNode);
         }
@@ -56,7 +56,7 @@ public class RuleTreeEngine implements IRuleTreeEngine {
             }
         }
 
-        throw new RuntimeException("配置错误，未找到可执行节点");
+        return null;
     }
 
     public boolean decide(RuleCheckResult value, RuleEdgeVO ruleEdgeVO) {

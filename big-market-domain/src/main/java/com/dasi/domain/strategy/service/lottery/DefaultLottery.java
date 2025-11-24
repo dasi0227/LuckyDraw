@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 
 @Slf4j
 @Service
-public class Lottery implements ILottery{
+public class DefaultLottery implements ILottery{
 
     @Resource
     private IStrategyRepository strategyRepository;

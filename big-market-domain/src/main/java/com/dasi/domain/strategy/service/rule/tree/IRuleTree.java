@@ -5,6 +5,6 @@ import com.dasi.domain.strategy.model.check.RuleCheckResponse;
 
 public interface IRuleTree {
 
-    RuleCheckResponse logic(String userId, Long strategyId, Integer awardId);
+    RuleCheckResponse logic(String userId, Long strategyId, Integer awardId, String ruleValue);
 
 }

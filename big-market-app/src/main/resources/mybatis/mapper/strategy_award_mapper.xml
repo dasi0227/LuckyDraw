@@ -16,6 +16,12 @@
         <result column="update_time"         property="updateTime"/>
     </resultMap>
 
+    <update id="updateStrategyAwardStock" parameterType="com.dasi.infrastructure.persistent.po.StrategyAward">
+        update strategy_award
+        set award_count_surplus = award_count_surplus - 1
+        where award_count_surplus > 0 and strategy_id = #{strategyId} and award_id = #{awardId}
+    </update>
+
     <select id="queryStrategyAwardListByStrategyId" parameterType="java.lang.Long" resultMap="dataMap">
         select strategy_id, award_id, award_count, award_count_surplus, award_rate
         from strategy_award
