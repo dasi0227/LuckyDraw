@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityOrder">
+        <id     property="id"            column="id"/>
+        <result property="userId"        column="user_id"/>
+        <result property="activityId"    column="activity_id"/>
+        <result property="activityName"  column="activity_name"/>
+        <result property="strategyId"    column="strategy_id"/>
+        <result property="orderId"       column="order_id"/>
+        <result property="orderTime"     column="order_time"/>
+        <result property="state"         column="state"/>
+        <result property="createTime"    column="create_time"/>
+        <result property="updateTime"    column="update_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.ActivityOrder">
+        INSERT INTO activity_order (user_id, activity_id, activity_name, strategy_id, order_id, order_time, state)
+        VALUES (#{userId}, #{activityId}, #{activityName}, #{strategyId}, #{orderId}, #{orderTime}, #{state});
+    </insert>
+
+    <select id="queryActivityOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT id, user_id, activity_id, activity_name, strategy_id, order_id, order_time, state, create_time, update_time
+        FROM activity_order
+        WHERE user_id = #{userId};
+    </select>
+
+</mapper>
