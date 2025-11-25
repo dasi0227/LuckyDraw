@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AwardEntity {
 
-    /** 奖品 ID */
+    /** 奖品ID */
     private Integer awardId;
 
     /** 奖品类型 */
-    private String awardKey;
+    private String awardName;
 
     /** 奖品信息 */
     private String awardConfig;

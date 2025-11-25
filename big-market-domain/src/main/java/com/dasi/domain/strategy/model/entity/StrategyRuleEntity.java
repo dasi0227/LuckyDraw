@@ -23,12 +23,6 @@ public class StrategyRuleEntity {
     /** 抽奖策略ID */
     private Long strategyId;
 
-    /** 奖品ID（规则类型为策略级时可为空） */
-    private Integer awardId;
-
-    /** 规则类型；1-策略规则、2-奖品规则 */
-    private Integer ruleType;
-
     /** 规则模型 */
     private String ruleModel;
 

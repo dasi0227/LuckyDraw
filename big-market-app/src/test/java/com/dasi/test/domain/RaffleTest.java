@@ -41,11 +41,13 @@ public class RaffleTest {
 
     @Test
     public void testRaffle() throws InterruptedException {
-        armory.assembleStrategy(100006L);
+        Long strategyId = 100001L;
+
+        armory.assembleStrategy(strategyId);
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
         RaffleContext raffleContext = new RaffleContext();
         raffleContext.setUserId("wyw");
-        raffleContext.setStrategyId(100006L);
+        raffleContext.setStrategyId(strategyId);
         for (int i = 1; i <= 100; i++) {
             ReflectionTestUtils.setField(ruleLockTree, "userRaffleCount", (long) i);
             log.info("============================== 第 {} 次抽奖 ==============================", i);

@@ -15,6 +15,8 @@ public class RaffleResult {
 
     private Integer awardId;
 
+    private String awardName;
+
     private String awardConfig;
 
     private String awardDesc;
@@ -23,6 +25,7 @@ public class RaffleResult {
         AwardEntity awardEntity = strategyRepository.queryAwardEntityByAwardId(awardId);
         return RaffleResult.builder()
                 .awardId(awardId)
+                .awardName(awardEntity.getAwardName())
                 .awardConfig(awardEntity.getAwardConfig())
                 .awardDesc(awardEntity.getAwardDesc())
                 .build();

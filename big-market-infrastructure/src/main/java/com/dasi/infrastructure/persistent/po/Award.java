@@ -11,16 +11,16 @@ public class Award {
     /** 自增ID */
     private Integer id;
 
-    /** 抽奖奖品ID（策略内部流转使用） */
+    /** 奖品ID */
     private Integer awardId;
 
-    /** 奖品对接标识（对应发奖策略） */
-    private String awardKey;
+    /** 奖品名称 */
+    private String awardName;
 
-    /** 奖品配置信息（数量/模型/积分区间等） */
+    /** 奖品配置 */
     private String awardConfig;
 
-    /** 奖品内容描述 */
+    /** 奖品描述 */
     private String awardDesc;
 
     /** 创建时间 */

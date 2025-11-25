@@ -44,8 +44,6 @@ public class IRaffleController implements IRaffleService {
                 .map(e -> RaffleAwardListResponseDTO.builder()
                         .awardId(e.getAwardId())
                         .awardTitle(e.getAwardTitle())
-                        .awardSubTitle(e.getAwardSubtitle())
-                        .sort(e.getSort())
                         .build())
                 .collect(Collectors.toList());
         return Result.success(result);

@@ -13,20 +13,14 @@ public class StrategyRule {
     /** 抽奖策略ID */
     private Long strategyId;
 
-    /** 奖品ID（规则类型为策略级时可为空） */
-    private Integer awardId;
-
-    /** 规则类型；1-策略规则、2-奖品规则 */
-    private Integer ruleType;
+    /** 规则描述 */
+    private String ruleDesc;
 
     /** 规则模型 */
     private String ruleModel;
 
-    /** 规则比值 */
+    /** 规则值 */
     private String ruleValue;
-
-    /** 规则描述 */
-    private String ruleDesc;
 
     /** 创建时间 */
     private LocalDateTime createTime;

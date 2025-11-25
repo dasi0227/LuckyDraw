@@ -4,8 +4,6 @@
 
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.StrategyRule">
         <result column="strategy_id" property="strategyId"/>
-        <result column="award_id"    property="awardId"/>
-        <result column="rule_type"   property="ruleType"/>
         <result column="rule_model"  property="ruleModel"/>
         <result column="rule_value"  property="ruleValue"/>
         <result column="rule_desc"   property="ruleDesc"/>
@@ -14,7 +12,7 @@
     </resultMap>
 
     <select id="queryStrategyRuleByRuleModel" resultType="com.dasi.infrastructure.persistent.po.StrategyRule" resultMap="dataMap">
-        select strategy_id, award_id, rule_type, rule_model, rule_value, rule_desc
+        select strategy_id, rule_model, rule_value, rule_desc
         from strategy_rule
         where strategy_id = #{strategyId} and rule_model = #{ruleModel}
     </select>
@@ -22,13 +20,7 @@
     <select id="queryStrategyRuleValue" parameterType="com.dasi.infrastructure.persistent.po.StrategyRule" resultType="java.lang.String">
         select rule_value
         from strategy_rule
-        <where>
-            strategy_id = #{strategyId}
-            AND rule_model = #{ruleModel}
-            <if test="awardId != null">
-                AND award_id = #{awardId}
-            </if>
-        </where>
+        where strategy_id = #{strategyId} and rule_model = #{ruleModel}
     </select>
 
 </mapper>

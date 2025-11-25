@@ -8,7 +8,7 @@ public class RedisKey {
     public static final String STRATEGY_RULE_KEY        = "big_market:entity:strategy_rule:";
     public static final String STRATEGY_RULE_VALUE_KEY  = "big_market:entity:strategy_rule_value:";
     public static final String AWARD_KEY                = "big_market:entity:award:";
-    public static final String STRATEGY_RULE_MODEL_KEY  = "big_market:entity:rule_model:";
+    public static final String TREE_ID_KEY              = "big_market:entity:tree_id:";
     public static final String RULE_TREE_VO_KEY         = "big_market:entity:rule_tree_vo:";
 
 

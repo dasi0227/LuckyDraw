@@ -20,23 +20,17 @@ public class StrategyAward {
     /** 抽奖奖品标题 */
     private String awardTitle;
 
-    /** 抽奖奖品副标题 */
-    private String awardSubtitle;
-
     /** 奖品库存总量 */
-    private Integer awardCount;
+    private Integer awardTotal;
 
     /** 奖品库存余量 */
-    private Integer awardCountSurplus;
+    private Integer awardSurplus;
 
     /** 奖品中奖概率 */
     private BigDecimal awardRate;
 
-    /** 奖品对应的规则模型集合（逗号分隔） */
-    private String ruleModels;
-
-    /** 排序 */
-    private Integer sort;
+    /** 规则树ID */
+    private String treeId;
 
     /** 创建时间 */
     private LocalDateTime createTime;

@@ -42,16 +42,14 @@ public class DefaultRaffle extends AbstractRaffle {
 
     @Override
     protected RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext) {
-        String[] ruleModels = strategyRepository.queryStrategyRuleModelByStrategyIdAndAwardId(ruleCheckContext.getStrategyId(), ruleCheckContext.getAwardId());
-        if (ruleModels == null || ruleModels.length == 0) {
+        String treeId = strategyRepository.queryStrategyAwardTreeIdByStrategyIdAndAwardId(ruleCheckContext.getStrategyId(), ruleCheckContext.getAwardId());
+        if (treeId == null || treeId.isEmpty()) {
             return RuleCheckResult.builder()
                     .awardId(ruleCheckContext.getAwardId())
-                    .ruleModel(null)
                     .build();
         }
 
-        String ruleModel = ruleModels[0];
-        RuleTreeVO ruleTreeVO = strategyRepository.queryRuleTreeVOByTreeId(ruleModel);
+        RuleTreeVO ruleTreeVO = strategyRepository.queryRuleTreeVOByTreeId(treeId);
         if (ruleTreeVO == null) {
             throw new AppException("规则树配置错误");
         }

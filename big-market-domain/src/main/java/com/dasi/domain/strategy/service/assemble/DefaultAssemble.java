@@ -28,6 +28,9 @@ public class DefaultAssemble implements IAssemble {
     public boolean assembleStrategy(Long strategyId) {
         // 1. 查询当前策略的奖品列表
         List<StrategyAwardEntity> strategyAwardEntities = strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
+        if (strategyAwardEntities == null || strategyAwardEntities.isEmpty()) {
+            throw new AppException("策略不存在：" + strategyId);
+        }
 
         // 2. 装配库存
         assembleStrategyAwardStock(strategyId, strategyAwardEntities);
@@ -94,7 +97,7 @@ public class DefaultAssemble implements IAssemble {
     private void assembleStrategyAwardStock(Long strategyId, List<StrategyAwardEntity> strategyAwardEntities) {
         for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
             String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Character.UNDERSCORE + strategyAwardEntity.getAwardId();
-            Integer stock = strategyAwardEntity.getAwardCountSurplus();
+            Integer stock = strategyAwardEntity.getAwardSurplus();
             strategyRepository.cacheStrategyAwardStock(cacheKey, stock);
             log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, stock);
         }

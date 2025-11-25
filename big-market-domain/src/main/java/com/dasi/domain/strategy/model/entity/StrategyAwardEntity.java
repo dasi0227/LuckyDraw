@@ -22,17 +22,11 @@ public class StrategyAwardEntity {
     /** 抽奖奖品标题 */
     private String awardTitle;
 
-    /** 抽奖奖品副标题 */
-    private String awardSubtitle;
-
-    /** 抽奖奖品排序 */
-    private Integer sort;
-
     /** 奖品库存总量 */
-    private Integer awardCount;
+    private Integer awardTotal;
 
     /** 奖品库存余量 */
-    private Integer awardCountSurplus;
+    private Integer awardSurplus;
 
     /** 奖品中奖概率 */
     private BigDecimal awardRate;

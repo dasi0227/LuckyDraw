@@ -75,10 +75,8 @@ public class StrategyRepository implements IStrategyRepository {
                     .strategyId(strategyAward.getStrategyId())
                     .awardId(strategyAward.getAwardId())
                     .awardTitle(strategyAward.getAwardTitle())
-                    .awardSubtitle(strategyAward.getAwardSubtitle())
-                    .sort(strategyAward.getSort())
-                    .awardCount(strategyAward.getAwardCount())
-                    .awardCountSurplus(strategyAward.getAwardCountSurplus())
+                    .awardTotal(strategyAward.getAwardTotal())
+                    .awardSurplus(strategyAward.getAwardSurplus())
                     .awardRate(strategyAward.getAwardRate())
                     .build();
             entities.add(entity);
@@ -127,8 +125,6 @@ public class StrategyRepository implements IStrategyRepository {
         StrategyRule strategyRuleResponse = strategyRuleDao.queryStrategyRuleByRuleModel(strategyRuleRequest);
         strategyRuleEntity = StrategyRuleEntity.builder()
                 .strategyId(strategyRuleResponse.getStrategyId())
-                .awardId(strategyRuleResponse.getAwardId())
-                .ruleType(strategyRuleResponse.getRuleType())
                 .ruleModel(strategyRuleResponse.getRuleModel())
                 .ruleValue(strategyRuleResponse.getRuleValue())
                 .ruleDesc(strategyRuleResponse.getRuleDesc())
@@ -140,9 +136,9 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel) {
+    public String queryStrategyRuleValue(Long strategyId, String ruleModel) {
         // 先查缓存
-        String cacheKey = RedisKey.STRATEGY_RULE_VALUE_KEY + strategyId + Character.UNDERSCORE + (awardId != null ? awardId : "") + Character.UNDERSCORE + ruleModel;
+        String cacheKey = RedisKey.STRATEGY_RULE_VALUE_KEY + strategyId + Character.UNDERSCORE + ruleModel;
         String ruleValue = redisService.getValue(cacheKey);
         if (ruleValue != null) {
             return ruleValue;
@@ -151,18 +147,12 @@ public class StrategyRepository implements IStrategyRepository {
         // 再查数据库
         StrategyRule strategyRule = new StrategyRule();
         strategyRule.setStrategyId(strategyId);
-        strategyRule.setAwardId(awardId);
         strategyRule.setRuleModel(ruleModel);
         ruleValue = strategyRuleDao.queryStrategyRuleValue(strategyRule);
 
         // 缓存后返回
         redisService.setValue(cacheKey, ruleValue);
         return ruleValue;
-    }
-
-    @Override
-    public String queryStrategyRuleValue(Long strategyId, String ruleModel) {
-        return queryStrategyRuleValue(strategyId, null, ruleModel);
     }
 
     @Override
@@ -178,7 +168,7 @@ public class StrategyRepository implements IStrategyRepository {
         Award award = awardDao.queryAwardByAwardId(awardId);
         awardEntity = AwardEntity.builder()
                 .awardId(award.getAwardId())
-                .awardKey(award.getAwardKey())
+                .awardName(award.getAwardName())
                 .awardConfig(award.getAwardConfig())
                 .awardDesc(award.getAwardDesc())
                 .build();
@@ -189,23 +179,23 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public String[] queryStrategyRuleModelByStrategyIdAndAwardId(Long strategyId, Integer awardId) {
+    public String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Integer awardId) {
         // 先查缓存
-        String cacheKey = RedisKey.STRATEGY_RULE_MODEL_KEY + strategyId + Character.UNDERSCORE + awardId;
-        String ruleModels = redisService.getValue(cacheKey);
-        if (ruleModels != null) {
-            return ruleModels.split(Character.COMMA);
+        String cacheKey = RedisKey.TREE_ID_KEY + strategyId + Character.UNDERSCORE + awardId;
+        String treeId = redisService.getValue(cacheKey);
+        if (treeId != null) {
+            return treeId;
         }
 
         // 再查数据库
         StrategyAward strategyAward = new StrategyAward();
         strategyAward.setStrategyId(strategyId);
         strategyAward.setAwardId(awardId);
-        ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
+        treeId = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
 
         // 缓存后返回
-        redisService.setValue(cacheKey, ruleModels);
-        return ruleModels.split(Character.COMMA);
+        redisService.setValue(cacheKey, treeId);
+        return treeId;
     }
 
     @Override

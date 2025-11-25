@@ -24,15 +24,13 @@ public interface IStrategyRepository {
 
     StrategyRuleEntity queryStrategyRuleByStrategyIDAndRuleModel(Long strategyId, String ruleModel);
 
-    String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel);
-
     String queryStrategyRuleValue(Long strategyId, String ruleModel);
 
     AwardEntity queryAwardEntityByAwardId(Integer awardId);
 
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 
-    String[] queryStrategyRuleModelByStrategyIdAndAwardId(Long strategyId, Integer awardId);
+    String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Integer awardId);
 
     void cacheStrategyAwardStock(String cacheKey, Integer stock);
 

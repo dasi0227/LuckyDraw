@@ -17,10 +17,4 @@ public class RaffleAwardListResponseDTO {
     /** 奖品标题 */
     private String awardTitle;
 
-    /** 奖品副标题 */
-    private String awardSubTitle;
-
-    /** 奖品排序 */
-    private Integer sort;
-
 }
