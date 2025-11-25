@@ -7,12 +7,12 @@
         <id     property="id"                   column="id"/>
         <result property="userId"               column="user_id"/>
         <result property="activityId"           column="activity_id"/>
-        <result property="totalCount"           column="total_count"/>
-        <result property="totalCountSurplus"    column="total_count_surplus"/>
-        <result property="dayCount"             column="day_count"/>
-        <result property="dayCountSurplus"      column="day_count_surplus"/>
-        <result property="monthCount"           column="month_count"/>
-        <result property="monthCountSurplus"    column="month_count_surplus"/>
+        <result property="totalAmount"          column="total_amount"/>
+        <result property="totalSurplus"         column="total_surplus"/>
+        <result property="dayAmount"            column="day_amount"/>
+        <result property="daySurplus"           column="day_surplus"/>
+        <result property="monthAmount"          column="month_amount"/>
+        <result property="monthSurplus"         column="month_surplus"/>
         <result property="createTime"           column="create_time"/>
         <result property="updateTime"           column="update_time"/>
     </resultMap>

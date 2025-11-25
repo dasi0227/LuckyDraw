@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RaffleTest {
+public class StrategyTest {
 
     @Resource
     private IRaffle raffle;
@@ -36,12 +36,12 @@ public class RaffleTest {
 
     @Before
     public void setUp() {
-        redisService.deleteByPattern("big_market*");
+        redisService.deleteByPattern("big_market:strategy:*");
     }
 
     @Test
-    public void testRaffle() throws InterruptedException {
-        Long strategyId = 100001L;
+    public void testStrategy() throws InterruptedException {
+        Long strategyId = 1001L;
 
         armory.assembleStrategy(strategyId);
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);

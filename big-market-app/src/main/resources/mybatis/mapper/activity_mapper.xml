@@ -7,10 +7,8 @@
         <result property="activityId"           column="activity_id"/>
         <result property="activityName"         column="activity_name"/>
         <result property="activityDesc"         column="activity_desc"/>
-        <result property="beginDateTime"        column="begin_date_time"/>
-        <result property="endDateTime"          column="end_date_time"/>
-        <result property="stockCount"           column="stock_count"/>
-        <result property="stockCountSurplus"    column="stock_count_surplus"/>
+        <result property="beginTime"            column="begin_time"/>
+        <result property="endTime"              column="end_time"/>
         <result property="activityCountId"      column="activity_count_id"/>
         <result property="strategyId"           column="strategy_id"/>
         <result property="state"                column="state"/>
@@ -19,7 +17,7 @@
     </resultMap>
 
     <select id="queryActivityByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT activity_id, activity_name, activity_desc, begin_date_time, end_date_time, stock_count, stock_count_surplus, activity_count_id, strategy_id, state
+        SELECT activity_id, activity_name, activity_desc, begin_time, end_time, activity_count_id, strategy_id, state
         FROM activity
         WHERE activity_id = #{activityId}
     </select>

@@ -15,4 +15,5 @@ public class ActivityCount {
     private Integer monthCount;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
 }

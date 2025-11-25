@@ -5,16 +5,15 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ActivityFlow {
+public class ActivitySku {
+
     private Long id;
-    private String userId;
+    private Long sku;
     private Long activityId;
-    private Integer totalCount;
-    private Integer dayCount;
-    private Integer monthCount;
-    private String flowId;
-    private String flowChannel;
-    private String bizId;
+    private Long activityCountId;
+    private Integer stockAmount;
+    private Integer stockSurplus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
 }

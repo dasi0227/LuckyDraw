@@ -1,20 +1,30 @@
-package com.dasi.infrastructure.persistent.po;
+package com.dasi.domain.activity.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ActivityAccount {
-    private Long id;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ActivityAccountEntity {
+
     private String userId;
+
     private Long activityId;
+
     private Integer totalAmount;
+
     private Integer totalSurplus;
+
     private Integer dayAmount;
+
     private Integer daySurplus;
+
     private Integer monthAmount;
+
     private Integer monthSurplus;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+
 }

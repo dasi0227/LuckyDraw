@@ -135,7 +135,7 @@ ERROR in ch.qos.logback.core.pattern.parser.Compiler@68b32e3e - Failed to create
 	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
 	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
 	... 45 common frames omitted
-2025-11-20 15:47:04 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.RaffleTest@687ef2e0]
+2025-11-20 15:47:04 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.StrategyTest@687ef2e0]
 java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:98)
 	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
@@ -284,7 +284,7 @@ ERROR in ch.qos.logback.core.ConsoleAppender[CONSOLE] - No encoder set for the a
 	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:132)
 	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
 	... 45 common frames omitted
-2025-11-20 15:50:42 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.RaffleTest@62727399]
+2025-11-20 15:50:42 [main            ] ERROR TestContextManager     - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2aceadd4] to prepare test instance [com.dasi.test.domain.StrategyTest@62727399]
 java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:98)
 	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)

@@ -1,11 +1,13 @@
 package com.dasi.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,11 +16,14 @@ import org.springframework.context.annotation.Configuration;
 public class RedisClientConfig {
 
     @Bean("redissonClient")
-    public RedissonClient redissonClient(ConfigurableApplicationContext applicationContext, RedisClientConfigProperties properties) {
+    public RedissonClient redissonClient(RedisClientConfigProperties properties) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        JsonJacksonCodec codec = new JsonJacksonCodec(mapper);
+
         Config config = new Config();
-
-        config.setCodec(new JsonJacksonCodec());
-
+        config.setCodec(codec);
         config.useSingleServer()
                 .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
                 .setPassword(properties.getPassword())

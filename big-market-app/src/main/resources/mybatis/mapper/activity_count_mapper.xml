@@ -13,4 +13,10 @@
         <result property="updateTime"       column="update_time"/>
     </resultMap>
 
+    <select id="queryActivityCountByActivityCountId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT activity_count_id, total_count, day_count, month_count
+        FROM activity_count
+        WHERE activity_count_id = #{activityCountId};
+    </select>
+
 </mapper>

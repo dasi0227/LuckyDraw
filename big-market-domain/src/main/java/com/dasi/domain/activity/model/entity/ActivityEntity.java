@@ -1,13 +1,18 @@
-package com.dasi.infrastructure.persistent.po;
+package com.dasi.domain.activity.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Activity {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ActivityEntity {
 
-    private Long id;
     private Long activityId;
     private String activityName;
     private String activityDesc;
@@ -16,7 +21,5 @@ public class Activity {
     private Long activityCountId;
     private Long strategyId;
     private String state;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 
 }
