@@ -39,7 +39,7 @@ public class StrategyRuleEntity {
     private String ruleDesc;
 
     public Map<String, List<Integer>> getRuleWeightValue() {
-        if (!RuleModel.RULE_WEIGHT.name().equals(ruleModel)) return null;
+        if (!RuleModel.RULE_WEIGHT.getName().equals(ruleModel)) return null;
         if (ruleValue == null || ruleValue.trim().isEmpty()) return null;
 
         Map<String, List<Integer>> ruleWeightValue = new HashMap<>();

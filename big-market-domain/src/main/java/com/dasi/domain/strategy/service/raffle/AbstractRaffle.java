@@ -4,7 +4,7 @@ import com.dasi.domain.strategy.model.dto.RaffleContext;
 import com.dasi.domain.strategy.model.dto.RaffleResult;
 import com.dasi.domain.strategy.model.dto.RuleCheckContext;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.rule.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.ILottery;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public abstract class AbstractRaffle implements IRaffle {
         ruleCheckResult = beforeCheck(ruleCheckContext);
 
         // 3. 判断是否需要继续
-        if (ruleCheckResult.getRuleCheckOutcome() == RuleCheckOutcome.CAPTURE) {
+        if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
             return RaffleResult.build(ruleCheckResult.getAwardId(), strategyRepository);
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
@@ -47,7 +47,7 @@ public abstract class AbstractRaffle implements IRaffle {
         return RaffleResult.build(ruleCheckResult.getAwardId(), strategyRepository);
     }
 
-    protected abstract RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext);
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);
+    protected abstract RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext);
 
 }

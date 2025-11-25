@@ -37,7 +37,7 @@ public class StrategyEntity {
             return false;
         }
         for (String ruleModel : ruleModels) {
-            if (RuleModel.RULE_WEIGHT.name().equals(ruleModel)) {
+            if (RuleModel.RULE_WEIGHT.getName().equals(ruleModel)) {
                 return true;
             }
         }

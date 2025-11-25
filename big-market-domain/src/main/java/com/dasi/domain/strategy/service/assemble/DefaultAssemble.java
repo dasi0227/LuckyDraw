@@ -38,7 +38,7 @@ public class DefaultAssemble implements IAssemble {
         // 4. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.name());
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.getName());
         if (null == strategyRuleEntity) throw new AppException("权重规则没有配置");
 
         // 5. 根据规则值分档装配
@@ -94,8 +94,9 @@ public class DefaultAssemble implements IAssemble {
     private void assembleStrategyAwardStock(Long strategyId, List<StrategyAwardEntity> strategyAwardEntities) {
         for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
             String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Character.UNDERSCORE + strategyAwardEntity.getAwardId();
-            strategyRepository.cacheStrategyAwardStock(cacheKey, strategyAwardEntity.getAwardCount());
-            log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, strategyAwardEntity.getAwardCount());
+            Integer stock = strategyAwardEntity.getAwardCountSurplus();
+            strategyRepository.cacheStrategyAwardStock(cacheKey, stock);
+            log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, stock);
         }
     }
 

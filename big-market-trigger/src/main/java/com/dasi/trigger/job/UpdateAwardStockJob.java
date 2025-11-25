@@ -22,8 +22,9 @@ public class UpdateAwardStockJob {
             if (stockUpdateMessage != null) {
                 stock.updateStrategyAwardStock(stockUpdateMessage);
                 log.info("【定时任务】更新奖品库存：{}", stockUpdateMessage);
+            } else {
+                log.info("【定时任务】暂时没有奖品库存待更新");
             }
-            log.info("【定时任务】暂时没有奖品库存待更新");
         } catch (Exception e) {
             log.error("【定时任务】失败：{}", e.getMessage());
         }

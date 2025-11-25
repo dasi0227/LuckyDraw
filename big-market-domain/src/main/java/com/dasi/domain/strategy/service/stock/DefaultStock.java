@@ -17,7 +17,7 @@ public class DefaultStock implements IStock{
     @Override
     public long subStrategyAwardCount(Long strategyId, Integer awardId) {
         String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_KEY + strategyId + Character.UNDERSCORE + awardId;
-        return strategyRepository.subStrategyAwardCount(cacheKey);
+        return strategyRepository.subStrategyAwardStock(cacheKey);
     }
 
     @Override

@@ -36,17 +36,17 @@ public class RaffleTest {
 
     @Before
     public void setUp() {
-        redisService.deleteByPattern("big_market_*");
-        armory.assembleStrategy(100006L);
-        ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
+        redisService.deleteByPattern("big_market*");
     }
 
     @Test
     public void testRaffle() throws InterruptedException {
+        armory.assembleStrategy(100006L);
+        ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
         RaffleContext raffleContext = new RaffleContext();
-        raffleContext.setUserId("dasi");
+        raffleContext.setUserId("wyw");
         raffleContext.setStrategyId(100006L);
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 100; i++) {
             ReflectionTestUtils.setField(ruleLockTree, "userRaffleCount", (long) i);
             log.info("============================== 第 {} 次抽奖 ==============================", i);
             log.info("【抽奖请求】RaffleContext {}", raffleContext);

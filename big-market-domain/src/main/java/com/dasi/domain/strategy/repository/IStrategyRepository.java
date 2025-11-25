@@ -34,9 +34,9 @@ public interface IStrategyRepository {
 
     String[] queryStrategyRuleModelByStrategyIdAndAwardId(Long strategyId, Integer awardId);
 
-    void cacheStrategyAwardStock(String cacheKey, Integer awardCount);
+    void cacheStrategyAwardStock(String cacheKey, Integer stock);
 
-    long subStrategyAwardCount(String cacheKey);
+    long subStrategyAwardStock(String cacheKey);
 
     void sendStockConsumeToQueue(StockUpdateMessage stockUpdateMessage);
 
