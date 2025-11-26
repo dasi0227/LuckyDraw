@@ -17,4 +17,20 @@
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
+    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        INSERT INTO activity_account (user_id, activity_id, total_amount, total_surplus, day_amount, day_surplus, month_amount, month_surplus)
+        VALUES (#{userId}, #{activityId}, #{totalAmount}, #{totalSurplus}, #{dayAmount}, #{daySurplus}, #{monthAmount}, #{monthSurplus});
+    </insert>
+
+    <update id="updateAccountQuota" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        UPDATE activity_account
+        SET total_amount = total_amount + #{totalAmount},
+            total_surplus = total_surplus + #{totalSurplus},
+            day_amount = day_amount + #{dayAmount},
+            day_surplus = day_surplus + #{daySurplus},
+            month_amount = month_amount + #{monthAmount},
+            month_surplus = month_surplus + #{monthSurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </update>
+
 </mapper>

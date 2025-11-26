@@ -3,9 +3,10 @@ package com.dasi.domain.strategy.service.rule.chain.impl;
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.ILottery;
+import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
 import com.dasi.types.constant.Character;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,7 @@ public class RuleWeightChain extends AbstractRuleChain {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.getName());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.getCode());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
@@ -59,7 +60,7 @@ public class RuleWeightChain extends AbstractRuleChain {
 
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
-            log.info("【责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
+            log.info("【策略责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
             Integer awardId = lottery.doLottery(strategyId, String.valueOf(matchedThreshold));
             return RuleCheckResult.builder()
                     .awardId(awardId)
@@ -69,7 +70,7 @@ public class RuleWeightChain extends AbstractRuleChain {
         }
 
         // 6. 放行走下一条规则
-        log.info("【责任链 - rule_weight】放行");
+        log.info("【策略责任链 - rule_weight】放行");
         return next().logic(userId, strategyId);
     }
 

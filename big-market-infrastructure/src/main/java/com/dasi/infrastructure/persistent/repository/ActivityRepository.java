@@ -1,18 +1,21 @@
 package com.dasi.infrastructure.persistent.repository;
 
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.model.entity.ActivityCountEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
+import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.io.SkuOrder;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.persistent.dao.*;
-import com.dasi.infrastructure.persistent.po.Activity;
-import com.dasi.infrastructure.persistent.po.ActivityCount;
-import com.dasi.infrastructure.persistent.po.ActivitySku;
+import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 
@@ -38,6 +41,12 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IActivityAccountDao activityAccountDao;
+
+    @Resource
+    private TransactionTemplate transactionTemplate;
+
+    @Resource
+    private IDBRouterStrategy dbRouter;
 
     @Override
     public ActivitySkuEntity queryActivitySkuBySku(Long sku) {
@@ -114,5 +123,58 @@ public class ActivityRepository implements IActivityRepository {
         // 缓存并返回
         redisService.setValue(cacheKey, activityCountEntity);
         return activityCountEntity;
+    }
+
+    @Override
+    public void saveOrder(SkuOrder skuOrder) {
+        // 订单对象
+        ActivityOrderEntity activityOrderEntity = skuOrder.getActivityOrderEntity();
+        ActivityOrder activityOrder = new ActivityOrder();
+        activityOrder.setOrderId(activityOrderEntity.getOrderId());
+        activityOrder.setBizId(activityOrderEntity.getBizId());
+        activityOrder.setUserId(activityOrderEntity.getUserId());
+        activityOrder.setSku(activityOrderEntity.getSku());
+        activityOrder.setStrategyId(activityOrderEntity.getStrategyId());
+        activityOrder.setActivityId(activityOrderEntity.getActivityId());
+        activityOrder.setActivityName(activityOrderEntity.getActivityName());
+        activityOrder.setTotalCount(activityOrderEntity.getTotalCount());
+        activityOrder.setMonthCount(activityOrderEntity.getMonthCount());
+        activityOrder.setDayCount(activityOrderEntity.getDayCount());
+        activityOrder.setState(activityOrderEntity.getState());
+        activityOrder.setOrderTime(activityOrderEntity.getOrderTime());
+
+        // 账户对象
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(skuOrder.getUserId());
+        activityAccount.setActivityId(skuOrder.getActivityId());
+        activityAccount.setTotalAmount(skuOrder.getTotalCount());
+        activityAccount.setTotalSurplus(skuOrder.getTotalCount());
+        activityAccount.setDayAmount(skuOrder.getDayCount());
+        activityAccount.setDaySurplus(skuOrder.getDayCount());
+        activityAccount.setMonthAmount(skuOrder.getMonthCount());
+        activityAccount.setMonthSurplus(skuOrder.getMonthCount());
+
+        try {
+            dbRouter.doRouter(skuOrder.getUserId());
+            transactionTemplate.execute(status -> {
+                try {
+                    // 1. 写入订单
+                    activityOrderDao.insert(activityOrder);
+                    // 2. 更新账户
+                    int count = activityAccountDao.updateAccountQuota(activityAccount);
+                    // 3. 创建账户
+                    if (count == 0) {
+                        activityAccountDao.insert(activityAccount);
+                    }
+                    return 1;
+                } catch (DuplicateKeyException e) {
+                    status.setRollbackOnly();
+                    log.error("唯一索引冲突；{}", skuOrder);
+                    throw new AppException("唯一索引冲突：" + skuOrder);
+                }
+            });
+        } finally {
+            dbRouter.clear();
+        }
     }
 }

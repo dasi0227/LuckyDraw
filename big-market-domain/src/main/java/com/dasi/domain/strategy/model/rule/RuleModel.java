@@ -15,6 +15,6 @@ public enum RuleModel {
     RULE_STOCK("rule_stock"),
     ;
 
-    private final String name;
+    private final String code;
 
 }

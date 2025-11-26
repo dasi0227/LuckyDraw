@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class ActivityOrderEntity {
 
     private String orderId;
+    private String bizId;
     private String userId;
     private Long sku;
     private Long strategyId;

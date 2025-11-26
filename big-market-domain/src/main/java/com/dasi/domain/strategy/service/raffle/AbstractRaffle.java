@@ -1,9 +1,9 @@
 package com.dasi.domain.strategy.service.raffle;
 
-import com.dasi.domain.strategy.model.dto.RaffleContext;
-import com.dasi.domain.strategy.model.dto.RaffleResult;
-import com.dasi.domain.strategy.model.dto.RuleCheckContext;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RaffleContext;
+import com.dasi.domain.strategy.model.io.RaffleResult;
+import com.dasi.domain.strategy.model.io.RuleCheckContext;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.rule.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.ILottery;

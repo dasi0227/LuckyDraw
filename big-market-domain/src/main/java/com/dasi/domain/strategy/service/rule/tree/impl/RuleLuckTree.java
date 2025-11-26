@@ -2,7 +2,7 @@ package com.dasi.domain.strategy.service.rule.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class RuleLuckTree implements IRuleTree {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
         Integer luckAwardId = Integer.valueOf(ruleValue);
-        log.info("【规则树 - rule_luck】接管：awardId = {}", luckAwardId);
+        log.info("【策略规则树 - rule_luck】接管：awardId = {}", luckAwardId);
         return RuleCheckResult.builder()
                 .awardId(luckAwardId)
                 .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

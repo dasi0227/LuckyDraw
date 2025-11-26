@@ -26,7 +26,7 @@ public class RuleChainFactory {
             RuleConfig ruleConfig = AnnotationUtils.findAnnotation(ruleChain.getClass(), RuleConfig.class);
             if (null != ruleConfig) {
                 // 规则名字作为 key，对应的责任链作为 value
-                this.ruleChainMap.put(ruleConfig.ruleModel().getName(), ruleChain);
+                this.ruleChainMap.put(ruleConfig.ruleModel().getCode(), ruleChain);
             }
         });
     }
@@ -38,7 +38,7 @@ public class RuleChainFactory {
         String[] ruleModels = strategyEntity.splitRuleModels();
 
         // 如果没有前置规则，则直接执行默认责任链
-        IRuleChain defaultRuleChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getName());
+        IRuleChain defaultRuleChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode());
         if (null == ruleModels || ruleModels.length == 0) {
             return defaultRuleChain;
         }

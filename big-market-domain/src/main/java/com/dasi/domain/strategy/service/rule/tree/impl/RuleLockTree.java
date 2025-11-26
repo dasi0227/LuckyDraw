@@ -2,7 +2,7 @@ package com.dasi.domain.strategy.service.rule.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.rule.RuleModel;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +20,14 @@ public class RuleLockTree implements IRuleTree {
         long limitRaffleCount = Long.parseLong(ruleValue);
 
         if (userRaffleCount >= limitRaffleCount) {
-            log.info("【规则树 - rule_lock】放行：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
+            log.info("【策略规则树 - rule_lock】放行：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.PERMIT)
                     .ruleModel(RuleModel.RULE_LOCK)
                     .build();
         } else {
-            log.info("【规则树 - rule_lock】接管：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
+            log.info("【策略规则树 - rule_lock】接管：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
             return RuleCheckResult.builder()
                     .awardId(null)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

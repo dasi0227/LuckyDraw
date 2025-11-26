@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.dto;
+package com.dasi.domain.strategy.model.io;
 
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.repository.IStrategyRepository;

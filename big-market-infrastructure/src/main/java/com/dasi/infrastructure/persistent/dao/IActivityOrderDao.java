@@ -11,7 +11,6 @@ import java.util.List;
 @DBRouterStrategy(splitTable = true)
 public interface IActivityOrderDao {
 
-    @DBRouter(key = "userId")
     void insert(ActivityOrder activityOrder);
 
     @DBRouter

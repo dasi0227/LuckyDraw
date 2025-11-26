@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.dto.RaffleContext;
-import com.dasi.domain.strategy.model.dto.RaffleResult;
+import com.dasi.domain.strategy.model.io.RaffleContext;
+import com.dasi.domain.strategy.model.io.RaffleResult;
 import com.dasi.domain.strategy.service.assemble.IAssemble;
 import com.dasi.domain.strategy.service.raffle.IRaffle;
 import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
