@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.model.entity;
 
-import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.types.constant.Character;
+import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.types.constant.Delimiter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class StrategyEntity {
         if (StringUtils.isBlank(ruleModels)) {
             return null;
         } else {
-            return ruleModels.split(Character.COMMA);
+            return ruleModels.split(Delimiter.COMMA);
         }
     }
 

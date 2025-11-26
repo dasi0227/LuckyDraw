@@ -1,9 +1,9 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.rule.RuleModel;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -8,4 +8,7 @@ public interface IActivitySkuDao {
 
     ActivitySku queryActivitySkuBySku(Long sku);
 
+    void updateActivitySkuStock(Long sku);
+
+    void clearActivitySkuStock(Long sku);
 }

@@ -2,6 +2,8 @@ package com.dasi.infrastructure.persistent.redis;
 
 import org.redisson.api.*;
 
+import java.time.Duration;
+
 @SuppressWarnings("unused")
 public interface IRedisService {
 
@@ -90,11 +92,15 @@ public interface IRedisService {
     Long getAtomicLong(String key);
 
     /** 放入原子 Long 类型数据 */
-    void setAtomicLong(String key, Integer awardCount);
+    void setAtomicLong(String key, Integer num);
 
     /** 设置值如果不存在 */
-    Boolean setNx(String lockKey);
+    Boolean setNx(String key);
+
+    /** 设置值如果不存在 */
+    Boolean setNx(String key, Duration expire);
 
     /** 清空键 */
     long deleteByPattern(String pattern);
+
 }

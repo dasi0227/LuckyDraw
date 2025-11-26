@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.rule.tree;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.tree.RuleTreeVO;
+import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.service.rule.tree.impl.RuleTreeEngine;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;

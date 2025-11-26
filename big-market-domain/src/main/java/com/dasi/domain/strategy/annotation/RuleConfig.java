@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.annotation;
 
-import com.dasi.domain.strategy.model.rule.RuleModel;
+import com.dasi.domain.strategy.model.type.RuleModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

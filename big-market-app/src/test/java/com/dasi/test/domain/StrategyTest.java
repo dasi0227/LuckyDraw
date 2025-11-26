@@ -1,9 +1,9 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.io.RaffleContext;
-import com.dasi.domain.strategy.model.io.RaffleResult;
-import com.dasi.domain.strategy.service.assemble.IAssemble;
-import com.dasi.domain.strategy.service.raffle.IRaffle;
+import com.dasi.domain.strategy.model.dto.RaffleContext;
+import com.dasi.domain.strategy.model.dto.RaffleResult;
+import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
+import com.dasi.domain.strategy.service.raffle.IStrategyRaffle;
 import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
 import com.dasi.domain.strategy.service.rule.tree.impl.RuleLockTree;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -24,9 +24,9 @@ import java.util.concurrent.CountDownLatch;
 public class StrategyTest {
 
     @Resource
-    private IRaffle raffle;
+    private IStrategyRaffle raffle;
     @Resource
-    private IAssemble armory;
+    private IStrategyAssemble armory;
     @Resource
     private RuleWeightChain ruleWeightChain;
     @Resource
@@ -43,7 +43,10 @@ public class StrategyTest {
     public void testStrategy() throws InterruptedException {
         Long strategyId = 1001L;
 
+        // 装配
         armory.assembleStrategy(strategyId);
+
+        // 抽奖
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
         RaffleContext raffleContext = new RaffleContext();
         raffleContext.setUserId("wyw");

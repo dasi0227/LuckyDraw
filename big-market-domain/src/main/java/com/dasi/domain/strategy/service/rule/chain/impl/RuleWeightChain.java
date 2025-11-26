@@ -1,13 +1,13 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.lottery.ILottery;
+import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
-import com.dasi.types.constant.Character;
+import com.dasi.types.constant.Delimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class RuleWeightChain extends AbstractRuleChain {
     private IStrategyRepository strategyRepository;
 
     @Resource
-    private ILottery lottery;
+    private IStrategyLottery strategyLottery;
 
     public Long userScore = 0L;
 
@@ -38,9 +38,9 @@ public class RuleWeightChain extends AbstractRuleChain {
 
         // 2. 解析得到积分阈值和对应的奖品列表
         Map<Long, String> weightMap = new HashMap<>();
-        for (String group : ruleValue.split(Character.SPACE)) {
+        for (String group : ruleValue.split(Delimiter.SPACE)) {
             if (StringUtils.isBlank(group)) continue;
-            String[] parts = group.split(Character.COLON);
+            String[] parts = group.split(Delimiter.COLON);
             if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
             weightMap.put(Long.parseLong(parts[0]), parts[1]);
         }
@@ -61,7 +61,7 @@ public class RuleWeightChain extends AbstractRuleChain {
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
             log.info("【策略责任链 - rule_weight】接管：匹配积分={}", matchedThreshold);
-            Integer awardId = lottery.doLottery(strategyId, String.valueOf(matchedThreshold));
+            Integer awardId = strategyLottery.doLottery(strategyId, String.valueOf(matchedThreshold));
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_WEIGHT)

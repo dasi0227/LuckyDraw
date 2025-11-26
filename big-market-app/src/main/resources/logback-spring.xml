@@ -19,7 +19,7 @@
             <level>info</level>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-15thread] %-5p %-40class{4} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{4} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>

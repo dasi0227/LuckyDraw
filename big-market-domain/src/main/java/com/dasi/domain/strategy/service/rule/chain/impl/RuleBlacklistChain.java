@@ -1,12 +1,12 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
-import com.dasi.types.constant.Character;
+import com.dasi.types.constant.Delimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -31,9 +31,9 @@ public class RuleBlacklistChain extends AbstractRuleChain {
         }
 
         // 2. 解析得到固定奖品和对应的黑名单列表
-        String[] values = ruleValue.split(Character.COLON);
+        String[] values = ruleValue.split(Delimiter.COLON);
         Integer awardId = Integer.valueOf(values[0]);
-        String[] blackIds = values[1].split(Character.COMMA);
+        String[] blackIds = values[1].split(Delimiter.COMMA);
 
         // 3. 判断是否位于黑名单之中
         if (Arrays.asList(blackIds).contains(userId)) {

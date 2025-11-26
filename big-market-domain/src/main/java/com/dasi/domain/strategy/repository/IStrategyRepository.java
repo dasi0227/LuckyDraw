@@ -1,12 +1,12 @@
 package com.dasi.domain.strategy.repository;
 
 
-import com.dasi.domain.strategy.model.message.StockUpdateMessage;
+import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
-import com.dasi.domain.strategy.model.tree.RuleTreeVO;
+import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -36,9 +36,9 @@ public interface IStrategyRepository {
 
     long subStrategyAwardStock(String cacheKey);
 
-    void sendStockConsumeToQueue(StockUpdateMessage stockUpdateMessage);
+    void sendStrategyAwardStockToMQ(StrategyAwardStock strategyAwardStock);
 
-    StockUpdateMessage getQueueValue();
+    StrategyAwardStock getQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
 }

@@ -1,13 +1,13 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.message.StockUpdateMessage;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
-import com.dasi.domain.strategy.service.stock.IStock;
+import com.dasi.domain.strategy.service.stock.IStrategyStock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,22 +19,22 @@ import javax.annotation.Resource;
 public class RuleStockTree implements IRuleTree {
 
     @Resource
-    private IStock stock;
+    private IStrategyStock strategyStock;
 
     @Resource
     private IStrategyRepository strategyRepository;
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
-        long surplus = stock.subStrategyAwardCount(strategyId, awardId);
+        long surplus = strategyStock.subStrategyAwardCount(strategyId, awardId);
         if (surplus > 0L) {
             log.info("【策略规则树 - rule_stock】接管：awardId = {}, surplus = {}->{}", awardId, surplus + 1, surplus);
-            StockUpdateMessage stockUpdateRequest = StockUpdateMessage.builder()
+            StrategyAwardStock stockUpdateRequest = StrategyAwardStock.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
                     .build();
             // 扣减成功：放到延迟队列之中，异步操作数据库
-            strategyRepository.sendStockConsumeToQueue(stockUpdateRequest);
+            strategyRepository.sendStrategyAwardStockToMQ(stockUpdateRequest);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

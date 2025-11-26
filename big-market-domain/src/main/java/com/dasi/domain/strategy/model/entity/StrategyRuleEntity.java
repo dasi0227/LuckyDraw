@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.model.entity;
 
-import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.types.constant.Character;
+import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.types.constant.Delimiter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,15 +39,15 @@ public class StrategyRuleEntity {
         Map<String, List<Integer>> ruleWeightValue = new HashMap<>();
 
         // 分割空格：得到不同【积分-奖品】组
-        String[] groups = ruleValue.trim().split(Character.SPACE);
+        String[] groups = ruleValue.trim().split(Delimiter.SPACE);
         for (String group : groups) {
             // 分割冒号：得到【左侧积分】和【右侧奖品列表】
-            String[] parts = group.split(Character.COLON);
+            String[] parts = group.split(Delimiter.COLON);
             if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
 
             // 分割积分值和规则值
             String weight = parts[0];
-            List<Integer> value = Arrays.stream(parts[1].trim().split(Character.COMMA))
+            List<Integer> value = Arrays.stream(parts[1].trim().split(Delimiter.COMMA))
                     .map(String::trim)
                     .map(Integer::valueOf)
                     .collect(Collectors.toList());

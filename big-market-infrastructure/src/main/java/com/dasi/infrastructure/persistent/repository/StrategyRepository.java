@@ -1,20 +1,20 @@
 package com.dasi.infrastructure.persistent.repository;
 
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.rule.RuleCheckType;
-import com.dasi.domain.strategy.model.message.StockUpdateMessage;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleCheckType;
+import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
-import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
-import com.dasi.domain.strategy.model.tree.RuleNodeVO;
-import com.dasi.domain.strategy.model.tree.RuleTreeVO;
+import com.dasi.domain.strategy.model.vo.RuleEdgeVO;
+import com.dasi.domain.strategy.model.vo.RuleNodeVO;
+import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
-import com.dasi.types.constant.Character;
+import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
@@ -112,7 +112,7 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public StrategyRuleEntity queryStrategyRuleByStrategyIDAndRuleModel(Long strategyId, String ruleModel) {
         // 先查缓存
-        String cacheKey = RedisKey.STRATEGY_RULE_KEY + strategyId + Character.UNDERSCORE + ruleModel;
+        String cacheKey = RedisKey.STRATEGY_RULE_KEY + strategyId + Delimiter.UNDERSCORE + ruleModel;
         StrategyRuleEntity strategyRuleEntity = redisService.getValue(cacheKey);
         if (strategyRuleEntity != null) {
             return strategyRuleEntity;
@@ -138,7 +138,7 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public String queryStrategyRuleValue(Long strategyId, String ruleModel) {
         // 先查缓存
-        String cacheKey = RedisKey.STRATEGY_RULE_VALUE_KEY + strategyId + Character.UNDERSCORE + ruleModel;
+        String cacheKey = RedisKey.STRATEGY_RULE_VALUE_KEY + strategyId + Delimiter.UNDERSCORE + ruleModel;
         String ruleValue = redisService.getValue(cacheKey);
         if (ruleValue != null) {
             return ruleValue;
@@ -181,7 +181,7 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Integer awardId) {
         // 先查缓存
-        String cacheKey = RedisKey.TREE_ID_KEY + strategyId + Character.UNDERSCORE + awardId;
+        String cacheKey = RedisKey.TREE_ID_KEY + strategyId + Delimiter.UNDERSCORE + awardId;
         String treeId = redisService.getValue(cacheKey);
         if (treeId != null) {
             return treeId;
@@ -282,7 +282,7 @@ public class StrategyRepository implements IStrategyRepository {
             redisService.setAtomicLong(cacheKey, 0);
             return 0L;
         }
-        String lockKey = cacheKey + Character.UNDERSCORE + (surplus + 1);
+        String lockKey = cacheKey + Delimiter.UNDERSCORE + (surplus + 1);
         if (redisService.setNx(lockKey)) {
             return surplus;
         } else {
@@ -291,18 +291,18 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public void sendStockConsumeToQueue(StockUpdateMessage stockUpdateMessage) {
-        String queueKey = RedisKey.STRATEGY_AWARD_CONSUME_QUEUE_KEY;
-        RBlockingQueue<StockUpdateMessage> blockingQueue = redisService.getBlockingQueue(queueKey);
-        RDelayedQueue<StockUpdateMessage> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+    public void sendStrategyAwardStockToMQ(StrategyAwardStock strategyAwardStock) {
+        String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
+        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
+        RDelayedQueue<StrategyAwardStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
         // 构造延迟队列，三秒后才放入
-        delayedQueue.offer(stockUpdateMessage, 3, TimeUnit.SECONDS);
+        delayedQueue.offer(strategyAwardStock, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public StockUpdateMessage getQueueValue() {
-        String queueKey = RedisKey.STRATEGY_AWARD_CONSUME_QUEUE_KEY;
-        RBlockingQueue<StockUpdateMessage> blockingQueue = redisService.getBlockingQueue(queueKey);
+    public StrategyAwardStock getQueueValue() {
+        String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
+        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
         return blockingQueue.poll();
     }
 

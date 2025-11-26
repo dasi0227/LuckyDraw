@@ -2,7 +2,7 @@ package com.dasi.domain.strategy.service.rule.chain;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
-import com.dasi.domain.strategy.model.rule.RuleModel;
+import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;

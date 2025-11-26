@@ -109,3 +109,16 @@ logging:
   level:
     root: info
   config: classpath:logback-spring.xml
+
+# RabbitMQ
+spring:
+  rabbitmq:
+    addresses: 127.0.0.1
+    port: 5672
+    username: dasi
+    password: jason2004
+    listener:
+      simple:
+        prefetch: 1
+    topic:
+      activity_sku_stock_empty: activity_sku_stock_empty

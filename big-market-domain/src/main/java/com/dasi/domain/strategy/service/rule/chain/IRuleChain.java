@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.service.rule.chain;
 
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 
 // 过滤器的执行责任链
 public interface IRuleChain {

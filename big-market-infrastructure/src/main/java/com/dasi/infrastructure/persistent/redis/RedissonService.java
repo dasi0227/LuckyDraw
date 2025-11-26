@@ -153,13 +153,18 @@ public class RedissonService implements IRedisService {
     }
 
     @Override
-    public void setAtomicLong(String key, Integer awardCount) {
-        redissonClient.getAtomicLong(key).set(awardCount);
+    public void setAtomicLong(String key, Integer num) {
+        redissonClient.getAtomicLong(key).set(num);
     }
 
     @Override
-    public Boolean setNx(String lockKey) {
-        return redissonClient.getBucket(lockKey).setIfAbsent("lock");
+    public Boolean setNx(String key) {
+        return redissonClient.getBucket(key).setIfAbsent("lock");
+    }
+
+    @Override
+    public Boolean setNx(String key, Duration expire) {
+        return redissonClient.getBucket(key).setIfAbsent("lock", expire);
     }
 
     @Override

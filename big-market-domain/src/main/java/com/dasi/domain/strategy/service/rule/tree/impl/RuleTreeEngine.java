@@ -1,11 +1,11 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 
-import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
-import com.dasi.domain.strategy.model.tree.RuleNodeVO;
-import com.dasi.domain.strategy.model.tree.RuleTreeVO;
+import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.vo.RuleEdgeVO;
+import com.dasi.domain.strategy.model.vo.RuleNodeVO;
+import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTreeEngine;
 import lombok.extern.slf4j.Slf4j;

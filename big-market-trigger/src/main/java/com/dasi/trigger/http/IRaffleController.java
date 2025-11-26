@@ -5,11 +5,11 @@ import com.dasi.api.dto.RaffleAwardListRequestDTO;
 import com.dasi.api.dto.RaffleAwardListResponseDTO;
 import com.dasi.api.dto.RaffleRequestDTO;
 import com.dasi.api.dto.RaffleResponseDTO;
-import com.dasi.domain.strategy.model.io.RaffleContext;
-import com.dasi.domain.strategy.model.io.RaffleResult;
+import com.dasi.domain.strategy.model.dto.RaffleContext;
+import com.dasi.domain.strategy.model.dto.RaffleResult;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
-import com.dasi.domain.strategy.service.assemble.IAssemble;
-import com.dasi.domain.strategy.service.raffle.IRaffle;
+import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
+import com.dasi.domain.strategy.service.raffle.IStrategyRaffle;
 import com.dasi.types.model.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 public class IRaffleController implements IRaffleService {
 
     @Resource
-    private IAssemble assemble;
+    private IStrategyAssemble assemble;
 
     @Resource
-    private IRaffle raffle;
+    private IStrategyRaffle raffle;
 
     @GetMapping("/assemble")
     @Override
