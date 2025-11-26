@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.rule.tree;
 
 
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 
 public interface IRuleTree {
 

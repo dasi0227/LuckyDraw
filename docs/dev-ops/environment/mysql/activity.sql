@@ -12,16 +12,13 @@ CREATE TABLE `activity` (
     `end_time` DATETIME NOT NULL,
     `activity_count_id` BIGINT NOT NULL,
     `strategy_id` BIGINT NOT NULL,
-    `state` VARCHAR(8) NOT NULL,
+    `state` VARCHAR(32) NOT NULL,
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY `uq_activity_id` (`activity_id`),
     KEY `idx_begin_date_time` (`begin_time`),
     KEY `idx_end_date_time` (`end_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖活动表';
-INSERT INTO activity (activity_id, activity_name, activity_desc, begin_time, end_time, activity_count_id, strategy_id, state)
-VALUES
-    (1001, '测试活动', '测试活动描述', '2025-11-25 00:00:00', '2025-12-25 00:00:00', 1001, 100001, 'enable');
 
 /* 活动次数配置 */
 DROP TABLE IF EXISTS activity_count;
@@ -66,7 +63,7 @@ CREATE TABLE `activity_account` (
     `month_surplus` INT NOT NULL,
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-UNIQUE KEY `uq_user_id_activity_id` (`user_id`,`activity_id`)
+    UNIQUE KEY `uq_user_id_activity_id` (`user_id`,`activity_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖活动账户表';
 
 /* 订单 */
@@ -74,6 +71,7 @@ DROP TABLE IF EXISTS activity_order;
 CREATE TABLE activity_order (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增ID',
     order_id VARCHAR(32) NOT NULL COMMENT '订单ID',
+    biz_id VARCHAR(32) NOT NULL COMMENT '业务ID',
     user_id VARCHAR(32) NOT NULL COMMENT '用户ID',
     sku BIGINT NOT NULL COMMENT '活动SKU编码',
     strategy_id BIGINT NOT NULL COMMENT '抽奖策略ID',
@@ -82,11 +80,12 @@ CREATE TABLE activity_order (
     total_count INT NOT NULL COMMENT '总次数（本次下单获得）',
     month_count INT NOT NULL COMMENT '月次数（本次下单获得）',
     day_count INT NOT NULL COMMENT '日次数（本次下单获得）',
-    state VARCHAR(8) NOT NULL COMMENT '订单状态（not_used、used、expire）',
+    state VARCHAR(32) NOT NULL COMMENT '订单状态（not_used、used、expire）',
     order_time DATETIME NOT NULL COMMENT '下单时间',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY uq_order_id (order_id),
+    UNIQUE KEY uq_biz_id (biz_id),
     KEY idx_user_sku_status (user_id, sku, state)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖活动订单表';
 
@@ -110,3 +109,15 @@ CREATE TABLE activity_order_003 LIKE big_market.activity_order;
 CREATE TABLE activity_account LIKE big_market.activity_account;
 
 USE big_market;
+
+INSERT INTO activity (activity_id, activity_name, activity_desc, begin_time, end_time, activity_count_id, strategy_id, state)
+VALUES
+    (1001, '测试活动', '测试活动描述', '2025-11-25 00:00:00', '2025-12-25 00:00:00', 1001, 100001, 'created');
+
+INSERT INTO activity_count (activity_count_id, total_count, day_count, month_count)
+VALUES
+    (1001, 5, 1, 2);
+
+INSERT INTO activity_sku (sku, activity_id, activity_count_id, stock_amount, stock_surplus)
+VALUES
+    (2001, 1001, 1001, 100, 100);

@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.rule.tree.impl;
 
 
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.tree.RuleEdgeVO;
 import com.dasi.domain.strategy.model.tree.RuleNodeVO;

@@ -1,7 +1,6 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
-import com.dasi.domain.activity.model.entity.ActivityShoppingCartEntity;
+import com.dasi.domain.activity.model.io.SkuRecharge;
 import com.dasi.domain.activity.service.order.IOrder;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +30,11 @@ public class ActivityTest {
 
     @Test
     public void testOrder() {
-        ActivityShoppingCartEntity activityShoppingCartEntity = new ActivityShoppingCartEntity();
-        activityShoppingCartEntity.setUserId("dasi");
-        activityShoppingCartEntity.setSku(2001L);
-        ActivityOrderEntity activityOrderEntity = order.createActivityOrder(activityShoppingCartEntity);
-        log.info("【测试结果】activityOrderEntity = {}", activityOrderEntity);
+        SkuRecharge skuRecharge = new SkuRecharge();
+        skuRecharge.setUserId("dasi");
+        skuRecharge.setSku(2001L);
+        skuRecharge.setBizId("200402270002");
+        String orderId = order.createSkuRechargeOrder(skuRecharge);
+        log.info("【测试结果】orderId = {}", orderId);
     }
 }

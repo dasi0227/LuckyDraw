@@ -1,10 +1,9 @@
 package com.dasi.domain.activity.service.order;
 
-import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
-import com.dasi.domain.activity.model.entity.ActivityShoppingCartEntity;
+import com.dasi.domain.activity.model.io.SkuRecharge;
 
 public interface IOrder {
 
-    ActivityOrderEntity createActivityOrder(ActivityShoppingCartEntity activityShoppingCartEntity);
+    String createSkuRechargeOrder(SkuRecharge skuRecharge);
 
 }

@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.entity;
+package com.dasi.domain.activity.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityShoppingCartEntity {
+public class SkuRecharge {
 
     private String userId;
 
     private Long sku;
+
+    private String bizId;
 
 }

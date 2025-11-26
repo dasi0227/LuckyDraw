@@ -3,7 +3,7 @@ package com.dasi.domain.strategy.service.rule.tree.impl;
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.rule.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.rule.RuleModel;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.message.StockUpdateMessage;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
@@ -28,7 +28,7 @@ public class RuleStockTree implements IRuleTree {
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
         long surplus = stock.subStrategyAwardCount(strategyId, awardId);
         if (surplus > 0L) {
-            log.info("【规则树 - rule_stock】接管：awardId = {}, surplus = {}->{}", awardId, surplus + 1, surplus);
+            log.info("【策略规则树 - rule_stock】接管：awardId = {}, surplus = {}->{}", awardId, surplus + 1, surplus);
             StockUpdateMessage stockUpdateRequest = StockUpdateMessage.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
@@ -41,7 +41,7 @@ public class RuleStockTree implements IRuleTree {
                     .ruleModel(RuleModel.RULE_STOCK)
                     .build();
         } else {
-            log.info("【规则树 - rule_stock】放行：surplus = {}", surplus);
+            log.info("【策略规则树 - rule_stock】放行：surplus = {}", surplus);
             return RuleCheckResult.builder()
                     .awardId(null)
                     .ruleCheckOutcome(RuleCheckOutcome.PERMIT)

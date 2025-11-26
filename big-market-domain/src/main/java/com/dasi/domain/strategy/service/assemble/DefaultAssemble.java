@@ -41,7 +41,7 @@ public class DefaultAssemble implements IAssemble {
         // 4. 查询当前策略是否有规则 rule_weight，以及是否有配置 rule_weight 规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         if (!strategyEntity.hasRuleWeight()) return true;
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.getName());
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.getCode());
         if (null == strategyRuleEntity) throw new AppException("权重规则没有配置");
 
         // 5. 根据规则值分档装配

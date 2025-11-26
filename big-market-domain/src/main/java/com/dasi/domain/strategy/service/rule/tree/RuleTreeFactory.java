@@ -22,7 +22,7 @@ public class RuleTreeFactory {
             RuleConfig config = AnnotationUtils.findAnnotation(ruleTree.getClass(), RuleConfig.class);
             if (null != config) {
                 // 规则名字作为 key，对应的责任链作为 value
-                this.ruleTreeMap.put(config.ruleModel().getName(), ruleTree);
+                this.ruleTreeMap.put(config.ruleModel().getCode(), ruleTree);
             }
         });
     }

@@ -5,6 +5,7 @@
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityOrder">
         <id     property="id"           column="id"/>
         <result property="orderId"      column="order_id"/>
+        <result property="bizId"        column="biz_id"/>
         <result property="userId"       column="user_id"/>
         <result property="sku"          column="sku"/>
         <result property="strategyId"   column="strategy_id"/>
@@ -20,12 +21,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.ActivityOrder">
-        INSERT INTO activity_order (order_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time)
-        VALUES (#{orderId}, #{userId}, #{sku}, #{strategyId}, #{activityId}, #{activityName}, #{totalCount}, #{monthCount}, #{dayCount}, #{state}, #{orderTime});
+        INSERT INTO activity_order (order_id, biz_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{sku}, #{strategyId}, #{activityId}, #{activityName}, #{totalCount}, #{monthCount}, #{dayCount}, #{state}, #{orderTime});
     </insert>
 
     <select id="queryActivityOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
-        SELECT order_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time
+        SELECT order_id, biz_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time
         FROM activity_order
         WHERE user_id = #{userId};
     </select>
