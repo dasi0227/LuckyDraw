@@ -26,9 +26,11 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
             throw new AppException("参数为空");
         }
 
-        // 2. 活动查询
+        // 2. 活动校验
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
         Boolean success = checkRaffleValid(activityEntity);
+
+        // 3. 查询
 
         return null;
     }

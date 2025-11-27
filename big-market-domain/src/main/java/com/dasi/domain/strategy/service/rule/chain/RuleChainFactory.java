@@ -4,6 +4,8 @@ import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
+import com.dasi.types.constant.Delimiter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RuleChainFactory {
+
+    private final Map<String, IRuleChain> ruleChainPrototypeCache = new ConcurrentHashMap<>();
 
     private final Map<String, IRuleChain> ruleChainMap = new ConcurrentHashMap<>();
 
@@ -31,28 +35,32 @@ public class RuleChainFactory {
         });
     }
 
-    // 根据 strategyId，构造责任链，并返回第一个 RuleChain
     public IRuleChain getRuleModelChain(Long strategyId) {
-        // 当前策略包含的所有前置规则
+        // 查实体中的前置规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
-        String[] ruleModels = strategyEntity.splitRuleModels();
+        String ruleModelsStr = strategyEntity.getRuleModels();
 
-        // 如果没有前置规则，则直接执行默认责任链
-        IRuleChain defaultRuleChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode()).clone();
-        if (null == ruleModels || ruleModels.length == 0) {
-            return defaultRuleChain;
+        // 没有前置规则：直接返回默认链的 clone
+        if (StringUtils.isBlank(ruleModelsStr)) {
+            IRuleChain defaultChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode());
+            return defaultChain.clone();
         }
 
-        // 否则，按照数据库的顺序，逐一添加责任链
-        IRuleChain firstRuleChain = ruleChainMap.get(ruleModels[0]).clone();
-        IRuleChain currentRuleChain = firstRuleChain;
-        for (int i = 1; i < ruleModels.length; i++) {
-            IRuleChain nextRuleChain = ruleChainMap.get(ruleModels[i]).clone();
-            currentRuleChain = currentRuleChain.appendNext(nextRuleChain);
-        }
-        currentRuleChain.appendNext(defaultRuleChain);
+        // 有前置规则：用 ruleModelsStr 做 key，从本地缓存拿“原型链”
+        IRuleChain prototype = ruleChainPrototypeCache.computeIfAbsent(ruleModelsStr, this::buildChainPrototype);
 
-        return firstRuleChain;
+        // 每次请求都 clone 一份，避免 next 被并发修改
+        return prototype.clone();
     }
 
+    private IRuleChain buildChainPrototype(String ruleModelsStr) {
+        String[] ruleModels = ruleModelsStr.split(Delimiter.COMMA);
+        IRuleChain head = ruleChainMap.get(ruleModels[0]).clone();
+        IRuleChain current = head;
+        for (int i = 1; i < ruleModels.length; i++) {
+            current = current.appendNext(ruleChainMap.get(ruleModels[i]).clone());
+        }
+        current.appendNext(ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode()).clone());
+        return head;
+    }
 }

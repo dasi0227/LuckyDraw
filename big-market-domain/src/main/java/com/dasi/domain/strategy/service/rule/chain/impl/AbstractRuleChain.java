@@ -2,7 +2,7 @@ package com.dasi.domain.strategy.service.rule.chain.impl;
 
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 
-public abstract class AbstractRuleChain implements IRuleChain {
+public abstract class AbstractRuleChain implements IRuleChain, Cloneable {
 
     private IRuleChain next;
 
@@ -21,7 +21,9 @@ public abstract class AbstractRuleChain implements IRuleChain {
     public IRuleChain clone() {
         try {
             AbstractRuleChain copy = (AbstractRuleChain) super.clone();
-            copy.next = null;
+            if (this.next != null) {
+                copy.next = this.next.clone();
+            }
             return copy;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
