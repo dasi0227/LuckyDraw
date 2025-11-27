@@ -1,32 +1,29 @@
-package com.dasi.domain.strategy.service.raffle;
+package com.dasi.domain.strategy.service.lottery.impl;
 
-import com.dasi.domain.strategy.model.dto.RaffleContext;
-import com.dasi.domain.strategy.model.dto.RaffleResult;
 import com.dasi.domain.strategy.model.dto.RuleCheckContext;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryContext;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryResult;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractStrategyRaffle implements IStrategyRaffle {
+public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
     protected final IStrategyRepository strategyRepository;
 
-    protected final IStrategyLottery strategyLottery;
-
-    public AbstractStrategyRaffle(IStrategyRepository strategyRepository, IStrategyLottery strategyLottery) {
+    protected AbstractStrategyLottery(IStrategyRepository strategyRepository) {
         this.strategyRepository = strategyRepository;
-        this.strategyLottery = strategyLottery;
     }
 
     @Override
-    public RaffleResult doRaffle(RaffleContext raffleContext) {
+    public StrategyLotteryResult doStrategyLottery(StrategyLotteryContext strategyLotteryContext) {
         // 1. 构造输入输出
         RuleCheckContext ruleCheckContext = RuleCheckContext.builder()
-                .userId(raffleContext.getUserId())
-                .strategyId(raffleContext.getStrategyId())
+                .userId(strategyLotteryContext.getUserId())
+                .strategyId(strategyLotteryContext.getStrategyId())
                 .build();
         RuleCheckResult ruleCheckResult;
 
@@ -35,7 +32,7 @@ public abstract class AbstractStrategyRaffle implements IStrategyRaffle {
 
         // 3. 判断是否需要继续
         if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
-            return RaffleResult.build(ruleCheckResult.getAwardId(), strategyRepository);
+            return StrategyLotteryResult.build(ruleCheckResult.getAwardId(), strategyRepository);
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
         }
@@ -44,7 +41,7 @@ public abstract class AbstractStrategyRaffle implements IStrategyRaffle {
         ruleCheckResult = afterCheck(ruleCheckContext);
 
         // 5. 返回结果
-        return RaffleResult.build(ruleCheckResult.getAwardId(), strategyRepository);
+        return StrategyLotteryResult.build(ruleCheckResult.getAwardId(), strategyRepository);
     }
 
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);

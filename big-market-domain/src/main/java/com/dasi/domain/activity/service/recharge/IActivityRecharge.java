@@ -1,10 +1,10 @@
 package com.dasi.domain.activity.service.recharge;
 
-import com.dasi.domain.activity.model.dto.SkuRechargeContext;
-import com.dasi.domain.activity.model.dto.SkuRechargeResult;
+import com.dasi.domain.activity.model.dto.RechargeContext;
+import com.dasi.domain.activity.model.dto.RechargeResult;
 
 public interface IActivityRecharge {
 
-    SkuRechargeResult skuRecharge(SkuRechargeContext skuRechargeContext);
+    RechargeResult skuRecharge(RechargeContext rechargeContext);
 
 }

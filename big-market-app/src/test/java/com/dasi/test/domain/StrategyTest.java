@@ -1,9 +1,9 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.dto.RaffleContext;
-import com.dasi.domain.strategy.model.dto.RaffleResult;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryContext;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryResult;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
-import com.dasi.domain.strategy.service.raffle.IStrategyRaffle;
+import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
 import com.dasi.domain.strategy.service.rule.tree.impl.RuleLockTree;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -24,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 public class StrategyTest {
 
     @Resource
-    private IStrategyRaffle raffle;
+    private IStrategyLottery raffle;
     @Resource
     private IStrategyAssemble armory;
     @Resource
@@ -48,15 +48,15 @@ public class StrategyTest {
 
         // 抽奖
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
-        RaffleContext raffleContext = new RaffleContext();
-        raffleContext.setUserId("wyw");
-        raffleContext.setStrategyId(strategyId);
+        StrategyLotteryContext strategyLotteryContext = new StrategyLotteryContext();
+        strategyLotteryContext.setUserId("wyw");
+        strategyLotteryContext.setStrategyId(strategyId);
         for (int i = 1; i <= 100; i++) {
-            ReflectionTestUtils.setField(ruleLockTree, "userRaffleCount", (long) i);
+            ReflectionTestUtils.setField(ruleLockTree, "userLotteryCount", (long) i);
             log.info("============================== 第 {} 次抽奖 ==============================", i);
-            log.info("【抽奖请求】RaffleContext {}", raffleContext);
-            RaffleResult raffleResult = raffle.doRaffle(raffleContext);
-            log.info("【抽奖结果】RaffleResult = {}", raffleResult);
+            log.info("【抽奖请求】StrategyLotteryContext {}", strategyLotteryContext);
+            StrategyLotteryResult strategyLotteryResult = raffle.doStrategyLottery(strategyLotteryContext);
+            log.info("【抽奖结果】StrategyLotteryResult = {}", strategyLotteryResult);
         }
 
         new CountDownLatch(1).await();

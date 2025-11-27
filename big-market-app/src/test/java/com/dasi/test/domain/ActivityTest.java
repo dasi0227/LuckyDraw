@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.activity.model.dto.SkuRechargeContext;
-import com.dasi.domain.activity.model.dto.SkuRechargeResult;
+import com.dasi.domain.activity.model.dto.RechargeContext;
+import com.dasi.domain.activity.model.dto.RechargeResult;
 import com.dasi.domain.activity.service.recharge.IActivityRecharge;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -42,16 +42,17 @@ public class ActivityTest {
         // 装配
         boolean success = activityStock.assembleActivitySkuStock(skuId);
 
-        // 下单
+        // 充值
         for (int i = 1; i <= 20; i++) {
-            log.info("=================== 第 {} 次下单 ===================", i);
+            log.info("=================== 第 {} 次充值 ===================", i);
             try {
-                SkuRechargeContext skuRechargeContext = new SkuRechargeContext();
-                skuRechargeContext.setUserId("dasi");
-                skuRechargeContext.setSkuId(skuId);
-                skuRechargeContext.setBizId(RandomStringUtils.randomAlphanumeric(12));
-                SkuRechargeResult skuRechargeResult = activityOrder.skuRecharge(skuRechargeContext);
-                log.info("【下单结果】skuRechargeResult = {}", skuRechargeResult);
+                RechargeContext rechargeContext = new RechargeContext();
+                rechargeContext.setUserId("dasi");
+                rechargeContext.setSkuId(skuId);
+                rechargeContext.setBizId(RandomStringUtils.randomAlphanumeric(12));
+                log.info("【充值请求】RechargeContext = {}", rechargeContext);
+                RechargeResult rechargeResult = activityOrder.skuRecharge(rechargeContext);
+                log.info("【充值结果】RechargeResult = {}", rechargeResult);
             } catch (Exception e) {
                 log.warn("【错误原因】info = {}", e.getMessage());
                 log.warn("【错误栈】", e);

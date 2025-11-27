@@ -25,11 +25,11 @@ public class ActionStockChain extends AbstractActionChain {
     private IActivityRepository activityRepository;
 
     @Override
-    public void action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+    public Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
         Long surplus = activityStock.subtractActivitySkuStock(activitySkuEntity.getSkuId(), activityEntity.getActivityEndTime());
         if (surplus == -1L) {
-            log.info("【活动责任链 - action_sku_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
-            return;
+            log.info("【活动责任链 - action_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
+            return false;
         }
         if (surplus == -2L)  throw new AppException("扣减库存失败：" + activitySkuEntity);
         ActivitySkuStock activitySkuStock = ActivitySkuStock.builder()
@@ -37,6 +37,7 @@ public class ActionStockChain extends AbstractActionChain {
                 .activityId(activityEntity.getActivityId())
                 .build();
         activityRepository.sendActivitySkuStockConsumeToMQ(activitySkuStock);
-        log.info("【活动责任链 - action_sku_stock】扣减库存：activityId = {}，skuId = {}, surplus = {}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
+        log.info("【活动责任链 - action_stock】扣减库存：activityId = {}，skuId = {}, surplus = {}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
+        return true;
     }
 }

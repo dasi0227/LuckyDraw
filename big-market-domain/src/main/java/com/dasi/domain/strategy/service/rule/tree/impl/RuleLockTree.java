@@ -13,21 +13,22 @@ import org.springframework.stereotype.Component;
 @RuleConfig(ruleModel = RuleModel.RULE_LOCK)
 public class RuleLockTree implements IRuleTree {
 
-    private Long userRaffleCount = 10L;
+    @SuppressWarnings("all")
+    private Long userLotteryCount = 10L;
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
-        long limitRaffleCount = Long.parseLong(ruleValue);
+        long limitLotteryCount = Long.parseLong(ruleValue);
 
-        if (userRaffleCount >= limitRaffleCount) {
-            log.info("【策略规则树 - rule_lock】放行：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
+        if (userLotteryCount >= limitLotteryCount) {
+            log.info("【策略规则树 - rule_lock】放行：userLotteryCount = {}, limitLotteryCount = {}", userLotteryCount, limitLotteryCount);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.PERMIT)
                     .ruleModel(RuleModel.RULE_LOCK)
                     .build();
         } else {
-            log.info("【策略规则树 - rule_lock】接管：userRaffleCount = {}, limitRaffleCount = {}", userRaffleCount, limitRaffleCount);
+            log.info("【策略规则树 - rule_lock】接管：userLotteryCount = {}, limitLotteryCount = {}", userLotteryCount, limitLotteryCount);
             return RuleCheckResult.builder()
                     .awardId(null)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

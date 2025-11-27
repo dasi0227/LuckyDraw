@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum OrderState {
+public enum RaffleOrderState {
 
     CREATED("created"),
-    COMPLETED("completed"),
+    USED("used"),
+    CANCELLED("cancelled"),
     ;
 
     private final String code;

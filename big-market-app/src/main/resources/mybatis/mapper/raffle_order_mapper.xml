@@ -4,15 +4,15 @@
 <mapper namespace="com.dasi.infrastructure.persistent.dao.IRaffleOrderDao">
 
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RaffleOrder">
-        <id     property="id"           column="id"/>
-        <result property="orderId"      column="order_id"/>
-        <result property="userId"       column="user_id"/>
-        <result property="activityId"   column="activity_id"/>
-        <result property="strategyId"   column="strategy_id"/>
-        <result property="orderTime"    column="order_time"/>
-        <result property="orderState"   column="order_state"/>
-        <result property="createTime"   column="create_time"/>
-        <result property="updateTime"   column="update_time"/>
+        <id     property="id"                   column="id"/>
+        <result property="orderId"              column="order_id"/>
+        <result property="userId"               column="user_id"/>
+        <result property="activityId"           column="activity_id"/>
+        <result property="strategyId"           column="strategy_id"/>
+        <result property="orderTime"            column="order_time"/>
+        <result property="raffleOrderState"     column="raffle_order_state"/>
+        <result property="createTime"           column="create_time"/>
+        <result property="updateTime"           column="update_time"/>
     </resultMap>
 
 </mapper>

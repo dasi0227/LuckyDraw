@@ -23,7 +23,7 @@ public class RaffleOrder {
     private Long strategyId;
 
     /** 订单状态 */
-    private String orderState;
+    private String raffleOrderState;
 
     /** 下单时间 */
     private LocalDateTime orderTime;

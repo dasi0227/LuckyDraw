@@ -5,11 +5,11 @@ import com.dasi.api.dto.RaffleAwardListRequestDTO;
 import com.dasi.api.dto.RaffleAwardListResponseDTO;
 import com.dasi.api.dto.RaffleRequestDTO;
 import com.dasi.api.dto.RaffleResponseDTO;
-import com.dasi.domain.strategy.model.dto.RaffleContext;
-import com.dasi.domain.strategy.model.dto.RaffleResult;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryContext;
+import com.dasi.domain.strategy.model.dto.StrategyLotteryResult;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
-import com.dasi.domain.strategy.service.raffle.IStrategyRaffle;
+import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.types.model.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class IRaffleController implements IRaffleService {
     private IStrategyAssemble assemble;
 
     @Resource
-    private IStrategyRaffle raffle;
+    private IStrategyLottery raffle;
 
     @GetMapping("/assemble")
     @Override
@@ -39,7 +39,7 @@ public class IRaffleController implements IRaffleService {
     @PostMapping("/award")
     @Override
     public Result<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(@RequestBody RaffleAwardListRequestDTO raffleAwardListRequestDTO) {
-        List<StrategyAwardEntity> strategyAwardEntities = raffle.queryRaffleStrategyAwardList(raffleAwardListRequestDTO.getStrategyId());
+        List<StrategyAwardEntity> strategyAwardEntities = raffle.queryStrategyAwardList(raffleAwardListRequestDTO.getStrategyId());
         List<RaffleAwardListResponseDTO> result = strategyAwardEntities.stream()
                 .map(e -> RaffleAwardListResponseDTO.builder()
                         .awardId(e.getAwardId())
@@ -52,15 +52,15 @@ public class IRaffleController implements IRaffleService {
     @PostMapping("/raffle")
     @Override
     public Result<RaffleResponseDTO> raffle(@RequestBody RaffleRequestDTO raffleRequestDTO) {
-        RaffleContext raffleContext = RaffleContext.builder()
+        StrategyLotteryContext strategyLotteryContext = StrategyLotteryContext.builder()
                 .strategyId(raffleRequestDTO.getStrategyId())
                 .userId("dasi")
                 .build();
-        log.info("【执行抽奖】raffleContext = {}", raffleContext);
-        RaffleResult raffleResult = raffle.doRaffle(raffleContext);
-        log.info("【执行抽奖】raffleResult = {}", raffleResult);
+        log.info("【执行抽奖】strategyLotteryContext = {}", strategyLotteryContext);
+        StrategyLotteryResult strategyLotteryResult = raffle.doStrategyLottery(strategyLotteryContext);
+        log.info("【执行抽奖】strategyLotteryResult = {}", strategyLotteryResult);
         RaffleResponseDTO raffleResponseDTO = RaffleResponseDTO.builder()
-                .awardId(raffleResult.getAwardId())
+                .awardId(strategyLotteryResult.getAwardId())
                 .build();
         return Result.success(raffleResponseDTO);
     }

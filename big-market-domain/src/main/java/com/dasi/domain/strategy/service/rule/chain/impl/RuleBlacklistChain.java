@@ -5,7 +5,6 @@ import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.rule.chain.AbstractRuleChain;
 import com.dasi.types.constant.Delimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

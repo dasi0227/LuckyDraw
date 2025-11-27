@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class ActionBasicChain extends AbstractActionChain {
 
     @Override
-    public void action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+    public Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
 
         String activityState = activityEntity.getActivityState();
         if (ActivityState.CREATED.getCode().equals(activityState)) {
@@ -42,11 +42,11 @@ public class ActionBasicChain extends AbstractActionChain {
         Integer surplus = activitySkuEntity.getStockSurplus();
         if (surplus <= 0) {
             log.info("【活动责任链 - action_basic】活动被抢光了：activityId = {}, surplus = {}", activityEntity.getActivityId(), surplus);
-            throw new AppException("活动被抢光了");
+            return false;
         }
 
         log.info("【活动责任链 - action_basic】活动基础信息无误：activityId = {}, activityName = {}", activityEntity.getActivityId(), activityEntity.getActivityName());
-        next().action(activitySkuEntity, activityEntity, activityQuotaEntity);
+        return next().action(activitySkuEntity, activityEntity, activityQuotaEntity);
     }
 
 }

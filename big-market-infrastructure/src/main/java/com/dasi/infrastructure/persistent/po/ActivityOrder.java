@@ -41,7 +41,7 @@ public class ActivityOrder {
     private Integer dayCount;
 
     /** 订单状态 */
-    private String orderState;
+    private String activityOrderState;
 
     /** 下单时间 */
     private LocalDateTime orderTime;

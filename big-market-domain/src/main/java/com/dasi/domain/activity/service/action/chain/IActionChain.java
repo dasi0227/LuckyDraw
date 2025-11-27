@@ -6,7 +6,7 @@ import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 
 public interface IActionChain {
 
-    void action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
+    Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
 
     IActionChain next();
 

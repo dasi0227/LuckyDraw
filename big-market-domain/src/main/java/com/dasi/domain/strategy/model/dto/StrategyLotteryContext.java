@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleContext {
+public class StrategyLotteryContext {
 
     private String userId;
 

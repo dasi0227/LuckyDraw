@@ -153,7 +153,7 @@ public class ActivityRepository implements IActivityRepository {
         activityOrder.setTotalCount(activityOrderEntity.getTotalCount());
         activityOrder.setMonthCount(activityOrderEntity.getMonthCount());
         activityOrder.setDayCount(activityOrderEntity.getDayCount());
-        activityOrder.setOrderState(activityOrderEntity.getOrderState());
+        activityOrder.setActivityOrderState(activityOrderEntity.getActivityOrderState());
         activityOrder.setOrderTime(activityOrderEntity.getOrderTime());
 
         // 账户对象
