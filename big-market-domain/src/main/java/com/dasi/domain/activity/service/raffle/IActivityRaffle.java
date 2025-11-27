@@ -1,7 +1,10 @@
 package com.dasi.domain.activity.service.raffle;
 
-public interface IActivityRaffle {
+import com.dasi.domain.activity.model.dto.RaffleContext;
+import com.dasi.domain.activity.model.dto.RaffleResult;
 
-    void doActivityRaffles();
+public interface  IActivityRaffle {
+
+    RaffleResult doActivityRaffle(RaffleContext raffleContext);
 
 }

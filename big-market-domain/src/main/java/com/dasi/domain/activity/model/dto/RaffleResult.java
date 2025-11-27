@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.dto;
+package com.dasi.domain.activity.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,5 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StrategyLotteryContext {
-
-    private String userId;
-
-    private Long strategyId;
-
+public class RaffleResult {
 }

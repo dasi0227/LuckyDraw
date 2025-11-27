@@ -5,7 +5,6 @@ import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.model.type.ActivityState;
-import com.dasi.domain.activity.service.action.chain.AbstractActionChain;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -37,12 +36,6 @@ public class ActionBasicChain extends AbstractActionChain {
         if (now.isAfter(activityEntity.getActivityEndTime())) {
             log.info("【活动责任链 - action_basic】超过了截止时间：activityId = {}, endTime = {}", activityEntity.getActivityId(), activityEntity.getActivityEndTime());
             throw new AppException("超过了截止时间");
-        }
-
-        Integer surplus = activitySkuEntity.getStockSurplus();
-        if (surplus <= 0) {
-            log.info("【活动责任链 - action_basic】活动被抢光了：activityId = {}, surplus = {}", activityEntity.getActivityId(), surplus);
-            return false;
         }
 
         log.info("【活动责任链 - action_basic】活动基础信息无误：activityId = {}, activityName = {}", activityEntity.getActivityId(), activityEntity.getActivityName());

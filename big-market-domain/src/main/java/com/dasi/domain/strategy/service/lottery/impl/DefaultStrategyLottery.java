@@ -39,7 +39,7 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
 
     @Override
     protected RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext) {
-        IRuleChain firstRuleChain = ruleChainFactory.getFirstRuleChain(ruleCheckContext.getStrategyId());
+        IRuleChain firstRuleChain = ruleChainFactory.getRuleModelChain(ruleCheckContext.getStrategyId());
         return firstRuleChain.logic(ruleCheckContext.getUserId(), ruleCheckContext.getStrategyId());
     }
 

@@ -1,6 +1,5 @@
 package com.dasi.domain.strategy.service.rule.chain.impl;
 
-
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 
 public abstract class AbstractRuleChain implements IRuleChain {
@@ -17,5 +16,17 @@ public abstract class AbstractRuleChain implements IRuleChain {
         this.next = next;
         return next;
     }
+
+    @Override
+    public IRuleChain clone() {
+        try {
+            AbstractRuleChain copy = (AbstractRuleChain) super.clone();
+            copy.next = null;
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

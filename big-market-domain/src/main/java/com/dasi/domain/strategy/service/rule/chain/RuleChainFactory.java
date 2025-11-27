@@ -32,22 +32,22 @@ public class RuleChainFactory {
     }
 
     // 根据 strategyId，构造责任链，并返回第一个 RuleChain
-    public IRuleChain getFirstRuleChain(Long strategyId) {
+    public IRuleChain getRuleModelChain(Long strategyId) {
         // 当前策略包含的所有前置规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         String[] ruleModels = strategyEntity.splitRuleModels();
 
         // 如果没有前置规则，则直接执行默认责任链
-        IRuleChain defaultRuleChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode());
+        IRuleChain defaultRuleChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode()).clone();
         if (null == ruleModels || ruleModels.length == 0) {
             return defaultRuleChain;
         }
 
         // 否则，按照数据库的顺序，逐一添加责任链
-        IRuleChain firstRuleChain = ruleChainMap.get(ruleModels[0]);
+        IRuleChain firstRuleChain = ruleChainMap.get(ruleModels[0]).clone();
         IRuleChain currentRuleChain = firstRuleChain;
         for (int i = 1; i < ruleModels.length; i++) {
-            IRuleChain nextRuleChain = ruleChainMap.get(ruleModels[i]);
+            IRuleChain nextRuleChain = ruleChainMap.get(ruleModels[i]).clone();
             currentRuleChain = currentRuleChain.appendNext(nextRuleChain);
         }
         currentRuleChain.appendNext(defaultRuleChain);

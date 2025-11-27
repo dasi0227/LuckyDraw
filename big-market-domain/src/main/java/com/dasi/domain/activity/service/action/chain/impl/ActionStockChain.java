@@ -6,7 +6,6 @@ import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.action.chain.AbstractActionChain;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +25,11 @@ public class ActionStockChain extends AbstractActionChain {
 
     @Override
     public Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+        if (activitySkuEntity.getStockSurplus() <= 0) {
+            log.info("【活动责任链 - action_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
+            return false;
+        }
+
         Long surplus = activityStock.subtractActivitySkuStock(activitySkuEntity.getSkuId(), activityEntity.getActivityEndTime());
         if (surplus == -1L) {
             log.info("【活动责任链 - action_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
@@ -38,6 +42,7 @@ public class ActionStockChain extends AbstractActionChain {
                 .build();
         activityRepository.sendActivitySkuStockConsumeToMQ(activitySkuStock);
         log.info("【活动责任链 - action_stock】扣减库存：activityId = {}，skuId = {}, surplus = {}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
-        return true;
+
+        return next().action(activitySkuEntity, activityEntity, activityQuotaEntity);
     }
 }

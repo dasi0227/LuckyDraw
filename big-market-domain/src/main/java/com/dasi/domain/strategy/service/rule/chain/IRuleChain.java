@@ -14,4 +14,7 @@ public interface IRuleChain {
     // 将节点组合成链
     IRuleChain appendNext(IRuleChain next);
 
+    // 克隆当前节点
+    IRuleChain clone();
+
 }

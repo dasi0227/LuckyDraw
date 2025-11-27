@@ -4,21 +4,28 @@ import com.dasi.domain.activity.model.type.ActionModel;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ActionChainFactory {
 
-    private final IActionChain actionChain;
-
-    public IActionChain getFirstActionChain() {
-        return actionChain;
-    }
+    private final Map<String, IActionChain> actionChainMap = new ConcurrentHashMap<>();
 
     public ActionChainFactory(Map<String, IActionChain> actionChainMap) {
+        this.actionChainMap.putAll(actionChainMap);
+    }
 
-        actionChain = actionChainMap.get(ActionModel.ACTION_BASIC);
-        actionChain.appendNext(actionChainMap.get(ActionModel.ACTION_STOCK));
+    public IActionChain getRaffleActionChain() {
+        IActionChain head = actionChainMap.get(ActionModel.ACTION_BASIC).clone();
+        head.appendNext(actionChainMap.get(ActionModel.ACTION_DEFAULT).clone());
+        return head;
+    }
 
+    public IActionChain getRechargeActionChain() {
+        IActionChain head = actionChainMap.get(ActionModel.ACTION_BASIC).clone();
+        head.appendNext(actionChainMap.get(ActionModel.ACTION_STOCK).clone())
+            .appendNext(actionChainMap.get(ActionModel.ACTION_DEFAULT).clone());
+        return head;
     }
 
 }

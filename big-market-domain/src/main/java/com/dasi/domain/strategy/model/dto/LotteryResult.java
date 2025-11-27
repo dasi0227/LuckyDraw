@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StrategyLotteryResult {
+public class LotteryResult {
 
     private Integer awardId;
 
@@ -21,9 +21,9 @@ public class StrategyLotteryResult {
 
     private String awardDesc;
 
-    public static StrategyLotteryResult build(Integer awardId, IStrategyRepository strategyRepository) {
+    public static LotteryResult build(Integer awardId, IStrategyRepository strategyRepository) {
         AwardEntity awardEntity = strategyRepository.queryAwardEntityByAwardId(awardId);
-        return StrategyLotteryResult.builder()
+        return LotteryResult.builder()
                 .awardId(awardId)
                 .awardName(awardEntity.getAwardName())
                 .awardConfig(awardEntity.getAwardConfig())

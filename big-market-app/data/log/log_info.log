@@ -6843,8 +6843,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=987473011539
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -6906,8 +6906,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=815246699576
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -6969,8 +6969,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=648464634881
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7032,8 +7032,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=329321216497
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7095,8 +7095,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=619815208270
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7158,8 +7158,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=697666793304
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7221,8 +7221,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=847580202585
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7284,8 +7284,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=365691576553
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7347,8 +7347,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=522468425133
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7411,8 +7411,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=389229165176
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7475,8 +7475,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=777767814616
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7539,8 +7539,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=038475397397
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7604,8 +7604,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=306091397800
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7668,8 +7668,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=254308322277
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7732,8 +7732,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=886957464952
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7796,8 +7796,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=097023043922
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7860,8 +7860,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=162480098439
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7924,8 +7924,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=464313563111
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -7988,8 +7988,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=880750863062
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8052,8 +8052,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=601062018568
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
 	at com.dasi.infrastructure.persistent.repository.ActivityRepository$$EnhancerBySpringCGLIB$$96d57af8.saveActivitySkuOrder(<generated>)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.createRechargeOrder(DefaultActivityRecharge.java:54)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:41)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8150,8 +8150,8 @@ com.dasi.types.exception.AppException: 订单创建失败，orderId=601062018568
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8193,8 +8193,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8236,8 +8236,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8279,8 +8279,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8322,8 +8322,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8365,8 +8365,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8408,8 +8408,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8451,8 +8451,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8494,8 +8494,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8537,8 +8537,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8580,8 +8580,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8623,8 +8623,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8666,8 +8666,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8709,8 +8709,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8752,8 +8752,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8795,8 +8795,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8838,8 +8838,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8881,8 +8881,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8924,8 +8924,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -8967,8 +8967,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:05:01 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9130,8 +9130,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9173,8 +9173,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9216,8 +9216,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9259,8 +9259,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9302,8 +9302,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9345,8 +9345,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9388,8 +9388,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9431,8 +9431,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9474,8 +9474,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9517,8 +9517,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9560,8 +9560,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9603,8 +9603,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9646,8 +9646,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9689,8 +9689,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9732,8 +9732,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9775,8 +9775,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9818,8 +9818,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9861,8 +9861,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9904,8 +9904,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -9947,8 +9947,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 16:06:34 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicInfoChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:53)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12134,8 +12134,8 @@ Caused by: org.springframework.beans.factory.BeanCurrentlyInCreationException: E
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12178,8 +12178,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12222,8 +12222,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12266,8 +12266,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12310,8 +12310,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12354,8 +12354,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12398,8 +12398,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12442,8 +12442,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12486,8 +12486,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12530,8 +12530,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12574,8 +12574,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12618,8 +12618,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12662,8 +12662,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12706,8 +12706,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12750,8 +12750,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12794,8 +12794,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12838,8 +12838,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12882,8 +12882,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12926,8 +12926,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -12970,8 +12970,8 @@ com.dasi.types.exception.AppException: 活动被抢光了
 2025-11-27 17:06:17 [main            ] WARN  ActivityTest           - 【错误栈】
 com.dasi.types.exception.AppException: 活动被抢光了
 	at com.dasi.domain.activity.service.action.chain.impl.ActionBasicChain.action(ActionBasicChain.java:45)
-	at com.dasi.domain.activity.service.recharge.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
-	at com.dasi.domain.activity.service.recharge.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
+	at com.dasi.domain.activity.service.recharge.impl.DefaultActivityRecharge.checkInvalid(DefaultActivityRecharge.java:32)
+	at com.dasi.domain.activity.service.recharge.impl.AbstractActivityRecharge.skuRecharge(AbstractActivityRecharge.java:38)
 	at com.dasi.test.domain.ActivityTest.testActivity(ActivityTest.java:54)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

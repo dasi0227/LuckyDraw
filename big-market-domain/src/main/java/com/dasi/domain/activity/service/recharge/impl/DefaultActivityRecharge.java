@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.service.recharge;
+package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.dto.RechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
@@ -19,16 +19,16 @@ import java.time.LocalDateTime;
 @Service
 public class DefaultActivityRecharge extends AbstractActivityRecharge {
 
+    @Resource
+    private ActionChainFactory actionChainFactory;
+
     public DefaultActivityRecharge(IActivityRepository activityRepository) {
         super(activityRepository);
     }
 
-    @Resource
-    private ActionChainFactory actionChainFactory;
-
     @Override
-    public Boolean checkInvalid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
-        IActionChain actionChain = actionChainFactory.getFirstActionChain();
+    public Boolean checkRechargeValid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+        IActionChain actionChain = actionChainFactory.getRechargeActionChain();
         return actionChain.action(activitySkuEntity, activityEntity, activityQuotaEntity);
     }
 

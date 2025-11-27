@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.service.recharge;
+package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.dto.RechargeContext;
 import com.dasi.domain.activity.model.dto.RechargeResult;
@@ -6,6 +6,7 @@ import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
+import com.dasi.domain.activity.service.recharge.IActivityRecharge;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
 
     @Override
     public RechargeResult skuRecharge(RechargeContext rechargeContext) {
+
         // 1. 参数校验
         String userId = rechargeContext.getUserId();
         String bizId = rechargeContext.getBizId();
@@ -35,7 +37,7 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
         ActivityQuotaEntity activityQuotaEntity = activityRepository.queryActivityQuotaByActivityQuotaId(activitySkuEntity.getActivityQuotaId());
 
         // 3. 活动规则校验 TODO：暂时不处理责任链结果，后续还有更多的处理规则
-        Boolean success = checkInvalid(activitySkuEntity, activityEntity, activityQuotaEntity);
+        Boolean success = checkRechargeValid(activitySkuEntity, activityEntity, activityQuotaEntity);
         if (!success) {
             return RechargeResult.builder().userId(userId).build();
         }
@@ -46,6 +48,6 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
 
     protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
 
-    protected abstract Boolean checkInvalid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
+    protected abstract Boolean checkRechargeValid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
 
 }

@@ -1,7 +1,7 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.dto.StrategyLotteryContext;
-import com.dasi.domain.strategy.model.dto.StrategyLotteryResult;
+import com.dasi.domain.strategy.model.dto.LotteryContext;
+import com.dasi.domain.strategy.model.dto.LotteryResult;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
@@ -48,15 +48,15 @@ public class StrategyTest {
 
         // 抽奖
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
-        StrategyLotteryContext strategyLotteryContext = new StrategyLotteryContext();
-        strategyLotteryContext.setUserId("wyw");
-        strategyLotteryContext.setStrategyId(strategyId);
+        LotteryContext lotteryContext = new LotteryContext();
+        lotteryContext.setUserId("wyw");
+        lotteryContext.setStrategyId(strategyId);
         for (int i = 1; i <= 100; i++) {
             ReflectionTestUtils.setField(ruleLockTree, "userLotteryCount", (long) i);
             log.info("============================== 第 {} 次抽奖 ==============================", i);
-            log.info("【抽奖请求】StrategyLotteryContext {}", strategyLotteryContext);
-            StrategyLotteryResult strategyLotteryResult = raffle.doStrategyLottery(strategyLotteryContext);
-            log.info("【抽奖结果】StrategyLotteryResult = {}", strategyLotteryResult);
+            log.info("【抽奖请求】LotteryContext {}", lotteryContext);
+            LotteryResult lotteryResult = raffle.doStrategyLottery(lotteryContext);
+            log.info("【抽奖结果】LotteryResult = {}", lotteryResult);
         }
 
         new CountDownLatch(1).await();

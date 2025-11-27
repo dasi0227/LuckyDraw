@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.action.chain;
 
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
+import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 
 public interface IActionChain {
@@ -11,5 +11,7 @@ public interface IActionChain {
     IActionChain next();
 
     IActionChain appendNext(IActionChain next);
+
+    IActionChain clone();
 
 }
