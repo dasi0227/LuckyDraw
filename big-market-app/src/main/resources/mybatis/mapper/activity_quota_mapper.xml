@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityCountDao">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityQuotaDao">
 
-    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityCount">
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityQuota">
         <id     property="id"               column="id"/>
-        <result property="activityCountId"  column="activity_count_id"/>
+        <result property="activityQuotaId"  column="activity_quota_id"/>
         <result property="totalCount"       column="total_count"/>
         <result property="dayCount"         column="day_count"/>
         <result property="monthCount"       column="month_count"/>
@@ -13,10 +13,10 @@
         <result property="updateTime"       column="update_time"/>
     </resultMap>
 
-    <select id="queryActivityCountByActivityCountId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT activity_count_id, total_count, day_count, month_count
-        FROM activity_count
-        WHERE activity_count_id = #{activityCountId};
+    <select id="queryActivityQuotaByActivityQuotaId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT activity_quota_id, total_count, day_count, month_count
+        FROM activity_quota
+        WHERE activity_quota_id = #{activityQuotaId};
     </select>
 
 </mapper>

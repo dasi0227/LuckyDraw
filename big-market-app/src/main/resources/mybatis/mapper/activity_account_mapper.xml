@@ -7,28 +7,28 @@
         <id     property="id"                   column="id"/>
         <result property="userId"               column="user_id"/>
         <result property="activityId"           column="activity_id"/>
-        <result property="totalAmount"          column="total_amount"/>
+        <result property="totalAllocate"        column="total_allocate"/>
         <result property="totalSurplus"         column="total_surplus"/>
-        <result property="dayAmount"            column="day_amount"/>
+        <result property="dayAllocate"          column="day_allocate"/>
         <result property="daySurplus"           column="day_surplus"/>
-        <result property="monthAmount"          column="month_amount"/>
+        <result property="monthAllocate"        column="month_allocate"/>
         <result property="monthSurplus"         column="month_surplus"/>
         <result property="createTime"           column="create_time"/>
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
-        INSERT INTO activity_account (user_id, activity_id, total_amount, total_surplus, day_amount, day_surplus, month_amount, month_surplus)
-        VALUES (#{userId}, #{activityId}, #{totalAmount}, #{totalSurplus}, #{dayAmount}, #{daySurplus}, #{monthAmount}, #{monthSurplus});
+    <insert id="insertActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        INSERT INTO activity_account (user_id, activity_id, total_allocate, total_surplus, day_allocate, day_surplus, month_allocate, month_surplus)
+        VALUES (#{userId}, #{activityId}, #{totalAllocate}, #{totalSurplus}, #{dayAllocate}, #{daySurplus}, #{monthAllocate}, #{monthSurplus});
     </insert>
 
     <update id="updateAccountQuota" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
-        SET total_amount = total_amount + #{totalAmount},
+        SET total_allocate = total_allocate + #{totalAllocate},
             total_surplus = total_surplus + #{totalSurplus},
-            day_amount = day_amount + #{dayAmount},
+            day_allocate = day_allocate + #{dayAllocate},
             day_surplus = day_surplus + #{daySurplus},
-            month_amount = month_amount + #{monthAmount},
+            month_allocate = month_allocate + #{monthAllocate},
             month_surplus = month_surplus + #{monthSurplus}
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>

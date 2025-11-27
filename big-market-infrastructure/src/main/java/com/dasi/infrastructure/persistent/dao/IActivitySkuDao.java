@@ -6,9 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IActivitySkuDao {
 
-    ActivitySku queryActivitySkuBySku(Long sku);
+    ActivitySku queryActivitySkuBySku(Long skuId);
 
-    void updateActivitySkuStock(Long sku);
+    void updateActivitySkuStock(Long skuId);
 
-    void clearActivitySkuStock(Long sku);
+    void clearActivitySkuStock(Long skuId);
 }

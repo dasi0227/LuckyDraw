@@ -3,31 +3,31 @@
 <mapper namespace="com.dasi.infrastructure.persistent.dao.IActivitySkuDao">
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivitySku">
         <id     property="id"               column="id"/>
-        <result property="sku"              column="sku"/>
+        <result property="skuId"            column="sku_id"/>
         <result property="activityId"       column="activity_id"/>
-        <result property="activityCountId"  column="activity_count_id"/>
-        <result property="stockAmount"      column="stock_amount"/>
+        <result property="activityQuotaId"  column="activity_quota_id"/>
+        <result property="stockAllocate"    column="stock_allocate"/>
         <result property="stockSurplus"     column="stock_surplus"/>
         <result property="createTime"       column="create_time"/>
         <result property="updateTime"       column="update_time"/>
     </resultMap>
 
     <select id="queryActivitySkuBySku" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT sku, activity_id, activity_count_id, stock_amount, stock_surplus
+        SELECT sku_id, activity_id, activity_quota_id, stock_allocate, stock_surplus
         FROM activity_sku
-        WHERE sku = #{sku};
+        WHERE sku_id = #{skuId};
     </select>
 
     <update id="clearActivitySkuStock" parameterType="java.lang.Long">
         UPDATE activity_sku
         SET stock_surplus = stock_surplus - 1
-        where sku = #{sku}
+        where sku_id = #{skuId}
     </update>
 
     <update id="updateActivitySkuStock" parameterType="java.lang.Long">
         UPDATE activity_sku
         SET stock_surplus = 0
-        where sku = #{sku}
+        where sku_id = #{skuId}
     </update>
 
 </mapper>

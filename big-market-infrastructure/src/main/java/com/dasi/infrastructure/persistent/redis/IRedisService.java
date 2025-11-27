@@ -92,7 +92,7 @@ public interface IRedisService {
     Long getAtomicLong(String key);
 
     /** 放入原子 Long 类型数据 */
-    void setAtomicLong(String key, Integer num);
+    void setAtomicLong(String key, Long num);
 
     /** 设置值如果不存在 */
     Boolean setNx(String key);

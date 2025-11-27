@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum ActivityState {
 
     CREATED("created"),
-    OPEN("open"),
-    CLOSE("close")
+    UNDERWAY("underway"),
+    OVER("over")
     ;
 
     private final String code;

@@ -20,7 +20,7 @@ public class UpdateActivitySkuStockJob {
         try {
             ActivitySkuStock activitySkuStock = activityStock.getQueueValue();
             if (activitySkuStock != null) {
-                activityStock.updateActivitySkuStock(activitySkuStock.getSku());
+                activityStock.updateActivitySkuStock(activitySkuStock.getSkuId());
                 log.info("【定时任务】更新 SKU 库存成功：{}", activitySkuStock);
             } else {
                 log.info("【定时任务】暂时没有 SKU 库存待更新");

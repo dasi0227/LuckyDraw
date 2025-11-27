@@ -271,15 +271,15 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public void cacheStrategyAwardStock(String cacheKey, Integer stock) {
         if (!redisService.isExists(cacheKey)) {
-            redisService.setAtomicLong(cacheKey, stock);
+            redisService.setAtomicLong(cacheKey, Long.valueOf(stock));
         }
     }
 
     @Override
     public long subStrategyAwardStock(String cacheKey) {
         long surplus = redisService.decr(cacheKey);
-        if (surplus <= 0) {
-            redisService.setAtomicLong(cacheKey, 0);
+        if (surplus <= 0L) {
+            redisService.setAtomicLong(cacheKey, 0L);
             return 0L;
         }
         String lockKey = cacheKey + Delimiter.UNDERSCORE + (surplus + 1);

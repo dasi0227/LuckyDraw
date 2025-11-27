@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class ActionModel {
 
-    public static final String ACTION_BASIC_INFO = "action_base";
-    public static final String ACTION_SKU_STOCK = "action_sku_stock";
-
+    public static final String ACTION_BASIC = "action_basic";
+    public static final String ACTION_STOCK = "action_stock";
 
 }

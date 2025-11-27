@@ -3,30 +3,32 @@
 <mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityOrderDao">
 
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityOrder">
-        <id     property="id"           column="id"/>
-        <result property="orderId"      column="order_id"/>
-        <result property="bizId"        column="biz_id"/>
-        <result property="userId"       column="user_id"/>
-        <result property="sku"          column="sku"/>
-        <result property="strategyId"   column="strategy_id"/>
-        <result property="activityId"   column="activity_id"/>
-        <result property="activityName" column="activity_name"/>
-        <result property="totalCount"   column="total_count"/>
-        <result property="monthCount"   column="month_count"/>
-        <result property="dayCount"     column="day_count"/>
-        <result property="state"        column="state"/>
-        <result property="orderTime"    column="order_time"/>
-        <result property="createTime"   column="create_time"/>
-        <result property="updateTime"   column="update_time"/>
+        <id     property="id"               column="id"/>
+        <result property="orderId"          column="order_id"/>
+        <result property="bizId"            column="biz_id"/>
+        <result property="activityId"       column="activity_id"/>
+        <result property="activityQuotaId"  column="activity_quota_id"/>
+        <result property="strategyId"       column="strategy_id"/>
+        <result property="userId"           column="user_id"/>
+        <result property="skuId"            column="sku_id"/>
+        <result property="totalCount"       column="total_count"/>
+        <result property="monthCount"       column="month_count"/>
+        <result property="dayCount"         column="day_count"/>
+        <result property="orderState"       column="order_state"/>
+        <result property="orderTime"        column="order_time"/>
+        <result property="createTime"       column="create_time"/>
+        <result property="updateTime"       column="update_time"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.ActivityOrder">
-        INSERT INTO activity_order (order_id, biz_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time)
-        VALUES (#{orderId}, #{bizId}, #{userId}, #{sku}, #{strategyId}, #{activityId}, #{activityName}, #{totalCount}, #{monthCount}, #{dayCount}, #{state}, #{orderTime});
+        INSERT
+        INTO activity_order (order_id, biz_id, activity_id, activity_quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, order_state, order_time)
+        VALUES (#{orderId}, #{bizId}, #{activityId}, #{activityQuotaId}, #{strategyId}, #{userId}, #{skuId}, #{totalCount}, #{monthCount}, #{dayCount}, #{orderState}, #{orderTime});
     </insert>
 
+
     <select id="queryActivityOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
-        SELECT order_id, biz_id, user_id, sku, strategy_id, activity_id, activity_name, total_count, month_count, day_count, state, order_time
+        SELECT order_id, biz_id, activity_id, activity_quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, order_state, order_time
         FROM activity_order
         WHERE user_id = #{userId};
     </select>

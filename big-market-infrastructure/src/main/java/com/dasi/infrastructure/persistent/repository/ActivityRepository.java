@@ -3,11 +3,10 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.event.ActivitySkuStockEmptyEvent;
 import com.dasi.domain.activity.model.dto.ActivitySkuStock;
-import com.dasi.domain.activity.model.entity.ActivityCountEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
+import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
-import com.dasi.domain.activity.model.dto.SkuOrder;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
@@ -44,7 +43,7 @@ public class ActivityRepository implements IActivityRepository {
     private IActivitySkuDao activitySkuDao;
 
     @Resource
-    private IActivityCountDao activityCountDao;
+    private IActivityQuotaDao activityCountDao;
 
     @Resource
     private IActivityOrderDao activityOrderDao;
@@ -65,22 +64,22 @@ public class ActivityRepository implements IActivityRepository {
     private ActivitySkuStockEmptyEvent activitySkuStockEmptyEvent;
 
     @Override
-    public ActivitySkuEntity queryActivitySkuBySku(Long sku) {
+    public ActivitySkuEntity queryActivitySkuBySkuId(Long skuId) {
         // 先查缓存
-        String cacheKey = RedisKey.ACTIVITY_SKU_KEY + sku;
+        String cacheKey = RedisKey.ACTIVITY_SKU_KEY + skuId;
         ActivitySkuEntity activitySkuEntity = redisService.getValue(cacheKey);
         if (activitySkuEntity != null) {
             return activitySkuEntity;
         }
 
         // 再查数据库
-        ActivitySku activitySku = activitySkuDao.queryActivitySkuBySku(sku);
-        if (activitySku == null) throw new AppException("ActivitySku 不存在，请检查 " + sku);
+        ActivitySku activitySku = activitySkuDao.queryActivitySkuBySku(skuId);
+        if (activitySku == null) throw new AppException("ActivitySku 不存在，skuId = " + skuId);
         activitySkuEntity = ActivitySkuEntity.builder()
-                .sku(activitySku.getSku())
+                .skuId(activitySku.getSkuId())
                 .activityId(activitySku.getActivityId())
-                .activityCountId(activitySku.getActivityCountId())
-                .stockAmount(activitySku.getStockAmount())
+                .activityQuotaId(activitySku.getActivityQuotaId())
+                .stockAllocate(activitySku.getStockAllocate())
                 .stockSurplus(activitySku.getStockSurplus())
                 .build();
 
@@ -105,11 +104,10 @@ public class ActivityRepository implements IActivityRepository {
                 .activityId(activity.getActivityId())
                 .activityName(activity.getActivityName())
                 .activityDesc(activity.getActivityDesc())
-                .beginTime(activity.getBeginTime())
-                .endTime(activity.getEndTime())
-                .activityCountId(activity.getActivityCountId())
+                .activityBeginTime(activity.getActivityBeginTime())
+                .activityEndTime(activity.getActivityEndTime())
                 .strategyId(activity.getStrategyId())
-                .state(activity.getState())
+                .activityState(activity.getActivityState())
                 .build();
 
         // 缓存并返回
@@ -118,75 +116,77 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public ActivityCountEntity queryActivityCountByActivityCountId(Long activityCountId) {
+    public ActivityQuotaEntity queryActivityQuotaByActivityQuotaId(Long activityQuotaId) {
         // 先查缓存
-        String cacheKey = RedisKey.ACTIVITY_COUNT_KEY + activityCountId;
-        ActivityCountEntity activityCountEntity = redisService.getValue(cacheKey);
-        if (activityCountEntity != null) {
-            return activityCountEntity;
+        String cacheKey = RedisKey.ACTIVITY_COUNT_KEY + activityQuotaId;
+        ActivityQuotaEntity activityQuotaEntity = redisService.getValue(cacheKey);
+        if (activityQuotaEntity != null) {
+            return activityQuotaEntity;
         }
 
         // 再查数据库
-        ActivityCount activityCount = activityCountDao.queryActivityCountByActivityCountId(activityCountId);
-        if (activityCount == null) throw new AppException("ActivityCount 不存在，请检查 " + activityCountId);
-        activityCountEntity = ActivityCountEntity.builder()
-                .activityCountId(activityCount.getActivityCountId())
-                .totalCount(activityCount.getTotalCount())
-                .dayCount(activityCount.getDayCount())
-                .monthCount(activityCount.getMonthCount())
+        ActivityQuota activityQuota = activityCountDao.queryActivityQuotaByActivityQuotaId(activityQuotaId);
+        if (activityQuota == null) throw new AppException("ActivityQuota 不存在，请检查 " + activityQuotaId);
+        activityQuotaEntity = ActivityQuotaEntity.builder()
+                .activityQuotaId(activityQuota.getActivityQuotaId())
+                .totalCount(activityQuota.getTotalCount())
+                .dayCount(activityQuota.getDayCount())
+                .monthCount(activityQuota.getMonthCount())
                 .build();
 
         // 缓存并返回
-        redisService.setValue(cacheKey, activityCountEntity);
-        return activityCountEntity;
+        redisService.setValue(cacheKey, activityQuotaEntity);
+        return activityQuotaEntity;
     }
 
     @Override
-    public void saveOrder(SkuOrder skuOrder) {
+    public void saveActivitySkuOrder(ActivityOrderEntity activityOrderEntity) {
         // 订单对象
-        ActivityOrderEntity activityOrderEntity = skuOrder.getActivityOrderEntity();
         ActivityOrder activityOrder = new ActivityOrder();
         activityOrder.setOrderId(activityOrderEntity.getOrderId());
         activityOrder.setBizId(activityOrderEntity.getBizId());
         activityOrder.setUserId(activityOrderEntity.getUserId());
-        activityOrder.setSku(activityOrderEntity.getSku());
+        activityOrder.setSkuId(activityOrderEntity.getSkuId());
         activityOrder.setStrategyId(activityOrderEntity.getStrategyId());
         activityOrder.setActivityId(activityOrderEntity.getActivityId());
-        activityOrder.setActivityName(activityOrderEntity.getActivityName());
+        activityOrder.setActivityQuotaId(activityOrderEntity.getActivityQuotaId());
         activityOrder.setTotalCount(activityOrderEntity.getTotalCount());
         activityOrder.setMonthCount(activityOrderEntity.getMonthCount());
         activityOrder.setDayCount(activityOrderEntity.getDayCount());
-        activityOrder.setState(activityOrderEntity.getState());
+        activityOrder.setOrderState(activityOrderEntity.getOrderState());
         activityOrder.setOrderTime(activityOrderEntity.getOrderTime());
 
         // 账户对象
         ActivityAccount activityAccount = new ActivityAccount();
-        activityAccount.setUserId(skuOrder.getUserId());
-        activityAccount.setActivityId(skuOrder.getActivityId());
-        activityAccount.setTotalAmount(skuOrder.getTotalCount());
-        activityAccount.setTotalSurplus(skuOrder.getTotalCount());
-        activityAccount.setDayAmount(skuOrder.getDayCount());
-        activityAccount.setDaySurplus(skuOrder.getDayCount());
-        activityAccount.setMonthAmount(skuOrder.getMonthCount());
-        activityAccount.setMonthSurplus(skuOrder.getMonthCount());
+        activityAccount.setUserId(activityOrderEntity.getUserId());
+        activityAccount.setActivityId(activityOrderEntity.getActivityId());
+        activityAccount.setTotalAllocate(activityOrderEntity.getTotalCount());
+        activityAccount.setTotalSurplus(activityOrderEntity.getTotalCount());
+        activityAccount.setDayAllocate(activityOrderEntity.getDayCount());
+        activityAccount.setDaySurplus(activityOrderEntity.getDayCount());
+        activityAccount.setMonthAllocate(activityOrderEntity.getMonthCount());
+        activityAccount.setMonthSurplus(activityOrderEntity.getMonthCount());
 
         try {
-            dbRouter.doRouter(skuOrder.getUserId());
+            dbRouter.doRouter(activityOrderEntity.getUserId());
             transactionTemplate.execute(status -> {
                 try {
                     // 1. 写入订单
                     activityOrderDao.insert(activityOrder);
-                    // 2. 更新账户
+                    // 2. 创建/更新账户
                     int count = activityAccountDao.updateAccountQuota(activityAccount);
-                    // 3. 创建账户
                     if (count == 0) {
-                        activityAccountDao.insert(activityAccount);
+                        activityAccountDao.insertActivityAccount(activityAccount);
                     }
                     return 1;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    log.error("唯一索引冲突；{}", skuOrder);
-                    throw new AppException("唯一索引冲突：" + skuOrder);
+                    log.warn("【订单创建失败】唯一约束冲突：orderId={}, bizId={}, error={}", activityOrderEntity.getOrderId(), activityOrderEntity.getBizId(), e.getMessage());
+                    throw new AppException("唯一索引冲突：" + activityOrderEntity.getOrderId());
+                } catch (Exception e) {
+                    status.setRollbackOnly();
+                    log.warn("【订单创建失败】未知异常：error={}", e.getMessage());
+                    throw new AppException("订单创建失败，orderId=" + activityOrderEntity.getOrderId());
                 }
             });
         } finally {
@@ -195,31 +195,38 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void cacheActivitySkuStockSurplus(Long sku, Integer stockSurplus) {
-        String cacheKey = RedisKey.ACTIVITY_SKU_STOCK_SURPLUS_KEY + sku;
+    public void cacheActivitySkuStockSurplus(Long skuId, Integer stockSurplus) {
+        String cacheKey = RedisKey.ACTIVITY_SKU_STOCK_SURPLUS_KEY + skuId;
         if (redisService.isExists(cacheKey)) return;
-        redisService.setAtomicLong(cacheKey, stockSurplus);
+        redisService.setAtomicLong(cacheKey, Long.valueOf(stockSurplus));
     }
 
+    // -1 表示为空，-2 表示错误
     @Override
-    public Long subtractActivitySkuStock(Long sku, LocalDateTime endDatetime) {
-        String cacheKey = RedisKey.ACTIVITY_SKU_STOCK_SURPLUS_KEY + sku;
-        if (!redisService.isExists(cacheKey)) return -1L;
+    public Long subtractActivitySkuStockSurplus(Long skuId, LocalDateTime endTime) {
+        String cacheKey = RedisKey.ACTIVITY_SKU_STOCK_SURPLUS_KEY + skuId;
+        if (!redisService.isExists(cacheKey)) return -2L;
+
         long surplus = redisService.decr(cacheKey);
-        if (surplus == 0) {
-            eventPublisher.publish(activitySkuStockEmptyEvent.topic(), activitySkuStockEmptyEvent.buildEventMessage(sku));
-            return surplus;
-        } else if (surplus < 0) {
-            redisService.setAtomicLong(cacheKey, 0);
+        if (surplus < -1L) {
+            redisService.setAtomicLong(cacheKey, 0L);
+            return -2L;
+        }
+        if (surplus == -1L) {
+            redisService.setAtomicLong(cacheKey, 0L);
             return -1L;
+        }
+        if (surplus == 0L) {
+            eventPublisher.publish(activitySkuStockEmptyEvent.topic(), activitySkuStockEmptyEvent.buildEventMessage(skuId));
+            return surplus;
         }
 
         String lockKey = cacheKey + Delimiter.UNDERSCORE + surplus;
         Duration expire = Duration.ofMillis(
-                endDatetime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                endTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 - System.currentTimeMillis()
                 + TimeUnit.DAYS.toMillis(1));
-        return redisService.setNx(lockKey, expire) ? surplus : -1L;
+        return redisService.setNx(lockKey, expire) ? surplus : -2L;
     }
 
     @Override
@@ -245,12 +252,12 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void updateActivitySkuStock(Long sku) {
-        activitySkuDao.updateActivitySkuStock(sku);
+    public void updateActivitySkuStock(Long skuId) {
+        activitySkuDao.updateActivitySkuStock(skuId);
     }
 
     @Override
-    public void clearActivitySkuStock(Long sku) {
-        activitySkuDao.clearActivitySkuStock(sku);
+    public void clearActivitySkuStock(Long skuId) {
+        activitySkuDao.clearActivitySkuStock(skuId);
     }
 }

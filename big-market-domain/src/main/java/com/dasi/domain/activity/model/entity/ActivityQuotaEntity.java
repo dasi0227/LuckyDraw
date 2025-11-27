@@ -9,11 +9,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityCountEntity {
+public class ActivityQuotaEntity {
 
-    private Long activityCountId;
+    /** 定量id */
+    private Long activityQuotaId;
+
+    /** 总次数 */
     private Integer totalCount;
-    private Integer dayCount;
+
+    /** 每月次数 */
     private Integer monthCount;
+
+    /** 每日次数 */
+    private Integer dayCount;
 
 }

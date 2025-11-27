@@ -6,14 +6,27 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ActivityCount {
+public class ActivityQuota {
 
+    /** 自增id */
     private Long id;
-    private Long activityCountId;
+
+    /** 定量id */
+    private Long activityQuotaId;
+
+    /** 总次数 */
     private Integer totalCount;
-    private Integer dayCount;
+
+    /** 每月次数 */
     private Integer monthCount;
+
+    /** 每日次数 */
+    private Integer dayCount;
+
+    /** 创建时间 */
     private LocalDateTime createTime;
+
+    /** 更新时间 */
     private LocalDateTime updateTime;
 
 }

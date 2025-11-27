@@ -1,26 +1,26 @@
 package com.dasi.domain.activity.repository;
 
 import com.dasi.domain.activity.model.dto.ActivitySkuStock;
-import com.dasi.domain.activity.model.entity.ActivityCountEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
+import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
+import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
-import com.dasi.domain.activity.model.dto.SkuOrder;
 
 import java.time.LocalDateTime;
 
 public interface IActivityRepository {
 
-    ActivitySkuEntity queryActivitySkuBySku(Long sku);
+    ActivitySkuEntity queryActivitySkuBySkuId(Long skuId);
 
     ActivityEntity queryActivityByActivityId(Long activityId);
 
-    ActivityCountEntity queryActivityCountByActivityCountId(Long activityCountId);
+    ActivityQuotaEntity queryActivityQuotaByActivityQuotaId(Long activityCountId);
 
-    void saveOrder(SkuOrder skuOrder);
+    void saveActivitySkuOrder(ActivityOrderEntity activityOrderEntity);
 
-    void cacheActivitySkuStockSurplus(Long sku, Integer stockSurplus);
+    void cacheActivitySkuStockSurplus(Long skuId, Integer stockSurplus);
 
-    Long subtractActivitySkuStock(Long sku, LocalDateTime endDatetime);
+    Long subtractActivitySkuStockSurplus(Long skuId, LocalDateTime endTime);
 
     void sendActivitySkuStockConsumeToMQ(ActivitySkuStock activitySkuStock);
 
@@ -28,7 +28,7 @@ public interface IActivityRepository {
 
     void clearQueueValue();
 
-    void updateActivitySkuStock(Long sku);
+    void updateActivitySkuStock(Long skuId);
 
-    void clearActivitySkuStock(Long sku);
+    void clearActivitySkuStock(Long skuId);
 }

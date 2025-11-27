@@ -13,13 +13,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ActivityEntity {
 
+    /** 活动id */
     private Long activityId;
-    private String activityName;
-    private String activityDesc;
-    private LocalDateTime beginTime;
-    private LocalDateTime endTime;
-    private Long activityCountId;
+
+    /** 策略id */
     private Long strategyId;
-    private String state;
+
+    /** 活动名称 */
+    private String activityName;
+
+    /** 活动描述 */
+    private String activityDesc;
+
+    /** 活动状态 */
+    private String activityState;
+
+    /** 活动开始时间 */
+    private LocalDateTime activityBeginTime;
+
+    /** 活动结束时间 */
+    private LocalDateTime activityEndTime;
 
 }

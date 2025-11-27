@@ -1,29 +1,30 @@
 package com.dasi.infrastructure.persistent.po;
 
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ActivitySku {
+public class ActivityDay {
 
     /** 自增id */
     private Long id;
 
-    /** 库存id */
-    private Long skuId;
-
     /** 活动id */
     private Long activityId;
 
-    /** 定量id */
-    private Long activityQuotaId;
+    /** 用户id */
+    private String userId;
 
-    /** 库存分配 */
-    private Integer stockAllocate;
+    /** yyyy-mm-dd */
+    private String day;
 
-    /** 库存剩余 */
-    private Integer stockSurplus;
+    /** 日次数 */
+    private Integer dayAllocate;
+
+    /** 日次数-剩余 */
+    private Integer daySurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

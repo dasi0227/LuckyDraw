@@ -5,25 +5,25 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ActivitySku {
+public class ActivityMonth {
 
     /** 自增id */
     private Long id;
 
-    /** 库存id */
-    private Long skuId;
-
     /** 活动id */
     private Long activityId;
 
-    /** 定量id */
-    private Long activityQuotaId;
+    /** 用户id */
+    private String userId;
 
-    /** 库存分配 */
-    private Integer stockAllocate;
+    /** yyyy-mm */
+    private String month;
 
-    /** 库存剩余 */
-    private Integer stockSurplus;
+    /** 月次数 */
+    private Integer monthAllocate;
+
+    /** 月次数-剩余 */
+    private Integer monthSurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

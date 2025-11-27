@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IActivityAccountDao {
     int updateAccountQuota(ActivityAccount activityAccount);
 
-    void insert(ActivityAccount activityAccount);
+    void insertActivityAccount(ActivityAccount activityAccount);
 }

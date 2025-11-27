@@ -11,20 +11,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ActivityAccountEntity {
 
+    /** 用户id */
     private String userId;
 
+    /** 活动id */
     private Long activityId;
 
-    private Integer totalAmount;
+    /** 总分配 */
+    private Integer totalAllocate;
 
+    /** 总余额 */
     private Integer totalSurplus;
 
-    private Integer dayAmount;
+    /** 天分配 */
+    private Integer dayAllocate;
 
+    /** 天余额 */
     private Integer daySurplus;
 
-    private Integer monthAmount;
+    /** 月分配 */
+    private Integer monthAllocate;
 
+    /** 月余额 */
     private Integer monthSurplus;
 
 }

@@ -5,19 +5,18 @@
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Activity">
         <id     property="id"                   column="id"/>
         <result property="activityId"           column="activity_id"/>
+        <result property="strategyId"           column="strategy_id"/>
         <result property="activityName"         column="activity_name"/>
         <result property="activityDesc"         column="activity_desc"/>
-        <result property="beginTime"            column="begin_time"/>
-        <result property="endTime"              column="end_time"/>
-        <result property="activityCountId"      column="activity_count_id"/>
-        <result property="strategyId"           column="strategy_id"/>
-        <result property="state"                column="state"/>
+        <result property="activityState"        column="activity_state"/>
+        <result property="activityBeginTime"    column="activity_begin_time"/>
+        <result property="activityEndTime"      column="activity_end_time"/>
         <result property="createTime"           column="create_time"/>
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
     <select id="queryActivityByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT activity_id, activity_name, activity_desc, begin_time, end_time, activity_count_id, strategy_id, state
+        SELECT activity_id, activity_name, activity_desc, activity_begin_time, activity_end_time, strategy_id, activity_state
         FROM activity
         WHERE activity_id = #{activityId}
     </select>

@@ -18,15 +18,15 @@ public class DefaultActivityStock implements IActivityStock {
 
     @Override
     public boolean assembleActivitySkuStock(Long sku) {
-        ActivitySkuEntity activitySkuEntity = activityRepository.queryActivitySkuBySku(sku);
+        ActivitySkuEntity activitySkuEntity = activityRepository.queryActivitySkuBySkuId(sku);
         activityRepository.cacheActivitySkuStockSurplus(sku, activitySkuEntity.getStockSurplus());
         log.info("【活动装配】sku = {}, activitySkuStockSurplus = {}", sku, activitySkuEntity.getStockSurplus());
         return false;
     }
 
     @Override
-    public Long subtractActivitySkuStock(Long sku, LocalDateTime endDatetime) {
-        return activityRepository.subtractActivitySkuStock(sku, endDatetime);
+    public Long subtractActivitySkuStock(Long sku, LocalDateTime endTime) {
+        return activityRepository.subtractActivitySkuStockSurplus(sku, endTime);
     }
 
     @Override

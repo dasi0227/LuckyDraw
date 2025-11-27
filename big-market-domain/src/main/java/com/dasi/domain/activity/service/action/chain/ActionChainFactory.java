@@ -16,8 +16,8 @@ public class ActionChainFactory {
 
     public ActionChainFactory(Map<String, IActionChain> actionChainMap) {
 
-        actionChain = actionChainMap.get(ActionModel.ACTION_BASIC_INFO);
-        actionChain.appendNext(actionChainMap.get(ActionModel.ACTION_SKU_STOCK));
+        actionChain = actionChainMap.get(ActionModel.ACTION_BASIC);
+        actionChain.appendNext(actionChainMap.get(ActionModel.ACTION_STOCK));
 
     }
 

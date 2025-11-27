@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivitySkuStock {
+public class SkuRechargeContext {
+
+    private String userId;
 
     private Long skuId;
 
-    private Long activityId;
+    private String bizId;
 
 }

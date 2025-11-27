@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ActivityAccount {
+public class RaffleAward {
 
     /** 自增id */
     private Long id;
@@ -16,23 +16,23 @@ public class ActivityAccount {
     /** 活动id */
     private Long activityId;
 
-    /** 总分配 */
-    private Integer totalAllocate;
+    /** 策略id */
+    private Long strategyId;
 
-    /** 总余额 */
-    private Integer totalSurplus;
+    /** 订单id */
+    private String orderId;
 
-    /** 天分配 */
-    private Integer dayAllocate;
+    /** 奖品id */
+    private Integer awardId;
 
-    /** 天余额 */
-    private Integer daySurplus;
+    /** 奖品标题 */
+    private String awardTitle;
 
-    /** 月分配 */
-    private Integer monthAllocate;
+    /** 中奖时间 */
+    private LocalDateTime awardTime;
 
-    /** 月余额 */
-    private Integer monthSurplus;
+    /** 奖品发放状态 */
+    private String awardState;
 
     /** 创建时间 */
     private LocalDateTime createTime;

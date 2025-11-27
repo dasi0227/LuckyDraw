@@ -14,11 +14,11 @@ public class ActivitySkuStockEmptyEvent extends BaseEvent<Long> {
     private String topic;
 
     @Override
-    public EventMessage<Long> buildEventMessage(Long data) {
+    public EventMessage<Long> buildEventMessage(Long skuId) {
         return EventMessage.<Long>builder()
                 .id(RandomStringUtils.randomNumeric(12))
                 .time(LocalDateTime.now())
-                .data(data)
+                .data(skuId)
                 .build();
     }
 

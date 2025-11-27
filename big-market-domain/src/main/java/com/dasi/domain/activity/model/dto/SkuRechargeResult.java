@@ -9,12 +9,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SkuRecharge {
+public class SkuRechargeResult {
 
     private String userId;
 
-    private Long sku;
+    private String orderId;
 
-    private String bizId;
+    private Integer totalCount;
+
+    private Integer monthCount;
+
+    private Integer dayCount;
 
 }
