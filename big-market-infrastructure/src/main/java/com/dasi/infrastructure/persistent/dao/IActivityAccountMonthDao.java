@@ -10,5 +10,8 @@ public interface IActivityAccountMonthDao {
     @DBRouter
     ActivityAccountMonth queryActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
+    int subtractActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
+
+    void createActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
 }

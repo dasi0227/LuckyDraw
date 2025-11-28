@@ -40,11 +40,14 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         // 3. 查询还未执行完成的抽奖
         RaffleOrderEntity raffleOrderEntity = activityRepository.queryUnusedRaffleOrder(userId, activityId);
         if (raffleOrderEntity != null) {
-            return RaffleResult.builder().raffleOrderEntity(raffleOrderEntity).build();
+            return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
         }
 
         // 4. 用户校验
         RaffleOrderAggregate raffleOrderAggregate = checkAccountAvailable(userId, activityId);
+        if (raffleOrderAggregate == null) {
+            return RaffleResult.builder().userId(userId).build();
+        }
 
         // 5. 构建订单
         raffleOrderEntity = createRaffleOrder(userId, activityId);
@@ -53,7 +56,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         // 6. 构造聚合对象
         activityRepository.saveRaffleOrder(raffleOrderAggregate);
 
-        return RaffleResult.builder().raffleOrderEntity(raffleOrderEntity).build();
+        return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
     }
 
     protected abstract RaffleOrderEntity createRaffleOrder(String userId, Long activityId);

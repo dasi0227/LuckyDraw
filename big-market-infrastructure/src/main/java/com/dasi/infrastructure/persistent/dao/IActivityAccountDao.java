@@ -15,8 +15,8 @@ public interface IActivityAccountDao {
     @DBRouter
     ActivityAccount queryActivityAccount(ActivityAccount activityAccount);
 
-    void updateActivityAccountDay(ActivityAccount activityAccount);
+    void updateActivityAccountDaySurplus(ActivityAccount activityAccount);
 
-    void updateActivityAccountMonth(ActivityAccount activityAccount);
+    void updateActivityAccountMonthSurplus(ActivityAccount activityAccount);
 
 }

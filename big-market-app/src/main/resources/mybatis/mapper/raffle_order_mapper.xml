@@ -15,10 +15,17 @@
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
+    <insert id="saveRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder">
+        INSERT INTO raffle_order (order_id, user_id, activity_id, strategy_id, raffle_time, raffle_state)
+        VALUES (#{orderId}, #{userId}, #{activityId}, #{strategyId}, #{raffleTime}, #{raffleState})
+    </insert>
+
     <select id="queryUnusedRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder" resultMap="dataMap">
         SELECT order_id, user_id, activity_id, strategy_id, raffle_time, raffle_state
         FROM raffle_order
         WHERE raffle_state = 'created' AND user_id = #{userId} AND activity_id = #{activityId}
+        ORDER BY raffle_time DESC
+        LIMIT 1
     </select>
 
 </mapper>

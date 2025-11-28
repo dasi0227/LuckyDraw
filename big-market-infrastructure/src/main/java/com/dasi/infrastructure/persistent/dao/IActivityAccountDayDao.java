@@ -10,4 +10,7 @@ public interface IActivityAccountDayDao {
     @DBRouter
     ActivityAccountDay queryActivityAccountDay(ActivityAccountDay activityAccountDay);
 
+    int subtractActivityAccountDay(ActivityAccountDay activityAccountDay);
+
+    void createActivityAccountDay(ActivityAccountDay activityAccountDay);
 }

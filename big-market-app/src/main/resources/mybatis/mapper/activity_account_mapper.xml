@@ -47,13 +47,13 @@
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>
 
-    <update id="updateActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+    <update id="updateActivityAccountDaySurplus" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET day_surplus = #{daySurplus}
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>
 
-    <update id="updateActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+    <update id="updateActivityAccountMonthSurplus" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET month_surplus = #{monthSurplus}
         WHERE user_id = #{userId} AND activity_id = #{activityId};
