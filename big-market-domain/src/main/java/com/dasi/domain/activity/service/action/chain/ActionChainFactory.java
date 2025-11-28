@@ -13,13 +13,14 @@ public class ActionChainFactory {
     private final IActionChain rechargeActionChainPrototype;
 
     public ActionChainFactory(Map<String, IActionChain> actionChainMap) {
-        IActionChain raffleHead = actionChainMap.get(ActionModel.ACTION_BASIC).clone();
-        raffleHead.appendNext(actionChainMap.get(ActionModel.ACTION_DEFAULT).clone());
+        IActionChain raffleHead = actionChainMap.get(ActionModel.ACTIVITY_INFO).clone();
+        raffleHead.appendNext(actionChainMap.get(ActionModel.ACCOUNT_INFO).clone())
+                  .appendNext(actionChainMap.get(ActionModel.DEFAULT).clone());
         this.raffleActionChainPrototype = raffleHead;
 
-        IActionChain rechargeHead = actionChainMap.get(ActionModel.ACTION_BASIC).clone();
-        rechargeHead.appendNext(actionChainMap.get(ActionModel.ACTION_STOCK).clone())
-                    .appendNext(actionChainMap.get(ActionModel.ACTION_DEFAULT).clone());
+        IActionChain rechargeHead = actionChainMap.get(ActionModel.ACTIVITY_INFO).clone();
+        rechargeHead.appendNext(actionChainMap.get(ActionModel.SKU_STOCK).clone())
+                    .appendNext(actionChainMap.get(ActionModel.DEFAULT).clone());
         this.rechargeActionChainPrototype = rechargeHead;
     }
 

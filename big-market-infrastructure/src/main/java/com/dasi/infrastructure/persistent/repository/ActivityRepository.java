@@ -394,7 +394,7 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccountMonth.setMonthSurplus(activityAccountMonthEntity.getMonthSurplus() - 1);
                         activityAccountMonthDao.createActivityAccountMonth(activityAccountMonth);
 
-                        // 3. 保持与总余额一致
+                        // 3. 保持与总余额同步
                         activityAccount.setMonthSurplus(activityAccountMonthEntity.getMonthSurplus() - 1);
                         activityAccountDao.updateActivityAccountMonthSurplus(activityAccount);
                     }
@@ -413,7 +413,7 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccountDay.setDaySurplus(activityAccountDayEntity.getDaySurplus() - 1);
                         activityAccountDayDao.createActivityAccountDay(activityAccountDay);
 
-                        // 3. 保持与总余额一致
+                        // 3. 保持与总余额同步
                         activityAccount.setDaySurplus(activityAccountDayEntity.getDaySurplus() - 1);
                         activityAccountDao.updateActivityAccountDaySurplus(activityAccount);
                     }

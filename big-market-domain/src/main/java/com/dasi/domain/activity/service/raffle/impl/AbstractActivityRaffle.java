@@ -5,11 +5,15 @@ import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.dto.RaffleResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
+import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 public abstract class AbstractActivityRaffle implements IActivityRaffle {
@@ -30,39 +34,35 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
             throw new AppException("参数为空");
         }
 
-        // 2. 活动校验
+        // 2. 活动与用户校验
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
-        Boolean available = checkActivityAvailable(activityEntity);
-        if (!available) {
-            return RaffleResult.builder().build();
+        RaffleOrderAggregate raffleOrderAggregate = checkRaffleAvailable(userId, activityEntity);
+        if (raffleOrderAggregate == null) {
+            return RaffleResult.builder().userId(userId).build();
         }
 
         // 3. 查询还未执行完成的抽奖
         RaffleOrderEntity raffleOrderEntity = activityRepository.queryUnusedRaffleOrder(userId, activityId);
         if (raffleOrderEntity != null) {
             return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
+        } else {
+            raffleOrderEntity = RaffleOrderEntity.builder()
+                    .orderId(RandomStringUtils.randomNumeric(12))
+                    .userId(userId)
+                    .activityId(activityId)
+                    .strategyId(activityEntity.getStrategyId())
+                    .raffleState(RaffleState.CREATED.getCode())
+                    .raffleTime(LocalDateTime.now())
+                    .build();
         }
 
-        // 4. 用户校验
-        RaffleOrderAggregate raffleOrderAggregate = checkAccountAvailable(userId, activityId);
-        if (raffleOrderAggregate == null) {
-            return RaffleResult.builder().userId(userId).build();
-        }
-
-        // 5. 构建订单
-        raffleOrderEntity = createRaffleOrder(userId, activityId);
+        // 4. 保存订单
         raffleOrderAggregate.setRaffleOrderEntity(raffleOrderEntity);
-
-        // 6. 构造聚合对象
         activityRepository.saveRaffleOrder(raffleOrderAggregate);
 
         return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
     }
 
-    protected abstract RaffleOrderEntity createRaffleOrder(String userId, Long activityId);
-
-    protected abstract RaffleOrderAggregate checkAccountAvailable(String userId, Long activityId);
-
-    protected abstract Boolean checkActivityAvailable(ActivityEntity activityEntity);
+    protected abstract RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity);
 
 }
