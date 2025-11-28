@@ -1,12 +1,12 @@
 package com.dasi.domain.activity.service.action.chain;
 
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
+import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 
 public interface IActionChain {
 
-    Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
+    Boolean action(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
     IActionChain next();
 

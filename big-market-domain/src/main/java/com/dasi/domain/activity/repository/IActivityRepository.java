@@ -1,34 +1,42 @@
 package com.dasi.domain.activity.repository;
 
-import com.dasi.domain.activity.model.dto.ActivitySkuStock;
-import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.dto.SkuStock;
+import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
+import com.dasi.domain.activity.model.entity.*;
 
 import java.time.LocalDateTime;
 
 public interface IActivityRepository {
 
-    ActivitySkuEntity queryActivitySkuBySkuId(Long skuId);
+    RechargeSkuEntity queryRechargeSkuBySkuId(Long skuId);
 
     ActivityEntity queryActivityByActivityId(Long activityId);
 
-    ActivityQuotaEntity queryActivityQuotaByActivityQuotaId(Long activityCountId);
+    RechargeQuotaEntity queryRechargeQuotaByQuotaId(Long quotaId);
 
-    void saveActivitySkuOrder(ActivityOrderEntity activityOrderEntity);
+    ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
 
-    void cacheActivitySkuStockSurplus(Long skuId, Integer stockSurplus);
+    ActivityAccountMonthEntity queryActivityAccountMonth(String userId, Long activityId, String month);
 
-    Long subtractActivitySkuStockSurplus(Long skuId, LocalDateTime endTime);
+    ActivityAccountDayEntity queryActivityAccountDay(String userId, Long activityId, String day);
 
-    void sendActivitySkuStockConsumeToMQ(ActivitySkuStock activitySkuStock);
+    RaffleOrderEntity queryUnusedRaffleOrder(String userId, Long activityId);
 
-    ActivitySkuStock getQueueValue();
+    void cacheRechargeSkuStockSurplus(Long skuId, Integer stockSurplus);
+
+    Long subtractRechargeSkuStockSurplus(Long skuId, LocalDateTime endTime);
+
+    void sendRechargeSkuStockConsumeToMQ(SkuStock skuStock);
+
+    SkuStock getQueueValue();
 
     void clearQueueValue();
 
-    void updateActivitySkuStock(Long skuId);
+    void updateRechargeSkuStock(Long skuId);
 
-    void clearActivitySkuStock(Long skuId);
+    void clearRechargeSkuStock(Long skuId);
+
+    void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate);
+
+    void saveRechargeOrder(RechargeOrderEntity rechargeOrderEntity);
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRechargeOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RechargeOrder">
+        <id     property="id"                   column="id"/>
+        <result property="orderId"              column="order_id"/>
+        <result property="bizId"                column="biz_id"/>
+        <result property="activityId"           column="activity_id"/>
+        <result property="quotaId"              column="quota_id"/>
+        <result property="strategyId"           column="strategy_id"/>
+        <result property="userId"               column="user_id"/>
+        <result property="skuId"                column="sku_id"/>
+        <result property="totalCount"           column="total_count"/>
+        <result property="monthCount"           column="month_count"/>
+        <result property="dayCount"             column="day_count"/>
+        <result property="rechargeState"        column="recharge_state"/>
+        <result property="rechargeTime"         column="recharge_time"/>
+        <result property="createTime"           column="create_time"/>
+        <result property="updateTime"           column="update_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.dasi.infrastructure.persistent.po.RechargeOrder">
+        INSERT
+        INTO recharge_order (order_id, biz_id, activity_id, quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, recharge_state, recharge_time)
+        VALUES (#{orderId}, #{bizId}, #{activityId}, #{quotaId}, #{strategyId}, #{userId}, #{skuId}, #{totalCount}, #{monthCount}, #{dayCount}, #{rechargeState}, #{rechargeTime});
+    </insert>
+
+    <select id="queryRechargeOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT order_id, biz_id, activity_id, quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, recharge_state, recharge_time
+        FROM recharge_order
+        WHERE user_id = #{userId};
+    </select>
+
+</mapper>

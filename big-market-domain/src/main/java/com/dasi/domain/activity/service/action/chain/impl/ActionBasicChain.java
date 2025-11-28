@@ -1,9 +1,9 @@
 package com.dasi.domain.activity.service.action.chain.impl;
 
 import com.dasi.domain.activity.model.type.ActionModel;
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
+import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.model.type.ActivityState;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ActionBasicChain extends AbstractActionChain {
 
     @Override
-    public Boolean action(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+    public Boolean action(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
 
         String activityState = activityEntity.getActivityState();
         if (ActivityState.CREATED.getCode().equals(activityState)) {
@@ -39,7 +39,7 @@ public class ActionBasicChain extends AbstractActionChain {
         }
 
         log.info("【活动责任链 - action_basic】活动基础信息无误：activityId = {}, activityName = {}", activityEntity.getActivityId(), activityEntity.getActivityName());
-        return next().action(activitySkuEntity, activityEntity, activityQuotaEntity);
+        return next().action(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
     }
 
 }

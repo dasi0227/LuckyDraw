@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRechargeSkuDao">
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RechargeSku">
+        <id     property="id"               column="id"/>
+        <result property="skuId"            column="sku_id"/>
+        <result property="activityId"       column="activity_id"/>
+        <result property="quotaId"          column="quota_id"/>
+        <result property="stockAllocate"    column="stock_allocate"/>
+        <result property="stockSurplus"     column="stock_surplus"/>
+        <result property="createTime"       column="create_time"/>
+        <result property="updateTime"       column="update_time"/>
+    </resultMap>
+
+    <select id="queryRechargeSkuBySku" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT sku_id, activity_id, quota_id, stock_allocate, stock_surplus
+        FROM recharge_sku
+        WHERE sku_id = #{skuId};
+    </select>
+
+    <update id="clearRechargeSkuStock" parameterType="java.lang.Long">
+        UPDATE recharge_sku
+        SET stock_surplus = 0
+        where sku_id = #{skuId}
+    </update>
+
+    <update id="updateRechargeSkuStock" parameterType="java.lang.Long">
+        UPDATE recharge_sku
+        SET stock_surplus = stock_surplus - 1
+        where sku_id = #{skuId}
+    </update>
+
+</mapper>

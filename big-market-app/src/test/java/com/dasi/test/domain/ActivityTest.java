@@ -2,6 +2,7 @@ package com.dasi.test.domain;
 
 import com.dasi.domain.activity.model.dto.RechargeContext;
 import com.dasi.domain.activity.model.dto.RechargeResult;
+import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.activity.service.recharge.IActivityRecharge;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -16,13 +17,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 
+@SuppressWarnings("unused")
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ActivityTest {
 
     @Resource
-    private IActivityRecharge activityOrder;
+    private IActivityRecharge activityRecharge;
+
+    @Resource
+    private IActivityRaffle activityRaffle;
 
     @Resource
     private IActivityStock activityStock;
@@ -40,7 +45,7 @@ public class ActivityTest {
         Long skuId = 3001L;
 
         // 装配
-        boolean success = activityStock.assembleActivitySkuStock(skuId);
+        boolean success = activityStock.assembleRechargeSkuStock(skuId);
 
         // 充值
         for (int i = 1; i <= 20; i++) {
@@ -51,7 +56,7 @@ public class ActivityTest {
                 rechargeContext.setSkuId(skuId);
                 rechargeContext.setBizId(RandomStringUtils.randomAlphanumeric(12));
                 log.info("【充值请求】RechargeContext = {}", rechargeContext);
-                RechargeResult rechargeResult = activityOrder.skuRecharge(rechargeContext);
+                RechargeResult rechargeResult = activityRecharge.doRecharge(rechargeContext);
                 log.info("【充值结果】RechargeResult = {}", rechargeResult);
             } catch (Exception e) {
                 log.warn("【错误原因】info = {}", e.getMessage());

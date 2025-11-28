@@ -5,28 +5,25 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RaffleOrder {
+public class RechargeSku {
 
     /** 自增id */
     private Long id;
 
-    /** 订单id */
-    private String orderId;
-
-    /** 用户id */
-    private String userId;
+    /** 库存id */
+    private Long skuId;
 
     /** 活动id */
     private Long activityId;
 
-    /** 策略id */
-    private Long strategyId;
+    /** 定量id */
+    private Long quotaId;
 
-    /** 订单状态 */
-    private String raffleState;
+    /** 库存分配 */
+    private Integer stockAllocate;
 
-    /** 下单时间 */
-    private LocalDateTime raffleTime;
+    /** 库存剩余 */
+    private Integer stockSurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

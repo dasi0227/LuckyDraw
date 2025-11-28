@@ -26,9 +26,9 @@ public class RaffleOrderEntity {
     private Long strategyId;
 
     /** 订单状态 */
-    private String raffleOrderState;
+    private String raffleState;
 
     /** 下单时间 */
-    private LocalDateTime orderTime;
+    private LocalDateTime raffleTime;
 
 }

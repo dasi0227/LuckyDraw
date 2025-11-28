@@ -1,11 +1,11 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.dto.RechargeResult;
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
+import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.ActivityOrderEntity;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
-import com.dasi.domain.activity.model.type.ActivityOrderState;
+import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
+import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.model.dto.RechargeContext;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.action.chain.ActionChainFactory;
@@ -27,40 +27,40 @@ public class DefaultActivityRecharge extends AbstractActivityRecharge {
     }
 
     @Override
-    public Boolean checkRechargeValid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+    public Boolean checkActivityAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
         IActionChain actionChain = actionChainFactory.getRechargeActionChain();
-        return actionChain.action(activitySkuEntity, activityEntity, activityQuotaEntity);
+        return actionChain.action(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
     }
 
     @Override
-    protected RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity) {
+    protected RechargeResult createRechargeOrder(RechargeContext rechargeContext, RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
 
         // 1. 构建订单
-        ActivityOrderEntity activityOrderEntity = ActivityOrderEntity.builder()
+        RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
                 .orderId(RandomStringUtils.randomNumeric(12))
                 .bizId(rechargeContext.getBizId())
                 .userId(rechargeContext.getUserId())
                 .skuId(rechargeContext.getSkuId())
                 .activityId(activityEntity.getActivityId())
-                .activityQuotaId(activityQuotaEntity.getActivityQuotaId())
+                .quotaId(rechargeQuotaEntity.getQuotaId())
                 .strategyId(activityEntity.getStrategyId())
-                .totalCount(activityQuotaEntity.getTotalCount())
-                .monthCount(activityQuotaEntity.getMonthCount())
-                .dayCount(activityQuotaEntity.getDayCount())
-                .orderTime(LocalDateTime.now())
-                .activityOrderState(ActivityOrderState.COMPLETED.getCode())
+                .totalCount(rechargeQuotaEntity.getTotalCount())
+                .monthCount(rechargeQuotaEntity.getMonthCount())
+                .dayCount(rechargeQuotaEntity.getDayCount())
+                .rechargeTime(LocalDateTime.now())
+                .rechargeState(RechargeState.COMPLETED.getCode())
                 .build();
 
         // 2. 充值到账
-        activityRepository.saveActivitySkuOrder(activityOrderEntity);
+        activityRepository.saveRechargeOrder(rechargeOrderEntity);
 
         // 3. 构造结果
         return RechargeResult.builder()
-                .userId(activityOrderEntity.getUserId())
-                .orderId(activityOrderEntity.getOrderId())
-                .totalCount(activityOrderEntity.getTotalCount())
-                .monthCount(activityOrderEntity.getMonthCount())
-                .dayCount(activityOrderEntity.getDayCount())
+                .userId(rechargeOrderEntity.getUserId())
+                .orderId(rechargeOrderEntity.getOrderId())
+                .totalCount(rechargeOrderEntity.getTotalCount())
+                .monthCount(rechargeOrderEntity.getMonthCount())
+                .dayCount(rechargeOrderEntity.getDayCount())
                 .build();
     }
 

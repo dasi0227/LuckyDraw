@@ -1,32 +1,30 @@
 package com.dasi.infrastructure.persistent.po;
 
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class RaffleOrder {
+public class ActivityAccountDay {
 
     /** 自增id */
     private Long id;
 
-    /** 订单id */
-    private String orderId;
+    /** 活动id */
+    private Long activityId;
 
     /** 用户id */
     private String userId;
 
-    /** 活动id */
-    private Long activityId;
+    /** yyyy-mm-dd */
+    private String day;
 
-    /** 策略id */
-    private Long strategyId;
+    /** 日次数 */
+    private Integer dayAllocate;
 
-    /** 订单状态 */
-    private String raffleState;
-
-    /** 下单时间 */
-    private LocalDateTime raffleTime;
+    /** 日次数-剩余 */
+    private Integer daySurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

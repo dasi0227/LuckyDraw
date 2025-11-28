@@ -1,6 +1,5 @@
 package com.dasi.domain.activity.model.dto;
 
-import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RaffleResult {
+public class SkuStock {
 
-    private RaffleOrderEntity raffleOrderEntity;
+    private Long skuId;
+
+    private Long activityId;
 
 }

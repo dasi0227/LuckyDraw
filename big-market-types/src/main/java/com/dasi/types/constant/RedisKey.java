@@ -15,8 +15,8 @@ public class RedisKey {
     public static final String STRATEGY_AWARD_STOCK_SURPLUS_KEY     = "big_market:strategy:stock:surplus:";
 
     public static final String ACTIVITY_KEY                         = "big_market:activity:entity:activity:";
-    public static final String ACTIVITY_SKU_KEY                     = "big_market:activity:entity:activity_sku:";
-    public static final String ACTIVITY_COUNT_KEY                   = "big_market:activity:entity:activity_count:";
-    public static final String ACTIVITY_SKU_STOCK_SURPLUS_KEY       = "big_market:activity:stock:sku_surplus:";
-    public static final String ACTIVITY_SKU_STOCK_QUEUE_KEY         = "big_market:activity:stock:sku_queue:";
+    public static final String RECHARGE_SKU_KEY                     = "big_market:activity:entity:recharge_sku:";
+    public static final String RECHARGE_QUOTA_KEY                   = "big_market:activity:entity:recharge_quota:";
+    public static final String RECHARGE_SKU_STOCK_SURPLUS_KEY       = "big_market:activity:stock:recharge_sku_surplus:";
+    public static final String RECHARGE_SKU_STOCK_QUEUE_KEY         = "big_market:activity:stock:recharge_sku_queue:";
 }

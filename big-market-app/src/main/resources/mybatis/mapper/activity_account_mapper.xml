@@ -17,12 +17,18 @@
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
-    <insert id="insertActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+    <select id="queryActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount" resultMap="dataMap">
+        SELECT user_id, activity_id, total_allocate, total_surplus, day_allocate, day_surplus, month_allocate, month_surplus
+        FROM activity_account
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </select>
+
+    <insert id="createActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         INSERT INTO activity_account (user_id, activity_id, total_allocate, total_surplus, day_allocate, day_surplus, month_allocate, month_surplus)
         VALUES (#{userId}, #{activityId}, #{totalAllocate}, #{totalSurplus}, #{dayAllocate}, #{daySurplus}, #{monthAllocate}, #{monthSurplus});
     </insert>
 
-    <update id="updateAccountQuota" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+    <update id="rechargeActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET total_allocate = total_allocate + #{totalAllocate},
             total_surplus = total_surplus + #{totalSurplus},
@@ -32,5 +38,26 @@
             month_surplus = month_surplus + #{monthSurplus}
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>
+
+    <update id="subtractActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        UPDATE activity_account
+        SET total_surplus = total_surplus - 1,
+            day_surplus = day_surplus - 1,
+            month_surplus = month_surplus - 1
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </update>
+
+    <update id="updateActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        UPDATE activity_account
+        SET day_surplus = #{daySurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </update>
+
+    <update id="updateActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        UPDATE activity_account
+        SET month_surplus = #{monthSurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </update>
+
 
 </mapper>

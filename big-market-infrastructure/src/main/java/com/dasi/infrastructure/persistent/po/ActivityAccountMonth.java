@@ -5,28 +5,25 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RaffleOrder {
+public class ActivityAccountMonth {
 
     /** 自增id */
     private Long id;
 
-    /** 订单id */
-    private String orderId;
+    /** 活动id */
+    private Long activityId;
 
     /** 用户id */
     private String userId;
 
-    /** 活动id */
-    private Long activityId;
+    /** yyyy-mm */
+    private String month;
 
-    /** 策略id */
-    private Long strategyId;
+    /** 月次数 */
+    private Integer monthAllocate;
 
-    /** 订单状态 */
-    private String raffleState;
-
-    /** 下单时间 */
-    private LocalDateTime raffleTime;
+    /** 月次数-剩余 */
+    private Integer monthSurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

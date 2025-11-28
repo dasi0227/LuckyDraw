@@ -9,10 +9,16 @@
         <result property="userId"               column="user_id"/>
         <result property="activityId"           column="activity_id"/>
         <result property="strategyId"           column="strategy_id"/>
-        <result property="orderTime"            column="order_time"/>
-        <result property="raffleOrderState"     column="raffle_order_state"/>
+        <result property="raffleTime"           column="raffle_time"/>
+        <result property="raffleState"          column="raffle_state"/>
         <result property="createTime"           column="create_time"/>
         <result property="updateTime"           column="update_time"/>
     </resultMap>
+
+    <select id="queryUnusedRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder" resultMap="dataMap">
+        SELECT order_id, user_id, activity_id, strategy_id, raffle_time, raffle_state
+        FROM raffle_order
+        WHERE raffle_state = 'created' AND user_id = #{userId} AND activity_id = #{activityId}
+    </select>
 
 </mapper>

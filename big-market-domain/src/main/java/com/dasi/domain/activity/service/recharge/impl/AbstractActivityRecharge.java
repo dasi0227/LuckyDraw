@@ -3,8 +3,8 @@ package com.dasi.domain.activity.service.recharge.impl;
 import com.dasi.domain.activity.model.dto.RechargeContext;
 import com.dasi.domain.activity.model.dto.RechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.ActivityQuotaEntity;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
+import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.recharge.IActivityRecharge;
 import com.dasi.types.exception.AppException;
@@ -21,7 +21,7 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
     }
 
     @Override
-    public RechargeResult skuRecharge(RechargeContext rechargeContext) {
+    public RechargeResult doRecharge(RechargeContext rechargeContext) {
 
         // 1. 参数校验
         String userId = rechargeContext.getUserId();
@@ -32,22 +32,22 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
         }
 
         // 2. 查询活动的基础信息
-        ActivitySkuEntity activitySkuEntity = activityRepository.queryActivitySkuBySkuId(rechargeContext.getSkuId());
-        ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
-        ActivityQuotaEntity activityQuotaEntity = activityRepository.queryActivityQuotaByActivityQuotaId(activitySkuEntity.getActivityQuotaId());
+        RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(rechargeContext.getSkuId());
+        ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
+        RechargeQuotaEntity rechargeQuotaEntity = activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
 
         // 3. 活动规则校验 TODO：暂时不处理责任链结果，后续还有更多的处理规则
-        Boolean success = checkRechargeValid(activitySkuEntity, activityEntity, activityQuotaEntity);
-        if (!success) {
+        Boolean available = checkActivityAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
+        if (!available) {
             return RechargeResult.builder().userId(userId).build();
         }
 
         // 4. 充值并保存订单
-        return createRechargeOrder(rechargeContext, activitySkuEntity, activityEntity, activityQuotaEntity);
+        return createRechargeOrder(rechargeContext, rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
     }
 
-    protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
+    protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
-    protected abstract Boolean checkRechargeValid(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityQuotaEntity activityQuotaEntity);
+    protected abstract Boolean checkActivityAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
 }

@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.dto.ActivitySkuStock;
-import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.dto.SkuStock;
+import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,20 +17,20 @@ public class DefaultActivityStock implements IActivityStock {
     private IActivityRepository activityRepository;
 
     @Override
-    public boolean assembleActivitySkuStock(Long sku) {
-        ActivitySkuEntity activitySkuEntity = activityRepository.queryActivitySkuBySkuId(sku);
-        activityRepository.cacheActivitySkuStockSurplus(sku, activitySkuEntity.getStockSurplus());
-        log.info("【活动装配】sku = {}, activitySkuStockSurplus = {}", sku, activitySkuEntity.getStockSurplus());
+    public boolean assembleRechargeSkuStock(Long sku) {
+        RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(sku);
+        activityRepository.cacheRechargeSkuStockSurplus(sku, rechargeSkuEntity.getStockSurplus());
+        log.info("【活动装配】sku = {}, rechargeSkuStockSurplus = {}", sku, rechargeSkuEntity.getStockSurplus());
         return false;
     }
 
     @Override
-    public Long subtractActivitySkuStock(Long sku, LocalDateTime endTime) {
-        return activityRepository.subtractActivitySkuStockSurplus(sku, endTime);
+    public Long subtractRechargeSkuStock(Long sku, LocalDateTime endTime) {
+        return activityRepository.subtractRechargeSkuStockSurplus(sku, endTime);
     }
 
     @Override
-    public ActivitySkuStock getQueueValue() {
+    public SkuStock getQueueValue() {
         return activityRepository.getQueueValue();
     }
 
@@ -40,13 +40,13 @@ public class DefaultActivityStock implements IActivityStock {
     }
 
     @Override
-    public void updateActivitySkuStock(Long sku) {
-        activityRepository.updateActivitySkuStock(sku);
+    public void updateRechargeSkuStock(Long sku) {
+        activityRepository.updateRechargeSkuStock(sku);
     }
 
     @Override
-    public void clearActivitySkuStock(Long sku) {
-        activityRepository.clearActivitySkuStock(sku);
+    public void clearRechargeSkuStock(Long sku) {
+        activityRepository.clearRechargeSkuStock(sku);
     }
 
 }
