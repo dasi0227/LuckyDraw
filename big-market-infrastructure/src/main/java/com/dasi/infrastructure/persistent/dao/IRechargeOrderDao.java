@@ -11,7 +11,7 @@ import java.util.List;
 @DBRouterStrategy(splitTable = true)
 public interface IRechargeOrderDao {
 
-    void insert(RechargeOrder rechargeOrder);
+    void saveRechargeOrder(RechargeOrder rechargeOrder);
 
     @DBRouter
     List<RechargeOrder> queryRechargeOrderListByUserId(String userId);

@@ -14,9 +14,20 @@
         <result property="updateTime"    column="update_time"/>
     </resultMap>
 
+    <insert id="createActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
+        INSERT INTO activity_account_month (activity_id, user_id, month, month_allocate, month_surplus)
+        VALUES (#{activityId}, #{userId}, #{month}, #{monthAllocate}, #{monthSurplus})
+    </insert>
+
+    <update id="subtractActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
+        UPDATE activity_account_month
+        SET month_surplus = month_surplus - 1
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND `month` = #{month}
+    </update>
+
     <select id="queryActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth" resultMap="dataMap">
         SELECT user_id, activity_id, `month`, month_allocate, month_surplus
-        FROM activity_month
+        FROM activity_account_month
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND `month` = #{month}
     </select>
 

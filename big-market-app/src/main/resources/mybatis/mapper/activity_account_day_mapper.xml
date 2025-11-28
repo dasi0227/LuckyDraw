@@ -14,9 +14,20 @@
         <result property="updateTime"  column="update_time"/>
     </resultMap>
 
+    <insert id="createActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        INSERT INTO activity_account_day (activity_id, user_id, `day`, day_allocate, day_surplus)
+        VALUES (#{activityId}, #{userId}, #{day}, #{dayAllocate}, #{daySurplus})
+    </insert>
+
+    <update id="subtractActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        UPDATE activity_account_day
+        SET day_surplus = day_surplus - 1
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND `day` = #{day}
+    </update>
+
     <select id="queryActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay" resultMap="dataMap">
         SELECT activity_id, user_id, `day`, day_allocate, day_surplus
-        FROM activity_day
+        FROM activity_account_day
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND `day` = #{day}
     </select>
 

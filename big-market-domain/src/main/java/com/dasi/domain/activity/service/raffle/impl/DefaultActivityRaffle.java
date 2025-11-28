@@ -11,16 +11,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
 public class DefaultActivityRaffle extends AbstractActivityRaffle {
 
-    private final SimpleDateFormat monthDateFormat = new SimpleDateFormat("yyyy-MM");
-
-    private final SimpleDateFormat dayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
+    private static final DateTimeFormatter DAY_FORMATTER   = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Resource
     private ActionChainFactory actionChainFactory;
@@ -54,18 +54,18 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
     @Override
     protected RaffleOrderAggregate checkAccountAvailable(String userId, Long activityId) {
 
-        // 1. 查询用户额度
+        // 1. 查询用户余额
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
         if (activityAccountEntity == null || activityAccountEntity.getTotalSurplus() <= 0) {
-            log.info("【xxx】用户当前的账户额度不足");
+            log.info("【抽奖】用户当前的账户余额不足");
             return null;
         }
 
-        // 2. 查询月额度
-        String month = monthDateFormat.format(LocalDateTime.now());
+        // 2. 查询月余额
+        String month = LocalDate.now().format(MONTH_FORMATTER);
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, month);
         if (activityAccountMonthEntity != null && activityAccountMonthEntity.getMonthSurplus() <= 0) {
-            log.info("【xxx】用户当前的月额度不足");
+            log.info("【抽奖】用户当前的月余额不足");
             return null;
         } else if (activityAccountMonthEntity == null) {
             activityAccountMonthEntity = ActivityAccountMonthEntity.builder()
@@ -77,11 +77,11 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
                     .build();
         }
 
-        // 3. 查询日额度
-        String day = dayDateFormat.format(LocalDateTime.now());
+        // 3. 查询日余额
+        String day = LocalDate.now().format(DAY_FORMATTER);
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, day);
         if (activityAccountDayEntity != null && activityAccountDayEntity.getDaySurplus() <= 0) {
-            log.info("【xxx】用户当前的日额度不足");
+            log.info("【抽奖】用户当前的日余额不足");
             return null;
         } else if (activityAccountDayEntity == null) {
             activityAccountDayEntity = ActivityAccountDayEntity.builder()
@@ -94,7 +94,6 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
         }
 
         // 4. 返回对象
-
         return RaffleOrderAggregate.builder()
                 .userId(userId)
                 .activityId(activityId)
