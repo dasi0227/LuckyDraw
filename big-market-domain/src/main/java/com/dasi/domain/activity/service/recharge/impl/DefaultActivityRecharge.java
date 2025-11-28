@@ -1,5 +1,6 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
+import com.dasi.domain.activity.model.dto.ActionChainCheck;
 import com.dasi.domain.activity.model.dto.RechargeResult;
 import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
@@ -27,9 +28,14 @@ public class DefaultActivityRecharge extends AbstractActivityRecharge {
     }
 
     @Override
-    public Boolean checkActivityAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    public Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+        ActionChainCheck actionChainCheck = ActionChainCheck.builder()
+                .activityEntity(activityEntity)
+                .rechargeSkuEntity(rechargeSkuEntity)
+                .rechargeQuotaEntity(rechargeQuotaEntity)
+                .build();
         IActionChain actionChain = actionChainFactory.getRechargeActionChain();
-        return actionChain.action(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
+        return actionChain.action(actionChainCheck);
     }
 
     @Override
@@ -62,6 +68,7 @@ public class DefaultActivityRecharge extends AbstractActivityRecharge {
                 .monthCount(rechargeOrderEntity.getMonthCount())
                 .dayCount(rechargeOrderEntity.getDayCount())
                 .build();
+
     }
 
 }

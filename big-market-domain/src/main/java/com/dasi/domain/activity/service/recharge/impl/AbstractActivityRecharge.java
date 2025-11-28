@@ -36,8 +36,8 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
         RechargeQuotaEntity rechargeQuotaEntity = activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
 
-        // 3. 活动规则校验 TODO：暂时不处理责任链结果，后续还有更多的处理规则
-        Boolean available = checkActivityAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
+        // 3. 活动规则校验
+        Boolean available = checkRechargeAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
         if (!available) {
             return RechargeResult.builder().userId(userId).build();
         }
@@ -48,6 +48,6 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
 
     protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
-    protected abstract Boolean checkActivityAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
+    protected abstract Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
 }

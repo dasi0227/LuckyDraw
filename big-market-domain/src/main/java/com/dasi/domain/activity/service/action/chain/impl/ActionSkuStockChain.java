@@ -1,10 +1,10 @@
 package com.dasi.domain.activity.service.action.chain.impl;
 
+import com.dasi.domain.activity.model.dto.ActionChainCheck;
 import com.dasi.domain.activity.model.dto.SkuStock;
-import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
-import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import com.dasi.types.exception.AppException;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Slf4j
-@Component(ActionModel.ACTION_STOCK)
-public class ActionStockChain extends AbstractActionChain {
+@Component(ActionModel.SKU_STOCK)
+public class ActionSkuStockChain extends AbstractActionChain {
 
     @Resource
     private IActivityStock activityStock;
@@ -24,7 +24,10 @@ public class ActionStockChain extends AbstractActionChain {
     private IActivityRepository activityRepository;
 
     @Override
-    public Boolean action(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    public Boolean action(ActionChainCheck actionChainCheck) {
+        ActivityEntity activityEntity = actionChainCheck.getActivityEntity();
+        RechargeSkuEntity rechargeSkuEntity = actionChainCheck.getRechargeSkuEntity();
+
         if (rechargeSkuEntity.getStockSurplus() <= 0) {
             log.info("【活动责任链 - action_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
             return false;
@@ -43,6 +46,6 @@ public class ActionStockChain extends AbstractActionChain {
         activityRepository.sendRechargeSkuStockConsumeToMQ(skuStock);
         log.info("【活动责任链 - action_stock】扣减库存：activityId = {}，skuId = {}, surplus = {}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
 
-        return next().action(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
+        return next().action(actionChainCheck);
     }
 }
