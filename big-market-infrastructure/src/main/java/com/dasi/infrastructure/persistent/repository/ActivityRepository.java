@@ -3,7 +3,7 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.event.RechargeSkuStockEmptyEvent;
 import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
-import com.dasi.domain.activity.model.dto.SkuStock;
+import com.dasi.domain.activity.model.dto.RechargeSkuStock;
 import com.dasi.domain.activity.model.entity.*;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
@@ -259,24 +259,24 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void sendRechargeSkuStockConsumeToMQ(SkuStock skuStock) {
+    public void sendRechargeSkuStockConsumeToMQ(RechargeSkuStock rechargeSkuStock) {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<SkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
-        RDelayedQueue<SkuStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
-        delayedQueue.offer(skuStock, 3, TimeUnit.SECONDS);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RDelayedQueue<RechargeSkuStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        delayedQueue.offer(rechargeSkuStock, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public SkuStock getQueueValue() {
+    public RechargeSkuStock getQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<SkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
         return blockingQueue.poll();
     }
 
     @Override
     public void clearQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<SkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
         blockingQueue.clear();
     }
 
@@ -320,7 +320,7 @@ public class ActivityRepository implements IActivityRepository {
 
         try {
             dbRouter.doRouter(rechargeOrderEntity.getUserId());
-            transactionTemplate.execute(status->{
+            transactionTemplate.execute(status -> {
                 try {
                     // 1. 创建/更新账户
                     int count = activityAccountDao.rechargeActivityAccount(activityAccount);
@@ -363,7 +363,7 @@ public class ActivityRepository implements IActivityRepository {
             ActivityAccountDayEntity activityAccountDayEntity = raffleOrderAggregate.getActivityAccountDayEntity();
 
             dbRouter.doRouter(userId);
-            transactionTemplate.execute(status->{
+            transactionTemplate.execute(status -> {
                 try {
                     int count;
 

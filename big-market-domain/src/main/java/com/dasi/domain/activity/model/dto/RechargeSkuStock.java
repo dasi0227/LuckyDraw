@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SkuStock {
+public class RechargeSkuStock {
 
     private Long skuId;
 

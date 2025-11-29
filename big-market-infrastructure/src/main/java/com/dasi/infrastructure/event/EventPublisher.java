@@ -16,12 +16,16 @@ public class EventPublisher {
     private RabbitTemplate rabbitTemplate;
 
     public void publish(String topic, EventMessage<?> eventMessage) {
+        String message = JSON.toJSONString(eventMessage);
+        publish(topic, message);
+    }
+
+    public void publish(String topic, String message) {
         try {
-            String message = JSON.toJSONString(eventMessage);
             rabbitTemplate.convertAndSend(topic, message);
-            log.error("【消息队列 - Publisher】发送消息成功：topic = {}, message = {}", topic, message);
+            log.error("【发送消息】发送消息成功：topic = {}, message = {}", topic, message);
         } catch (Exception e) {
-            log.error("【消息队列 - Publisher】发送消息失败：topic = {}, errorMsg = {}", topic, e.getMessage());
+            log.error("【发送消息】发送消息失败：topic = {}, errorMsg = {}", topic, e.getMessage());
             throw e;
         }
     }

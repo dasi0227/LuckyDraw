@@ -13,21 +13,21 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Component
-public class RechargeSkuStockEmptyConsumer {
+public class ClearRechargeSkuStock {
 
     @Resource
     private IActivityStock activityStock;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_empty"))
-    public void listen(String message) {
+    public void clearRechargeSkuStock(String message) {
         try {
             EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<Long>>() {}.getType());
             Long sku = eventMessage.getData();
             activityStock.clearRechargeSkuStock(sku);
             activityStock.clearQueueValue();
-            log.info("【消息队列 - Consumer】接收消息，清空 SKU 库存成功：sku = {}", sku);
+            log.info("【监听消息 - clearRechargeSkuStock】清空 SKU 库存成功：sku = {}", sku);
         } catch (Exception e) {
-            log.info("【消息队列 - Consumer】接收消息，清空 SKU 库存失败：message = {}", message);
+            log.info("【监听消息 - clearRechargeSkuStock】清空 SKU 库存失败：error = {}", e.getMessage());
             throw e;
         }
     }

@@ -21,12 +21,12 @@ public class UpdateStrategyAwardStockJob {
             StrategyAwardStock strategyAwardStock = strategyStock.getQueueValue();
             if (strategyAwardStock != null) {
                 strategyStock.updateStrategyAwardStock(strategyAwardStock);
-                log.info("【定时任务】更新奖品库存成功：{}", strategyAwardStock);
+                log.info("【定时任务 - updateAwardStock】更新策略奖品库存成功：strategyId = {}, awardId = {}", strategyAwardStock.getStrategyId(), strategyAwardStock.getAwardId());
             } else {
-                log.info("【定时任务】暂时没有奖品库存待更新");
+                log.info("【定时任务 - updateAwardStock】暂时没有策略奖品库存待更新");
             }
         } catch (Exception e) {
-            log.error("【定时任务】更新奖品库存失败：{}", e.getMessage());
+            log.error("【定时任务 - updateAwardStock】更新策略奖品库存失败：error = {}", e.getMessage());
         }
     }
 

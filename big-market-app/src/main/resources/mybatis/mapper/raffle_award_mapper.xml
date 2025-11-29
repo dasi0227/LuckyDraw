@@ -17,4 +17,9 @@
         <result property="updateTime"  column="update_time"/>
     </resultMap>
 
+    <insert id="saveRaffleAward" parameterType="com.dasi.infrastructure.persistent.po.RaffleAward">
+        INSERT INTO raffle_award (user_id, activity_id, strategy_id, order_id, award_id, award_title, award_time, award_state)
+        VALUES (#{userId}, #{activityId}, #{strategyId}, #{orderId}, #{awardId}, #{awardTitle}, #{awardTime}, #{awardState})
+    </insert>
+
 </mapper>
