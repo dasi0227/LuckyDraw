@@ -1,10 +1,11 @@
-package com.dasi.domain.strategy.service.assemble;
+package com.dasi.domain.strategy.service.assemble.impl;
 
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
+import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +27,13 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public boolean assembleStrategy(Long strategyId) {
+    public boolean assembleStrategyByActivityId(Long activityId) {
+        Long strategyId = strategyRepository.queryStrategyIdByActivityId(activityId);
+        return assembleStrategyByStrategyId(strategyId);
+    }
+
+    @Override
+    public boolean assembleStrategyByStrategyId(Long strategyId) {
         // 1. 查询当前策略的奖品列表
         List<StrategyAwardEntity> strategyAwardEntities = strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
         if (strategyAwardEntities == null || strategyAwardEntities.isEmpty()) {
@@ -53,6 +61,10 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
             assembleStrategyAwardRate(cacheKey, strategyAwardEntitiesUnderWeight);
         }
 
+        String awardIds = strategyAwardEntities.stream()
+                .map(strategyAwardEntity -> String.valueOf(strategyAwardEntity.getAwardId()))
+                .collect(Collectors.joining(","));
+        log.info("【策略装配】strategyId = {}, awardIds = {}", strategyId, awardIds);
         return true;
     }
 
@@ -91,7 +103,6 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
 
         // 7. 将 Map 存储到 Redis
         strategyRepository.cacheStrategyAwardRate(cacheKey, strategyAwardMap.size(), strategyAwardMap);
-        log.info("【装配器 - rate】cacheKey = {}", cacheKey);
     }
 
     private void assembleStrategyAwardStockSurplus(Long strategyId, List<StrategyAwardEntity> strategyAwardEntities) {
@@ -99,7 +110,6 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
             String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_SURPLUS_KEY + strategyId + Delimiter.UNDERSCORE + strategyAwardEntity.getAwardId();
             Integer stock = strategyAwardEntity.getAwardSurplus();
             strategyRepository.cacheStrategyAwardStock(cacheKey, stock);
-            log.info("【装配器 - stock】cacheKey = {}, stock = {}", cacheKey, stock);
         }
     }
 

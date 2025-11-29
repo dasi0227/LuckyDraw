@@ -6,17 +6,17 @@ import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.recharge.IActivityRecharge;
+import com.dasi.domain.activity.service.recharge.ISkuRecharge;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
-public abstract class AbstractActivityRecharge implements IActivityRecharge {
+public abstract class AbstractSkuRecharge implements ISkuRecharge {
 
     protected IActivityRepository activityRepository;
 
-    public AbstractActivityRecharge(IActivityRepository activityRepository) {
+    public AbstractSkuRecharge(IActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractActivityRecharge implements IActivityRecharge {
         // 3. 活动规则校验
         Boolean available = checkRechargeAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
         if (!available) {
-            return RechargeResult.builder().userId(userId).build();
+            throw new AppException("活动规则检测失败");
         }
 
         // 4. 充值并保存订单

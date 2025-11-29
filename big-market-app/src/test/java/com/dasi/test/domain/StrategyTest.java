@@ -44,7 +44,7 @@ public class StrategyTest {
         Long strategyId = 1001L;
 
         // 装配
-        armory.assembleStrategy(strategyId);
+        armory.assembleStrategyByStrategyId(strategyId);
 
         // 抽奖
         ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);

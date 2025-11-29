@@ -39,7 +39,7 @@ public class ScanUnsolvedTaskJob {
                         dbRouter.setTBKey(0);
                         List<TaskEntity> taskEntities = taskScan.queryUnsolvedTask();
                         if (taskEntities.isEmpty()) {
-                            log.info("【定时任务 - scanUnsolvedTask】没有发现未处理奖品：dbIdx = {}", finalDbIdx);
+                            log.debug("【定时任务 - scanUnsolvedTask】没有发现未处理奖品：dbIdx = {}", finalDbIdx);
                             return;
                         }
 

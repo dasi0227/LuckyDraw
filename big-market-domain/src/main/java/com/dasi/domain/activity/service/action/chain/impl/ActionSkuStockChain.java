@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.action.chain.impl;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
-import com.dasi.domain.activity.model.dto.RechargeSkuStock;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
+import com.dasi.domain.activity.model.entity.RechargeSkuStockEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.model.type.ActionModel;
@@ -24,9 +24,9 @@ public class ActionSkuStockChain extends AbstractActionChain {
     private IActivityRepository activityRepository;
 
     @Override
-    public Boolean action(ActionChainCheck actionChainCheck) {
-        ActivityEntity activityEntity = actionChainCheck.getActivityEntity();
-        RechargeSkuEntity rechargeSkuEntity = actionChainCheck.getRechargeSkuEntity();
+    public Boolean action(ActionChainCheckAggregate actionChainCheckAggregate) {
+        ActivityEntity activityEntity = actionChainCheckAggregate.getActivityEntity();
+        RechargeSkuEntity rechargeSkuEntity = actionChainCheckAggregate.getRechargeSkuEntity();
 
         if (rechargeSkuEntity.getStockSurplus() <= 0) {
             log.info("【活动责任链 - action_stock】库存为空：activityId = {}, skuId = {}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
@@ -39,13 +39,13 @@ public class ActionSkuStockChain extends AbstractActionChain {
             return false;
         }
         if (surplus == -2L)  throw new AppException("扣减库存失败：" + rechargeSkuEntity);
-        RechargeSkuStock rechargeSkuStock = RechargeSkuStock.builder()
+        RechargeSkuStockEntity rechargeSkuStockEntity = RechargeSkuStockEntity.builder()
                 .skuId(rechargeSkuEntity.getSkuId())
                 .activityId(activityEntity.getActivityId())
                 .build();
-        activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStock);
+        activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStockEntity);
         log.info("【活动责任链 - action_stock】扣减库存：activityId = {}，skuId = {}, surplus = {}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
 
-        return next().action(actionChainCheck);
+        return next().action(actionChainCheckAggregate);
     }
 }

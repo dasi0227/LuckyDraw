@@ -14,4 +14,6 @@ public interface IRaffleOrderDao {
 
     void saveRaffleOrder(RaffleOrder raffleOrder);
 
+    int updateRaffleOrderState(RaffleOrder raffleOrder);
+
 }

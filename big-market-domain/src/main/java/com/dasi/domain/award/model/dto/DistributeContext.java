@@ -1,4 +1,4 @@
-package com.dasi.domain.award.event;
+package com.dasi.domain.award.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendRaffleAwardMessage {
+public class DistributeContext {
 
     private String userId;
 
+    private Long activityId;
+
     private Integer awardId;
+
+    private String awardName;
+
+    private Long strategyId;
+
+    private String orderId;
 
 }

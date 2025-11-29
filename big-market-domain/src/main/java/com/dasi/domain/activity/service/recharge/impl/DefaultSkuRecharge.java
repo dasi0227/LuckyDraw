@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.dto.RechargeResult;
 import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
@@ -18,24 +18,24 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 @Service
-public class DefaultActivityRecharge extends AbstractActivityRecharge {
+public class DefaultSkuRecharge extends AbstractSkuRecharge {
 
     @Resource
     private ActionChainFactory actionChainFactory;
 
-    public DefaultActivityRecharge(IActivityRepository activityRepository) {
+    public DefaultSkuRecharge(IActivityRepository activityRepository) {
         super(activityRepository);
     }
 
     @Override
     public Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
-        ActionChainCheck actionChainCheck = ActionChainCheck.builder()
+        ActionChainCheckAggregate actionChainCheckAggregate = ActionChainCheckAggregate.builder()
                 .activityEntity(activityEntity)
                 .rechargeSkuEntity(rechargeSkuEntity)
                 .rechargeQuotaEntity(rechargeQuotaEntity)
                 .build();
         IActionChain actionChain = actionChainFactory.getRechargeActionChain();
-        return actionChain.action(actionChainCheck);
+        return actionChain.action(actionChainCheckAggregate);
     }
 
     @Override
@@ -62,7 +62,6 @@ public class DefaultActivityRecharge extends AbstractActivityRecharge {
 
         // 3. 构造结果
         return RechargeResult.builder()
-                .userId(rechargeOrderEntity.getUserId())
                 .orderId(rechargeOrderEntity.getOrderId())
                 .totalCount(rechargeOrderEntity.getTotalCount())
                 .monthCount(rechargeOrderEntity.getMonthCount())

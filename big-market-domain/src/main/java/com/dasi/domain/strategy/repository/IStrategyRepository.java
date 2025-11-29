@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.repository;
 
 
-import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
+import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IStrategyRepository {
+
     List<StrategyAwardEntity> queryStrategyAwardListByStrategyId(Long strategyId);
 
     void cacheStrategyAwardRate(String cacheKey, Integer rateRange, Map<String, String> strategyAwardMap);
@@ -20,13 +21,17 @@ public interface IStrategyRepository {
 
     Integer getStrategyAwardAssemble(String cacheKey, int randomNum);
 
+    Long queryStrategyIdByActivityId(Long activityId);
+
+    long queryUserLotteryCount(String userId, Long strategyId);
+
     StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
 
     StrategyRuleEntity queryStrategyRuleByStrategyIDAndRuleModel(Long strategyId, String ruleModel);
 
     String queryStrategyRuleValue(Long strategyId, String ruleModel);
 
-    AwardEntity queryAwardEntityByAwardId(Integer awardId);
+    AwardEntity queryAwardByAwardId(Integer awardId);
 
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 
@@ -36,9 +41,9 @@ public interface IStrategyRepository {
 
     long subStrategyAwardStock(String cacheKey);
 
-    void sendStrategyAwardStockToMQ(StrategyAwardStock strategyAwardStock);
+    void sendStrategyAwardStockConsumeToMQ(StrategyAwardStockEntity strategyAwardStockEntity);
 
-    StrategyAwardStock getQueueValue();
+    StrategyAwardStockEntity getQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
 

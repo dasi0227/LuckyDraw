@@ -2,8 +2,8 @@ package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.event.RechargeSkuStockEmptyEvent;
-import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
-import com.dasi.domain.activity.model.dto.RechargeSkuStock;
+import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
+import com.dasi.domain.activity.model.entity.RechargeSkuStockEntity;
 import com.dasi.domain.activity.model.entity.*;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
@@ -24,7 +24,9 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Slf4j
@@ -86,7 +88,7 @@ public class ActivityRepository implements IActivityRepository {
         }
 
         // 再查数据库
-        RechargeSku rechargeSku = rechargeSkuDao.queryRechargeSkuBySku(skuId);
+        RechargeSku rechargeSku = rechargeSkuDao.queryRechargeSkuBySkuId(skuId);
         if (rechargeSku == null) throw new AppException("RechargeSku 不存在，skuId = " + skuId);
         rechargeSkuEntity = RechargeSkuEntity.builder()
                 .skuId(rechargeSku.getSkuId())
@@ -99,6 +101,33 @@ public class ActivityRepository implements IActivityRepository {
         // 缓存并返回
         redisService.setValue(cacheKey, rechargeSkuEntity);
         return rechargeSkuEntity;
+    }
+
+    @Override
+    public List<RechargeSkuEntity> queryRechargeSkuByActivityId(Long activityId) {
+        // 先查缓存
+        String cacheKey = RedisKey.ACTIVITY_RECHARGE_SKU_KEY + activityId;
+        List<RechargeSkuEntity> rechargeSkuEntities = redisService.getValue(cacheKey);
+        if (rechargeSkuEntities != null && !rechargeSkuEntities.isEmpty()) {
+            return rechargeSkuEntities;
+        }
+
+        // 再查数据库
+        List<RechargeSku> rechargeSkuList = rechargeSkuDao.queryRechargeSkuByActivityId(activityId);
+        rechargeSkuEntities = rechargeSkuList.stream()
+                .map(rechargeSku -> RechargeSkuEntity.builder()
+                        .skuId(rechargeSku.getSkuId())
+                        .activityId(rechargeSku.getActivityId())
+                        .quotaId(rechargeSku.getQuotaId())
+                        .stockAllocate(rechargeSku.getStockAllocate())
+                        .stockSurplus(rechargeSku.getStockSurplus())
+                        .build())
+                .collect(Collectors.toList());
+
+        // 缓存并返回
+        redisService.setValue(cacheKey, rechargeSkuEntities);
+        return rechargeSkuEntities;
+
     }
 
     @Override
@@ -259,24 +288,24 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void sendRechargeSkuStockConsumeToMQ(RechargeSkuStock rechargeSkuStock) {
+    public void sendRechargeSkuStockConsumeToMQ(RechargeSkuStockEntity rechargeSkuStockEntity) {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
-        RDelayedQueue<RechargeSkuStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
-        delayedQueue.offer(rechargeSkuStock, 3, TimeUnit.SECONDS);
+        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RDelayedQueue<RechargeSkuStockEntity> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        delayedQueue.offer(rechargeSkuStockEntity, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public RechargeSkuStock getQueueValue() {
+    public RechargeSkuStockEntity getQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
         return blockingQueue.poll();
     }
 
     @Override
     public void clearQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
         blockingQueue.clear();
     }
 
@@ -336,7 +365,7 @@ public class ActivityRepository implements IActivityRepository {
                     log.info("【充值】保存充值订单：userId={}, sku={}, order={}",
                             rechargeOrderEntity.getUserId(), rechargeOrderEntity.getActivityId(), rechargeOrder.getOrderId());
 
-                    return 1;
+                    return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.warn("【充值】保存充值订单失败（唯一约束冲突）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
@@ -432,7 +461,7 @@ public class ActivityRepository implements IActivityRepository {
                     raffleOrderDao.saveRaffleOrder(raffleOrder);
                     log.info("【抽奖】保存抽奖订单：userId={}, activityId={}, orderId={}", userId, activityId, raffleOrder.getOrderId());
 
-                    return 1;
+                    return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.warn("【抽奖】保存抽奖订单失败（唯一约束冲突）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());

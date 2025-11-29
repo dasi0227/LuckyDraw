@@ -1,7 +1,7 @@
-package com.dasi.domain.activity.model.dto;
+package com.dasi.domain.activity.model.aggregate;
 
-import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
 import com.dasi.domain.activity.model.entity.ActivityAccountDayEntity;
+import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
 import com.dasi.domain.activity.model.entity.ActivityAccountMonthEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
 import lombok.AllArgsConstructor;

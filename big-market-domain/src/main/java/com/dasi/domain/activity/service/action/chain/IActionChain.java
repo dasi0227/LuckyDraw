@@ -1,10 +1,10 @@
 package com.dasi.domain.activity.service.action.chain;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 
 public interface IActionChain {
 
-    Boolean action(ActionChainCheck actionChainCheck);
+    Boolean action(ActionChainCheckAggregate actionChainCheckAggregate);
 
     IActionChain next();
 

@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RaffleResult {
 
-    private String userId;
-
     private String orderId;
+
+    private Long strategyId;
 
 }

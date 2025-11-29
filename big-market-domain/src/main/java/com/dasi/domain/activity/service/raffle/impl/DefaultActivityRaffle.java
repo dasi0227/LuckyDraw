@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.raffle.impl;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
-import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
+import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.action.chain.ActionChainFactory;
@@ -25,13 +25,13 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
     @Override
     protected RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity) {
 
-        ActionChainCheck actionChainCheck = new ActionChainCheck();
-        actionChainCheck.setUserId(userId);
-        actionChainCheck.setActivityId(activityEntity.getActivityId());
-        actionChainCheck.setActivityEntity(activityEntity);
+        ActionChainCheckAggregate actionChainCheckAggregate = new ActionChainCheckAggregate();
+        actionChainCheckAggregate.setUserId(userId);
+        actionChainCheckAggregate.setActivityId(activityEntity.getActivityId());
+        actionChainCheckAggregate.setActivityEntity(activityEntity);
 
         IActionChain actionChain = actionChainFactory.getRaffleActionChain();
-        return actionChain.action(actionChainCheck) ? actionChainCheck.getRaffleOrderAggregate() : null;
+        return actionChain.action(actionChainCheckAggregate) ? actionChainCheckAggregate.getRaffleOrderAggregate() : null;
     }
 
 }

@@ -1,13 +1,13 @@
 package com.dasi.domain.strategy.service.stock;
 
-import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
+import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 
 public interface IStrategyStock {
 
     long subStrategyAwardCount(Long strategyId, Integer awardId);
 
-    StrategyAwardStock getQueueValue() throws InterruptedException;
+    StrategyAwardStockEntity getQueueValue() throws InterruptedException;
 
-    void updateStrategyAwardStock(StrategyAwardStock stockUpdateRequest);
+    void updateStrategyAwardStock(StrategyAwardStockEntity stockUpdateRequest);
 
 }

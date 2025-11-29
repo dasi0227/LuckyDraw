@@ -1,7 +1,8 @@
-package com.dasi.domain.strategy.service.stock;
+package com.dasi.domain.strategy.service.stock.impl;
 
-import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
+import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
+import com.dasi.domain.strategy.service.stock.IStrategyStock;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,13 @@ public class DefaultStrategyStock implements IStrategyStock {
     }
 
     @Override
-    public StrategyAwardStock getQueueValue() {
+    public StrategyAwardStockEntity getQueueValue() {
         return strategyRepository.getQueueValue();
     }
 
     @Override
-    public void updateStrategyAwardStock(StrategyAwardStock strategyAwardStock) {
-        strategyRepository.updateStrategyAwardStock(strategyAwardStock.getStrategyId(), strategyAwardStock.getAwardId());
+    public void updateStrategyAwardStock(StrategyAwardStockEntity strategyAwardStockEntity) {
+        strategyRepository.updateStrategyAwardStock(strategyAwardStockEntity.getStrategyId(), strategyAwardStockEntity.getAwardId());
     }
 
 }

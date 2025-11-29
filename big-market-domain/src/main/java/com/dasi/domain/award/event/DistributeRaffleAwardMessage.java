@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.dto;
+package com.dasi.domain.award.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LotteryResult {
+public class DistributeRaffleAwardMessage {
+
+    private String userId;
 
     private Integer awardId;
-
-    private String awardName;
-
-    private String awardConfig;
 
 }

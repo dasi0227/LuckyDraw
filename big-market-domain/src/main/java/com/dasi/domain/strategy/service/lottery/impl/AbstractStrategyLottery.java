@@ -4,6 +4,7 @@ import com.dasi.domain.strategy.model.dto.LotteryResult;
 import com.dasi.domain.strategy.model.dto.RuleCheckContext;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 import com.dasi.domain.strategy.model.dto.LotteryContext;
+import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
@@ -32,7 +33,7 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
         // 3. 判断是否需要继续
         if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
-            return LotteryResult.build(ruleCheckResult.getAwardId(), strategyRepository);
+            return buildLotteryResult(ruleCheckResult.getAwardId());
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
         }
@@ -41,10 +42,19 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
         ruleCheckResult = afterCheck(ruleCheckContext);
 
         // 5. 返回结果
-        return LotteryResult.build(ruleCheckResult.getAwardId(), strategyRepository);
+        return buildLotteryResult(ruleCheckResult.getAwardId());
     }
 
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);
     protected abstract RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext);
+
+    private LotteryResult buildLotteryResult(Integer awardId) {
+        AwardEntity awardEntity = strategyRepository.queryAwardByAwardId(awardId);
+        return LotteryResult.builder()
+                .awardId(awardId)
+                .awardName(awardEntity.getAwardName())
+                .awardConfig(awardEntity.getAwardConfig())
+                .build();
+    }
 
 }

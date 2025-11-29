@@ -5,6 +5,6 @@ import com.dasi.domain.activity.model.dto.RaffleResult;
 
 public interface IActivityRaffle {
 
-    RaffleResult doRaffle(RaffleContext raffleContext);
+    RaffleResult doActivityRaffle(RaffleContext raffleContext);
 
 }

@@ -3,7 +3,7 @@ package com.dasi.test.domain;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
 import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.service.scan.ITaskScan;
-import com.dasi.domain.award.service.send.IAwardSend;
+import com.dasi.domain.award.service.send.IAwardDistribute;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import java.util.concurrent.CountDownLatch;
 public class AwardTest {
 
     @Resource
-    private IAwardSend awardSend;
+    private IAwardDistribute awardDistribute;
 
     @Resource
     private ITaskScan iTaskScan;
@@ -37,11 +37,11 @@ public class AwardTest {
                         .strategyId(1001L)
                         .orderId(RandomStringUtils.randomNumeric(12))
                         .awardId(2001)
-                        .awardTitle("测试奖品")
+                        .awardName("测试奖品")
                         .awardTime(LocalDateTime.now())
                         .awardState(AwardState.CREATED.getCode())
                         .build();
-            awardSend.saveRaffleAward(raffleAwardEntity);
+//            awardDistribute.saveRaffleAward(raffleAwardEntity);
             Thread.sleep(500);
         }
 

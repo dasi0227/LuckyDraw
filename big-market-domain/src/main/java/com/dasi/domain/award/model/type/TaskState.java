@@ -9,7 +9,7 @@ public enum TaskState {
 
     CREATED("created"),
     FAILED("failed"),
-    SEND("send")
+    DISTRIBUTED("distributed")
 
     ;
 

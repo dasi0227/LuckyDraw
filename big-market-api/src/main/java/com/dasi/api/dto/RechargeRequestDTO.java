@@ -9,8 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleAwardListRequestDTO {
+public class RechargeRequestDTO {
 
-    private Long strategyId;
+    private String userId;
+
+    private String bizId;
+
+    private Long skuId;
 
 }

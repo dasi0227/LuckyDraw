@@ -1,15 +1,20 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
+import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.infrastructure.event.EventPublisher;
+import com.dasi.infrastructure.persistent.dao.IAwardDao;
 import com.dasi.infrastructure.persistent.dao.IRaffleAwardDao;
+import com.dasi.infrastructure.persistent.dao.IRaffleOrderDao;
 import com.dasi.infrastructure.persistent.dao.ITaskDao;
 import com.dasi.infrastructure.persistent.po.RaffleAward;
+import com.dasi.infrastructure.persistent.po.RaffleOrder;
 import com.dasi.infrastructure.persistent.po.Task;
+import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,10 +30,19 @@ import java.util.stream.Collectors;
 public class AwardRepository implements IAwardRepository {
 
     @Resource
+    private IAwardDao awardDao;
+
+    @Resource
     private ITaskDao taskDao;
 
     @Resource
     private IRaffleAwardDao raffleAwardDao;
+
+    @Resource
+    private IRaffleOrderDao raffleOrderDao;
+
+    @Resource
+    private IRedisService redisService;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -51,7 +65,7 @@ public class AwardRepository implements IAwardRepository {
         raffleAward.setStrategyId(raffleAwardEntity.getStrategyId());
         raffleAward.setOrderId(raffleAwardEntity.getOrderId());
         raffleAward.setAwardId(raffleAwardEntity.getAwardId());
-        raffleAward.setAwardTitle(raffleAwardEntity.getAwardTitle());
+        raffleAward.setAwardName(raffleAwardEntity.getAwardName());
         raffleAward.setAwardTime(raffleAwardEntity.getAwardTime());
         raffleAward.setAwardState(raffleAwardEntity.getAwardState());
 
@@ -67,11 +81,24 @@ public class AwardRepository implements IAwardRepository {
             dbRouter.doRouter(userId);
             transactionTemplate.execute(status -> {
                 try {
+                    // 写入记录
                     raffleAwardDao.saveRaffleAward(raffleAward);
                     taskDao.saveTask(task);
+
+                    // 更新订单状态
+                    RaffleOrder raffleOrder = new RaffleOrder();
+                    raffleOrder.setUserId(raffleAwardEntity.getUserId());
+                    raffleOrder.setOrderId(raffleAwardEntity.getOrderId());
+                    raffleOrder.setRaffleState(RaffleState.USED.getCode());
+                    if (raffleOrderDao.updateRaffleOrderState(raffleOrder) != 1) {
+                        status.setRollbackOnly();
+                        log.warn("【中奖】保存中奖记录失败（订单已经使用）：orderId = {}", raffleOrder.getOrderId());
+                        return null;
+                    }
+
                     log.warn("【中奖】保存中奖记录：userId = {}, activityId = {}, awardId = {}",
                             raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId());
-                    return 1;
+                    return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.warn("【中奖】保存中奖记录失败（唯一约束冲突）：userId = {}, activityId = {}, awardId = {}, error={}",
@@ -93,7 +120,7 @@ public class AwardRepository implements IAwardRepository {
         // 3. 发送到消息队列
         try {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-            task.setTaskState(TaskState.SEND.getCode());
+            task.setTaskState(TaskState.DISTRIBUTED.getCode());
             taskDao.updateTaskState(task);
             log.warn("【中奖】发送中奖记录到消息队列：userId = {}, activityId = {}, awardId = {}, topic={}",
                     raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(),
@@ -134,7 +161,7 @@ public class AwardRepository implements IAwardRepository {
 
         try {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-            task.setTaskState(TaskState.SEND.getCode());
+            task.setTaskState(TaskState.DISTRIBUTED.getCode());
             taskDao.updateTaskState(task);
         } catch (Exception e) {
             task.setTaskState(TaskState.FAILED.getCode());
@@ -154,4 +181,5 @@ public class AwardRepository implements IAwardRepository {
 
         taskDao.updateTaskState(task);
     }
+
 }

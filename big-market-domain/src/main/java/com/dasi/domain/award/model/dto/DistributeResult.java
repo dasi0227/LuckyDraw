@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.award.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RaffleResponseDTO {
+@AllArgsConstructor
+public class DistributeResult {
 
     private Integer awardId;
 
     private String awardName;
+
+    private String messageId;
 
 }

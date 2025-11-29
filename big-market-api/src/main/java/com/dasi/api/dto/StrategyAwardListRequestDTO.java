@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.dto;
+package com.dasi.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class StrategyAwardStock {
+@NoArgsConstructor
+public class StrategyAwardListRequestDTO {
 
     private Long strategyId;
-
-    private Integer awardId;
 
 }

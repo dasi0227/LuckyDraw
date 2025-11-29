@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.action.chain.impl;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.model.type.ActivityState;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class ActionActivityInfoChain extends AbstractActionChain {
 
     @Override
-    public Boolean action(ActionChainCheck actionChainCheck) {
+    public Boolean action(ActionChainCheckAggregate actionChainCheckAggregate) {
 
-        ActivityEntity activityEntity = actionChainCheck.getActivityEntity();
+        ActivityEntity activityEntity = actionChainCheckAggregate.getActivityEntity();
 
         String activityState = activityEntity.getActivityState();
         if (ActivityState.CREATED.getCode().equals(activityState)) {
@@ -40,7 +40,7 @@ public class ActionActivityInfoChain extends AbstractActionChain {
         }
 
         log.info("【活动责任链 - activity_info】活动基础信息无误：activityId = {}, activityName = {}", activityEntity.getActivityId(), activityEntity.getActivityName());
-        return next().action(actionChainCheck);
+        return next().action(actionChainCheckAggregate);
     }
 
 }

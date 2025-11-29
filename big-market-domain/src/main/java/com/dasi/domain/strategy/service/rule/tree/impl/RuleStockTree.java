@@ -4,7 +4,7 @@ import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
-import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
+import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.tree.IRuleTree;
 import com.dasi.domain.strategy.service.stock.IStrategyStock;
@@ -29,12 +29,12 @@ public class RuleStockTree implements IRuleTree {
         long surplus = strategyStock.subStrategyAwardCount(strategyId, awardId);
         if (surplus > 0L) {
             log.info("【策略规则树 - rule_stock】接管：awardId = {}, surplus = {}->{}", awardId, surplus + 1, surplus);
-            StrategyAwardStock stockUpdateRequest = StrategyAwardStock.builder()
+            StrategyAwardStockEntity stockUpdateRequest = StrategyAwardStockEntity.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
                     .build();
             // 扣减成功：放到延迟队列之中，异步操作数据库
-            strategyRepository.sendStrategyAwardStockToMQ(stockUpdateRequest);
+            strategyRepository.sendStrategyAwardStockConsumeToMQ(stockUpdateRequest);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

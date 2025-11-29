@@ -1,18 +1,16 @@
 package com.dasi.infrastructure.persistent.repository;
 
-import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
-import com.dasi.domain.strategy.model.type.RuleCheckType;
-import com.dasi.domain.strategy.model.dto.StrategyAwardStock;
+import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
-import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleCheckType;
 import com.dasi.domain.strategy.model.vo.RuleEdgeVO;
 import com.dasi.domain.strategy.model.vo.RuleNodeVO;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -25,6 +23,8 @@ import org.redisson.api.RMap;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +57,38 @@ public class StrategyRepository implements IStrategyRepository {
     private IRuleNodeDao ruleNodeDao;
 
     @Resource
+    private IActivityDao activityDao;
+
+    @Resource
+    private IActivityAccountDayDao activityAccountDayDao;
+
+    @Resource
     private IRedisService redisService;
+
+    @Override
+    public Long queryStrategyIdByActivityId(Long activityId) {
+        String cacheKey = RedisKey.STRATEGY_ID_KEY + activityId;
+        Long strategyId = redisService.getValue(cacheKey);
+        if (strategyId != null) {
+            return strategyId;
+        }
+
+        strategyId = activityDao.queryStrategyIdByActivityId(activityId);
+        redisService.setValue(cacheKey, strategyId);
+        return strategyId;
+    }
+
+    @Override
+    public long queryUserLotteryCount(String userId, Long strategyId) {
+        Long activityId = activityDao.queryStrategyIdByActivityId(strategyId);
+        ActivityAccountDay activityAccountDay = new ActivityAccountDay();
+        activityAccountDay.setUserId(userId);
+        activityAccountDay.setActivityId(activityId);
+        activityAccountDay.setDay(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDay);
+        if (activityAccountDay == null) return 0;
+        return activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus();
+    }
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardListByStrategyId(Long strategyId) {
@@ -158,7 +189,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public AwardEntity queryAwardEntityByAwardId(Integer awardId) {
+    public AwardEntity queryAwardByAwardId(Integer awardId) {
         // 先查缓存
         String cacheKey = RedisKey.AWARD_KEY + awardId;
         AwardEntity awardEntity = redisService.getValue(cacheKey);
@@ -269,7 +300,6 @@ public class StrategyRepository implements IStrategyRepository {
         return Integer.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey, String.valueOf(randomNum)));
     }
 
-
     @Override
     public void cacheStrategyAwardStock(String cacheKey, Integer stock) {
         if (!redisService.isExists(cacheKey)) {
@@ -293,18 +323,18 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public void sendStrategyAwardStockToMQ(StrategyAwardStock strategyAwardStock) {
+    public void sendStrategyAwardStockConsumeToMQ(StrategyAwardStockEntity strategyAwardStockEntity) {
         String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
-        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
-        RDelayedQueue<StrategyAwardStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        RBlockingQueue<StrategyAwardStockEntity> blockingQueue = redisService.getBlockingQueue(queueKey);
+        RDelayedQueue<StrategyAwardStockEntity> delayedQueue = redisService.getDelayedQueue(blockingQueue);
         // 构造延迟队列，三秒后才放入
-        delayedQueue.offer(strategyAwardStock, 3, TimeUnit.SECONDS);
+        delayedQueue.offer(strategyAwardStockEntity, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public StrategyAwardStock getQueueValue() {
+    public StrategyAwardStockEntity getQueueValue() {
         String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
-        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
+        RBlockingQueue<StrategyAwardStockEntity> blockingQueue = redisService.getBlockingQueue(queueKey);
         return blockingQueue.poll();
     }
 

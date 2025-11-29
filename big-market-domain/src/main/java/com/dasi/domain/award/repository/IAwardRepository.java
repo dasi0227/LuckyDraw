@@ -14,4 +14,5 @@ public interface IAwardRepository {
     void sendMessage(TaskEntity taskEntity);
 
     void updateTaskState(TaskEntity taskEntity);
+
 }

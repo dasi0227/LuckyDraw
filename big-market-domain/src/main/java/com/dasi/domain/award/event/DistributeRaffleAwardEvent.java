@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class SendRaffleAwardEvent extends BaseEvent<SendRaffleAwardMessage> {
+public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardMessage> {
 
-    @Value("${spring.rabbitmq.topic.send_raffle_award}")
+    @Value("${spring.rabbitmq.topic.distribute_raffle_award}")
     private String topic;
 
     @Override
@@ -19,8 +19,8 @@ public class SendRaffleAwardEvent extends BaseEvent<SendRaffleAwardMessage> {
     }
 
     @Override
-    public EventMessage<SendRaffleAwardMessage> buildEventMessage(SendRaffleAwardMessage data) {
-        return EventMessage.<SendRaffleAwardMessage>builder()
+    public EventMessage<DistributeRaffleAwardMessage> buildEventMessage(DistributeRaffleAwardMessage data) {
+        return EventMessage.<DistributeRaffleAwardMessage>builder()
                 .id(RandomStringUtils.randomNumeric(12))
                 .time(LocalDateTime.now())
                 .data(data)

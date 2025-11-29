@@ -12,10 +12,16 @@
         <result property="updateTime"       column="update_time"/>
     </resultMap>
 
-    <select id="queryRechargeSkuBySku" parameterType="java.lang.Long" resultMap="dataMap">
+    <select id="queryRechargeSkuBySkuId" parameterType="java.lang.Long" resultMap="dataMap">
         SELECT sku_id, activity_id, quota_id, stock_allocate, stock_surplus
         FROM recharge_sku
         WHERE sku_id = #{skuId};
+    </select>
+
+    <select id="queryRechargeSkuByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT sku_id, activity_id, quota_id, stock_allocate, stock_surplus
+        FROM recharge_sku
+        WHERE activity_id = #{activityId}
     </select>
 
     <update id="clearRechargeSkuStock" parameterType="java.lang.Long">

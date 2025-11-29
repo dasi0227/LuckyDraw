@@ -10,7 +10,7 @@
         <result property="strategyId"  column="strategy_id"/>
         <result property="orderId"     column="order_id"/>
         <result property="awardId"     column="award_id"/>
-        <result property="awardTitle"  column="award_title"/>
+        <result property="awardName"   column="award_name"/>
         <result property="awardTime"   column="award_time"/>
         <result property="awardState"  column="award_state"/>
         <result property="createTime"  column="create_time"/>
@@ -18,8 +18,8 @@
     </resultMap>
 
     <insert id="saveRaffleAward" parameterType="com.dasi.infrastructure.persistent.po.RaffleAward">
-        INSERT INTO raffle_award (user_id, activity_id, strategy_id, order_id, award_id, award_title, award_time, award_state)
-        VALUES (#{userId}, #{activityId}, #{strategyId}, #{orderId}, #{awardId}, #{awardTitle}, #{awardTime}, #{awardState})
+        INSERT INTO raffle_award (user_id, activity_id, strategy_id, order_id, award_id, award_name, award_time, award_state)
+        VALUES (#{userId}, #{activityId}, #{strategyId}, #{orderId}, #{awardId}, #{awardName}, #{awardTime}, #{awardState})
     </insert>
 
 </mapper>

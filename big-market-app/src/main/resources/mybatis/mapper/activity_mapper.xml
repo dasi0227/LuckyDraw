@@ -21,4 +21,16 @@
         WHERE activity_id = #{activityId}
     </select>
 
+    <select id="queryStrategyIdByActivityId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT strategy_id
+        FROM activity
+        WHERE activity_id = #{activityId}
+    </select>
+
+    <select id="queryActivityIdByStrategyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT activity_id
+        FROM activity
+        WHERE strategy_id = #{strategyId}
+    </select>
+
 </mapper>

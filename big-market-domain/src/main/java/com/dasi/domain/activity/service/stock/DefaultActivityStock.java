@@ -1,7 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.dto.RechargeSkuStock;
-import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.entity.RechargeSkuStockEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,20 +16,12 @@ public class DefaultActivityStock implements IActivityStock {
     private IActivityRepository activityRepository;
 
     @Override
-    public boolean assembleRechargeSkuStock(Long sku) {
-        RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(sku);
-        activityRepository.cacheRechargeSkuStockSurplus(sku, rechargeSkuEntity.getStockSurplus());
-        log.info("【活动装配】sku = {}, rechargeSkuStockSurplus = {}", sku, rechargeSkuEntity.getStockSurplus());
-        return false;
+    public Long subtractRechargeSkuStock(Long skuId, LocalDateTime endTime) {
+        return activityRepository.subtractRechargeSkuStockSurplus(skuId, endTime);
     }
 
     @Override
-    public Long subtractRechargeSkuStock(Long sku, LocalDateTime endTime) {
-        return activityRepository.subtractRechargeSkuStockSurplus(sku, endTime);
-    }
-
-    @Override
-    public RechargeSkuStock getQueueValue() {
+    public RechargeSkuStockEntity getQueueValue() {
         return activityRepository.getQueueValue();
     }
 
@@ -40,13 +31,13 @@ public class DefaultActivityStock implements IActivityStock {
     }
 
     @Override
-    public void updateRechargeSkuStock(Long sku) {
-        activityRepository.updateRechargeSkuStock(sku);
+    public void updateRechargeSkuStock(Long skuId) {
+        activityRepository.updateRechargeSkuStock(skuId);
     }
 
     @Override
-    public void clearRechargeSkuStock(Long sku) {
-        activityRepository.clearRechargeSkuStock(sku);
+    public void clearRechargeSkuStock(Long skuId) {
+        activityRepository.clearRechargeSkuStock(skuId);
     }
 
 }

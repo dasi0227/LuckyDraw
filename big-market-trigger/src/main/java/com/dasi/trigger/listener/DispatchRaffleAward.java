@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DispatchRaffleAward {
 
-    @Value("${spring.rabbitmq.topic.send_raffle_award}")
+    @Value("${spring.rabbitmq.topic.distribute_raffle_award}")
     private String topic;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "send_raffle_award"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "distribute_raffle_award"))
     public void dispatchRaffleAward(String message) {
         try {
             log.info("【监听消息 - dispatchRaffleAward】发送奖品到用户成功：topic = {}, message = {}", topic, message);

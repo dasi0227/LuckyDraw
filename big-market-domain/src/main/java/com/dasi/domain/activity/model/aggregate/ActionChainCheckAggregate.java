@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.dto;
+package com.dasi.domain.activity.model.aggregate;
 
 import com.dasi.domain.activity.model.entity.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActionChainCheck {
+public class ActionChainCheckAggregate {
 
     private String userId;
 

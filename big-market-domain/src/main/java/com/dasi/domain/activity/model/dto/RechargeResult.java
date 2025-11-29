@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RechargeResult {
 
-    private String userId;
-
     private String orderId;
 
     private Integer totalCount;

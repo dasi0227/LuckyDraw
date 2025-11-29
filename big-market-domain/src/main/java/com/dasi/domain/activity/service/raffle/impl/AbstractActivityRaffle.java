@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.raffle.impl;
 
 import com.dasi.domain.activity.model.dto.RaffleContext;
-import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
+import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.dto.RaffleResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
@@ -25,7 +25,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
     }
 
     @Override
-    public RaffleResult doRaffle(RaffleContext raffleContext) {
+    public RaffleResult doActivityRaffle(RaffleContext raffleContext) {
 
         // 1. 参数校验
         String userId = raffleContext.getUserId();
@@ -38,13 +38,16 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
         RaffleOrderAggregate raffleOrderAggregate = checkRaffleAvailable(userId, activityEntity);
         if (raffleOrderAggregate == null) {
-            return RaffleResult.builder().userId(userId).build();
+            throw new AppException("活动与用户校验失败");
         }
 
         // 3. 查询还未执行完成的抽奖
         RaffleOrderEntity raffleOrderEntity = activityRepository.queryUnusedRaffleOrder(userId, activityId);
         if (raffleOrderEntity != null) {
-            return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
+            return RaffleResult.builder()
+                    .orderId(raffleOrderEntity.getOrderId())
+                    .strategyId(raffleOrderEntity.getStrategyId())
+                    .build();
         } else {
             raffleOrderEntity = RaffleOrderEntity.builder()
                     .orderId(RandomStringUtils.randomNumeric(12))
@@ -60,7 +63,10 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         raffleOrderAggregate.setRaffleOrderEntity(raffleOrderEntity);
         activityRepository.saveRaffleOrder(raffleOrderAggregate);
 
-        return RaffleResult.builder().userId(userId).orderId(raffleOrderEntity.getOrderId()).build();
+        return RaffleResult.builder()
+                .orderId(raffleOrderEntity.getOrderId())
+                .strategyId(raffleOrderEntity.getStrategyId())
+                .build();
     }
 
     protected abstract RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity);

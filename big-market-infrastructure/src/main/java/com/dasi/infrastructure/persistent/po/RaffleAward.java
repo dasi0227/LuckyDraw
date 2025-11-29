@@ -26,7 +26,7 @@ public class RaffleAward {
     private Integer awardId;
 
     /** 奖品标题 */
-    private String awardTitle;
+    private String awardName;
 
     /** 中奖时间 */
     private LocalDateTime awardTime;

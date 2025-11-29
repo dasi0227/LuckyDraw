@@ -16,7 +16,10 @@ public class RedisKey {
 
     public static final String ACTIVITY_KEY                         = "big_market:activity:entity:activity:";
     public static final String RECHARGE_SKU_KEY                     = "big_market:activity:entity:recharge_sku:";
+    public static final String ACTIVITY_RECHARGE_SKU_KEY            = "big_market:activity:entity:activity_recharge_sku:";
     public static final String RECHARGE_QUOTA_KEY                   = "big_market:activity:entity:recharge_quota:";
     public static final String RECHARGE_SKU_STOCK_SURPLUS_KEY       = "big_market:activity:stock:recharge_sku_surplus:";
     public static final String RECHARGE_SKU_STOCK_QUEUE_KEY         = "big_market:activity:stock:recharge_sku_queue:";
+    public static final String ACTIVITY_ID_KEY                      = "big_market:activity:entity:activity_id:";
+    public static final String STRATEGY_ID_KEY                      = "big_market:activity:entity:strategy_id:";
 }

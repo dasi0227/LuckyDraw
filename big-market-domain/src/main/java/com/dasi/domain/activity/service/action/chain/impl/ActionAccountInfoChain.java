@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.action.chain.impl;
 
-import com.dasi.domain.activity.model.dto.ActionChainCheck;
-import com.dasi.domain.activity.model.dto.RaffleOrderAggregate;
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
+import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.ActivityAccountDayEntity;
 import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
 import com.dasi.domain.activity.model.entity.ActivityAccountMonthEntity;
@@ -25,10 +25,10 @@ public class ActionAccountInfoChain extends AbstractActionChain {
     private static final DateTimeFormatter DAY_FORMATTER   = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
-    public Boolean action(ActionChainCheck actionChainCheck) {
+    public Boolean action(ActionChainCheckAggregate actionChainCheckAggregate) {
 
-        String userId = actionChainCheck.getUserId();
-        Long activityId = actionChainCheck.getActivityId();
+        String userId = actionChainCheckAggregate.getUserId();
+        Long activityId = actionChainCheckAggregate.getActivityId();
 
         /* ========= 1. 查询总余额 ========= */
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
@@ -77,12 +77,12 @@ public class ActionAccountInfoChain extends AbstractActionChain {
                 .activityAccountMonthEntity(activityAccountMonthEntity)
                 .activityAccountDayEntity(activityAccountDayEntity)
                 .build();
-        actionChainCheck.setRaffleOrderAggregate(raffleOrderAggregate);
+        actionChainCheckAggregate.setRaffleOrderAggregate(raffleOrderAggregate);
         log.info("【活动责任链 - account_info】账户余额充足：userId={}, activityId={}, total={}, month={}, day={}",
                 userId, activityId,
                 activityAccountEntity.getTotalSurplus(), activityAccountEntity.getMonthSurplus(), activityAccountEntity.getDaySurplus());
 
-        return next().action(actionChainCheck);
+        return next().action(actionChainCheckAggregate);
     }
 
 }

@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleResponseDTO {
+public class StrategyAwardListResponseDTO {
 
+    /** 奖品ID */
     private Integer awardId;
 
-    private String awardName;
+    /** 奖品标题 */
+    private String awardTitle;
 
 }
