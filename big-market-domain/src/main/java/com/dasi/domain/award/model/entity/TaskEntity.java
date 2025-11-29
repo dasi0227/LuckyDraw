@@ -1,14 +1,15 @@
-package com.dasi.infrastructure.persistent.po;
+package com.dasi.domain.award.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
-public class Task {
-
-    /** 自增id */
-    private Long id;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TaskEntity {
 
     /** 用户id */
     private String userId;
@@ -24,11 +25,4 @@ public class Task {
 
     /** 任务状态 */
     private String taskState;
-
-    /** 创建时间 */
-    private LocalDateTime createTime;
-
-    /** 更新时间 */
-    private LocalDateTime updateTime;
-
 }

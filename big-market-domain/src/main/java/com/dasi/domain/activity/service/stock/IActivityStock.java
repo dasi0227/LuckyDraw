@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.dto.SkuStock;
+import com.dasi.domain.activity.model.dto.RechargeSkuStock;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +10,7 @@ public interface IActivityStock {
 
     Long subtractRechargeSkuStock(Long sku, LocalDateTime endDatetime);
 
-    SkuStock getQueueValue() throws InterruptedException;
+    RechargeSkuStock getQueueValue() throws InterruptedException;
 
     void clearQueueValue();
 

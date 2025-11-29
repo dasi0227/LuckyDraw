@@ -63,7 +63,44 @@ CREATE TABLE activity_account (
     UNIQUE KEY uq_user_id_activity_id (user_id, activity_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT ='账户在每个活动获得的抽奖次数';
 
--- 账户在每个活动通过什么权益获得的抽奖次数
+DROP TABLE IF EXISTS activity_account_month;
+CREATE TABLE activity_account_month (
+    id                  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id         BIGINT           NOT NULL COMMENT '活动id',
+    user_id             VARCHAR(32)      NOT NULL COMMENT '用户id',
+    `month`             VARCHAR(32)      NOT NULL COMMENT 'yyyy-mm',
+    month_allocate      INT              NOT NULL COMMENT '月次数',
+    month_surplus       INT              NOT NULL COMMENT '月次数-剩余',
+    create_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+UNIQUE KEY uq_user_id_activity_id_month (user_id, activity_id, `month`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT ='当月的用户抽奖消耗';
+
+DROP TABLE IF EXISTS activity_account_day;
+CREATE TABLE activity_account_day (
+    id                  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id         BIGINT           NOT NULL COMMENT '活动id',
+    user_id             VARCHAR(32)      NOT NULL COMMENT '用户id',
+    `day`               VARCHAR(32)      NOT NULL COMMENT 'yyyy-mm-dd',
+    day_allocate        INT              NOT NULL COMMENT '日次数',
+    day_surplus         INT              NOT NULL COMMENT '日次数-剩余',
+    create_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_user_id_activity_id_day (user_id, activity_id, `day`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '当天的用户抽奖消耗';
+
+DROP TABLE IF EXISTS task;
+CREATE TABLE task (
+    id          BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    user_id     VARCHAR(32)      NOT NULL COMMENT '用户id',
+    message_id  VARCHAR(32)      NOT NULL COMMENT '消息id',
+    topic       VARCHAR(32)      NOT NULL COMMENT '消息主题',
+    message     VARCHAR(512)     NOT NULL COMMENT '消息主体',
+    task_state  VARCHAR(32)      NOT NULL COMMENT '任务状态',
+    create_time DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT ='任务表';
+
 DROP TABLE IF EXISTS recharge_order_000;
 CREATE TABLE recharge_order_000 (
     id                   BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
@@ -82,44 +119,6 @@ CREATE TABLE recharge_order_000 (
     create_time          DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time          DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT ='充值抽奖次数订单';
-
--- 当月的抽奖消耗
-DROP TABLE IF EXISTS activity_account_month;
-CREATE TABLE activity_account_month (
-    id                  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    activity_id         BIGINT           NOT NULL COMMENT '活动id',
-    user_id             VARCHAR(32)      NOT NULL COMMENT '用户id',
-    `month`             VARCHAR(32)      NOT NULL COMMENT 'yyyy-mm',
-    month_allocate      INT              NOT NULL COMMENT '月次数',
-    month_surplus       INT              NOT NULL COMMENT '月次数-剩余',
-    create_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    UNIQUE KEY uq_user_id_activity_id_month (user_id, activity_id, `month`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT ='当月的用户抽奖消耗';
-
--- 当天的抽奖消耗
-DROP TABLE IF EXISTS activity_account_day;
-CREATE TABLE activity_account_day (
-    id                  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    activity_id         BIGINT           NOT NULL COMMENT '活动id',
-    user_id             VARCHAR(32)      NOT NULL COMMENT '用户id',
-    `day`               VARCHAR(32)      NOT NULL COMMENT 'yyyy-mm-dd',
-    day_allocate        INT              NOT NULL COMMENT '日次数',
-    day_surplus         INT              NOT NULL COMMENT '日次数-剩余',
-    create_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time         datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    UNIQUE KEY uq_user_id_activity_id_day (user_id, activity_id, `day`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '当天的用户抽奖消耗';
-
-DROP TABLE IF EXISTS task;
-CREATE TABLE task (
-    id          BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    topic       VARCHAR(32)      NOT NULL COMMENT '消息主题',
-    message     VARCHAR(512)     NOT NULL COMMENT '消息主体',
-    task_state  VARCHAR(32)      NOT NULL COMMENT '任务状态',
-    create_time DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT ='任务表';
 
 DROP TABLE IF EXISTS raffle_order_000;
 CREATE TABLE raffle_order_000 (
@@ -142,7 +141,7 @@ CREATE TABLE raffle_award_000 (
     activity_id BIGINT             NOT NULL COMMENT '活动id',
     award_id    INT                NOT NULL COMMENT '奖品id',
     strategy_id BIGINT             NOT NULL COMMENT '策略id',
-    raffle_id   VARCHAR(32)        NOT NULL COMMENT '订单id',
+    order_id    VARCHAR(32)        NOT NULL COMMENT '订单id',
     award_title VARCHAR(32)        NOT NULL COMMENT '奖品标题',
     award_time  DATETIME           NOT NULL COMMENT '中奖时间',
     award_state VARCHAR(32)        NOT NULL COMMENT '奖品发放状态',

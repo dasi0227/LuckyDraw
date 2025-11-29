@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.dto.SkuStock;
+import com.dasi.domain.activity.model.dto.RechargeSkuStock;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class DefaultActivityStock implements IActivityStock {
     }
 
     @Override
-    public SkuStock getQueueValue() {
+    public RechargeSkuStock getQueueValue() {
         return activityRepository.getQueueValue();
     }
 
