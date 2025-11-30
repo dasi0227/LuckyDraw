@@ -2,7 +2,6 @@ package com.dasi.domain.strategy.service.lottery.impl;
 
 import com.dasi.domain.strategy.model.dto.RuleCheckContext;
 import com.dasi.domain.strategy.model.dto.RuleCheckResult;
-import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.security.SecureRandom;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -58,11 +56,6 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
         }
         IRuleTreeEngine ruleTreeEngine = ruleTreeFactory.getTreeEngine(ruleTreeVO);
         return ruleTreeEngine.process(ruleCheckContext.getUserId(), ruleCheckContext.getStrategyId(), ruleCheckContext.getAwardId());
-    }
-
-    @Override
-    public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
-        return strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
     }
 
     @Override

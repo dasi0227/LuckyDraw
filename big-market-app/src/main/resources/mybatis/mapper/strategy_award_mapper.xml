@@ -5,11 +5,12 @@
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.StrategyAward">
         <result column="strategy_id"         property="strategyId"/>
         <result column="award_id"            property="awardId"/>
+        <result column="tree_id"             property="treeId"/>
         <result column="award_title"         property="awardTitle"/>
-        <result column="award_total"         property="awardTotal"/>
+        <result column="award_allocate"      property="awardAllocate"/>
         <result column="award_surplus"       property="awardSurplus"/>
         <result column="award_rate"          property="awardRate"/>
-        <result column="tree_id"             property="treeId"/>
+        <result column="award_index"         property="awardIndex"/>
         <result column="create_time"         property="createTime"/>
         <result column="update_time"         property="updateTime"/>
     </resultMap>
@@ -21,12 +22,12 @@
     </update>
 
     <select id="queryStrategyAwardListByStrategyId" parameterType="java.lang.Long" resultMap="dataMap">
-        select strategy_id, award_id, award_title, award_total, award_surplus, award_rate
+        select strategy_id, award_id, tree_id, award_title, award_allocate, award_surplus, award_rate, award_index
         from strategy_award
         where strategy_id = #{strategyId}
    </select>
 
-    <select id="queryStrategyAwardRuleModels" parameterType="com.dasi.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
+    <select id="queryStrategyAwardTreeIdByStrategyIdAndAwardId" parameterType="com.dasi.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
         select tree_id
         from strategy_award
         where strategy_id = #{strategyId} and award_id = #{awardId}

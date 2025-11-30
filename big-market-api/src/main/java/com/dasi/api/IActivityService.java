@@ -1,10 +1,9 @@
 package com.dasi.api;
 
-import com.dasi.api.dto.RaffleRequestDTO;
-import com.dasi.api.dto.RaffleResponseDTO;
-import com.dasi.api.dto.RechargeRequestDTO;
-import com.dasi.api.dto.RechargeResponseDTO;
+import com.dasi.api.dto.*;
 import com.dasi.types.model.Result;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public interface IActivityService {
@@ -14,5 +13,7 @@ public interface IActivityService {
     Result<RechargeResponseDTO> recharge(RechargeRequestDTO rechargeRequestDTO);
 
     Result<RaffleResponseDTO> raffle(RaffleRequestDTO raffleRequestDTO);
+
+    Result<List<AwardListResponseDTO>> award(AwardListRequestDTO awardListRequestDTO);
 
 }

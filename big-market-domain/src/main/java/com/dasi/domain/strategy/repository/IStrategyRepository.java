@@ -13,7 +13,9 @@ public interface IStrategyRepository {
 
     Long queryStrategyIdByActivityId(Long activityId);
 
-    long queryUserLotteryCount(String userId, Long strategyId);
+    Long queryActivityIdByStrategyId(Long strategyId);
+
+    int queryUserLotteryCount(String userId, Long strategyId);
 
     StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
 

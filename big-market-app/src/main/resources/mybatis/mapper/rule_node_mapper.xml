@@ -13,9 +13,15 @@
     </resultMap>
 
     <select id="queryRuleNodeListByTreeId" parameterType="java.lang.String" resultMap="dataMap">
-        select tree_id, rule_model, rule_value
-        from rule_node
-        where tree_id = #{treeId}
+        SELECT tree_id, rule_model, rule_value
+        FROM rule_node
+        WHERE tree_id = #{treeId}
+    </select>
+
+    <select id="queryRuleNodeLockCountByTreeId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT rule_value
+        FROM rule_node
+        WHERE tree_id = #{treeId} and rule_model = 'rule_lock'
     </select>
 
 </mapper>

@@ -6,21 +6,26 @@ import com.dasi.domain.award.model.entity.RaffleAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
+import com.dasi.domain.strategy.model.entity.AwardEntity;
+import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
 import com.dasi.infrastructure.event.EventPublisher;
-import com.dasi.infrastructure.persistent.dao.IRaffleAwardDao;
-import com.dasi.infrastructure.persistent.dao.IRaffleOrderDao;
-import com.dasi.infrastructure.persistent.dao.ITaskDao;
-import com.dasi.infrastructure.persistent.po.RaffleAward;
-import com.dasi.infrastructure.persistent.po.RaffleOrder;
-import com.dasi.infrastructure.persistent.po.Task;
+import com.dasi.infrastructure.persistent.dao.*;
+import com.dasi.infrastructure.persistent.po.*;
+import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,7 +33,22 @@ import java.util.stream.Collectors;
 public class AwardRepository implements IAwardRepository {
 
     @Resource
+    private IActivityDao activityDao;
+
+    @Resource
     private ITaskDao taskDao;
+
+    @Resource
+    private IAwardDao awardDao;
+
+    @Resource
+    private IRuleNodeDao ruleNodeDao;
+
+    @Resource
+    private IActivityAccountDayDao activityAccountDayDao;
+
+    @Resource
+    private IStrategyAwardDao strategyAwardDao;
 
     @Resource
     private IRaffleAwardDao raffleAwardDao;
@@ -44,6 +64,9 @@ public class AwardRepository implements IAwardRepository {
 
     @Resource
     private EventPublisher eventPublisher;
+
+    @Resource
+    private IRedisService redisService;
 
     @Override
     public void saveRaffleAward(RaffleAwardEntity raffleAwardEntity, TaskEntity taskEntity) {
@@ -172,6 +195,107 @@ public class AwardRepository implements IAwardRepository {
         task.setTaskState(taskEntity.getTaskState());
 
         taskDao.updateTaskState(task);
+    }
+
+    @Override
+    public List<StrategyAwardEntity> queryStrategyAwardListByActivityId(Long activityId) {
+        // 解析为策略 id
+        Long strategyId = redisService.getValue(RedisKey.STRATEGY_ID_KEY + activityId);
+        if (strategyId == null) {
+            strategyId = activityDao.queryStrategyIdByActivityId(activityId);
+        }
+
+        // 先查缓存
+        String cacheKey = RedisKey.STRATEGY_AWARD_KEY + strategyId;
+        List<StrategyAwardEntity> strategyAwardEntities = redisService.getValue(cacheKey);
+        if (null != strategyAwardEntities && !strategyAwardEntities.isEmpty()) {
+            return strategyAwardEntities;
+        }
+
+        // 再查数据库
+        List<StrategyAward> list = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
+        strategyAwardEntities = list.stream()
+                .map(strategyAward -> StrategyAwardEntity.builder()
+                        .strategyId(strategyAward.getStrategyId())
+                        .awardId(strategyAward.getAwardId())
+                        .treeId(strategyAward.getTreeId())
+                        .awardTitle(strategyAward.getAwardTitle())
+                        .awardAllocate(strategyAward.getAwardAllocate())
+                        .awardSurplus(strategyAward.getAwardSurplus())
+                        .awardRate(strategyAward.getAwardRate())
+                        .awardIndex(strategyAward.getAwardIndex())
+                        .build())
+                .collect(Collectors.toList());
+
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, strategyAwardEntities);
+        return strategyAwardEntities;
+    }
+
+    @Override
+    public Map<String, AwardEntity> queryAwardMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId) {
+        // 先查缓存
+        String cacheKey = RedisKey.AWARD_MAP_KEY + activityId;
+        Map<String, AwardEntity> awardEntityMap = redisService.getValue(cacheKey);
+        if (awardEntityMap != null && !awardEntityMap.isEmpty()) {
+            return awardEntityMap;
+        }
+
+        // 再查数据库
+        awardEntityMap = new HashMap<>();
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
+            Integer awardId = strategyAwardEntity.getAwardId();
+            Award award = awardDao.queryAwardByAwardId(awardId);
+            AwardEntity awardEntity = AwardEntity.builder()
+                    .awardId(award.getAwardId())
+                    .awardName(award.getAwardName())
+                    .awardConfig(award.getAwardConfig())
+                    .awardDesc(award.getAwardDesc())
+                    .build();
+            awardEntityMap.put(String.valueOf(awardId), awardEntity);
+        }
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, awardEntityMap);
+        return awardEntityMap;
+    }
+
+    @Override
+    public Map<String, Integer> queryRuleNodeLockCountMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId) {
+        // 先查缓存
+        String cacheKey = RedisKey.RULE_NODE_MAP_KEY + activityId;
+        Map<String, Integer> ruleNodeLockCountMap = redisService.getValue(cacheKey);
+        if (ruleNodeLockCountMap != null && !ruleNodeLockCountMap.isEmpty()) {
+            return ruleNodeLockCountMap;
+        }
+
+        // 再查数据库
+        ruleNodeLockCountMap = new HashMap<>();
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
+            Integer awardId = strategyAwardEntity.getAwardId();
+            String treeId = strategyAwardEntity.getTreeId();
+            if (StringUtils.isBlank(treeId)) {
+                ruleNodeLockCountMap.put(String.valueOf(awardId), 0);
+            }
+            Integer lockCount = ruleNodeDao.queryRuleNodeLockCountByTreeId(treeId);
+            ruleNodeLockCountMap.put(String.valueOf(awardId), lockCount == null ? 0 : lockCount);
+        }
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, ruleNodeLockCountMap);
+        return ruleNodeLockCountMap;
+    }
+
+    @Override
+    public Integer queryUserLotteryCount(String userId, Long activityId) {
+        ActivityAccountDay activityAccountDay = new ActivityAccountDay();
+        activityAccountDay.setUserId(userId);
+        activityAccountDay.setActivityId(activityId);
+        activityAccountDay.setDay(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDay);
+        if (activityAccountDay == null) return 0;
+        return activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus();
     }
 
 }

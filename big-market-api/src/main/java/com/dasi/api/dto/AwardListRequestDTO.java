@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StrategyAwardListRequestDTO {
+public class AwardListRequestDTO {
 
-    private Long strategyId;
+    private Long activityId;
+
+    private String userId;
 
 }

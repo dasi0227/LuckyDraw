@@ -19,16 +19,22 @@ public class StrategyAwardEntity {
     /** 抽奖奖品ID */
     private Integer awardId;
 
+    /** 规则树ID */
+    private String treeId;
+
     /** 抽奖奖品标题 */
     private String awardTitle;
 
     /** 奖品库存总量 */
-    private Integer awardTotal;
+    private Integer awardAllocate;
 
     /** 奖品库存余量 */
     private Integer awardSurplus;
 
     /** 奖品中奖概率 */
     private BigDecimal awardRate;
+
+    /** 奖品排列序号 */
+    private Integer awardIndex;
 
 }

@@ -27,8 +27,8 @@ public class RuleStockTree implements IRuleTree {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
         long surplus = strategyStock.subStrategyAwardCount(strategyId, awardId);
-        if (surplus > 0L) {
-            log.info("【策略规则树】rule_stock 接管：awardId={}, surplus={}->{}", awardId, surplus + 1, surplus);
+        if (surplus >= 0L) {
+            log.info("【策略规则树】rule_stock 放行：awardId={}, surplus={}->{}", awardId, surplus + 1, surplus);
             StrategyAwardStockEntity stockUpdateRequest = StrategyAwardStockEntity.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
@@ -37,14 +37,14 @@ public class RuleStockTree implements IRuleTree {
             strategyRepository.sendStrategyAwardStockConsumeToMQ(stockUpdateRequest);
             return RuleCheckResult.builder()
                     .awardId(awardId)
-                    .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
+                    .ruleCheckOutcome(RuleCheckOutcome.PERMIT)
                     .ruleModel(RuleModel.RULE_STOCK)
                     .build();
         } else {
-            log.info("【策略规则树】rule_stock 放行：surplus={}", surplus);
+            log.info("【策略规则树】rule_stock 接管：surplus={}", surplus);
             return RuleCheckResult.builder()
                     .awardId(null)
-                    .ruleCheckOutcome(RuleCheckOutcome.PERMIT)
+                    .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
                     .ruleModel(RuleModel.RULE_STOCK)
                     .build();
         }

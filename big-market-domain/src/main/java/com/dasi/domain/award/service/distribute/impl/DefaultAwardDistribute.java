@@ -1,4 +1,4 @@
-package com.dasi.domain.award.service.send.impl;
+package com.dasi.domain.award.service.distribute.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.dasi.domain.award.event.DistributeRaffleAwardEvent;
@@ -10,7 +10,7 @@ import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
-import com.dasi.domain.award.service.send.IAwardDistribute;
+import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.types.event.BaseEvent;
 import org.springframework.stereotype.Service;
 

@@ -21,8 +21,8 @@ public class RuleLockTree implements IRuleTree {
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
-        long limitLotteryCount = Long.parseLong(ruleValue);
-        long userLotteryCount = strategyRepository.queryUserLotteryCount(userId, strategyId);
+        int limitLotteryCount = Integer.parseInt(ruleValue);
+        int userLotteryCount = strategyRepository.queryUserLotteryCount(userId, strategyId);
         if (userLotteryCount > limitLotteryCount) {
             log.info("【策略规则树】rule_lock 放行：userLotteryCount={}, limitLotteryCount={}", userLotteryCount, limitLotteryCount);
             return RuleCheckResult.builder()
