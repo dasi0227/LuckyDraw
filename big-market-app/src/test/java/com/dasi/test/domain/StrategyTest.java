@@ -54,9 +54,9 @@ public class StrategyTest {
         for (int i = 1; i <= 100; i++) {
             ReflectionTestUtils.setField(ruleLockTree, "userLotteryCount", (long) i);
             log.info("============================== 第 {} 次抽奖 ==============================", i);
-            log.info("【抽奖请求】LotteryContext {}", lotteryContext);
+            log.info("【抽奖请求】LotteryContext={}", lotteryContext);
             LotteryResult lotteryResult = raffle.doStrategyLottery(lotteryContext);
-            log.info("【抽奖结果】LotteryResult = {}", lotteryResult);
+            log.info("【抽奖结果】LotteryResult={}", lotteryResult);
         }
 
         new CountDownLatch(1).await();

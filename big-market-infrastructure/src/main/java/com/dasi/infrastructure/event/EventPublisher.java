@@ -23,9 +23,9 @@ public class EventPublisher {
     public void publish(String topic, String message) {
         try {
             rabbitTemplate.convertAndSend(topic, message);
-            log.error("【发送消息】发送消息成功：topic = {}, message = {}", topic, message);
+            log.info("【发送消息】发送消息成功：topic={}, message={}", topic, message);
         } catch (Exception e) {
-            log.error("【发送消息】发送消息失败：topic = {}, errorMsg = {}", topic, e.getMessage());
+            log.error("【发送消息】发送消息失败：topic={}, errorMsg={}", topic, e.getMessage());
             throw e;
         }
     }

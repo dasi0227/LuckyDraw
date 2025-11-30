@@ -61,13 +61,15 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
 
         // 4. 保存订单
         raffleOrderAggregate.setRaffleOrderEntity(raffleOrderEntity);
-        activityRepository.saveRaffleOrder(raffleOrderAggregate);
+        saveRaffleOrder(raffleOrderAggregate);
 
         return RaffleResult.builder()
                 .orderId(raffleOrderEntity.getOrderId())
                 .strategyId(raffleOrderEntity.getStrategyId())
                 .build();
     }
+
+    protected abstract void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate);
 
     protected abstract RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity);
 

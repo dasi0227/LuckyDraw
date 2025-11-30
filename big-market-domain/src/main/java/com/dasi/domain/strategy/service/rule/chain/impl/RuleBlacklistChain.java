@@ -36,7 +36,7 @@ public class RuleBlacklistChain extends AbstractRuleChain {
 
         // 3. 判断是否位于黑名单之中
         if (Arrays.asList(blackIds).contains(userId)) {
-            log.info("【策略责任链 - rule_blacklist】接管：黑名单用户={}", userId);
+            log.info("【策略责任链】rule_blacklist 接管：userId={}, awardId={}", userId, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_BLACKLIST)
@@ -45,7 +45,7 @@ public class RuleBlacklistChain extends AbstractRuleChain {
         }
 
         // 4. 放行走下一条规则
-        log.info("【策略责任链 - rule_blacklist】放行");
+        log.info("【策略责任链】rule_blacklist 放行");
         return next().logic(userId, strategyId);
     }
 

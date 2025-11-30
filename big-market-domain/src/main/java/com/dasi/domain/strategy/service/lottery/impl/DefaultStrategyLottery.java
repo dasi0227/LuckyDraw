@@ -81,7 +81,7 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
         // 1. 获取概率长度
         int rateRange = strategyRepository.getRateRange(key);
         // 2. 生成随机数，找到对应的概率奖品
-        return strategyRepository.getStrategyAwardAssemble(key, new SecureRandom().nextInt(rateRange));
+        return strategyRepository.getRandomStrategyAward(key, new SecureRandom().nextInt(rateRange));
     }
 
 }

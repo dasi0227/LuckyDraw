@@ -33,7 +33,7 @@ public class ActionAccountInfoChain extends AbstractActionChain {
         /* ========= 1. 查询总余额 ========= */
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
         if (activityAccountEntity == null || activityAccountEntity.getTotalSurplus() <= 0) {
-            log.info("【活动责任链 - account_info】账户总余额不足：userId={}, activityId={}", userId, activityId);
+            log.info("【活动责任链】account_info 接管，账户总余额不足：userId={}, activityId={}", userId, activityId);
             return false;
         }
 
@@ -41,7 +41,7 @@ public class ActionAccountInfoChain extends AbstractActionChain {
         String month = LocalDate.now().format(MONTH_FORMATTER);
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, month);
         if (activityAccountMonthEntity != null && activityAccountMonthEntity.getMonthSurplus() <= 0) {
-            log.info("【抽奖-责任链-account】账户月余额不足：userId={}, activityId={}, month={}", userId, activityId, month);
+            log.info("【活动责任链】account_info 接管，账户月余额不足：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
             return false;
         } else if (activityAccountMonthEntity == null) {
             activityAccountMonthEntity = ActivityAccountMonthEntity.builder()
@@ -57,7 +57,7 @@ public class ActionAccountInfoChain extends AbstractActionChain {
         String day = LocalDate.now().format(DAY_FORMATTER);
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, day);
         if (activityAccountDayEntity != null && activityAccountDayEntity.getDaySurplus() <= 0) {
-            log.info("【抽奖-责任链-account】账户日余额不足：userId={}, activityId={}, day={}", userId, activityId, day);
+            log.info("【活动责任链】account_info 接管，账户日余额不足：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());
             return false;
         } else if (activityAccountDayEntity == null) {
             activityAccountDayEntity = ActivityAccountDayEntity.builder()
@@ -78,7 +78,7 @@ public class ActionAccountInfoChain extends AbstractActionChain {
                 .activityAccountDayEntity(activityAccountDayEntity)
                 .build();
         actionChainCheckAggregate.setRaffleOrderAggregate(raffleOrderAggregate);
-        log.info("【活动责任链 - account_info】账户余额充足：userId={}, activityId={}, total={}, month={}, day={}",
+        log.info("【活动责任链】account_info 放行，账户余额充足：userId={}, activityId={}, total={}, month={}, day={}",
                 userId, activityId,
                 activityAccountEntity.getTotalSurplus(), activityAccountEntity.getMonthSurplus(), activityAccountEntity.getDaySurplus());
 

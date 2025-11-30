@@ -22,12 +22,12 @@ public class ClearRechargeSkuStock {
     public void clearRechargeSkuStock(String message) {
         try {
             EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<Long>>() {}.getType());
-            Long sku = eventMessage.getData();
-            activityStock.clearRechargeSkuStock(sku);
+            Long skuId = eventMessage.getData();
+            activityStock.clearRechargeSkuStock(skuId);
             activityStock.clearQueueValue();
-            log.info("【监听消息 - clearRechargeSkuStock】清空 SKU 库存成功：sku = {}", sku);
+            log.info("【监听消息】清空充值权益库存成功：skuId={}", skuId);
         } catch (Exception e) {
-            log.info("【监听消息 - clearRechargeSkuStock】清空 SKU 库存失败：error = {}", e.getMessage());
+            log.info("【监听消息】清空充值权益库存失败：error={}", e.getMessage());
             throw e;
         }
     }

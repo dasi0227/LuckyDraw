@@ -86,6 +86,7 @@
         <logger name="com.zaxxer.hikari" level="WARN"/>
         <logger name="org.redisson" level="WARN"/>
         <logger name="io.netty.resolver.dns" level="ERROR"/>
+        <logger name="org.springframework.amqp" level="WARN"/>
     </springProfile>
 
     <!-- 根日志：只输出到控制台 -->

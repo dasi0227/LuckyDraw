@@ -16,9 +16,9 @@ public class DispatchRaffleAward {
     @RabbitListener(queuesToDeclare = @Queue(value = "distribute_raffle_award"))
     public void dispatchRaffleAward(String message) {
         try {
-            log.info("【监听消息 - dispatchRaffleAward】发送奖品到用户成功：topic = {}, message = {}", topic, message);
+            log.info("【监听消息】发送奖品到用户成功：topic={}, message={}", topic, message);
         } catch (Exception e) {
-            log.info("【监听消息 - dispatchRaffleAward】发送奖品到用户失败：topic = {}, message = {}", topic, message);
+            log.info("【监听消息】发送奖品到用户失败：topic={}, message={}", topic, message);
             throw new RuntimeException(e);
         }
     }

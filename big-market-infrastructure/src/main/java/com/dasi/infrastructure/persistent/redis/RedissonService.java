@@ -168,8 +168,8 @@ public class RedissonService implements IRedisService {
     }
 
     @Override
-    public long deleteByPattern(String pattern) {
+    public void deleteByPattern(String pattern) {
         RKeys keys = redissonClient.getKeys();
-        return keys.deleteByPattern(pattern);
+        keys.deleteByPattern(pattern);
     }
 }

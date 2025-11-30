@@ -64,7 +64,7 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
         String awardIds = strategyAwardEntities.stream()
                 .map(strategyAwardEntity -> String.valueOf(strategyAwardEntity.getAwardId()))
                 .collect(Collectors.joining(","));
-        log.info("【策略装配】strategyId = {}, awardIds = {}", strategyId, awardIds);
+        log.info("【策略装配】strategyId={}, awardIds={}", strategyId, awardIds);
         return true;
     }
 

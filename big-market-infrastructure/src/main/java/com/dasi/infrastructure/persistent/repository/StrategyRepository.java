@@ -281,6 +281,11 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
+    public void cacheStrategyAwardStock(String cacheKey, Integer stock) {
+        redisService.setAtomicLong(cacheKey, Long.valueOf(stock));
+    }
+
+    @Override
     public void cacheStrategyAwardRate(String cacheKey, Integer rateRange, Map<String, String> strategyAwardMap) {
         // 1. 存储当前策略对应的概率长度
         redisService.setValue(RedisKey.STRATEGY_RATE_RANGE_KEY + cacheKey, rateRange);
@@ -296,15 +301,8 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public Integer getStrategyAwardAssemble(String cacheKey, int randomNum) {
+    public Integer getRandomStrategyAward(String cacheKey, int randomNum) {
         return Integer.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey, String.valueOf(randomNum)));
-    }
-
-    @Override
-    public void cacheStrategyAwardStock(String cacheKey, Integer stock) {
-        if (!redisService.isExists(cacheKey)) {
-            redisService.setAtomicLong(cacheKey, Long.valueOf(stock));
-        }
     }
 
     @Override
