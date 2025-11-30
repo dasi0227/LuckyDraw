@@ -4,6 +4,6 @@ import com.dasi.domain.strategy.model.dto.RuleCheckResult;
 
 public interface IRuleTreeEngine {
 
-    RuleCheckResult process(String userId, Long strategyId, Integer awardId);
+    RuleCheckResult process(String userId, Long strategyId, Long awardId);
 
 }

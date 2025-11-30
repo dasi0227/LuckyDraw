@@ -17,7 +17,7 @@ public class StrategyAwardEntity {
     private Long strategyId;
 
     /** 抽奖奖品ID */
-    private Integer awardId;
+    private Long awardId;
 
     /** 规则树ID */
     private String treeId;

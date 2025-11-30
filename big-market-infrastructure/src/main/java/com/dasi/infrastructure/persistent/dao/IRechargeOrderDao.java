@@ -16,4 +16,6 @@ public interface IRechargeOrderDao {
     @DBRouter
     List<RechargeOrder> queryRechargeOrderListByUserId(String userId);
 
+    @DBRouter
+    void updateRechargeState(RechargeOrder rechargeOrder);
 }

@@ -7,8 +7,8 @@ public interface IStrategyLottery {
 
     LotteryResult doStrategyLottery(LotteryContext lotteryContext);
 
-    Integer getLotteryAward(Long strategyId);
+    Long getLotteryAward(Long strategyId);
 
-    Integer getLotteryAward(Long strategyId, String ruleWeight);
+    Long getLotteryAward(Long strategyId, String ruleWeight);
 
 }

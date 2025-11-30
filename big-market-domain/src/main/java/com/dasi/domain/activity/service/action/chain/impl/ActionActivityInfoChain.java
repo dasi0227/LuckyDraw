@@ -39,7 +39,10 @@ public class ActionActivityInfoChain extends AbstractActionChain {
             throw new AppException("超过了截止时间");
         }
 
-        log.info("【活动责任链】activity_info 放行，活动基础信息无误：activityId={}, activityName={}", activityEntity.getActivityId(), activityEntity.getActivityName());
+        if (ActivityState.UNDERWAY.getCode().equals(activityState)) {
+            log.info("【活动责任链】activity_info 放行，活动基础信息无误：activityId={}, activityName={}, activityState={}", activityEntity.getActivityId(), activityEntity.getActivityName(), activityEntity.getActivityState());
+        }
+
         return next().action(actionChainCheckAggregate);
     }
 

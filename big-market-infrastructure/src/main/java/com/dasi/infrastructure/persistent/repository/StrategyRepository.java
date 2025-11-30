@@ -19,7 +19,10 @@ import org.redisson.api.RMap;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,7 +203,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public AwardEntity queryAwardByAwardId(Integer awardId) {
+    public AwardEntity queryAwardByAwardId(Long awardId) {
         // 先查缓存
         String cacheKey = RedisKey.AWARD_KEY + awardId;
         AwardEntity awardEntity = redisService.getValue(cacheKey);
@@ -223,7 +226,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Integer awardId) {
+    public String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Long awardId) {
         // 先查缓存
         String cacheKey = RedisKey.TREE_ID_KEY + strategyId + Delimiter.UNDERSCORE + awardId;
         String treeId = redisService.getValue(cacheKey);
@@ -312,19 +315,23 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public Integer getRandomStrategyAward(String cacheKey, int randomNum) {
-        return Integer.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey, String.valueOf(randomNum)));
+    public Long getRandomStrategyAward(String cacheKey, int randomNum) {
+        return Long.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey, String.valueOf(randomNum)));
     }
 
     @Override
-    public long subStrategyAwardStock(String cacheKey) {
+    public long subtractStrategyAwardStock(String cacheKey, LocalDateTime activityEndTime) {
         long surplus = redisService.decr(cacheKey);
         if (surplus < 0L) {
             redisService.setAtomicLong(cacheKey, 0L);
             return -1L;
         }
         String lockKey = cacheKey + Delimiter.UNDERSCORE + (surplus + 1);
-        if (!redisService.setNx(lockKey)) {
+        Duration expire = Duration.ofMillis(
+                activityEndTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        - System.currentTimeMillis()
+                        + TimeUnit.DAYS.toMillis(1));
+        if (!redisService.setNx(lockKey, expire)) {
             return -1L;
         }
         return surplus;
@@ -347,11 +354,27 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
+    public void updateStrategyAwardStock(Long strategyId, Long awardId) {
         StrategyAward strategyAward = new StrategyAward();
         strategyAward.setStrategyId(strategyId);
         strategyAward.setAwardId(awardId);
         strategyAwardDao.updateStrategyAwardStock(strategyAward);
+    }
+
+    @Override
+    public LocalDateTime queryActivityEndTimeByStrategyId(Long strategyId) {
+        String cacheKey = RedisKey.ACTIVITY_END_TIME_KEY + strategyId;
+        LocalDateTime activityEndTime = redisService.getValue(cacheKey);
+        if (activityEndTime != null) {
+            return activityEndTime;
+        }
+
+        Long activityId = queryActivityIdByStrategyId(strategyId);
+        Activity activity = activityDao.queryActivityByActivityId(activityId);
+        activityEndTime = activity.getActivityEndTime();
+        redisService.setValue(cacheKey, activityEndTime);
+
+        return activityEndTime;
     }
 
 }

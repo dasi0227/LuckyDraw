@@ -59,18 +59,18 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
     }
 
     @Override
-    public Integer getLotteryAward(Long strategyId) {
+    public Long getLotteryAward(Long strategyId) {
         String key = String.valueOf(strategyId);
         return getLotteryAward(key);
     }
 
     @Override
-    public Integer getLotteryAward(Long strategyId, String ruleWeight) {
+    public Long getLotteryAward(Long strategyId, String ruleWeight) {
         String key = String.valueOf(strategyId).concat(Delimiter.UNDERSCORE).concat(ruleWeight);
         return getLotteryAward(key);
     }
 
-    private Integer getLotteryAward(String key) {
+    private Long getLotteryAward(String key) {
         // 1. 获取概率长度
         int rateRange = strategyRepository.getRateRange(key);
         // 2. 生成随机数，找到对应的概率奖品

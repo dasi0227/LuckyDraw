@@ -22,4 +22,10 @@
         VALUES (#{userId}, #{activityId}, #{strategyId}, #{orderId}, #{awardId}, #{awardName}, #{awardTime}, #{awardState})
     </insert>
 
+    <update id="updateRaffleAwardState" parameterType="com.dasi.infrastructure.persistent.po.RaffleAward">
+        UPDATE raffle_award
+        SET award_state = #{awardState}
+        WHERE order_id = #{orderId} AND user_id = #{userId} AND award_id = #{awardId}
+    </update>
+
 </mapper>

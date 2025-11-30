@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public abstract class AbstractActivityRaffle implements IActivityRaffle {
 
-    protected IActivityRepository activityRepository;
+    protected final IActivityRepository activityRepository;
 
     public AbstractActivityRaffle(IActivityRepository activityRepository) {
         this.activityRepository = activityRepository;

@@ -13,6 +13,8 @@ public class DistributeRaffleAwardMessage {
 
     private String userId;
 
-    private Integer awardId;
+    private Long awardId;
+
+    private String orderId;
 
 }

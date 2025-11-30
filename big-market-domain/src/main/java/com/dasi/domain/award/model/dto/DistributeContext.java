@@ -15,7 +15,7 @@ public class DistributeContext {
 
     private Long activityId;
 
-    private Integer awardId;
+    private Long awardId;
 
     private String awardName;
 

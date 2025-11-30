@@ -48,7 +48,7 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);
     protected abstract RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext);
 
-    private LotteryResult buildLotteryResult(Integer awardId) {
+    private LotteryResult buildLotteryResult(Long awardId) {
         AwardEntity awardEntity = strategyRepository.queryAwardByAwardId(awardId);
         return LotteryResult.builder()
                 .awardId(awardId)

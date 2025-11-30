@@ -32,11 +32,11 @@ public class StrategyRuleEntity {
     /** 规则描述 */
     private String ruleDesc;
 
-    public Map<String, List<Integer>> getRuleWeightValue() {
+    public Map<String, List<Long>> getRuleWeightValue() {
         if (!RuleModel.RULE_WEIGHT.getCode().equals(ruleModel)) return null;
         if (ruleValue == null || ruleValue.trim().isEmpty()) return null;
 
-        Map<String, List<Integer>> ruleWeightValue = new HashMap<>();
+        Map<String, List<Long>> ruleWeightValue = new HashMap<>();
 
         // 分割空格：得到不同【积分-奖品】组
         String[] groups = ruleValue.trim().split(Delimiter.SPACE);
@@ -47,9 +47,9 @@ public class StrategyRuleEntity {
 
             // 分割积分值和规则值
             String weight = parts[0];
-            List<Integer> value = Arrays.stream(parts[1].trim().split(Delimiter.COMMA))
+            List<Long> value = Arrays.stream(parts[1].trim().split(Delimiter.COMMA))
                     .map(String::trim)
-                    .map(Integer::valueOf)
+                    .map(Long::valueOf)
                     .collect(Collectors.toList());
 
             // 放入 Map

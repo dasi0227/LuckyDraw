@@ -32,6 +32,7 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         DistributeRaffleAwardMessage distributeRaffleAwardMessage = DistributeRaffleAwardMessage.builder()
                 .userId(distributeContext.getUserId())
                 .awardId(distributeContext.getAwardId())
+                .orderId(distributeContext.getOrderId())
                 .build();
         BaseEvent.EventMessage<DistributeRaffleAwardMessage> eventMessage = distributeRaffleAwardEvent.buildEventMessage(distributeRaffleAwardMessage);
 
@@ -58,6 +59,11 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         awardRepository.saveRaffleAward(raffleAwardEntity, taskEntity);
 
         return DistributeResult.builder().awardId(raffleAwardEntity.getAwardId()).awardName(raffleAwardEntity.getAwardName()).messageId(taskEntity.getMessageId()).build();
+    }
+
+    @Override
+    public int updateRaffleAwardState(RaffleAwardEntity raffleAwardEntity) {
+        return awardRepository.updateRaffleAwardState(raffleAwardEntity);
     }
 
 }

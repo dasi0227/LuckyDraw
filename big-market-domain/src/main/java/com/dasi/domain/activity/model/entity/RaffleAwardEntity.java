@@ -26,7 +26,7 @@ public class RaffleAwardEntity {
     private String orderId;
 
     /** 奖品id */
-    private Integer awardId;
+    private Long awardId;
 
     /** 奖品标题 */
     private String awardName;

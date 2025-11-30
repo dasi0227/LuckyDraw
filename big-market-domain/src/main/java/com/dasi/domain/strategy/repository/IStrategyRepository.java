@@ -4,6 +4,7 @@ package com.dasi.domain.strategy.repository;
 import com.dasi.domain.strategy.model.entity.*;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,11 @@ public interface IStrategyRepository {
 
     String queryStrategyRuleValue(Long strategyId, String ruleModel);
 
-    AwardEntity queryAwardByAwardId(Integer awardId);
+    AwardEntity queryAwardByAwardId(Long awardId);
 
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 
-    String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Integer awardId);
+    String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Long awardId);
 
     void cacheStrategyAwardStock(String cacheKey, Integer stock);
 
@@ -35,14 +36,15 @@ public interface IStrategyRepository {
 
     int getRateRange(String cacheKey);
 
-    Integer getRandomStrategyAward(String cacheKey, int randomNum);
+    Long getRandomStrategyAward(String cacheKey, int randomNum);
 
-    long subStrategyAwardStock(String cacheKey);
+    long subtractStrategyAwardStock(String cacheKey, LocalDateTime activityEndTime);
 
     void sendStrategyAwardStockConsumeToMQ(StrategyAwardStockEntity strategyAwardStockEntity);
 
     StrategyAwardStockEntity getQueueValue();
 
-    void updateStrategyAwardStock(Long strategyId, Integer awardId);
+    void updateStrategyAwardStock(Long strategyId, Long awardId);
 
+    LocalDateTime queryActivityEndTimeByStrategyId(Long strategyId);
 }

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class AwardListResponseDTO {
 
     /** 奖品ID */
-    private Integer awardId;
+    private Long awardId;
 
     /** 奖品名称 */
     private String awardName;

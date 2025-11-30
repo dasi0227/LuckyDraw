@@ -31,7 +31,7 @@ public class RuleBlacklistChain extends AbstractRuleChain {
 
         // 2. 解析得到固定奖品和对应的黑名单列表
         String[] values = ruleValue.split(Delimiter.COLON);
-        Integer awardId = Integer.valueOf(values[0]);
+        Long awardId = Long.valueOf(values[0]);
         String[] blackIds = values[1].split(Delimiter.COMMA);
 
         // 3. 判断是否位于黑名单之中

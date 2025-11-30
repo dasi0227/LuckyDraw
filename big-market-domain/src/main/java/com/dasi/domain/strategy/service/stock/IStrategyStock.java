@@ -2,11 +2,13 @@ package com.dasi.domain.strategy.service.stock;
 
 import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
 
+import java.time.LocalDateTime;
+
 public interface IStrategyStock {
 
-    long subStrategyAwardCount(Long strategyId, Integer awardId);
+    long subtractStrategyAwardCount(Long strategyId, Long awardId, LocalDateTime activityEndTime);
 
-    StrategyAwardStockEntity getQueueValue() throws InterruptedException;
+    StrategyAwardStockEntity getQueueValue();
 
     void updateStrategyAwardStock(StrategyAwardStockEntity stockUpdateRequest);
 

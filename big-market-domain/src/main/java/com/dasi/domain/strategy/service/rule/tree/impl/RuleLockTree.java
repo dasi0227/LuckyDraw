@@ -20,7 +20,7 @@ public class RuleLockTree implements IRuleTree {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
+    public RuleCheckResult logic(String userId, Long strategyId, Long awardId, String ruleValue) {
         int limitLotteryCount = Integer.parseInt(ruleValue);
         int userLotteryCount = strategyRepository.queryUserLotteryCount(userId, strategyId);
         if (userLotteryCount > limitLotteryCount) {

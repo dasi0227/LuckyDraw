@@ -26,6 +26,12 @@
         VALUES (#{orderId}, #{bizId}, #{activityId}, #{quotaId}, #{strategyId}, #{userId}, #{skuId}, #{totalCount}, #{monthCount}, #{dayCount}, #{rechargeState}, #{rechargeTime});
     </insert>
 
+    <update id="updateRechargeState" parameterType="com.dasi.infrastructure.persistent.po.RechargeOrder">
+        UPDATE recharge_order
+        SET recharge_state = #{rechargeState}
+        WHERE order_id = #{orderId} AND user_id = #{userId} AND activityId = #{activityId}
+    </update>
+
     <select id="queryRechargeOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
         SELECT order_id, biz_id, activity_id, quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, recharge_state, recharge_time
         FROM recharge_order

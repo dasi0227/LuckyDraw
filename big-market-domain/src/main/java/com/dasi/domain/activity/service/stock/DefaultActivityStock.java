@@ -16,8 +16,8 @@ public class DefaultActivityStock implements IActivityStock {
     private IActivityRepository activityRepository;
 
     @Override
-    public Long subtractRechargeSkuStock(Long skuId, LocalDateTime endTime) {
-        return activityRepository.subtractRechargeSkuStockSurplus(skuId, endTime);
+    public Long subtractRechargeSkuStock(Long skuId, LocalDateTime activityEndTime) {
+        return activityRepository.subtractRechargeSkuStockSurplus(skuId, activityEndTime);
     }
 
     @Override

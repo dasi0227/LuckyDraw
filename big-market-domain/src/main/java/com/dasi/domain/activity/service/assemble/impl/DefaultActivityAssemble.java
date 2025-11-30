@@ -24,14 +24,19 @@ public class DefaultActivityAssemble implements IActivityAssemble {
 
     @Override
     public boolean assembleRechargeSkuStockBySkuId(Long skuId) {
-        // 装配库存
-        RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(skuId);
-        activityRepository.cacheRechargeSkuStockSurplus(skuId, rechargeSkuEntity.getStockSurplus());
-        // 预热信息
-        activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
-        activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
-        log.info("【活动装配】skuId={}, surplus={}, activityId={}, quotaId={}", skuId, rechargeSkuEntity.getStockSurplus(), rechargeSkuEntity.getActivityId(), rechargeSkuEntity.getQuotaId());
-        return true;
+        try {
+            // 装配库存
+            RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(skuId);
+            activityRepository.cacheRechargeSkuStockSurplus(skuId, rechargeSkuEntity.getStockSurplus());
+            // 预热信息
+            activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
+            activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
+            log.info("【活动装配】skuId={}, surplus={}, activityId={}, quotaId={}", skuId, rechargeSkuEntity.getStockSurplus(), rechargeSkuEntity.getActivityId(), rechargeSkuEntity.getQuotaId());
+            return true;
+        } catch (Exception e) {
+            log.error("【活动装配】未知错误：error={}", e.getMessage());
+            return false;
+        }
     }
 
 }

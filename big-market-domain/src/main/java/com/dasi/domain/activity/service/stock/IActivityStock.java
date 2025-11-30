@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 public interface IActivityStock {
 
-    Long subtractRechargeSkuStock(Long skuId, LocalDateTime endDatetime);
+    Long subtractRechargeSkuStock(Long skuId, LocalDateTime activityEndTime);
 
-    RechargeSkuStockEntity getQueueValue() throws InterruptedException;
+    RechargeSkuStockEntity getQueueValue();
 
     void clearQueueValue();
 

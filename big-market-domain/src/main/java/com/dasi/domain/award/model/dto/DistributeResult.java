@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DistributeResult {
 
-    private Integer awardId;
+    private Long awardId;
 
     private String awardName;
 

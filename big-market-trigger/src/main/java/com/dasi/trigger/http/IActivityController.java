@@ -94,7 +94,7 @@ public class IActivityController implements IActivityService {
         // 5. 组装结果返回
         List<AwardListResponseDTO> awardListResponseDTOList = strategyAwardEntityList.stream()
                 .map(strategyAwardEntity -> {
-                    Integer awardId = strategyAwardEntity.getAwardId();
+                    Long awardId = strategyAwardEntity.getAwardId();
                     String key = String.valueOf(awardId);
                     return AwardListResponseDTO.builder()
                             .awardId(awardId)

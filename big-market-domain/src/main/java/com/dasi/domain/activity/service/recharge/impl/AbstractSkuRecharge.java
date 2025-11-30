@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public abstract class AbstractSkuRecharge implements ISkuRecharge {
 
-    protected IActivityRepository activityRepository;
+    protected final IActivityRepository activityRepository;
 
     public AbstractSkuRecharge(IActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
@@ -43,10 +43,10 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         }
 
         // 4. 充值并保存订单
-        return createRechargeOrder(rechargeContext, rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
+        return createRechargeOrder(rechargeContext, activityEntity, rechargeQuotaEntity);
     }
 
-    protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
+    protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
     protected abstract Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 

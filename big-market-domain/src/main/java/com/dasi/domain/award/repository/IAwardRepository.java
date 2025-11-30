@@ -25,4 +25,6 @@ public interface IAwardRepository {
     Map<String, Integer> queryRuleNodeLockCountMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId);
 
     Integer queryUserLotteryCount(String userId, Long activityId);
+
+    int updateRaffleAwardState(RaffleAwardEntity raffleAwardEntity);
 }

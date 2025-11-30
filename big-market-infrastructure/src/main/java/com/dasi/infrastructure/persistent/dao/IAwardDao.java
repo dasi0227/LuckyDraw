@@ -9,5 +9,5 @@ import java.util.List;
 public interface IAwardDao {
     List<Award> queryAwardList();
 
-    Award queryAwardByAwardId(Integer awardId);
+    Award queryAwardByAwardId(Long awardId);
 }

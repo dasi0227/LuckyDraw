@@ -17,7 +17,7 @@
         from award
     </select>
 
-    <select id="queryAwardByAwardId" parameterType="java.lang.Integer" resultMap="dataMap">
+    <select id="queryAwardByAwardId" parameterType="java.lang.Long" resultMap="dataMap">
         select award_id, award_name, award_config, award_desc
         from award
         where award_id = #{awardId}

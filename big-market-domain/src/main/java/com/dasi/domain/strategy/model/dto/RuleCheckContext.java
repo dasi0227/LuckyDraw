@@ -18,6 +18,6 @@ public class RuleCheckContext {
     private Long strategyId;
 
     /** 奖品 ID */
-    private Integer awardId ;
+    private Long awardId ;
 
 }

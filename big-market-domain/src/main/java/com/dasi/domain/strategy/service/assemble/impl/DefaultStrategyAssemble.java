@@ -53,19 +53,25 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
         if (null == strategyRuleEntity) throw new AppException("权重规则没有配置");
 
         // 5. 根据规则值分档装配
-        Map<String, List<Integer>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
-        for (Entry<String, List<Integer>> entry : ruleWeight.entrySet()) {
-            ArrayList<StrategyAwardEntity> strategyAwardEntitiesUnderWeight = new ArrayList<>(strategyAwardEntities);
-            strategyAwardEntitiesUnderWeight.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
-            String cacheKey = String.valueOf(strategyId).concat(Delimiter.UNDERSCORE).concat(entry.getKey());
-            assembleStrategyAwardRate(cacheKey, strategyAwardEntitiesUnderWeight);
+        try {
+            Map<String, List<Long>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
+            for (Entry<String, List<Long>> entry : ruleWeight.entrySet()) {
+                ArrayList<StrategyAwardEntity> strategyAwardEntitiesUnderWeight = new ArrayList<>(strategyAwardEntities);
+                strategyAwardEntitiesUnderWeight.removeIf(entity -> !entry.getValue().contains(entity.getAwardId()));
+                String cacheKey = String.valueOf(strategyId).concat(Delimiter.UNDERSCORE).concat(entry.getKey());
+                assembleStrategyAwardRate(cacheKey, strategyAwardEntitiesUnderWeight);
+            }
+
+            String awardIds = strategyAwardEntities.stream()
+                    .map(strategyAwardEntity -> String.valueOf(strategyAwardEntity.getAwardId()))
+                    .collect(Collectors.joining(","));
+            log.info("【策略装配】strategyId={}, awardIds={}", strategyId, awardIds);
+            return true;
+        } catch (Exception e) {
+            log.error("【策略装配】未知错误：error={}", e.getMessage());
+            return false;
         }
 
-        String awardIds = strategyAwardEntities.stream()
-                .map(strategyAwardEntity -> String.valueOf(strategyAwardEntity.getAwardId()))
-                .collect(Collectors.joining(","));
-        log.info("【策略装配】strategyId={}, awardIds={}", strategyId, awardIds);
-        return true;
     }
 
     private void assembleStrategyAwardRate(String cacheKey, List<StrategyAwardEntity> entities) {
@@ -84,9 +90,9 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
         BigDecimal rateRange = sumValue.divide(minValue, 0, RoundingMode.CEILING);
 
         // 4. 计算每个倍率与最小概率的比值，也即对应多少个基本单位，将对应数量的 awardId 加入概率奖品数组
-        ArrayList<Integer> strategyAwardArray = new ArrayList<>(rateRange.intValue());
+        ArrayList<Long> strategyAwardArray = new ArrayList<>(rateRange.intValue());
         for (StrategyAwardEntity entity : entities) {
-            Integer awardId = entity.getAwardId();
+            Long awardId = entity.getAwardId();
             BigDecimal awardRate = entity.getAwardRate();
             int amount = rateRange.multiply(awardRate).setScale(0, RoundingMode.CEILING).intValue();
             strategyAwardArray.addAll(Collections.nCopies(amount, awardId));

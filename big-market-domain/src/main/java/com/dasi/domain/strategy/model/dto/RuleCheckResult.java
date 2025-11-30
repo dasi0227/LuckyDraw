@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RuleCheckResult {
 
     /** 奖品 ID */
-    private Integer awardId;
+    private Long awardId;
 
     /** 最后应用的规则模型 */
     private RuleModel ruleModel;

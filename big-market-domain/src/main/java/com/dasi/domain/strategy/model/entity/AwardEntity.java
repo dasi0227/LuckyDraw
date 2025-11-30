@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AwardEntity {
 
     /** 奖品ID */
-    private Integer awardId;
+    private Long awardId;
 
     /** 奖品类型 */
     private String awardName;

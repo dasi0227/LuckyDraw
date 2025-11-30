@@ -8,6 +8,7 @@ import com.dasi.types.constant.RedisKey;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Service
 public class DefaultStrategyStock implements IStrategyStock {
@@ -16,9 +17,9 @@ public class DefaultStrategyStock implements IStrategyStock {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public long subStrategyAwardCount(Long strategyId, Integer awardId) {
+    public long subtractStrategyAwardCount(Long strategyId, Long awardId, LocalDateTime activityEndTime) {
         String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_SURPLUS_KEY + strategyId + Delimiter.UNDERSCORE + awardId;
-        return strategyRepository.subStrategyAwardStock(cacheKey);
+        return strategyRepository.subtractStrategyAwardStock(cacheKey, activityEndTime);
     }
 
     @Override

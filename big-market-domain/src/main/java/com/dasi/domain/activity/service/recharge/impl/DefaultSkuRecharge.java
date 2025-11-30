@@ -39,7 +39,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
     }
 
     @Override
-    protected RechargeResult createRechargeOrder(RechargeContext rechargeContext, RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    protected RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
 
         // 1. 构建订单
         RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
@@ -54,7 +54,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
                 .monthCount(rechargeQuotaEntity.getMonthCount())
                 .dayCount(rechargeQuotaEntity.getDayCount())
                 .rechargeTime(LocalDateTime.now())
-                .rechargeState(RechargeState.COMPLETED.getCode())
+                .rechargeState(RechargeState.CREATED.getCode())
                 .build();
 
         // 2. 充值到账

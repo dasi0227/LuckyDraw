@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 @Data
 @Builder
 @NoArgsConstructor

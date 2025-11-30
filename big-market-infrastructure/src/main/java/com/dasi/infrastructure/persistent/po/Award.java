@@ -12,7 +12,7 @@ public class Award {
     private Integer id;
 
     /** 奖品ID */
-    private Integer awardId;
+    private Long awardId;
 
     /** 奖品名称 */
     private String awardName;

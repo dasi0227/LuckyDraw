@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum RechargeState {
 
     CREATED("created"),
-    COMPLETED("completed"),
+    USED("used"),
+    CANCELLED("cancelled")
     ;
 
     private final String code;

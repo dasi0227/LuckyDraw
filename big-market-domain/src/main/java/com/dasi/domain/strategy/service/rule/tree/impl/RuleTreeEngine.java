@@ -26,7 +26,7 @@ public class RuleTreeEngine implements IRuleTreeEngine {
     }
 
     @Override
-    public RuleCheckResult process(String userId, Long strategyId, Integer awardId) {
+    public RuleCheckResult process(String userId, Long strategyId, Long awardId) {
 
         // 获取基础信息
         String treeRoot = this.ruleTreeVO.getTreeRoot();

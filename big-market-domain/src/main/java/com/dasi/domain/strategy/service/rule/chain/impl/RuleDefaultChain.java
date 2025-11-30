@@ -20,7 +20,7 @@ public class RuleDefaultChain extends AbstractRuleChain {
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
-        Integer awardId = strategyLottery.getLotteryAward(strategyId);
+        Long awardId = strategyLottery.getLotteryAward(strategyId);
         log.info("【策略责任链】rule_default 接管：awardId={}", awardId);
         return RuleCheckResult.builder()
                 .awardId(awardId)
