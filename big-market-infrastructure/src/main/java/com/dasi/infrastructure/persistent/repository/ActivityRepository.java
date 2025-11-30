@@ -241,7 +241,7 @@ public class ActivityRepository implements IActivityRepository {
         raffleOrder.setActivityId(activityId);
         raffleOrder = raffleOrderDao.queryUnusedRaffleOrder(raffleOrder);
         if (raffleOrder == null) return null;
-        log.info("【抽奖】存在未完成的抽奖：orderId = {}, raffle_state = {}", raffleOrder.getOrderId(), raffleOrder.getRaffleState());
+        log.info("【抽奖】存在未完成的抽奖：orderId={}, raffle_state={}", raffleOrder.getOrderId(), raffleOrder.getRaffleState());
         return RaffleOrderEntity.builder()
                 .orderId(raffleOrder.getOrderId())
                 .userId(raffleOrder.getUserId())
@@ -255,7 +255,6 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public void cacheRechargeSkuStockSurplus(Long skuId, Integer stockSurplus) {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_SURPLUS_KEY + skuId;
-        if (redisService.isExists(cacheKey)) return;
         redisService.setAtomicLong(cacheKey, Long.valueOf(stockSurplus));
     }
 
@@ -356,23 +355,23 @@ public class ActivityRepository implements IActivityRepository {
                     if (count == 0) {
                         activityAccountDao.createActivityAccount(activityAccount);
                     }
-                    log.info("【充值】账户余额变动：userId={}, sku={}, total+={}, month+={}, day+={}",
+                    log.info("【充值】账户余额变动：userId={}, skuId={}, total+={}, month+={}, day+={}",
                             rechargeOrderEntity.getUserId(), rechargeOrderEntity.getSkuId(),
                             activityAccount.getTotalSurplus(), activityAccount.getMonthSurplus(), activityAccount.getDaySurplus());
 
                     // 2. 写入订单
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
-                    log.info("【充值】保存充值订单：userId={}, sku={}, order={}",
+                    log.info("【充值】保存充值订单：userId={}, skuId={}, order={}",
                             rechargeOrderEntity.getUserId(), rechargeOrderEntity.getActivityId(), rechargeOrder.getOrderId());
 
                     return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    log.warn("【充值】保存充值订单失败（唯一约束冲突）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
+                    log.error("【充值】保存充值订单失败（唯一约束冲突）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
                     throw new AppException("创建充值订单失败，orderId=" + rechargeOrderEntity.getOrderId());
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.warn("【充值】保存充值订单失败（未知异常）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
+                    log.error("【充值】保存充值订单失败（未知异常）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
                     throw new AppException("创建充值订单失败，orderId=" + rechargeOrderEntity.getOrderId());
                 }
             });
@@ -447,7 +446,7 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccountDao.updateActivityAccountDaySurplus(activityAccount);
                     }
 
-                    log.info("【抽奖】账户余额变动：userId={}, activityId = {}, total-=1, month-=1, day-=1", userId, activityId);
+                    log.info("【抽奖】账户余额变动：userId={}, activityId={}, total-=1, month-=1, day-=1", userId, activityId);
                     /* ===================
                     // 4. 保存抽奖订单
                     ====================*/
@@ -464,11 +463,11 @@ public class ActivityRepository implements IActivityRepository {
                     return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    log.warn("【抽奖】保存抽奖订单失败（唯一约束冲突）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
+                    log.error("【抽奖】保存抽奖订单失败（唯一约束冲突）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
                     throw new AppException("创建充值订单失败，orderId=" + raffleOrderEntity.getOrderId());
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.warn("【抽奖】保存抽奖订单失败（未知异常）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
+                    log.error("【抽奖】保存抽奖订单失败（未知异常）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
                     throw new AppException("创建抽奖订单失败，orderId=" + raffleOrderEntity.getOrderId());
                 }
             });

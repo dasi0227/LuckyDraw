@@ -21,12 +21,12 @@ public class UpdateRechargeSkuStockJob {
             RechargeSkuStockEntity rechargeSkuStockEntity = activityStock.getQueueValue();
             if (rechargeSkuStockEntity != null) {
                 activityStock.updateRechargeSkuStock(rechargeSkuStockEntity.getSkuId());
-                log.info("【定时任务 - updateRechargeSkuStock】更新活动充值权益库存成功：skuId = {}, activityId = {}", rechargeSkuStockEntity.getSkuId(), rechargeSkuStockEntity.getActivityId());
+                log.info("【定时任务】更新活动充值权益库存成功：skuId={}, activityId={}", rechargeSkuStockEntity.getSkuId(), rechargeSkuStockEntity.getActivityId());
             } else {
-                log.debug("【定时任务 - updateRechargeSkuStock】暂时没有活动充值权益库存待更新");
+                log.debug("【定时任务】暂时没有活动充值权益库存待更新");
             }
         } catch (Exception e) {
-            log.error("【定时任务 - updateRechargeSkuStock】更新活动充值权益库存失败：error = {}", e.getMessage());
+            log.error("【定时任务】更新活动充值权益库存失败：error={}", e.getMessage());
         }
     }
 

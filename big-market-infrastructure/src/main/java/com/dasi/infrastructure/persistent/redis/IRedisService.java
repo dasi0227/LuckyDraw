@@ -101,6 +101,6 @@ public interface IRedisService {
     Boolean setNx(String key, Duration expire);
 
     /** 清空键 */
-    long deleteByPattern(String pattern);
+    void deleteByPattern(String pattern);
 
 }

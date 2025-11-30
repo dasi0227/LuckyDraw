@@ -16,7 +16,7 @@ public class RuleLuckTree implements IRuleTree {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
         Integer luckAwardId = Integer.valueOf(ruleValue);
-        log.info("【策略规则树 - rule_luck】接管：awardId = {}", luckAwardId);
+        log.info("【策略规则树】rule_luck 接管：awardId={}", luckAwardId);
         return RuleCheckResult.builder()
                 .awardId(luckAwardId)
                 .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

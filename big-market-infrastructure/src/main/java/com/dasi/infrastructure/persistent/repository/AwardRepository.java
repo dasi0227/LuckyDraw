@@ -7,14 +7,12 @@ import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.infrastructure.event.EventPublisher;
-import com.dasi.infrastructure.persistent.dao.IAwardDao;
 import com.dasi.infrastructure.persistent.dao.IRaffleAwardDao;
 import com.dasi.infrastructure.persistent.dao.IRaffleOrderDao;
 import com.dasi.infrastructure.persistent.dao.ITaskDao;
 import com.dasi.infrastructure.persistent.po.RaffleAward;
 import com.dasi.infrastructure.persistent.po.RaffleOrder;
 import com.dasi.infrastructure.persistent.po.Task;
-import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -30,9 +28,6 @@ import java.util.stream.Collectors;
 public class AwardRepository implements IAwardRepository {
 
     @Resource
-    private IAwardDao awardDao;
-
-    @Resource
     private ITaskDao taskDao;
 
     @Resource
@@ -40,9 +35,6 @@ public class AwardRepository implements IAwardRepository {
 
     @Resource
     private IRaffleOrderDao raffleOrderDao;
-
-    @Resource
-    private IRedisService redisService;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -92,22 +84,22 @@ public class AwardRepository implements IAwardRepository {
                     raffleOrder.setRaffleState(RaffleState.USED.getCode());
                     if (raffleOrderDao.updateRaffleOrderState(raffleOrder) != 1) {
                         status.setRollbackOnly();
-                        log.warn("【中奖】保存中奖记录失败（订单已经使用）：orderId = {}", raffleOrder.getOrderId());
+                        log.error("【中奖】保存中奖记录失败（订单已经使用）：orderId={}", raffleOrder.getOrderId());
                         return null;
                     }
 
-                    log.warn("【中奖】保存中奖记录：userId = {}, activityId = {}, awardId = {}",
+                    log.info("【中奖】保存中奖记录：userId={}, activityId={}, awardId={}",
                             raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId());
                     return null;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    log.warn("【中奖】保存中奖记录失败（唯一约束冲突）：userId = {}, activityId = {}, awardId = {}, error={}",
+                    log.error("【中奖】保存中奖记录失败（唯一约束冲突）：userId={}, activityId={}, awardId={}, error={}",
                             raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(),
                             e.getMessage());
                     throw new AppException("保存中奖记录失败");
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.warn("【中奖】保存中奖记录失败（未知错误）：userId = {}, activityId = {}, awardId = {}, error={}",
+                    log.error("【中奖】保存中奖记录失败（未知错误）：userId={}, activityId={}, awardId={}, error={}",
                             raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(),
                             e.getMessage());
                     throw new AppException("保存中奖记录失败");
@@ -122,13 +114,13 @@ public class AwardRepository implements IAwardRepository {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
             task.setTaskState(TaskState.DISTRIBUTED.getCode());
             taskDao.updateTaskState(task);
-            log.warn("【中奖】发送中奖记录到消息队列：userId = {}, activityId = {}, awardId = {}, topic={}",
+            log.error("【中奖】发送中奖记录到消息队列：userId={}, activityId={}, awardId={}, topic={}",
                     raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(),
                     task.getTopic());
         } catch (Exception e) {
             task.setTaskState(TaskState.FAILED.getCode());
             taskDao.updateTaskState(task);
-            log.warn("【中奖】发送中奖记录到消息队列失败：userId = {}, activityId = {}, awardId = {}, topic={}, error={}",
+            log.error("【中奖】发送中奖记录到消息队列失败：userId={}, activityId={}, awardId={}, topic={}, error={}",
                     raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(),
                     task.getTopic(), e.getMessage());
             throw new RuntimeException(e);

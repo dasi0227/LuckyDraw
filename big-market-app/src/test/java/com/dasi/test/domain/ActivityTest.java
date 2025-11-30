@@ -57,11 +57,11 @@ public class ActivityTest {
                 rechargeContext.setUserId("dasi");
                 rechargeContext.setSkuId(skuId);
                 rechargeContext.setBizId(RandomStringUtils.randomAlphanumeric(12));
-                log.info("【充值请求】RechargeContext = {}", rechargeContext);
+                log.info("【充值请求】RechargeContext={}", rechargeContext);
                 RechargeResult rechargeResult = activityRecharge.doRecharge(rechargeContext);
-                log.info("【充值结果】RechargeResult = {}", rechargeResult);
+                log.info("【充值结果】RechargeResult={}", rechargeResult);
             } catch (Exception e) {
-                log.warn("【错误栈】", e);
+                log.error("【错误栈】", e);
             }
         }
     }
@@ -75,11 +75,11 @@ public class ActivityTest {
                 RaffleContext raffleContext = new RaffleContext();
                 raffleContext.setUserId("dasi");
                 raffleContext.setActivityId(1001L);
-                log.info("【抽奖请求】RaffleContext = {}", raffleContext);
+                log.info("【抽奖请求】RaffleContext={}", raffleContext);
                 RaffleResult raffleResult = activityRaffle.doActivityRaffle(raffleContext);
-                log.info("【抽奖结果】RaffleResult = {}", raffleResult);
+                log.info("【抽奖结果】RaffleResult={}", raffleResult);
             } catch (Exception e) {
-                log.warn("【错误栈】", e);
+                log.error("【错误栈】", e);
             }
         }
     }

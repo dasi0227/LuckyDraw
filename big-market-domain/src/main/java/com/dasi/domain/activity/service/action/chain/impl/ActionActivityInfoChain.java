@@ -21,25 +21,25 @@ public class ActionActivityInfoChain extends AbstractActionChain {
 
         String activityState = activityEntity.getActivityState();
         if (ActivityState.CREATED.getCode().equals(activityState)) {
-            log.info("【活动责任链 - activity_info】活动未开启：activityId = {}, activityState = {}", activityEntity.getActivityId(), activityState);
+            log.info("【活动责任链】activity_info 接管，活动未开启：activityId={}, activityState={}", activityEntity.getActivityId(), activityState);
             throw new AppException("活动还未开始");
         }
         if (ActivityState.OVER.getCode().equals(activityState)) {
-            log.info("【活动责任链 - activity_info】活动关闭中：activityId = {}, activityState = {}", activityEntity.getActivityId(), activityState);
+            log.info("【活动责任链】activity_info 接管，活动已结束：activityId={}, activityState={}", activityEntity.getActivityId(), activityState);
             throw new AppException("活动关闭中");
         }
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(activityEntity.getActivityBeginTime())) {
-            log.info("【活动责任链 - activity_info】还未到开始时间：activityId = {}, beginTime = {}", activityEntity.getActivityId(), activityEntity.getActivityBeginTime());
+            log.info("【活动责任链】activity_info 接管，还未到开始时间：activityId={}, beginTime={}", activityEntity.getActivityId(), activityEntity.getActivityBeginTime());
             throw new AppException("活动还未到开始时间");
         }
         if (now.isAfter(activityEntity.getActivityEndTime())) {
-            log.info("【活动责任链 - activity_info】超过了截止时间：activityId = {}, endTime = {}", activityEntity.getActivityId(), activityEntity.getActivityEndTime());
+            log.info("【活动责任链】activity_info 接管，超过了截止时间：activityId={}, endTime={}", activityEntity.getActivityId(), activityEntity.getActivityEndTime());
             throw new AppException("超过了截止时间");
         }
 
-        log.info("【活动责任链 - activity_info】活动基础信息无误：activityId = {}, activityName = {}", activityEntity.getActivityId(), activityEntity.getActivityName());
+        log.info("【活动责任链】activity_info 放行，活动基础信息无误：activityId={}, activityName={}", activityEntity.getActivityId(), activityEntity.getActivityName());
         return next().action(actionChainCheckAggregate);
     }
 

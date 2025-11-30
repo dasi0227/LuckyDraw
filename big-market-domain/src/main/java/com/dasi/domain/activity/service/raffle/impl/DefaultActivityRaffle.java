@@ -23,6 +23,11 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
     }
 
     @Override
+    protected void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate) {
+        activityRepository.saveRaffleOrder(raffleOrderAggregate);
+    }
+
+    @Override
     protected RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity) {
 
         ActionChainCheckAggregate actionChainCheckAggregate = new ActionChainCheckAggregate();
@@ -32,6 +37,9 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
 
         IActionChain actionChain = actionChainFactory.getRaffleActionChain();
         return actionChain.action(actionChainCheckAggregate) ? actionChainCheckAggregate.getRaffleOrderAggregate() : null;
+
     }
+
+
 
 }
