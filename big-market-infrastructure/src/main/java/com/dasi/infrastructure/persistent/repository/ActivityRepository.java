@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
 @Slf4j
 @Repository
 public class ActivityRepository implements IActivityRepository {
@@ -59,12 +58,6 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IRaffleOrderDao raffleOrderDao;
-
-    @Resource
-    private IRaffleAwardDao raffleAwardDao;
-
-    @Resource
-    private ITaskDao taskDao;
 
     @Resource
     private TransactionTemplate transactionTemplate;

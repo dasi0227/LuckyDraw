@@ -1,9 +1,9 @@
 package com.dasi.trigger.job;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.dasi.domain.award.model.entity.TaskEntity;
-import com.dasi.domain.award.model.type.TaskState;
-import com.dasi.domain.award.service.scan.ITaskScan;
+import com.dasi.domain.task.model.entity.TaskEntity;
+import com.dasi.domain.task.model.type.TaskState;
+import com.dasi.domain.task.service.scan.ITaskScan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

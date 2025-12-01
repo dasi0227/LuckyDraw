@@ -4,8 +4,8 @@ import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.action.chain.ActionChainFactory;
-import com.dasi.domain.activity.service.action.chain.IActionChain;
+import com.dasi.domain.activity.service.chain.ActivityChainFactory;
+import com.dasi.domain.activity.service.chain.IActivityChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class DefaultActivityRaffle extends AbstractActivityRaffle {
 
     @Resource
-    private ActionChainFactory actionChainFactory;
+    private ActivityChainFactory activityChainFactory;
 
     public DefaultActivityRaffle(IActivityRepository activityRepository) {
         super(activityRepository);
@@ -35,7 +35,7 @@ public class DefaultActivityRaffle extends AbstractActivityRaffle {
         actionChainCheckAggregate.setActivityId(activityEntity.getActivityId());
         actionChainCheckAggregate.setActivityEntity(activityEntity);
 
-        IActionChain actionChain = actionChainFactory.getRaffleActionChain();
+        IActivityChain actionChain = activityChainFactory.getRaffleActionChain();
         return actionChain.action(actionChainCheckAggregate) ? actionChainCheckAggregate.getRaffleOrderAggregate() : null;
 
     }

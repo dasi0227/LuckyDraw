@@ -1,7 +1,7 @@
 package com.dasi.domain.strategy.service.lottery;
 
-import com.dasi.domain.strategy.model.dto.LotteryContext;
-import com.dasi.domain.strategy.model.dto.LotteryResult;
+import com.dasi.domain.strategy.model.io.LotteryContext;
+import com.dasi.domain.strategy.model.io.LotteryResult;
 
 public interface IStrategyLottery {
 

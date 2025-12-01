@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
-import com.dasi.domain.activity.model.dto.RechargeContext;
-import com.dasi.domain.activity.model.dto.RechargeResult;
+import com.dasi.domain.activity.model.io.RechargeContext;
+import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;

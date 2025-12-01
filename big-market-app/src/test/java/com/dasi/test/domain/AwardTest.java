@@ -2,7 +2,7 @@ package com.dasi.test.domain;
 
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
 import com.dasi.domain.award.model.type.AwardState;
-import com.dasi.domain.award.service.scan.ITaskScan;
+import com.dasi.domain.task.service.scan.ITaskScan;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,7 +36,7 @@ public class AwardTest {
                         .activityId(1001L)
                         .strategyId(1001L)
                         .orderId(RandomStringUtils.randomNumeric(12))
-                        .awardId(2001)
+                        .awardId(2001L)
                         .awardName("测试奖品")
                         .awardTime(LocalDateTime.now())
                         .awardState(AwardState.CREATED.getCode())

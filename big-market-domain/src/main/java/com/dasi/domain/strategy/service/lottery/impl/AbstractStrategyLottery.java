@@ -1,9 +1,9 @@
 package com.dasi.domain.strategy.service.lottery.impl;
 
-import com.dasi.domain.strategy.model.dto.LotteryResult;
-import com.dasi.domain.strategy.model.dto.RuleCheckContext;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
-import com.dasi.domain.strategy.model.dto.LotteryContext;
+import com.dasi.domain.strategy.model.io.LotteryResult;
+import com.dasi.domain.strategy.model.io.RuleCheckContext;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;

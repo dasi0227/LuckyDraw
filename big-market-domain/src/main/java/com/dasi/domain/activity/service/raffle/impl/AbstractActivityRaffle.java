@@ -1,8 +1,8 @@
 package com.dasi.domain.activity.service.raffle.impl;
 
-import com.dasi.domain.activity.model.dto.RaffleContext;
+import com.dasi.domain.activity.model.io.RaffleContext;
 import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
-import com.dasi.domain.activity.model.dto.RaffleResult;
+import com.dasi.domain.activity.model.io.RaffleResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
 import com.dasi.domain.activity.model.type.RaffleState;
