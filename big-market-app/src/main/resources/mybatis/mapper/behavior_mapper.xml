@@ -20,4 +20,12 @@
         WHERE behavior_id = #{behaviorId}
     </select>
 
+    <select id="queryBehaviorListByBehaviorIds" parameterType="java.util.List" resultMap="dataMap">
+        SELECT * FROM behavior
+        WHERE behavior_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

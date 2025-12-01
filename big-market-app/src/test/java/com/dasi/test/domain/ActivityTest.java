@@ -58,7 +58,7 @@ public class ActivityTest {
                 rechargeContext.setSkuId(skuId);
                 rechargeContext.setBizId(RandomStringUtils.randomAlphanumeric(12));
                 log.info("【充值请求】RechargeContext={}", rechargeContext);
-                RechargeResult rechargeResult = activityRecharge.doRecharge(rechargeContext);
+                RechargeResult rechargeResult = activityRecharge.doSkuRecharge(rechargeContext);
                 log.info("【充值结果】RechargeResult={}", rechargeResult);
             } catch (Exception e) {
                 log.error("【错误栈】", e);

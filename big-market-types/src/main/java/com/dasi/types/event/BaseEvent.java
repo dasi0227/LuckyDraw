@@ -12,14 +12,14 @@ public abstract class BaseEvent<T> {
 
     public abstract EventMessage<T> buildEventMessage(T data);
 
-    public abstract String topic();
+    public abstract String getTopic();
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class EventMessage<T> {
-        private String id;
+        private String messageId;
         private LocalDateTime time;
         private T data;
     }

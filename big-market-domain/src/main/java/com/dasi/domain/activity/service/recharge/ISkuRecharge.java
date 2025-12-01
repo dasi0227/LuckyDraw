@@ -5,6 +5,6 @@ import com.dasi.domain.activity.model.io.RechargeResult;
 
 public interface ISkuRecharge {
 
-    RechargeResult doRecharge(RechargeContext rechargeContext);
+    RechargeResult doSkuRecharge(RechargeContext rechargeContext);
 
 }

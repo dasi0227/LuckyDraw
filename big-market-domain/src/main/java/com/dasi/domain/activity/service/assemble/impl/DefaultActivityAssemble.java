@@ -18,8 +18,8 @@ public class DefaultActivityAssemble implements IActivityAssemble {
 
     @Override
     public boolean assembleRechargeSkuStockByActivityId(Long activityId) {
-        List<RechargeSkuEntity> rechargeSkuEntities = activityRepository.queryRechargeSkuByActivityId(activityId);
-        return rechargeSkuEntities.stream().allMatch(rechargeSkuEntity -> assembleRechargeSkuStockBySkuId(rechargeSkuEntity.getSkuId()));
+        List<RechargeSkuEntity> rechargeSkuEntityList = activityRepository.queryRechargeSkuByActivityId(activityId);
+        return rechargeSkuEntityList.stream().allMatch(rechargeSkuEntity -> assembleRechargeSkuStockBySkuId(rechargeSkuEntity.getSkuId()));
     }
 
     @Override

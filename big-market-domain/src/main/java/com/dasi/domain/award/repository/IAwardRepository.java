@@ -1,7 +1,7 @@
 package com.dasi.domain.award.repository;
 
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
-import com.dasi.domain.task.model.entity.TaskEntity;
+import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.entity.AwardEntity;
 import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 

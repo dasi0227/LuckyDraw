@@ -16,14 +16,14 @@ public class RechargeSkuStockEmptyEvent extends BaseEvent<Long> {
     @Override
     public EventMessage<Long> buildEventMessage(Long data) {
         return EventMessage.<Long>builder()
-                .id(RandomStringUtils.randomNumeric(12))
+                .messageId(RandomStringUtils.randomNumeric(12))
                 .time(LocalDateTime.now())
                 .data(data)
                 .build();
     }
 
     @Override
-    public String topic() {
+    public String getTopic() {
         return topic;
     }
 }

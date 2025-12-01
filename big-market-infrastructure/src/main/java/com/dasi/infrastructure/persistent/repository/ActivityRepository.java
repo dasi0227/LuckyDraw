@@ -100,14 +100,14 @@ public class ActivityRepository implements IActivityRepository {
     public List<RechargeSkuEntity> queryRechargeSkuByActivityId(Long activityId) {
         // 先查缓存
         String cacheKey = RedisKey.ACTIVITY_RECHARGE_SKU_KEY + activityId;
-        List<RechargeSkuEntity> rechargeSkuEntities = redisService.getValue(cacheKey);
-        if (rechargeSkuEntities != null && !rechargeSkuEntities.isEmpty()) {
-            return rechargeSkuEntities;
+        List<RechargeSkuEntity> rechargeSkuEntityList = redisService.getValue(cacheKey);
+        if (rechargeSkuEntityList != null && !rechargeSkuEntityList.isEmpty()) {
+            return rechargeSkuEntityList;
         }
 
         // 再查数据库
         List<RechargeSku> rechargeSkuList = rechargeSkuDao.queryRechargeSkuByActivityId(activityId);
-        rechargeSkuEntities = rechargeSkuList.stream()
+        rechargeSkuEntityList = rechargeSkuList.stream()
                 .map(rechargeSku -> RechargeSkuEntity.builder()
                         .skuId(rechargeSku.getSkuId())
                         .activityId(rechargeSku.getActivityId())
@@ -118,8 +118,8 @@ public class ActivityRepository implements IActivityRepository {
                 .collect(Collectors.toList());
 
         // 缓存并返回
-        redisService.setValue(cacheKey, rechargeSkuEntities);
-        return rechargeSkuEntities;
+        redisService.setValue(cacheKey, rechargeSkuEntityList);
+        return rechargeSkuEntityList;
 
     }
 
@@ -267,7 +267,7 @@ public class ActivityRepository implements IActivityRepository {
             return -1L;
         }
         if (surplus == 0L) {
-            eventPublisher.publish(rechargeSkuStockEmptyEvent.topic(), rechargeSkuStockEmptyEvent.buildEventMessage(skuId));
+            eventPublisher.publish(rechargeSkuStockEmptyEvent.getTopic(), rechargeSkuStockEmptyEvent.buildEventMessage(skuId));
             return surplus;
         }
 
