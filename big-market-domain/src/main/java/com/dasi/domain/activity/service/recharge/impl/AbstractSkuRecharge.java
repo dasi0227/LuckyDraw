@@ -1,5 +1,6 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
+import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
 import com.dasi.domain.activity.model.io.RechargeContext;
 import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
@@ -21,14 +22,14 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
     }
 
     @Override
-    public RechargeResult doRecharge(RechargeContext rechargeContext) {
+    public RechargeResult doSkuRecharge(RechargeContext rechargeContext) {
 
         // 1. 参数校验
         String userId = rechargeContext.getUserId();
         String bizId = rechargeContext.getBizId();
         Long skuId = rechargeContext.getSkuId();
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(bizId) || skuId == null) {
-            throw new AppException("参数为空");
+            throw new AppException("【用户充值】参数不正确");
         }
 
         // 2. 查询活动的基础信息
@@ -39,14 +40,20 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         // 3. 活动规则校验
         Boolean available = checkRechargeAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
         if (!available) {
-            throw new AppException("活动规则检测失败");
+            throw new AppException("【用户充值】基础信息检测失败");
         }
 
         // 4. 充值并保存订单
-        return createRechargeOrder(rechargeContext, activityEntity, rechargeQuotaEntity);
+        RechargeOrderEntity rechargeOrderEntity = createRechargeOrder(rechargeContext, activityEntity, rechargeQuotaEntity);
+        return RechargeResult.builder()
+                .orderId(rechargeOrderEntity.getOrderId())
+                .totalCount(rechargeOrderEntity.getTotalCount())
+                .monthCount(rechargeOrderEntity.getMonthCount())
+                .dayCount(rechargeOrderEntity.getDayCount())
+                .build();
     }
 
-    protected abstract RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
+    protected abstract RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 
     protected abstract Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
 

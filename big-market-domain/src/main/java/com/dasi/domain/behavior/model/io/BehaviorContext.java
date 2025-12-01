@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehaveContext {
+public class BehaviorContext {
 
     private String userId;
 
-    private Long behaviorId;
+    private String businessNo;
 
-    private String bizId;
+    private List<Long> behaviorIds;
 
 }

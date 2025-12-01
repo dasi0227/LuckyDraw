@@ -126,7 +126,7 @@ public class IActivityController implements IActivityService {
 
         log.info("=========================== 账户充值：userId={},skuId={} ===========================", userId, skuId);
         RechargeContext rechargeContext = RechargeContext.builder().userId(userId).skuId(skuId).bizId(bizId).build();
-        RechargeResult rechargeResult = skuRecharge.doRecharge(rechargeContext);
+        RechargeResult rechargeResult = skuRecharge.doSkuRecharge(rechargeContext);
         RechargeResponseDTO rechargeResponseDTO = RechargeResponseDTO.builder().orderId(rechargeResult.getOrderId()).totalCount(rechargeResult.getTotalCount()).monthCount(rechargeResult.getMonthCount()).dayCount(rechargeResult.getDayCount()).build();
         return Result.success(rechargeResponseDTO);
     }

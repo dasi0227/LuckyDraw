@@ -3,7 +3,7 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
-import com.dasi.domain.task.model.entity.TaskEntity;
+import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.task.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.model.entity.AwardEntity;
@@ -160,14 +160,14 @@ public class AwardRepository implements IAwardRepository {
 
         // 先查缓存
         String cacheKey = RedisKey.STRATEGY_AWARD_KEY + strategyId;
-        List<StrategyAwardEntity> strategyAwardEntities = redisService.getValue(cacheKey);
-        if (null != strategyAwardEntities && !strategyAwardEntities.isEmpty()) {
-            return strategyAwardEntities;
+        List<StrategyAwardEntity> strategyAwardEntityList = redisService.getValue(cacheKey);
+        if (null != strategyAwardEntityList && !strategyAwardEntityList.isEmpty()) {
+            return strategyAwardEntityList;
         }
 
         // 再查数据库
         List<StrategyAward> list = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
-        strategyAwardEntities = list.stream()
+        strategyAwardEntityList = list.stream()
                 .map(strategyAward -> StrategyAwardEntity.builder()
                         .strategyId(strategyAward.getStrategyId())
                         .awardId(strategyAward.getAwardId())
@@ -182,8 +182,8 @@ public class AwardRepository implements IAwardRepository {
 
 
         // 缓存后返回
-        redisService.setValue(cacheKey, strategyAwardEntities);
-        return strategyAwardEntities;
+        redisService.setValue(cacheKey, strategyAwardEntityList);
+        return strategyAwardEntityList;
     }
 
     @Override

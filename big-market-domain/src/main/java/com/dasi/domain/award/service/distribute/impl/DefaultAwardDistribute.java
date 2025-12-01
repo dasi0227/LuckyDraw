@@ -6,9 +6,9 @@ import com.dasi.domain.award.event.DistributeRaffleAwardEvent.DistributeRaffleAw
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
-import com.dasi.domain.task.model.entity.TaskEntity;
+import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.AwardState;
-import com.dasi.domain.task.model.type.TaskState;
+import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.types.event.BaseEvent;
@@ -39,8 +39,8 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         // 2. 构建任务对象
         TaskEntity taskEntity = TaskEntity.builder()
                 .userId(distributeContext.getUserId())
-                .messageId(eventMessage.getId())
-                .topic(distributeRaffleAwardEvent.topic())
+                .messageId(eventMessage.getMessageId())
+                .topic(distributeRaffleAwardEvent.getTopic())
                 .message(JSON.toJSONString(eventMessage))
                 .taskState(TaskState.CREATED.getCode())
                 .build();

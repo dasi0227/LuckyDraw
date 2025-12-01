@@ -1,13 +1,12 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
-import com.dasi.domain.activity.model.io.RechargeResult;
-import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
+import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
-import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.model.io.RechargeContext;
+import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.chain.ActivityChainFactory;
 import com.dasi.domain.activity.service.chain.IActivityChain;
@@ -39,7 +38,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
     }
 
     @Override
-    protected RechargeResult createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    protected RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
 
         // 1. 构建订单
         RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
@@ -59,15 +58,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
 
         // 2. 充值到账
         activityRepository.saveRechargeOrder(rechargeOrderEntity);
-
-        // 3. 构造结果
-        return RechargeResult.builder()
-                .orderId(rechargeOrderEntity.getOrderId())
-                .totalCount(rechargeOrderEntity.getTotalCount())
-                .monthCount(rechargeOrderEntity.getMonthCount())
-                .dayCount(rechargeOrderEntity.getDayCount())
-                .build();
-
+        return rechargeOrderEntity;
     }
 
 }

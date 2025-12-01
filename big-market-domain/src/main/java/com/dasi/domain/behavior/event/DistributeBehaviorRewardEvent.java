@@ -1,4 +1,4 @@
-package com.dasi.domain.award.event;
+package com.dasi.domain.behavior.event;
 
 import com.dasi.types.event.BaseEvent;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardEvent.DistributeRaffleAwardMessage> {
+public class DistributeBehaviorRewardEvent extends BaseEvent<DistributeBehaviorRewardEvent.DistributeBehaviorRewardMessage> {
 
-    @Value("${spring.rabbitmq.topic.distribute_raffle_award}")
+    @Value("${spring.rabbitmq.topic.distribute_behavior_reward}")
     private String topic;
 
     @Override
@@ -22,9 +22,10 @@ public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardE
         return topic;
     }
 
+
     @Override
-    public EventMessage<DistributeRaffleAwardMessage> buildEventMessage(DistributeRaffleAwardMessage data) {
-        return EventMessage.<DistributeRaffleAwardMessage>builder()
+    public EventMessage<DistributeBehaviorRewardMessage> buildEventMessage(DistributeBehaviorRewardMessage data) {
+        return EventMessage.<DistributeBehaviorRewardMessage>builder()
                 .messageId(RandomStringUtils.randomNumeric(12))
                 .time(LocalDateTime.now())
                 .data(data)
@@ -35,14 +36,15 @@ public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardE
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistributeRaffleAwardMessage {
+    public static class DistributeBehaviorRewardMessage {
 
         private String userId;
 
-        private Long awardId;
+        private String bizId;
 
-        private String orderId;
+        private String behavior_reward;
+
+        private String behavior_config;
 
     }
-
 }

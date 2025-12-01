@@ -108,14 +108,14 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 先查缓存
         String cacheKey = RedisKey.STRATEGY_AWARD_KEY + strategyId;
-        List<StrategyAwardEntity> strategyAwardEntities = redisService.getValue(cacheKey);
-        if (null != strategyAwardEntities && !strategyAwardEntities.isEmpty()) {
-            return strategyAwardEntities;
+        List<StrategyAwardEntity> strategyAwardEntityList = redisService.getValue(cacheKey);
+        if (null != strategyAwardEntityList && !strategyAwardEntityList.isEmpty()) {
+            return strategyAwardEntityList;
         }
 
         // 再查数据库
         List<StrategyAward> list = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
-        strategyAwardEntities = list.stream()
+        strategyAwardEntityList = list.stream()
                 .map(strategyAward -> StrategyAwardEntity.builder()
                         .strategyId(strategyAward.getStrategyId())
                         .awardId(strategyAward.getAwardId())
@@ -130,8 +130,8 @@ public class StrategyRepository implements IStrategyRepository {
 
 
         // 缓存后返回
-        redisService.setValue(cacheKey, strategyAwardEntities);
-        return strategyAwardEntities;
+        redisService.setValue(cacheKey, strategyAwardEntityList);
+        return strategyAwardEntityList;
     }
 
     @Override

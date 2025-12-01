@@ -31,14 +31,14 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         String userId = raffleContext.getUserId();
         Long activityId = raffleContext.getActivityId();
         if (StringUtils.isBlank(userId) || activityId == null) {
-            throw new AppException("参数为空");
+            throw new AppException("【用户抽奖】参数不正确");
         }
 
         // 2. 活动与用户校验
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
         RaffleOrderAggregate raffleOrderAggregate = checkRaffleAvailable(userId, activityEntity);
         if (raffleOrderAggregate == null) {
-            throw new AppException("活动与用户校验失败");
+            throw new AppException("【用户抽奖】基础信息校验失败");
         }
 
         // 3. 查询还未执行完成的抽奖

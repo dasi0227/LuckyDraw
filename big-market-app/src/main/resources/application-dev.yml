@@ -123,4 +123,4 @@ spring:
     topic:
       recharge_sku_stock_empty: recharge_sku_stock_empty
       distribute_raffle_award: distribute_raffle_award
-      save_behavior_order: save_behavior_order
+      distribute_behavior_reward: distribute_behavior_reward

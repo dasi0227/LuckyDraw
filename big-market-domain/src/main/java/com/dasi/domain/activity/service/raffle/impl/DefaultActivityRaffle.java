@@ -15,12 +15,12 @@ import javax.annotation.Resource;
 @Service
 public class DefaultActivityRaffle extends AbstractActivityRaffle {
 
-    @Resource
-    private ActivityChainFactory activityChainFactory;
-
     public DefaultActivityRaffle(IActivityRepository activityRepository) {
         super(activityRepository);
     }
+
+    @Resource
+    private ActivityChainFactory activityChainFactory;
 
     @Override
     protected void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate) {

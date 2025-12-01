@@ -37,18 +37,18 @@ public class ScanUnsolvedTaskJob {
                     try {
                         dbRouter.setDBKey(finalDbIdx);
                         dbRouter.setTBKey(0);
-                        List<TaskEntity> taskEntities = taskScan.queryUnsolvedTask();
-                        if (taskEntities.isEmpty()) {
+                        List<TaskEntity> taskEntityList = taskScan.queryUnsolvedTask();
+                        if (taskEntityList.isEmpty()) {
                             log.debug("【定时任务】没有发现未处理奖品：dbIdx={}", finalDbIdx);
                             return;
                         }
 
-                        String messageIds = taskEntities.stream()
+                        String messageIds = taskEntityList.stream()
                                 .map(TaskEntity::getMessageId)
                                 .collect(Collectors.joining(","));
                         log.info("【定时任务】发现未处理奖品：dbIdx={}, messageIds={}", finalDbIdx, messageIds);
 
-                        for (TaskEntity taskEntity : taskEntities) {
+                        for (TaskEntity taskEntity : taskEntityList) {
                             threadPoolExecutor.execute(() -> {
                                 try {
                                     taskScan.sendMessage(taskEntity);
