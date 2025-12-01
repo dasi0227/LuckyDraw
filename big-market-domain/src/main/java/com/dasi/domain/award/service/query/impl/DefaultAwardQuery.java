@@ -2,8 +2,8 @@ package com.dasi.domain.award.service.query.impl;
 
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.query.IAwardQuery;
-import com.dasi.domain.strategy.model.entity.AwardEntity;
-import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
+import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

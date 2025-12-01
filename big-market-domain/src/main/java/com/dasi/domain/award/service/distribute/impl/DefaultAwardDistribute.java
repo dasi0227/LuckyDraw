@@ -2,13 +2,13 @@ package com.dasi.domain.award.service.distribute.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.dasi.domain.award.event.DistributeRaffleAwardEvent;
-import com.dasi.domain.award.event.DistributeRaffleAwardMessage;
-import com.dasi.domain.award.model.dto.DistributeContext;
-import com.dasi.domain.award.model.dto.DistributeResult;
+import com.dasi.domain.award.event.DistributeRaffleAwardEvent.DistributeRaffleAwardMessage;
+import com.dasi.domain.award.model.io.DistributeContext;
+import com.dasi.domain.award.model.io.DistributeResult;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
-import com.dasi.domain.award.model.entity.TaskEntity;
+import com.dasi.domain.task.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.AwardState;
-import com.dasi.domain.award.model.type.TaskState;
+import com.dasi.domain.task.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.types.event.BaseEvent;

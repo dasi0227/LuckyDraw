@@ -1,9 +1,9 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.activity.model.dto.RaffleContext;
-import com.dasi.domain.activity.model.dto.RaffleResult;
-import com.dasi.domain.activity.model.dto.RechargeContext;
-import com.dasi.domain.activity.model.dto.RechargeResult;
+import com.dasi.domain.activity.model.io.RaffleContext;
+import com.dasi.domain.activity.model.io.RaffleResult;
+import com.dasi.domain.activity.model.io.RechargeContext;
+import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.activity.service.recharge.ISkuRecharge;

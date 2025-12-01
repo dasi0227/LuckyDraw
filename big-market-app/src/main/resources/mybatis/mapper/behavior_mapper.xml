@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IBehaviorDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Behavior">
+        <id     property="id"             column="id"/>
+        <result property="behaviorId"     column="behavior_id"/>
+        <result property="behaviorDesc"   column="behavior_desc"/>
+        <result property="behaviorType"   column="behavior_type"/>
+        <result property="behaviorReward" column="behavior_reward"/>
+        <result property="behaviorConfig" column="behavior_config"/>
+        <result property="behaviorState"  column="behavior_state"/>
+        <result property="createTime"     column="create_time"/>
+        <result property="updateTime"     column="update_time"/>
+    </resultMap>
+    
+    <select id="queryBehaviorByBehaviorId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT behavior_id, behavior_desc, behavior_type, behavior_reward, behavior_config, behavior_state
+        FROM behavior
+        WHERE behavior_id = #{behaviorId}
+    </select>
+
+</mapper>

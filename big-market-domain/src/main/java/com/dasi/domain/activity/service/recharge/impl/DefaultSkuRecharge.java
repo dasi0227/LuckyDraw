@@ -1,16 +1,16 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
-import com.dasi.domain.activity.model.dto.RechargeResult;
+import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
 import com.dasi.domain.activity.model.type.RechargeState;
-import com.dasi.domain.activity.model.dto.RechargeContext;
+import com.dasi.domain.activity.model.io.RechargeContext;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.action.chain.ActionChainFactory;
-import com.dasi.domain.activity.service.action.chain.IActionChain;
+import com.dasi.domain.activity.service.chain.ActivityChainFactory;
+import com.dasi.domain.activity.service.chain.IActivityChain;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class DefaultSkuRecharge extends AbstractSkuRecharge {
 
     @Resource
-    private ActionChainFactory actionChainFactory;
+    private ActivityChainFactory activityChainFactory;
 
     public DefaultSkuRecharge(IActivityRepository activityRepository) {
         super(activityRepository);
@@ -34,7 +34,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
                 .rechargeSkuEntity(rechargeSkuEntity)
                 .rechargeQuotaEntity(rechargeQuotaEntity)
                 .build();
-        IActionChain actionChain = actionChainFactory.getRechargeActionChain();
+        IActivityChain actionChain = activityChainFactory.getRechargeActionChain();
         return actionChain.action(actionChainCheckAggregate);
     }
 

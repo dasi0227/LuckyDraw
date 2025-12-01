@@ -2,8 +2,8 @@ package com.dasi.trigger.listener;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.dasi.domain.award.event.DistributeRaffleAwardMessage;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
+import com.dasi.domain.award.event.DistributeRaffleAwardEvent.DistributeRaffleAwardMessage;
 import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.types.event.BaseEvent.EventMessage;

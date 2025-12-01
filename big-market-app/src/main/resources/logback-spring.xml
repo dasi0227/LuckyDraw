@@ -87,6 +87,8 @@
         <logger name="org.redisson" level="WARN"/>
         <logger name="io.netty.resolver.dns" level="ERROR"/>
         <logger name="org.springframework.amqp" level="WARN"/>
+        <logger name="org.springframework.boot.web.servlet.context" level="WARN"/>
+        org.springframework.boot
     </springProfile>
 
     <!-- 根日志：只输出到控制台 -->

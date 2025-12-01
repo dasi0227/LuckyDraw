@@ -1,7 +1,7 @@
 package com.dasi.domain.award.service.query;
 
-import com.dasi.domain.strategy.model.entity.AwardEntity;
-import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
+import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 
 import java.util.List;
 import java.util.Map;

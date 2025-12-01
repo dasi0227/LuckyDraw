@@ -3,11 +3,11 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
-import com.dasi.domain.award.model.entity.TaskEntity;
-import com.dasi.domain.award.model.type.TaskState;
+import com.dasi.domain.task.model.entity.TaskEntity;
+import com.dasi.domain.task.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
-import com.dasi.domain.strategy.model.entity.AwardEntity;
-import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
+import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
@@ -148,52 +148,6 @@ public class AwardRepository implements IAwardRepository {
             throw new AppException("发送中奖记录到消息队列失败");
         }
 
-    }
-
-    @Override
-    public List<TaskEntity> queryUnsolvedTask() {
-        List<Task> tasks = taskDao.queryUnsolvedTask();
-        return tasks.stream()
-                .map(task -> TaskEntity.builder()
-                        .userId(task.getUserId())
-                        .messageId(task.getMessageId())
-                        .topic(task.getTopic())
-                        .message(task.getMessage())
-                        .taskState(task.getTaskState())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void sendMessage(TaskEntity taskEntity) {
-        Task task = new Task();
-        task.setUserId(taskEntity.getUserId());
-        task.setMessageId(taskEntity.getMessageId());
-        task.setTopic(taskEntity.getTopic());
-        task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState());
-
-        try {
-            eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-            task.setTaskState(TaskState.DISTRIBUTED.getCode());
-            taskDao.updateTaskState(task);
-        } catch (Exception e) {
-            task.setTaskState(TaskState.FAILED.getCode());
-            taskDao.updateTaskState(task);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void updateTaskState(TaskEntity taskEntity) {
-        Task task = new Task();
-        task.setUserId(taskEntity.getUserId());
-        task.setMessageId(taskEntity.getMessageId());
-        task.setTopic(taskEntity.getTopic());
-        task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState());
-
-        taskDao.updateTaskState(task);
     }
 
     @Override

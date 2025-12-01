@@ -1,11 +1,11 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.strategy.model.dto.LotteryContext;
-import com.dasi.domain.strategy.model.dto.LotteryResult;
+import com.dasi.domain.strategy.model.io.LotteryContext;
+import com.dasi.domain.strategy.model.io.LotteryResult;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
+import com.dasi.domain.strategy.service.chain.impl.RuleWeightChain;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
-import com.dasi.domain.strategy.service.rule.chain.impl.RuleWeightChain;
-import com.dasi.domain.strategy.service.rule.tree.impl.RuleLockTree;
+import com.dasi.domain.strategy.service.tree.impl.RuleLockTree;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;

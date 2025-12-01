@@ -41,4 +41,5 @@ public interface IActivityRepository {
     void saveRechargeOrder(RechargeOrderEntity rechargeOrderEntity);
 
     List<RechargeSkuEntity> queryRechargeSkuByActivityId(Long activityId);
+
 }

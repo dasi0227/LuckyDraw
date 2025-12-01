@@ -1,13 +1,13 @@
 package com.dasi.domain.strategy.service.lottery.impl;
 
-import com.dasi.domain.strategy.model.dto.RuleCheckContext;
-import com.dasi.domain.strategy.model.dto.RuleCheckResult;
+import com.dasi.domain.strategy.model.io.RuleCheckContext;
+import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
-import com.dasi.domain.strategy.service.rule.chain.IRuleChain;
-import com.dasi.domain.strategy.service.rule.chain.RuleChainFactory;
-import com.dasi.domain.strategy.service.rule.tree.IRuleTreeEngine;
-import com.dasi.domain.strategy.service.rule.tree.RuleTreeFactory;
+import com.dasi.domain.strategy.service.chain.IStrategyChain;
+import com.dasi.domain.strategy.service.chain.StrategyChainFactory;
+import com.dasi.domain.strategy.service.tree.IStrategyTreeEngine;
+import com.dasi.domain.strategy.service.tree.StrategyTreeFactory;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +26,10 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
 
     @Resource
     @Lazy
-    private RuleChainFactory ruleChainFactory;
+    private StrategyChainFactory strategyChainFactory;
 
     @Resource
-    private RuleTreeFactory ruleTreeFactory;
+    private StrategyTreeFactory strategyTreeFactory;
 
     protected DefaultStrategyLottery(IStrategyRepository strategyRepository) {
         super(strategyRepository);
@@ -37,7 +37,7 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
 
     @Override
     protected RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext) {
-        IRuleChain firstRuleChain = ruleChainFactory.getRuleModelChain(ruleCheckContext.getStrategyId());
+        IStrategyChain firstRuleChain = strategyChainFactory.getRuleModelChain(ruleCheckContext.getStrategyId());
         return firstRuleChain.logic(ruleCheckContext.getUserId(), ruleCheckContext.getStrategyId());
     }
 
@@ -54,7 +54,7 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
         if (ruleTreeVO == null) {
             throw new AppException("规则树配置错误");
         }
-        IRuleTreeEngine ruleTreeEngine = ruleTreeFactory.getTreeEngine(ruleTreeVO);
+        IStrategyTreeEngine ruleTreeEngine = strategyTreeFactory.getTreeEngine(ruleTreeVO);
         return ruleTreeEngine.process(ruleCheckContext.getUserId(), ruleCheckContext.getStrategyId(), ruleCheckContext.getAwardId());
     }
 
