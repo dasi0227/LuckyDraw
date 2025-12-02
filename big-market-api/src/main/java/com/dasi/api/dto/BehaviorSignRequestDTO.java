@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RechargeRequestDTO {
+public class BehaviorSignRequestDTO {
 
     private String userId;
 
-    private String bizId;
+    private Long activityId;
 
-    private Long skuId;
+    private String behaviorType;
 
 }

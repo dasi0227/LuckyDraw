@@ -4,19 +4,20 @@ import com.dasi.api.IActivityService;
 import com.dasi.api.dto.*;
 import com.dasi.domain.activity.model.io.RaffleContext;
 import com.dasi.domain.activity.model.io.RaffleResult;
-import com.dasi.domain.activity.model.io.RechargeContext;
-import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
-import com.dasi.domain.activity.service.recharge.ISkuRecharge;
+import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.domain.award.service.query.IAwardQuery;
+import com.dasi.domain.behavior.model.io.BehaviorContext;
+import com.dasi.domain.behavior.model.io.BehaviorResult;
+import com.dasi.domain.behavior.model.type.BehaviorType;
+import com.dasi.domain.behavior.service.reward.IBehaviorReward;
 import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
-import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.types.exception.AppException;
@@ -26,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,16 +36,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/api/${app.config.api-version}/activity")
-public class IActivityController implements IActivityService {
+public class ActivityController implements IActivityService {
+
+    @Resource
+    private IBehaviorReward behaviorReward;
 
     @Resource
     private IStrategyLottery strategyLottery;
 
     @Resource
     private IActivityRaffle activityRaffle;
-
-    @Resource
-    private ISkuRecharge skuRecharge;
 
     @Resource
     private IAwardDistribute awardDistribute;
@@ -63,7 +66,7 @@ public class IActivityController implements IActivityService {
             throw new AppException("API 请求参数为空");
         }
 
-        log.info("=========================== 活动装配：activity=Id{} ===========================", activityId);
+        log.info("=========================== 活动装配：activityId={} ===========================", activityId);
         boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
         boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
         return Result.success(flag1 && flag2);
@@ -114,21 +117,27 @@ public class IActivityController implements IActivityService {
         return Result.success(awardListResponseDTOList);
     }
 
-    @PostMapping("/recharge")
+    @PostMapping("/behavior")
     @Override
-    public Result<RechargeResponseDTO> recharge(@RequestBody RechargeRequestDTO rechargeRequestDTO) {
-        String userId = rechargeRequestDTO.getUserId();
-        String bizId = rechargeRequestDTO.getBizId();
-        Long skuId = rechargeRequestDTO.getSkuId();
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(bizId) || skuId == null) {
+    public Result<BehaviorSignResponseDTO> behavior(@RequestBody BehaviorSignRequestDTO behaviorSignRequestDTO) {
+        String userId = behaviorSignRequestDTO.getUserId();
+        Long activityId = behaviorSignRequestDTO.getActivityId();
+        String behaviorType = behaviorSignRequestDTO.getBehaviorType();
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(behaviorType) || activityId == null) {
             throw new AppException("API 请求参数为空");
         }
 
-        log.info("=========================== 账户充值：userId={},skuId={} ===========================", userId, skuId);
-        RechargeContext rechargeContext = RechargeContext.builder().userId(userId).skuId(skuId).bizId(bizId).build();
-        RechargeResult rechargeResult = skuRecharge.doSkuRecharge(rechargeContext);
-        RechargeResponseDTO rechargeResponseDTO = RechargeResponseDTO.builder().orderId(rechargeResult.getOrderId()).totalCount(rechargeResult.getTotalCount()).monthCount(rechargeResult.getMonthCount()).dayCount(rechargeResult.getDayCount()).build();
-        return Result.success(rechargeResponseDTO);
+        log.info("=========================== 账户签到：userId={},behavior={} ===========================", userId, behaviorType);
+        BehaviorContext behaviorContext = BehaviorContext.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .behaviorType(BehaviorType.valueOf(behaviorType.toUpperCase()))
+                .businessNo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .build();
+        BehaviorResult behaviorResult = behaviorReward.doBehaviorReward(behaviorContext);
+
+        BehaviorSignResponseDTO behaviorSignResponseDTO = BehaviorSignResponseDTO.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
+        return Result.success(behaviorSignResponseDTO);
     }
 
     @PostMapping("/raffle")

@@ -17,8 +17,8 @@ public class BehaviorEntity {
     /** 行为id */
     private Long behaviorId;
 
-    /** 行为描述 */
-    private String behaviorDesc;
+    /** 活动id */
+    private Long activityId;
 
     /** 行为类型 */
     private BehaviorType behaviorType;
@@ -28,6 +28,9 @@ public class BehaviorEntity {
 
     /** 行为奖励 */
     private RewardType rewardType;
+
+    /** 奖励描述 */
+    private String rewardDesc;
 
     /** 行为奖励值 */
     private String rewardValue;

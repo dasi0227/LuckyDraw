@@ -8,6 +8,7 @@ import com.dasi.domain.behavior.model.entity.BehaviorEntity;
 import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.entity.TaskEntity;
 import com.dasi.domain.behavior.model.type.BehaviorState;
+import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.TaskState;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
@@ -36,17 +37,15 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
     private DistributeBehaviorRewardEvent distributeBehaviorRewardEvent;
 
     @Override
-    protected List<RewardOrderEntity> saveRewardOrder(String userId, String businessNo, List<Long> behaviorIds) {
-        // 1. 查询配置
-        List<BehaviorEntity> behaviorEntityList = behaviorRepository.queryBehaviorListByBehaviorIds(behaviorIds);
-        if (behaviorEntityList == null || behaviorEntityList.isEmpty()) {
-            return null;
-        }
+    protected List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType) {
+        return behaviorRepository.queryBehaviorList(activityId, behaviorType);
+    }
 
+    @Override
+    protected List<RewardOrderEntity> saveRewardOrder(String userId, String businessNo, List<BehaviorEntity> behaviorEntityList) {
         List<RewardOrderEntity> rewardOrderEntityList = new ArrayList<>();
         List<RewardOrderAggregate> rewardOrderAggregateList = new ArrayList<>();
 
-        // 2. 构建聚合对象
         for (BehaviorEntity behaviorEntity : behaviorEntityList) {
             // 0. 检查是否可用
             if (behaviorEntity.getBehaviorState().equals(BehaviorState.UNAVAILABLE)) {
@@ -66,6 +65,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .rewardState(RewardState.CREATED)
+                        .rewardDesc(behaviorEntity.getRewardDesc())
                         .build();
             rewardOrderEntityList.add(rewardOrderEntity);
 
@@ -97,7 +97,6 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
             rewardOrderAggregateList.add(rewardOrderAggregate);
         }
 
-        // 3. 保存订单
         if (rewardOrderAggregateList.isEmpty()) {
             log.error("【奖励】当前行为无法触发任何【奖励】");
         } else {

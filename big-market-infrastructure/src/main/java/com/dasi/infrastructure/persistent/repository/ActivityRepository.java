@@ -25,8 +25,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -334,7 +336,7 @@ public class ActivityRepository implements IActivityRepository {
         rechargeOrder.setRechargeState(rechargeOrderEntity.getRechargeState().name());
         rechargeOrder.setRechargeTime(rechargeOrderEntity.getRechargeTime());
 
-        // 账户对象
+        // 账户对象 - 总
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(rechargeOrderEntity.getUserId());
         activityAccount.setActivityId(rechargeOrderEntity.getActivityId());
@@ -345,20 +347,52 @@ public class ActivityRepository implements IActivityRepository {
         activityAccount.setMonthAllocate(rechargeOrderEntity.getMonthCount());
         activityAccount.setMonthSurplus(rechargeOrderEntity.getMonthCount());
 
+        // 账户对象 - 月
+        ActivityAccountMonth activityAccountMonth = new ActivityAccountMonth();
+        activityAccountMonth.setActivityId(rechargeOrderEntity.getActivityId());
+        activityAccountMonth.setUserId(rechargeOrderEntity.getUserId());
+        activityAccountMonth.setMonth(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+        activityAccountMonth.setMonthAllocate(rechargeOrderEntity.getMonthCount());
+        activityAccountMonth.setMonthSurplus(rechargeOrderEntity.getMonthCount());
+
+        // 账户对象 - 日
+        ActivityAccountDay activityAccountDay = new ActivityAccountDay();
+        activityAccountDay.setActivityId(rechargeOrderEntity.getActivityId());
+        activityAccountDay.setUserId(rechargeOrderEntity.getUserId());
+        activityAccountDay.setDay(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activityAccountDay.setDayAllocate(rechargeOrderEntity.getDayCount());
+        activityAccountDay.setDaySurplus(rechargeOrderEntity.getDayCount());
+
         try {
             dbRouter.doRouter(rechargeOrderEntity.getUserId());
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 1. 保存/更新账户
-                    int count = activityAccountDao.rechargeActivityAccount(activityAccount);
+                    int count;
+
+                    // 1. 保存/更新总账户
+                    count = activityAccountDao.rechargeActivityAccount(activityAccount);
                     if (count == 0) {
                         activityAccountDao.createActivityAccount(activityAccount);
                     }
                     log.info("【充值】账户余额变动：userId={}, skuId={}, total+={}, month+={}, day+={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getSkuId(), activityAccount.getTotalSurplus(), activityAccount.getMonthSurplus(), activityAccount.getDaySurplus());
 
-                    // 2. 写入订单
+                    // 2. 保存/更新月账户
+                    count = activityAccountMonthDao.rechargeActivityAccountMonth(activityAccountMonth);
+                    if (count == 0) {
+                        activityAccountMonthDao.createActivityAccountMonth(activityAccountMonth);
+                    }
+                    log.info("【充值】月账户余额变动：userId={}, skuId={}, month+={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getSkuId(), activityAccountMonth.getMonthSurplus());
+
+                    // 3. 保存/更新日账户
+                    count = activityAccountDayDao.rechargeActivityAccountDay(activityAccountDay);
+                    if (count == 0) {
+                        activityAccountDayDao.createActivityAccountDay(activityAccountDay);
+                    }
+                    log.info("【充值】日账户余额变动：userId={}, skuId={}, day+={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getSkuId(), activityAccountDay.getDaySurplus());
+
+                    // 4. 写入订单
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
-                    log.info("【充值】保存充值订单成功：userId={}, skuId={}, order={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getActivityId(), rechargeOrder.getOrderId());
+                    log.info("【充值】保存充值订单成功：userId={}, skuId={}, order={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getActivityId(), rechargeOrderEntity.getOrderId());
 
                     return true;
                 } catch (DuplicateKeyException e) {

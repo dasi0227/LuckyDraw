@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     public Result<Void> handleAppException(AppException ex) {
         log.error("【业务异常】：{}", ex.getMessage());
-        return Result.error();
+        return Result.error(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

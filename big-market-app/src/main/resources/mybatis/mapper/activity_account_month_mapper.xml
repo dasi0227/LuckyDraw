@@ -25,6 +25,13 @@
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND `month` = #{month}
     </update>
 
+    <update id="rechargeActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
+        UPDATE activity_account_month
+        SET month_allocate = month_allocate + #{monthAllocate},
+            month_surplus = month_surplus + #{monthSurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId} and `month` = #{month}
+    </update>
+
     <select id="queryActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth" resultMap="dataMap">
         SELECT user_id, activity_id, `month`, month_allocate, month_surplus
         FROM activity_account_month

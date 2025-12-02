@@ -34,4 +34,7 @@ public class RewardOrderEntity {
     /** 奖励状态 */
     private RewardState rewardState;
 
+    /** 奖励状态 */
+    private String rewardDesc;
+
 }

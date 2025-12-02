@@ -13,4 +13,7 @@ public interface IActivityAccountDayDao {
     int subtractActivityAccountDay(ActivityAccountDay activityAccountDay);
 
     void createActivityAccountDay(ActivityAccountDay activityAccountDay);
+
+    int rechargeActivityAccountDay(ActivityAccountDay activityAccountDay);
+
 }

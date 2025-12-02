@@ -15,4 +15,6 @@ public class BehaviorResult {
 
     private List<String> orderIds;
 
+    private List<String> rewardDescList;
+
 }
