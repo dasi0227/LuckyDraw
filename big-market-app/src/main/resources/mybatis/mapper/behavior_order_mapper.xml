@@ -15,4 +15,10 @@
         <result property="updateTime"      column="update_time"/>
     </resultMap>
 
+    <insert id="saveBehaviorOrder" parameterType="com.dasi.infrastructure.persistent.po.BehaviorOrder">
+        INSERT INTO behavior_order (order_id, biz_id, user_id, behavior_id, behavior_type, behavior_reward, behavior_config)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{behaviorId}, #{behaviorType}, #{behaviorReward}, #{behaviorConfig})
+    </insert>
+
+
 </mapper>

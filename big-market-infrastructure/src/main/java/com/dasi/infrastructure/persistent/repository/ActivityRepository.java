@@ -344,7 +344,7 @@ public class ActivityRepository implements IActivityRepository {
 
         try {
             dbRouter.doRouter(rechargeOrderEntity.getUserId());
-            Integer success = transactionTemplate.execute(status -> {
+            Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 1. 保存/更新账户
                     int count = activityAccountDao.rechargeActivityAccount(activityAccount);
@@ -357,25 +357,31 @@ public class ActivityRepository implements IActivityRepository {
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
                     log.info("【充值】保存充值订单成功：userId={}, skuId={}, order={}", rechargeOrderEntity.getUserId(), rechargeOrderEntity.getActivityId(), rechargeOrder.getOrderId());
 
-                    return 1;
+                    return true;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.error("【充值】保存充值订单失败（唯一约束冲突）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
-                    return 0;
+                    return false;
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     log.error("【充值】保存充值订单失败（未知异常）：orderId={}, bizId={}, error={}", rechargeOrderEntity.getOrderId(), rechargeOrderEntity.getBizId(), e.getMessage());
-                    return 0;
+                    return false;
                 }
             });
 
-            if (success != null && success.equals(0)) {
+            try {
+                if (Boolean.TRUE.equals(success)) {
+                    rechargeOrder.setRechargeState(RechargeState.USED.getCode());
+                    rechargeOrderDao.updateRechargeState(rechargeOrder);
+                } else {
+                    rechargeOrder.setRechargeState(RechargeState.CANCELLED.getCode());
+                    rechargeOrderDao.updateRechargeState(rechargeOrder);
+                    throw new AppException("保存充值订单失败：orderId=" + rechargeOrder.getOrderId());
+                }
+            } catch (Exception e) {
                 rechargeOrder.setRechargeState(RechargeState.CANCELLED.getCode());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
                 throw new AppException("保存充值订单失败：orderId=" + rechargeOrder.getOrderId());
-            } else {
-                rechargeOrder.setRechargeState(RechargeState.USED.getCode());
-                rechargeOrderDao.updateRechargeState(rechargeOrder);
             }
 
         } finally {
@@ -394,7 +400,7 @@ public class ActivityRepository implements IActivityRepository {
             ActivityAccountDayEntity activityAccountDayEntity = raffleOrderAggregate.getActivityAccountDayEntity();
 
             dbRouter.doRouter(userId);
-            Integer success = transactionTemplate.execute(status -> {
+            Boolean success = transactionTemplate.execute(status -> {
                 try {
                     int count;
 
@@ -463,19 +469,19 @@ public class ActivityRepository implements IActivityRepository {
 
                     log.info("【抽奖】账户余额变动：userId={}, activityId={}, total-=1, month-=1, day-=1", userId, activityId);
                     log.info("【抽奖】保存抽奖订单：userId={}, activityId={}, orderId={}", userId, activityId, raffleOrder.getOrderId());
-                    return 1;
+                    return true;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.error("【抽奖】保存抽奖订单失败（唯一约束冲突）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
-                    return 0;
+                    return false;
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     log.error("【抽奖】保存抽奖订单失败（未知异常）：orderId={}, error={}", raffleOrderEntity.getOrderId(), e.getMessage());
-                    return 0;
+                    return false;
                 }
             });
 
-            if (success != null && success.equals(0)) {
+            if (Boolean.FALSE.equals(success)) {
                 throw new AppException("保存充值订单失败，orderId=" + raffleOrderEntity.getOrderId());
             }
 

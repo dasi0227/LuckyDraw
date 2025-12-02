@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DefaultUserAction extends AbstractUserAction {
+public class DefaultBehaviorReact extends AbstractBehaviorReact {
 
-    public DefaultUserAction(IBehaviorRepository behaviorRepository) {
+    public DefaultBehaviorReact(IBehaviorRepository behaviorRepository) {
         super(behaviorRepository);
     }
 

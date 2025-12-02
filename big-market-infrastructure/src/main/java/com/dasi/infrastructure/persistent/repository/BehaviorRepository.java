@@ -5,6 +5,7 @@ import com.dasi.domain.behavior.model.aggregate.BehaviorOrderAggregate;
 import com.dasi.domain.behavior.model.entity.BehaviorEntity;
 import com.dasi.domain.behavior.model.entity.BehaviorOrderEntity;
 import com.dasi.domain.behavior.model.entity.TaskEntity;
+import com.dasi.domain.behavior.model.type.TaskState;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.IBehaviorDao;
@@ -15,6 +16,7 @@ import com.dasi.infrastructure.persistent.po.BehaviorOrder;
 import com.dasi.infrastructure.persistent.po.Task;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.RedisKey;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -44,10 +46,10 @@ public class BehaviorRepository implements IBehaviorRepository {
     private IDBRouterStrategy dbRouter;
 
     @Resource
-    private EventPublisher eventPublisher;
+    private TransactionTemplate transactionTemplate;
 
     @Resource
-    private TransactionTemplate transactionTemplate;
+    private EventPublisher eventPublisher;
 
     @Override
     public List<BehaviorEntity> queryBehaviorListByBehaviorIds(List<Long> behaviorIds) {
@@ -81,7 +83,7 @@ public class BehaviorRepository implements IBehaviorRepository {
     public void saveBehaviorOrder(String userId, List<BehaviorOrderAggregate> behaviorOrderAggregateList) {
         try {
             dbRouter.doRouter(userId);
-            transactionTemplate.execute(status -> {
+            Boolean success = transactionTemplate.execute(status -> {
                 for (BehaviorOrderAggregate behaviorOrderAggregate : behaviorOrderAggregateList) {
                     try {
                         // 写入数据库
@@ -108,16 +110,45 @@ public class BehaviorRepository implements IBehaviorRepository {
 
                     } catch (DuplicateKeyException e) {
                         status.setRollbackOnly();
-                        log.error("【中奖】保存行为记录失败（唯一约束冲突）：userId={}, orderId={}, error={}", userId, behaviorOrderAggregate.getBehaviorOrderEntity().getOrderId(), e.getMessage());
-                        return 0;
+                        log.error("【行为】保存行为记录失败（唯一约束冲突）：userId={}, orderId={}, error={}", userId, behaviorOrderAggregate.getBehaviorOrderEntity().getOrderId(), e.getMessage());
+                        return false;
                     } catch (Exception e) {
                         status.setRollbackOnly();
-                        log.error("【中奖】保存行为记录失败（未知错误）：userId={}, orderId={}, error={}", userId, behaviorOrderAggregate.getBehaviorOrderEntity().getOrderId(), e.getMessage());
-                        return 0;
+                        log.error("【行为】保存行为记录失败（未知错误）：userId={}, orderId={}, error={}", userId, behaviorOrderAggregate.getBehaviorOrderEntity().getOrderId(), e.getMessage());
+                        return false;
                     }
                 }
-                return 1;
+                return true;
             });
+
+
+            boolean flag = false;
+            if (Boolean.TRUE.equals(success)) {
+                for (BehaviorOrderAggregate behaviorOrderAggregate : behaviorOrderAggregateList) {
+                    TaskEntity taskEntity = behaviorOrderAggregate.getTaskEntity();
+                    Task task = new Task();
+                    task.setUserId(taskEntity.getUserId());
+                    task.setMessageId(taskEntity.getMessageId());
+                    try {
+                        eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
+                        task.setTaskState(TaskState.DISTRIBUTED.getCode());
+                        taskDao.updateTaskState(task);
+                        log.error("【行为】发送行为记录成功：messageId={}", taskEntity.getMessageId());
+                    } catch (Exception e) {
+                        flag = true;
+                        task.setTaskState(TaskState.FAILED.getCode());
+                        taskDao.updateTaskState(task);
+                        log.error("【行为】发送行为记录失败：messageId={}", taskEntity.getMessageId());
+                    }
+                }
+            } else {
+                throw new AppException("【行为】行为触发奖励失败");
+            }
+
+            if (flag) {
+                throw new AppException("【行为】行为触发奖励失败");
+            }
+
         } finally {
             dbRouter.clear();
         }

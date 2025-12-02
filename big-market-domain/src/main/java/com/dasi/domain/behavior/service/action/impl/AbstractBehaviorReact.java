@@ -4,23 +4,23 @@ import com.dasi.domain.behavior.model.entity.BehaviorOrderEntity;
 import com.dasi.domain.behavior.model.io.BehaviorContext;
 import com.dasi.domain.behavior.model.io.BehaviorResult;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
-import com.dasi.domain.behavior.service.action.IUserAction;
+import com.dasi.domain.behavior.service.action.IBehaviorReact;
 import com.dasi.types.exception.AppException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractUserAction implements IUserAction {
+public abstract class AbstractBehaviorReact implements IBehaviorReact {
 
     protected final IBehaviorRepository behaviorRepository;
 
-    public AbstractUserAction(IBehaviorRepository behaviorRepository) {
+    public AbstractBehaviorReact(IBehaviorRepository behaviorRepository) {
         this.behaviorRepository = behaviorRepository;
     }
 
     @Override
-    public BehaviorResult doUserAction(BehaviorContext behaviorContext) {
+    public BehaviorResult doBehaviorReact(BehaviorContext behaviorContext) {
 
         // 1. 参数校验
         String userId = behaviorContext.getUserId();
