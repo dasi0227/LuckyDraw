@@ -18,6 +18,7 @@ import com.dasi.infrastructure.persistent.po.Behavior;
 import com.dasi.infrastructure.persistent.po.RewardOrder;
 import com.dasi.infrastructure.persistent.po.Task;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -55,24 +56,27 @@ public class BehaviorRepository implements IBehaviorRepository {
     private EventPublisher eventPublisher;
 
     @Override
-    public List<BehaviorEntity> queryBehaviorListByBehaviorIds(List<Long> behaviorIds) {
+    public List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType) {
         // 1. 先查缓存
-        String cacheKey = RedisKey.BEHAVIOR_LIST + behaviorIds.toString();
+        String cacheKey = RedisKey.BEHAVIOR_LIST + activityId + Delimiter.UNDERSCORE + behaviorType;
         List<BehaviorEntity> behaviorEntityList = redisService.getValue(cacheKey);
         if (behaviorEntityList != null && !behaviorEntityList.isEmpty()) {
             return behaviorEntityList;
         }
 
         // 2. 再查数据库
-        List<Behavior> behaviorList = behaviorDao.queryBehaviorListByBehaviorIds(behaviorIds);
+        Behavior behaviorReq = new Behavior();
+        behaviorReq.setActivityId(activityId);
+        behaviorReq.setBehaviorType(behaviorType.name());
+        List<Behavior> behaviorList = behaviorDao.queryBehaviorList(behaviorReq);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .behaviorId(behavior.getBehaviorId())
-                        .behaviorDesc(behavior.getBehaviorDesc())
                         .behaviorType(BehaviorType.valueOf(behavior.getBehaviorType()))
+                        .behaviorState(BehaviorState.valueOf(behavior.getBehaviorState()))
                         .rewardType(RewardType.valueOf(behavior.getRewardType()))
                         .rewardValue(behavior.getRewardValue())
-                        .behaviorState(BehaviorState.valueOf(behavior.getBehaviorState()))
+                        .rewardDesc(behavior.getRewardDesc())
                         .build())
                 .collect(Collectors.toList());
 
@@ -99,6 +103,7 @@ public class BehaviorRepository implements IBehaviorRepository {
                         rewardOrder.setRewardType(rewardOrderEntity.getRewardType().name());
                         rewardOrder.setRewardValue(rewardOrderEntity.getRewardValue());
                         rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
+                        rewardOrder.setRewardDesc(rewardOrderEntity.getRewardDesc());
                         rewardOrderDao.saveRewardOrder(rewardOrder);
 
                         // 写入数据库

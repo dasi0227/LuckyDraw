@@ -1,11 +1,10 @@
 package com.dasi.domain.behavior.model.io;
 
+import com.dasi.domain.behavior.model.type.BehaviorType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -15,8 +14,10 @@ public class BehaviorContext {
 
     private String userId;
 
-    private String businessNo;
+    private Long activityId;
 
-    private List<Long> behaviorIds;
+    private BehaviorType behaviorType;
+
+    private String businessNo;
 
 }

@@ -48,14 +48,15 @@ public class BehaviorTest {
 
     @Test
     public void testBehavior() throws InterruptedException {
-        BehaviorContext behaviorContext = BehaviorContext.builder()
-                .userId("dasi")
-                .behaviorIds(Arrays.asList(6001L, 6002L))
-//                .businessNo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                .businessNo("20240303")
-                .build();
-        BehaviorResult behaviorResult = behaviorReact.doBehaviorReward(behaviorContext);
-        log.info("测试订单 IDs：{}", behaviorResult.getOrderIds());
+        for (int i = 0; i < 3; i++) {
+            BehaviorContext behaviorContext = BehaviorContext.builder()
+                    .userId("dasi")
+                    .behaviorIds(Arrays.asList(6001L, 6002L))
+                    .businessNo("2024030" + i)
+                    .build();
+            BehaviorResult behaviorResult = behaviorReact.doBehaviorReward(behaviorContext);
+            log.info("测试订单 IDs：{}", behaviorResult.getOrderIds());
+        }
 
         new CountDownLatch(1).await();
     }

@@ -159,7 +159,7 @@ public class AwardRepository implements IAwardRepository {
         }
 
         // 先查缓存
-        String cacheKey = RedisKey.STRATEGY_AWARD_KEY + strategyId;
+        String cacheKey = RedisKey.STRATEGY_AWARD_KEY + activityId;
         List<StrategyAwardEntity> strategyAwardEntityList = redisService.getValue(cacheKey);
         if (null != strategyAwardEntityList && !strategyAwardEntityList.isEmpty()) {
             return strategyAwardEntityList;
@@ -254,6 +254,7 @@ public class AwardRepository implements IAwardRepository {
     @Override
     public int updateRaffleAwardState(RaffleAwardEntity raffleAwardEntity) {
         RaffleAward raffleAward = new RaffleAward();
+        raffleAward.setUserId(raffleAwardEntity.getUserId());
         raffleAward.setOrderId(raffleAwardEntity.getOrderId());
         raffleAward.setAwardId(raffleAwardEntity.getAwardId());
         raffleAward.setAwardState(raffleAwardEntity.getAwardState().name());

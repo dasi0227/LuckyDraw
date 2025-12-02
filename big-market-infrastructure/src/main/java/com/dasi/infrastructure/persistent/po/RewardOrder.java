@@ -31,6 +31,9 @@ public class RewardOrder {
     /** 奖励状态 */
     private String rewardState;
 
+    /** 奖励描述 */
+    private String rewardDesc;
+
     /** 创建时间 */
     private LocalDateTime createTime;
 

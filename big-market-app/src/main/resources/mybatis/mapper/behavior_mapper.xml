@@ -5,27 +5,20 @@
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Behavior">
         <id     property="id"             column="id"/>
         <result property="behaviorId"     column="behavior_id"/>
-        <result property="behaviorDesc"   column="behavior_desc"/>
+        <result property="activityId"     column="activity_id"/>
         <result property="behaviorType"   column="behavior_type"/>
         <result property="behaviorState"  column="behavior_state"/>
         <result property="rewardType"     column="reward_type"/>
         <result property="rewardValue"    column="reward_value"/>
+        <result property="rewardDesc"     column="reward_desc"/>
         <result property="createTime"     column="create_time"/>
         <result property="updateTime"     column="update_time"/>
     </resultMap>
-    
-    <select id="queryBehaviorByBehaviorId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT behavior_id, behavior_desc, behavior_type, behavior_state, reward_type, reward_value
-        FROM behavior
-        WHERE behavior_id = #{behaviorId}
-    </select>
 
-    <select id="queryBehaviorListByBehaviorIds" parameterType="java.util.List" resultMap="dataMap">
-        SELECT * FROM behavior
-        WHERE behavior_id IN
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+    <select id="queryBehaviorList" parameterType="com.dasi.infrastructure.persistent.po.Behavior" resultMap="dataMap">
+        SELECT behavior_id, activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc
+        FROM behavior
+        WHERE behavior_type = #{behaviorType} AND activity_id = #{activityId}
     </select>
 
 </mapper>

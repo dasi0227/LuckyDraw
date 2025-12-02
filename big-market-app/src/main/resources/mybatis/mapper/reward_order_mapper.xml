@@ -11,13 +11,14 @@
         <result property="rewardType"      column="reward_type"/>
         <result property="rewardValue"     column="reward_value"/>
         <result property="rewardState"     column="reward_state"/>
+        <result property="rewardDesc"      column="reward_desc"/>
         <result property="createTime"      column="create_time"/>
         <result property="updateTime"      column="update_time"/>
     </resultMap>
 
     <insert id="saveRewardOrder" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
-        INSERT INTO reward_order (order_id, biz_id, user_id, behavior_id, reward_type, reward_value, reward_state)
-        VALUES (#{orderId}, #{bizId}, #{userId}, #{behaviorId}, #{rewardType}, #{rewardValue}, #{rewardState})
+        INSERT INTO reward_order (order_id, biz_id, user_id, behavior_id, reward_type, reward_value, reward_state, reward_desc)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{behaviorId}, #{rewardType}, #{rewardValue}, #{rewardState}, #{rewardDesc})
     </insert>
 
     <update id="updateRewardOrderState" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">

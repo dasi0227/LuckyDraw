@@ -25,6 +25,13 @@
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND `day` = #{day}
     </update>
 
+    <update id="rechargeActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        UPDATE activity_account_day
+        SET day_allocate = day_allocate + #{dayAllocate},
+            day_surplus = day_surplus + #{daySurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND `day` = #{day}
+    </update>
+
     <select id="queryActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay" resultMap="dataMap">
         SELECT activity_id, user_id, `day`, day_allocate, day_surplus
         FROM activity_account_day

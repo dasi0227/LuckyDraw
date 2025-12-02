@@ -13,4 +13,5 @@ public interface IRaffleAwardDao {
 
     @DBRouter
     int updateRaffleAwardState(RaffleAward raffleAward);
+
 }

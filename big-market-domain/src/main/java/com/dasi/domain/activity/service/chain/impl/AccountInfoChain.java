@@ -21,9 +21,6 @@ public class AccountInfoChain extends AbstractActivityChain {
     @Resource
     private IActivityRepository activityRepository;
 
-    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
-    private static final DateTimeFormatter DAY_FORMATTER   = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     @Override
     public Boolean action(ActionChainCheckAggregate actionChainCheckAggregate) {
 
@@ -38,7 +35,7 @@ public class AccountInfoChain extends AbstractActivityChain {
         }
 
         /* ========= 2. 查询月余额 ========= */
-        String month = LocalDate.now().format(MONTH_FORMATTER);
+        String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, month);
         if (activityAccountMonthEntity != null && activityAccountMonthEntity.getMonthSurplus() <= 0) {
             log.info("【活动责任链】account_info 接管，账户月余额不足：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
@@ -54,7 +51,7 @@ public class AccountInfoChain extends AbstractActivityChain {
         }
 
         /* ========= 3. 查询日余额 ========= */
-        String day = LocalDate.now().format(DAY_FORMATTER);
+        String day = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, day);
         if (activityAccountDayEntity != null && activityAccountDayEntity.getDaySurplus() <= 0) {
             log.info("【活动责任链】account_info 接管，账户日余额不足：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());

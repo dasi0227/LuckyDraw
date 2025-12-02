@@ -5,18 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RechargeResponseDTO {
+public class BehaviorSignResponseDTO {
 
-    private String orderId;
-
-    private Integer totalCount;
-
-    private Integer monthCount;
-
-    private Integer dayCount;
+    private List<String> rewardDescList;
 
 }
