@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRewardOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RewardOrder">
+        <id     property="id"              column="id"/>
+        <result property="orderId"         column="order_id"/>
+        <result property="bizId"           column="biz_id"/>
+        <result property="userId"          column="user_id"/>
+        <result property="behaviorId"      column="behavior_id"/>
+        <result property="rewardType"      column="reward_type"/>
+        <result property="rewardValue"     column="reward_value"/>
+        <result property="rewardState"     column="reward_state"/>
+        <result property="createTime"      column="create_time"/>
+        <result property="updateTime"      column="update_time"/>
+    </resultMap>
+
+    <insert id="saveRewardOrder" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
+        INSERT INTO reward_order (order_id, biz_id, user_id, behavior_id, reward_type, reward_value, reward_state)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{behaviorId}, #{rewardType}, #{rewardValue}, #{rewardState})
+    </insert>
+
+    <update id="updateRewardOrderState" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
+        UPDATE reward_order
+        SET reward_state = #{rewardState}
+        WHERE user_id = #{userId} AND biz_id = #{bizId} AND order_id = #{orderId};
+    </update>
+
+
+</mapper>

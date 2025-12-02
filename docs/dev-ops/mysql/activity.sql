@@ -15,7 +15,7 @@ CREATE TABLE activity (
     update_time         DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT ='活动的元信息';
 INSERT INTO activity (activity_id, strategy_id, activity_name, activity_desc, activity_state, activity_begin_time, activity_end_time)
-VALUES (1001, 1001, '测试活动', '测试活动描述', 'underway', '2025-11-25 00:00:00', '2025-12-25 00:00:00');
+VALUES (1001, 1001, '测试活动', '测试活动描述', 'UNDERWAY', '2025-11-25 00:00:00', '2025-12-25 00:00:00');
 
 DROP TABLE IF EXISTS recharge_quota;
 CREATE TABLE recharge_quota (

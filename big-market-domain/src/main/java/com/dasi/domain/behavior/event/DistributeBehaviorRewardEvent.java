@@ -1,5 +1,6 @@
 package com.dasi.domain.behavior.event;
 
+import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.types.event.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,9 +43,11 @@ public class DistributeBehaviorRewardEvent extends BaseEvent<DistributeBehaviorR
 
         private String bizId;
 
-        private String behavior_reward;
+        private String orderId;
 
-        private String behavior_config;
+        private RewardType rewardType;
+
+        private String rewardValue;
 
     }
 }

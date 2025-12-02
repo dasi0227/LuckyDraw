@@ -1,6 +1,6 @@
 package com.dasi.domain.behavior.model.aggregate;
 
-import com.dasi.domain.behavior.model.entity.BehaviorOrderEntity;
+import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehaviorOrderAggregate {
+public class RewardOrderAggregate {
 
     private String userId;
 
-    private BehaviorOrderEntity behaviorOrderEntity;
+    private RewardOrderEntity rewardOrderEntity;
 
     private TaskEntity taskEntity;
 

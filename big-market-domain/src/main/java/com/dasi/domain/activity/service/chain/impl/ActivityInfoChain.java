@@ -19,12 +19,12 @@ public class ActivityInfoChain extends AbstractActivityChain {
 
         ActivityEntity activityEntity = actionChainCheckAggregate.getActivityEntity();
 
-        String activityState = activityEntity.getActivityState();
-        if (ActivityState.CREATED.getCode().equals(activityState)) {
+        ActivityState activityState = activityEntity.getActivityState();
+        if (ActivityState.CREATED.equals(activityState)) {
             log.info("【活动责任链】activity_info 接管，活动未开启：activityId={}, activityState={}", activityEntity.getActivityId(), activityState);
             throw new AppException("活动还未开始");
         }
-        if (ActivityState.OVER.getCode().equals(activityState)) {
+        if (ActivityState.OVER.equals(activityState)) {
             log.info("【活动责任链】activity_info 接管，活动已结束：activityId={}, activityState={}", activityEntity.getActivityId(), activityState);
             throw new AppException("活动关闭中");
         }
@@ -39,7 +39,7 @@ public class ActivityInfoChain extends AbstractActivityChain {
             throw new AppException("超过了截止时间");
         }
 
-        if (ActivityState.UNDERWAY.getCode().equals(activityState)) {
+        if (ActivityState.UNDERWAY.equals(activityState)) {
             log.info("【活动责任链】activity_info 放行，活动基础信息无误：activityId={}, activityName={}, activityState={}", activityEntity.getActivityId(), activityEntity.getActivityName(), activityEntity.getActivityState());
         }
 

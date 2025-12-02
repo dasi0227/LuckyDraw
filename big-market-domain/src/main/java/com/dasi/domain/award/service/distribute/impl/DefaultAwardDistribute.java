@@ -42,7 +42,7 @@ public class DefaultAwardDistribute implements IAwardDistribute {
                 .messageId(eventMessage.getMessageId())
                 .topic(distributeRaffleAwardEvent.getTopic())
                 .message(JSON.toJSONString(eventMessage))
-                .taskState(TaskState.CREATED.getCode())
+                .taskState(TaskState.CREATED)
                 .build();
 
         // 3. 保存
@@ -54,7 +54,7 @@ public class DefaultAwardDistribute implements IAwardDistribute {
                 .awardId(distributeContext.getAwardId())
                 .awardName(distributeContext.getAwardName())
                 .awardTime(LocalDateTime.now())
-                .awardState(AwardState.CREATED.getCode())
+                .awardState(AwardState.CREATED)
                 .build();
         awardRepository.saveRaffleAward(raffleAwardEntity, taskEntity);
 

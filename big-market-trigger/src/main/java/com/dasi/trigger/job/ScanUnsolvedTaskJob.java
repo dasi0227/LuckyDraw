@@ -39,23 +39,24 @@ public class ScanUnsolvedTaskJob {
                         dbRouter.setTBKey(0);
                         List<TaskEntity> taskEntityList = taskScan.queryUnsolvedTask();
                         if (taskEntityList.isEmpty()) {
-                            log.debug("【定时任务】没有发现未处理奖品：dbIdx={}", finalDbIdx);
+                            log.debug("【扫描未处理奖品】没有发现：dbIdx={}", finalDbIdx);
                             return;
                         }
 
                         String messageIds = taskEntityList.stream()
                                 .map(TaskEntity::getMessageId)
                                 .collect(Collectors.joining(","));
-                        log.info("【定时任务】发现未处理奖品：dbIdx={}, messageIds={}", finalDbIdx, messageIds);
+                        log.info("【扫描未处理奖品】发现：dbIdx={}, messageIds={}", finalDbIdx, messageIds);
 
                         for (TaskEntity taskEntity : taskEntityList) {
                             threadPoolExecutor.execute(() -> {
                                 try {
                                     taskScan.sendMessage(taskEntity);
+                                    log.info("【扫描未处理奖品】成功：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
                                 } catch (Exception e) {
-                                    taskEntity.setTaskState(TaskState.FAILED.getCode());
+                                    taskEntity.setTaskState(TaskState.FAILED);
                                     taskScan.updateTaskState(taskEntity);
-                                    log.info("【定时任务】处理奖品失败：dbIdx={}, topic={}, messageId={}, error={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId(), e.getMessage());
+                                    log.error("【扫描未处理奖品】失败：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
                                     throw new RuntimeException(e);
                                 }
                             });
@@ -66,7 +67,7 @@ public class ScanUnsolvedTaskJob {
                 });
             }
         } catch (Exception e) {
-            log.info("【定时任务】扫描未处理奖品失败：error={}", e.getMessage());
+            log.error("【扫描未处理奖品】失败：error={}", e.getMessage());
             throw new RuntimeException(e);
         } finally {
             dbRouter.clear();

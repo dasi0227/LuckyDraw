@@ -7,15 +7,15 @@
         <result property="behaviorId"     column="behavior_id"/>
         <result property="behaviorDesc"   column="behavior_desc"/>
         <result property="behaviorType"   column="behavior_type"/>
-        <result property="behaviorReward" column="behavior_reward"/>
-        <result property="behaviorConfig" column="behavior_config"/>
         <result property="behaviorState"  column="behavior_state"/>
+        <result property="rewardType"     column="reward_type"/>
+        <result property="rewardValue"    column="reward_value"/>
         <result property="createTime"     column="create_time"/>
         <result property="updateTime"     column="update_time"/>
     </resultMap>
     
     <select id="queryBehaviorByBehaviorId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT behavior_id, behavior_desc, behavior_type, behavior_reward, behavior_config, behavior_state
+        SELECT behavior_id, behavior_desc, behavior_type, behavior_state, reward_type, reward_value
         FROM behavior
         WHERE behavior_id = #{behaviorId}
     </select>

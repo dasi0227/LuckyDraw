@@ -1,9 +1,9 @@
 package com.dasi.domain.behavior.model.type;
 
-public enum TaskState {
+public enum RewardState {
 
     CREATED,
-    FAILED,
-    DISTRIBUTED;
+    USED,
+    CANCELLED;
 
 }

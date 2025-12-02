@@ -1,9 +1,9 @@
 package com.dasi.domain.activity.model.type;
 
-public enum ActivityState {
+public enum AwardState {
 
     CREATED,
-    UNDERWAY,
-    OVER;
+    COMPLETED,
+    FAILED;
 
 }

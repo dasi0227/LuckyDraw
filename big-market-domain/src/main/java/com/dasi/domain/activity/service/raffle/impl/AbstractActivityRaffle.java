@@ -54,7 +54,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
                     .userId(userId)
                     .activityId(activityId)
                     .strategyId(activityEntity.getStrategyId())
-                    .raffleState(RaffleState.CREATED.getCode())
+                    .raffleState(RaffleState.CREATED)
                     .raffleTime(LocalDateTime.now())
                     .build();
         }

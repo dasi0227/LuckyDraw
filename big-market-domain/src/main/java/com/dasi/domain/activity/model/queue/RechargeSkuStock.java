@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.entity;
+package com.dasi.domain.activity.model.queue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RechargeSkuStockEntity {
+public class RechargeSkuStock {
 
     private Long skuId;
 

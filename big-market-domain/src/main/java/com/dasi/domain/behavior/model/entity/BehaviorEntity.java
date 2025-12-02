@@ -1,5 +1,8 @@
 package com.dasi.domain.behavior.model.entity;
 
+import com.dasi.domain.behavior.model.type.BehaviorState;
+import com.dasi.domain.behavior.model.type.BehaviorType;
+import com.dasi.domain.behavior.model.type.RewardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,15 +21,15 @@ public class BehaviorEntity {
     private String behaviorDesc;
 
     /** 行为类型 */
-    private String behaviorType;
-
-    /** 行为奖励 */
-    private String behaviorReward;
-
-    /** 行为奖励值 */
-    private String behaviorConfig;
+    private BehaviorType behaviorType;
 
     /** 行为状态 */
-    private String behaviorState;
+    private BehaviorState behaviorState;
+
+    /** 行为奖励 */
+    private RewardType rewardType;
+
+    /** 行为奖励值 */
+    private String rewardValue;
 
 }

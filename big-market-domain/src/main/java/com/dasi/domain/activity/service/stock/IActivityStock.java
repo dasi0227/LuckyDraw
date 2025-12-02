@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.entity.RechargeSkuStockEntity;
+import com.dasi.domain.activity.model.queue.RechargeSkuStock;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +8,7 @@ public interface IActivityStock {
 
     Long subtractRechargeSkuStock(Long skuId, LocalDateTime activityEndTime);
 
-    RechargeSkuStockEntity getQueueValue();
+    RechargeSkuStock getQueueValue();
 
     void clearQueueValue();
 

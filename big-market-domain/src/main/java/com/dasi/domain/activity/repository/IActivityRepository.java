@@ -2,6 +2,7 @@ package com.dasi.domain.activity.repository;
 
 import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.*;
+import com.dasi.domain.activity.model.queue.RechargeSkuStock;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +27,9 @@ public interface IActivityRepository {
 
     Long subtractRechargeSkuStockSurplus(Long skuId, LocalDateTime activityEndTime);
 
-    void sendRechargeSkuStockConsumeToMQ(RechargeSkuStockEntity rechargeSkuStockEntity);
+    void sendRechargeSkuStockConsumeToMQ(RechargeSkuStock rechargeSkuStock);
 
-    RechargeSkuStockEntity getQueueValue();
+    RechargeSkuStock getQueueValue();
 
     void clearQueueValue();
 

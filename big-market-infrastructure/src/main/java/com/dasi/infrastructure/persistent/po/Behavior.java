@@ -19,14 +19,14 @@ public class Behavior {
     /** 行为类型 */
     private String behaviorType;
 
-    /** 行为奖励 */
-    private String behaviorReward;
-
-    /** 行为奖励值 */
-    private String behaviorConfig;
-
     /** 行为状态 */
     private String behaviorState;
+
+    /** 行为奖励 */
+    private String rewardType;
+
+    /** 行为奖励值 */
+    private String rewardValue;
 
     /** 创建时间 */
     private LocalDateTime createTime;

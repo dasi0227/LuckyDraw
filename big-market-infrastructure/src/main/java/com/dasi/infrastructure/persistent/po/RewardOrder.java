@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class BehaviorOrder {
+public class RewardOrder {
 
     /** 自增id */
     private Long id;
@@ -22,14 +22,14 @@ public class BehaviorOrder {
     /** 行为id */
     private Long behaviorId;
 
-    /** 行为类型 */
-    private String behaviorType;
+    /** 奖励类型 */
+    private String rewardType;
 
-    /** 行为奖励 */
-    private String behaviorReward;
+    /** 奖励值 */
+    private String rewardValue;
 
-    /** 行为奖励值 */
-    private String behaviorConfig;
+    /** 奖励状态 */
+    private String rewardState;
 
     /** 创建时间 */
     private LocalDateTime createTime;
