@@ -1,0 +1,370 @@
+DROP DATABASE IF EXISTS big_market_table;
+CREATE DATABASE IF NOT EXISTS big_market_table DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE big_market_table;
+
+/* =======================================
+任务表：存储需要发往 MQ 的信息
+======================================= */
+DROP TABLE IF EXISTS task;
+CREATE TABLE task
+(
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    user_id     VARCHAR(32)     NOT NULL COMMENT '用户id',
+    message_id  VARCHAR(32)     NOT NULL COMMENT '消息id',
+    topic       VARCHAR(32)     NOT NULL COMMENT '消息主题',
+    message     VARCHAR(512)    NOT NULL COMMENT '消息主体',
+    task_state  VARCHAR(32)     NOT NULL COMMENT '任务状态',
+    create_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='任务表';
+
+/* =======================================
+奖品表：最终发放到用户的奖品信息
+======================================= */
+DROP TABLE IF EXISTS award;
+CREATE TABLE award
+(
+    id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    award_id     BIGINT UNIQUE NOT NULL UNIQUE COMMENT '奖品id',
+    award_name   VARCHAR(32)   NOT NULL COMMENT '奖品名称',
+    award_config VARCHAR(32)   NULL COMMENT '奖品配置',
+    award_desc   VARCHAR(256)  NOT NULL COMMENT '奖品描述',
+    create_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='奖品表';
+
+/* =======================================
+策略表：与活动关联的策略信息
+======================================= */
+DROP TABLE IF EXISTS strategy;
+CREATE TABLE strategy
+(
+    id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    strategy_id   BIGINT UNIQUE NOT NULL UNIQUE COMMENT '策略id',
+    strategy_desc VARCHAR(256)  NOT NULL COMMENT '策略描述',
+    rule_models   VARCHAR(256)  NULL COMMENT '规则列表',
+    create_time   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='策略表';
+
+/* =======================================
+策略规则表：与策略关联的前置检查信息
+======================================= */
+DROP TABLE IF EXISTS strategy_rule;
+CREATE TABLE strategy_rule
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    strategy_id BIGINT       NOT NULL COMMENT '抽奖策略id',
+    rule_desc   VARCHAR(256) NOT NULL COMMENT '规则描述',
+    rule_model  VARCHAR(32)  NOT NULL COMMENT '规则名',
+    rule_value  VARCHAR(512) NOT NULL COMMENT '规则值',
+    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_strategy_id_rule_model (strategy_id, rule_model)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='策略规则表';
+
+/* =======================================
+策略奖品表：与策略和奖品关联的后置检查信息
+======================================= */
+DROP TABLE IF EXISTS strategy_award;
+CREATE TABLE strategy_award
+(
+    id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    strategy_id    BIGINT         NOT NULL COMMENT '抽奖策略id',
+    award_id       INT            NOT NULL COMMENT '抽奖奖品id',
+    tree_id        VARCHAR(32)    NULL COMMENT '规则树id',
+    award_title    VARCHAR(256)   NULL COMMENT '抽奖奖品标题',
+    award_allocate INT            NOT NULL COMMENT '奖品库存总量',
+    award_surplus  INT            NOT NULL COMMENT '奖品库存余量',
+    award_rate     DECIMAL(10, 6) NOT NULL COMMENT '奖品中奖概率',
+    award_index    INT            NOT NULL COMMENT '奖品排列序号',
+    create_time    DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_strategy_id_award_id (strategy_id, award_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='策略奖品表';
+
+/* =======================================
+规则树表：与策略奖品关联的规则信息
+======================================= */
+DROP TABLE IF EXISTS rule_tree;
+CREATE TABLE rule_tree
+(
+    id          BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    tree_id     VARCHAR(32) UNIQUE NOT NULL COMMENT '规则树id',
+    tree_name   VARCHAR(32)        NOT NULL COMMENT '规则树名称',
+    tree_desc   VARCHAR(256)       NOT NULL COMMENT '规则树描述',
+    tree_root   VARCHAR(32)        NOT NULL COMMENT '根节点规则',
+    create_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='规则树表';
+
+/* =======================================
+规则树节点表：与规则树关联的检查逻辑
+======================================= */
+DROP TABLE IF EXISTS rule_node;
+CREATE TABLE rule_node
+(
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    tree_id     VARCHAR(32)     NOT NULL COMMENT '规则树id',
+    rule_desc   VARCHAR(256)    NOT NULL COMMENT '规则树节点描述',
+    rule_model  VARCHAR(32)     NOT NULL COMMENT '规则树节点模型',
+    rule_value  VARCHAR(512)    NULL     DEFAULT NULL COMMENT '规则树节点值',
+    create_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_tree_id_rule_model (tree_id, rule_model)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='规则树节点表';
+
+/* =======================================
+规则树边表：与规则树和规则树节点关联的转移逻辑
+======================================= */
+DROP TABLE IF EXISTS rule_edge;
+CREATE TABLE rule_edge
+(
+    id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    tree_id           VARCHAR(32)     NOT NULL COMMENT '规则树id',
+    rule_node_from    VARCHAR(32)     NOT NULL COMMENT '规则边起点',
+    rule_node_to      VARCHAR(32)     NOT NULL COMMENT '规则边终点',
+    rule_check_type   VARCHAR(32)     NOT NULL COMMENT '规则检查类型',
+    rule_check_result VARCHAR(32)     NOT NULL COMMENT '规则检查结果',
+    create_time       DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time       DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_tree_id_from_to (tree_id, rule_node_from, rule_node_to)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='规则树边表';
+
+/* =======================================
+活动表：用户参与抽奖的活动信息
+======================================= */
+DROP TABLE IF EXISTS activity;
+CREATE TABLE activity
+(
+    id                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id         BIGINT UNIQUE   NOT NULL COMMENT '活动id',
+    strategy_id         BIGINT          NOT NULL COMMENT '策略id',
+    activity_name       VARCHAR(32)     NOT NULL COMMENT '活动名称',
+    activity_desc       VARCHAR(256)    NOT NULL COMMENT '活动描述',
+    activity_state      VARCHAR(32)     NOT NULL COMMENT '活动状态',
+    activity_begin_time DATETIME        NOT NULL COMMENT '活动开始时间',
+    activity_end_time   DATETIME        NOT NULL COMMENT '活动结束时间',
+    create_time         DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time         DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='活动的元信息';
+
+/* =======================================
+权益定量表：权益的定量信息
+======================================= */
+DROP TABLE IF EXISTS recharge_quota;
+CREATE TABLE recharge_quota
+(
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    quota_id    BIGINT UNIQUE   NOT NULL COMMENT '定量id',
+    total_count INT             NOT NULL COMMENT '总次数',
+    month_count INT             NOT NULL COMMENT '每月次数',
+    day_count   INT             NOT NULL COMMENT '每日次数',
+    create_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='权益定量表';
+
+/* =======================================
+权益库存表：权益的库存信息
+======================================= */
+DROP TABLE IF EXISTS recharge_sku;
+CREATE TABLE recharge_sku
+(
+    id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    sku_id         BIGINT UNIQUE   NOT NULL COMMENT '库存id',
+    activity_id    BIGINT          NOT NULL COMMENT '活动id',
+    quota_id       BIGINT          NOT NULL COMMENT '定量id',
+    stock_allocate INT             NOT NULL COMMENT '库存分配',
+    stock_surplus  INT             NOT NULL COMMENT '库存剩余',
+    create_time    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='权益库存表';
+
+/* =======================================
+活动账户表：活动获得的抽奖次数
+======================================= */
+DROP TABLE IF EXISTS activity_account;
+CREATE TABLE activity_account
+(
+    id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    user_id        VARCHAR(32)     NOT NULL COMMENT '用户id',
+    activity_id    BIGINT          NOT NULL COMMENT '活动id',
+    total_allocate INT             NOT NULL COMMENT '总分配',
+    total_surplus  INT             NOT NULL COMMENT '总余额',
+    month_allocate INT             NOT NULL COMMENT '月分配',
+    month_surplus  INT             NOT NULL COMMENT '月余额',
+    day_allocate   INT             NOT NULL COMMENT '天分配',
+    day_surplus    INT             NOT NULL COMMENT '天余额',
+    create_time    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_user_id_activity_id (user_id, activity_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='活动账户表';
+
+/* =======================================
+活动账户月表：活动每月获得的抽奖次数
+======================================= */
+DROP TABLE IF EXISTS activity_account_month;
+CREATE TABLE activity_account_month
+(
+    id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id    BIGINT          NOT NULL COMMENT '活动id',
+    user_id        VARCHAR(32)     NOT NULL COMMENT '用户id',
+    `month`        VARCHAR(32)     NOT NULL COMMENT 'yyyy-mm',
+    month_allocate INT             NOT NULL COMMENT '月次数',
+    month_surplus  INT             NOT NULL COMMENT '月次数-剩余',
+    create_time    datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_user_id_activity_id_month (user_id, activity_id, `month`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='活动账户月表';
+
+/* =======================================
+活动账户天表：活动每天获得的抽奖次数
+======================================= */
+DROP TABLE IF EXISTS activity_account_day;
+CREATE TABLE activity_account_day
+(
+    id           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id  BIGINT          NOT NULL COMMENT '活动id',
+    user_id      VARCHAR(32)     NOT NULL COMMENT '用户id',
+    `day`        VARCHAR(32)     NOT NULL COMMENT 'yyyy-mm-dd',
+    day_allocate INT             NOT NULL COMMENT '日次数',
+    day_surplus  INT             NOT NULL COMMENT '日次数-剩余',
+    create_time  datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time  datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uq_user_id_activity_id_day (user_id, activity_id, `day`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT = '活动账户天表';
+
+/* =======================================
+充值表：活动每天获得的抽奖次数
+======================================= */
+DROP TABLE IF EXISTS recharge_order;
+CREATE TABLE recharge_order
+(
+    id             BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    order_id       VARCHAR(32) UNIQUE NOT NULL COMMENT '充值订单id',
+    biz_id         VARCHAR(32) UNIQUE NOT NULL COMMENT '业务幂等id',
+    activity_id    BIGINT             NOT NULL COMMENT '活动id',
+    quota_id       BIGINT             NOT NULL COMMENT '定量id',
+    strategy_id    BIGINT             NOT NULL COMMENT '策略id',
+    user_id        VARCHAR(32)        NOT NULL COMMENT '用户id',
+    sku_id         BIGINT             NOT NULL COMMENT '库存id',
+    total_count    INT                NOT NULL COMMENT '本次下单获得的总次数',
+    month_count    INT                NOT NULL COMMENT '本次下单获得的月次数',
+    day_count      INT                NOT NULL COMMENT '本次下单获得的日次数',
+    recharge_state VARCHAR(32)        NOT NULL COMMENT '充值状态',
+    recharge_time  DATETIME           NOT NULL COMMENT '充值时间',
+    create_time    DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='充值抽奖次数订单';
+
+/* =======================================
+抽奖订单表：抽奖行为的记录
+======================================= */
+DROP TABLE IF EXISTS raffle_order;
+CREATE TABLE raffle_order
+(
+    id           BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    order_id     VARCHAR(32) UNIQUE NOT NULL COMMENT '订单id',
+    user_id      VARCHAR(32)        NOT NULL COMMENT '用户id',
+    activity_id  BIGINT             NOT NULL COMMENT '活动id',
+    strategy_id  BIGINT             NOT NULL COMMENT '策略id',
+    raffle_state VARCHAR(32)        NOT NULL COMMENT '抽奖状态',
+    raffle_time  DATETIME           NOT NULL COMMENT '抽奖时间',
+    create_time  DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time  DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    KEY idx_user_id_activity_id (user_id, activity_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='抽奖订单表';
+
+/* =======================================
+中奖结果表：中奖的记录
+======================================= */
+DROP TABLE IF EXISTS raffle_award;
+CREATE TABLE raffle_award
+(
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    user_id     VARCHAR(32)     NOT NULL COMMENT '用户id',
+    activity_id BIGINT          NOT NULL COMMENT '活动id',
+    award_id    INT             NOT NULL COMMENT '奖品id',
+    strategy_id BIGINT          NOT NULL COMMENT '策略id',
+    order_id    VARCHAR(32)     NOT NULL COMMENT '订单id',
+    award_name  VARCHAR(32)     NOT NULL COMMENT '奖品标题',
+    award_time  DATETIME        NOT NULL COMMENT '中奖时间',
+    award_state VARCHAR(32)     NOT NULL COMMENT '奖品发放状态',
+    create_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='中奖结果表';
+
+/* =======================================
+行为表：用户行为的信息
+======================================= */
+DROP TABLE IF EXISTS behavior;
+CREATE TABLE IF NOT EXISTS behavior
+(
+    id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    behavior_id    BIGINT UNIQUE NOT NULL COMMENT '行为id',
+    activity_id    BIGINT        NOT NULL COMMENT '活动id',
+    behavior_type  VARCHAR(32)   NOT NULL COMMENT '行为类型',
+    behavior_state VARCHAR(32)   NOT NULL COMMENT '行为状态',
+    reward_type    VARCHAR(32)   NOT NULL COMMENT '奖励类型',
+    reward_value   VARCHAR(32)   NOT NULL COMMENT '奖励值',
+    reward_desc    VARCHAR(256)  NOT NULL COMMENT '奖励描述',
+    create_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='行为表';
+
+/* =======================================
+奖励订单表：用户执行行为获得的奖励
+======================================= */
+DROP TABLE IF EXISTS reward_order;
+CREATE TABLE IF NOT EXISTS reward_order
+(
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    order_id        VARCHAR(32) UNIQUE NOT NULL COMMENT '订单id',
+    biz_id          VARCHAR(32) UNIQUE NOT NULL COMMENT '业务id',
+    user_id         VARCHAR(32)        NOT NULL COMMENT '用户id',
+    behavior_id     BIGINT             NOT NULL COMMENT '行为id',
+    reward_type     VARCHAR(32)        NOT NULL COMMENT '奖励类型',
+    reward_value    VARCHAR(32)        NOT NULL COMMENT '奖励值',
+    reward_state    VARCHAR(32)        NOT NULL COMMENT '奖励状态',
+    reward_desc     VARCHAR(256)       NOT NULL COMMENT '奖励描述',
+    create_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='奖励订单表';
