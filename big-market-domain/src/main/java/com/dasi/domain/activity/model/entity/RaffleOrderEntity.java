@@ -1,5 +1,6 @@
 package com.dasi.domain.activity.model.entity;
 
+import com.dasi.domain.activity.model.type.RaffleState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class RaffleOrderEntity {
     private Long strategyId;
 
     /** 订单状态 */
-    private String raffleState;
+    private RaffleState raffleState;
 
     /** 下单时间 */
     private LocalDateTime raffleTime;

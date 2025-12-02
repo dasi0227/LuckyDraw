@@ -1,5 +1,6 @@
 package com.dasi.domain.activity.model.entity;
 
+import com.dasi.domain.activity.model.type.ActivityState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class ActivityEntity {
     private String activityDesc;
 
     /** 活动状态 */
-    private String activityState;
+    private ActivityState activityState;
 
     /** 活动开始时间 */
     private LocalDateTime activityBeginTime;

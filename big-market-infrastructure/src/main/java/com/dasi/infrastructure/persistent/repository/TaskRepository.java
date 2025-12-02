@@ -30,7 +30,7 @@ public class TaskRepository implements ITaskRepository {
                         .messageId(task.getMessageId())
                         .topic(task.getTopic())
                         .message(task.getMessage())
-                        .taskState(task.getTaskState())
+                        .taskState(TaskState.valueOf(task.getTaskState()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -42,14 +42,14 @@ public class TaskRepository implements ITaskRepository {
         task.setMessageId(taskEntity.getMessageId());
         task.setTopic(taskEntity.getTopic());
         task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState());
+        task.setTaskState(taskEntity.getTaskState().name());
 
         try {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-            task.setTaskState(TaskState.DISTRIBUTED.getCode());
+            task.setTaskState(TaskState.DISTRIBUTED.name());
             taskDao.updateTaskState(task);
         } catch (Exception e) {
-            task.setTaskState(TaskState.FAILED.getCode());
+            task.setTaskState(TaskState.FAILED.name());
             taskDao.updateTaskState(task);
             throw new RuntimeException(e);
         }
@@ -62,7 +62,7 @@ public class TaskRepository implements ITaskRepository {
         task.setMessageId(taskEntity.getMessageId());
         task.setTopic(taskEntity.getTopic());
         task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState());
+        task.setTaskState(taskEntity.getTaskState().name());
 
         taskDao.updateTaskState(task);
     }

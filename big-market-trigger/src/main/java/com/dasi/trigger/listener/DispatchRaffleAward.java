@@ -27,26 +27,27 @@ public class DispatchRaffleAward {
 
     @RabbitListener(queuesToDeclare = @Queue(value = "distribute_raffle_award"))
     public void dispatchRaffleAward(String message) {
+        EventMessage<DistributeRaffleAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DistributeRaffleAwardMessage>>() {}.getType());
+        DistributeRaffleAwardMessage distributeRaffleAwardMessage = eventMessage.getData();
+
+        RaffleAwardEntity raffleAwardEntity = RaffleAwardEntity.builder()
+                .userId(distributeRaffleAwardMessage.getUserId())
+                .awardId(distributeRaffleAwardMessage.getAwardId())
+                .orderId(distributeRaffleAwardMessage.getOrderId())
+                .awardState(AwardState.COMPLETED)
+                .build();
+
         try {
-            EventMessage<DistributeRaffleAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DistributeRaffleAwardMessage>>() {}.getType());
-            DistributeRaffleAwardMessage distributeRaffleAwardMessage = eventMessage.getData();
-            RaffleAwardEntity raffleAwardEntity = RaffleAwardEntity.builder()
-                    .userId(distributeRaffleAwardMessage.getUserId())
-                    .awardId(distributeRaffleAwardMessage.getAwardId())
-                    .orderId(distributeRaffleAwardMessage.getOrderId())
-                    .awardState(AwardState.COMPLETED.getCode())
-                    .build();
             int count = awardDistribute.updateRaffleAwardState(raffleAwardEntity);
             if (count == 1) {
-                log.info("【监听消息】发放奖品到用户成功：topic={}, userId={}, orderId={}", topic, distributeRaffleAwardMessage.getUserId(), distributeRaffleAwardMessage.getOrderId());
+                log.info("【发放奖品】成功：topic={}, userId={}, orderId={}", topic, distributeRaffleAwardMessage.getUserId(), distributeRaffleAwardMessage.getOrderId());
             } else {
-                raffleAwardEntity.setAwardState(AwardState.FAILED.getCode());
+                raffleAwardEntity.setAwardState(AwardState.FAILED);
                 awardDistribute.updateRaffleAwardState(raffleAwardEntity);
-                log.info("【监听消息】发放奖品到用户失败：topic={}, userId={}, orderId={}", topic, distributeRaffleAwardMessage.getUserId(), distributeRaffleAwardMessage.getOrderId());
+                log.error("【发放奖品】失败：topic={}, userId={}, orderId={}", topic, distributeRaffleAwardMessage.getUserId(), distributeRaffleAwardMessage.getOrderId());
             }
         } catch (Exception e) {
-            log.info("【监听消息】发放奖品到用户失败：topic={}, message={}", topic, message);
-            throw new RuntimeException(e);
+            log.error("【发放奖励】失败：error={}", e.getMessage());
         }
     }
 

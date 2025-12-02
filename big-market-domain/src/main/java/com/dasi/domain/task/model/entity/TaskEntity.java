@@ -1,5 +1,6 @@
 package com.dasi.domain.task.model.entity;
 
+import com.dasi.domain.task.model.type.TaskState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,5 @@ public class TaskEntity {
     private String message;
 
     /** 任务状态 */
-    private String taskState;
+    private TaskState taskState;
 }

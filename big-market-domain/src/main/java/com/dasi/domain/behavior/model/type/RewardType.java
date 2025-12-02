@@ -1,8 +1,8 @@
 package com.dasi.domain.behavior.model.type;
 
-public enum BehaviorType {
+public enum RewardType {
 
-    SIGN,
-    LIKE;
+    POINT,
+    SKU;
 
 }

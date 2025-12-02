@@ -1,5 +1,6 @@
 package com.dasi.domain.activity.model.entity;
 
+import com.dasi.domain.activity.model.type.RechargeState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,7 +45,7 @@ public class RechargeOrderEntity {
     private Integer dayCount;
 
     /** 订单状态 */
-    private String rechargeState;
+    private RechargeState rechargeState;
 
     /** 下单时间 */
     private LocalDateTime rechargeTime;

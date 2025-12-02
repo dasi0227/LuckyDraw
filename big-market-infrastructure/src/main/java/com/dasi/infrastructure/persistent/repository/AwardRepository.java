@@ -1,10 +1,10 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.dasi.domain.activity.model.type.RaffleState;
+import com.dasi.domain.award.model.type.RaffleState;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
-import com.dasi.domain.task.model.type.TaskState;
+import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.model.entity.AwardEntity;
 import com.dasi.domain.award.model.entity.StrategyAwardEntity;
@@ -82,19 +82,19 @@ public class AwardRepository implements IAwardRepository {
         raffleAward.setAwardId(raffleAwardEntity.getAwardId());
         raffleAward.setAwardName(raffleAwardEntity.getAwardName());
         raffleAward.setAwardTime(raffleAwardEntity.getAwardTime());
-        raffleAward.setAwardState(raffleAwardEntity.getAwardState());
+        raffleAward.setAwardState(raffleAwardEntity.getAwardState().name());
 
         Task task = new Task();
         task.setUserId(taskEntity.getUserId());
         task.setMessageId(taskEntity.getMessageId());
         task.setTopic(taskEntity.getTopic());
         task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState());
+        task.setTaskState(taskEntity.getTaskState().name());
 
         RaffleOrder raffleOrder = new RaffleOrder();
         raffleOrder.setUserId(raffleAwardEntity.getUserId());
         raffleOrder.setOrderId(raffleAwardEntity.getOrderId());
-        raffleOrder.setRaffleState(RaffleState.USED.getCode());
+        raffleOrder.setRaffleState(RaffleState.USED.name());
 
         // 2. 入库
         try {
@@ -126,7 +126,7 @@ public class AwardRepository implements IAwardRepository {
             });
 
             if (success != null && success.equals(0)) {
-                raffleOrder.setRaffleState(RaffleState.CANCELLED.getCode());
+                raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
                 raffleOrderDao.updateRaffleOrderState(raffleOrder);
                 throw new AppException("保存中奖记录失败：orderId=" + raffleOrder.getOrderId());
             }
@@ -138,11 +138,11 @@ public class AwardRepository implements IAwardRepository {
         // 3. 发送到消息队列
         try {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-            task.setTaskState(TaskState.DISTRIBUTED.getCode());
+            task.setTaskState(TaskState.DISTRIBUTED.name());
             taskDao.updateTaskState(task);
             log.error("【中奖】发送中奖记录到消息队列：userId={}, activityId={}, awardId={}, topic={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), task.getTopic());
         } catch (Exception e) {
-            task.setTaskState(TaskState.FAILED.getCode());
+            task.setTaskState(TaskState.FAILED.name());
             taskDao.updateTaskState(task);
             log.error("【中奖】发送中奖记录到消息队列失败：userId={}, activityId={}, awardId={}, topic={}, error={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), task.getTopic(), e.getMessage());
             throw new AppException("发送中奖记录到消息队列失败");
@@ -256,7 +256,7 @@ public class AwardRepository implements IAwardRepository {
         RaffleAward raffleAward = new RaffleAward();
         raffleAward.setOrderId(raffleAwardEntity.getOrderId());
         raffleAward.setAwardId(raffleAwardEntity.getAwardId());
-        raffleAward.setAwardState(raffleAwardEntity.getAwardState());
+        raffleAward.setAwardState(raffleAwardEntity.getAwardState().name());
         return raffleAwardDao.updateRaffleAwardState(raffleAward);
     }
 

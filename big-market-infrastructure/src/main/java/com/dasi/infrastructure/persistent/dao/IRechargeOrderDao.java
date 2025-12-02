@@ -18,4 +18,5 @@ public interface IRechargeOrderDao {
 
     @DBRouter
     void updateRechargeState(RechargeOrder rechargeOrder);
+
 }

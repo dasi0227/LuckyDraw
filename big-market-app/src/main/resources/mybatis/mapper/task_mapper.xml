@@ -28,8 +28,8 @@
     <select id="queryUnsolvedTask" resultMap="dataMap">
         SELECT user_id, message_id, topic, message, task_state
         FROM task
-        WHERE task_state = 'failed'
-           OR (task_state = 'created' AND NOW() - update_time > 100000)
+        WHERE task_state = 'FAILED'
+           OR (task_state = 'CREATED' AND (NOW() - update_time) > 100000)
         LIMIT 10
     </select>
 

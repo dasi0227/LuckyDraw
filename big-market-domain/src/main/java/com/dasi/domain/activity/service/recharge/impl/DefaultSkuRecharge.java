@@ -53,7 +53,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
                 .monthCount(rechargeQuotaEntity.getMonthCount())
                 .dayCount(rechargeQuotaEntity.getDayCount())
                 .rechargeTime(LocalDateTime.now())
-                .rechargeState(RechargeState.CREATED.getCode())
+                .rechargeState(RechargeState.CREATED)
                 .build();
 
         // 2. 充值到账

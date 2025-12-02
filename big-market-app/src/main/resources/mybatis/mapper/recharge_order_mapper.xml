@@ -29,7 +29,7 @@
     <update id="updateRechargeState" parameterType="com.dasi.infrastructure.persistent.po.RechargeOrder">
         UPDATE recharge_order
         SET recharge_state = #{rechargeState}
-        WHERE order_id = #{orderId} AND user_id = #{userId} AND activityId = #{activityId}
+        WHERE order_id = #{orderId} AND user_id = #{userId} AND biz_id = #{bizId}
     </update>
 
     <select id="queryRechargeOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">

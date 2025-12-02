@@ -1,5 +1,6 @@
 package com.dasi.domain.award.model.entity;
 
+import com.dasi.domain.award.model.type.AwardState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +36,6 @@ public class RaffleAwardEntity {
     private LocalDateTime awardTime;
 
     /** 奖品发放状态 */
-    private String awardState;
+    private AwardState awardState;
 
 }

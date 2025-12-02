@@ -3,7 +3,7 @@ package com.dasi.domain.activity.service.chain.impl;
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
-import com.dasi.domain.activity.model.entity.RechargeSkuStockEntity;
+import com.dasi.domain.activity.model.queue.RechargeSkuStock;
 import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.stock.IActivityStock;
@@ -38,14 +38,14 @@ public class SkuStockChain extends AbstractActivityChain {
             return false;
         }
         if (surplus == -2L) {
-            log.info("【活动责任链】sku_stock 接管，扣减库存失败：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.error("【活动责任链】sku_stock 接管，扣减库存失败：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
             return false;
         }
-        RechargeSkuStockEntity rechargeSkuStockEntity = RechargeSkuStockEntity.builder()
+        RechargeSkuStock rechargeSkuStock = RechargeSkuStock.builder()
                 .skuId(rechargeSkuEntity.getSkuId())
                 .activityId(activityEntity.getActivityId())
                 .build();
-        activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStockEntity);
+        activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStock);
         log.info("【活动责任链】sku_stock 放行，扣减库存成功：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
 
         return next().action(actionChainCheckAggregate);

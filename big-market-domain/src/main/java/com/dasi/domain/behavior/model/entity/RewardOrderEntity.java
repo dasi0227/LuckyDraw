@@ -1,5 +1,7 @@
 package com.dasi.domain.behavior.model.entity;
 
+import com.dasi.domain.behavior.model.type.RewardState;
+import com.dasi.domain.behavior.model.type.RewardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehaviorOrderEntity {
+public class RewardOrderEntity {
 
     /** 订单id */
     private String orderId;
@@ -23,13 +25,13 @@ public class BehaviorOrderEntity {
     /** 行为id */
     private Long behaviorId;
 
-    /** 行为类型 */
-    private String behaviorType;
+    /** 奖励类型 */
+    private RewardType rewardType;
 
-    /** 行为奖励 */
-    private String behaviorReward;
+    /** 奖励值 */
+    private String rewardValue;
 
-    /** 行为奖励值 */
-    private String behaviorConfig;
+    /** 奖励状态 */
+    private RewardState rewardState;
 
 }

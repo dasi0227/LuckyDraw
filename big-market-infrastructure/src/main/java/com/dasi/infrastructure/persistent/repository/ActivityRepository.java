@@ -4,6 +4,9 @@ import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.event.RechargeSkuStockEmptyEvent;
 import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.*;
+import com.dasi.domain.activity.model.queue.RechargeSkuStock;
+import com.dasi.domain.activity.model.type.ActivityState;
+import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
@@ -142,7 +145,7 @@ public class ActivityRepository implements IActivityRepository {
                 .activityBeginTime(activity.getActivityBeginTime())
                 .activityEndTime(activity.getActivityEndTime())
                 .strategyId(activity.getStrategyId())
-                .activityState(activity.getActivityState())
+                .activityState(ActivityState.valueOf(activity.getActivityState()))
                 .build();
 
         // 缓存并返回
@@ -240,7 +243,7 @@ public class ActivityRepository implements IActivityRepository {
                 .userId(raffleOrder.getUserId())
                 .activityId(raffleOrder.getActivityId())
                 .strategyId(raffleOrder.getStrategyId())
-                .raffleState(raffleOrder.getRaffleState())
+                .raffleState(RaffleState.valueOf(raffleOrder.getRaffleState()))
                 .raffleTime(raffleOrder.getRaffleTime())
                 .build();
     }
@@ -283,24 +286,24 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void sendRechargeSkuStockConsumeToMQ(RechargeSkuStockEntity rechargeSkuStockEntity) {
+    public void sendRechargeSkuStockConsumeToMQ(RechargeSkuStock rechargeSkuStock) {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
-        RDelayedQueue<RechargeSkuStockEntity> delayedQueue = redisService.getDelayedQueue(blockingQueue);
-        delayedQueue.offer(rechargeSkuStockEntity, 3, TimeUnit.SECONDS);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RDelayedQueue<RechargeSkuStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        delayedQueue.offer(rechargeSkuStock, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public RechargeSkuStockEntity getQueueValue() {
+    public RechargeSkuStock getQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
         return blockingQueue.poll();
     }
 
     @Override
     public void clearQueueValue() {
         String cacheKey = RedisKey.RECHARGE_SKU_STOCK_QUEUE_KEY;
-        RBlockingQueue<RechargeSkuStockEntity> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        RBlockingQueue<RechargeSkuStock> blockingQueue = redisService.getBlockingQueue(cacheKey);
         blockingQueue.clear();
     }
 
@@ -328,7 +331,7 @@ public class ActivityRepository implements IActivityRepository {
         rechargeOrder.setTotalCount(rechargeOrderEntity.getTotalCount());
         rechargeOrder.setMonthCount(rechargeOrderEntity.getMonthCount());
         rechargeOrder.setDayCount(rechargeOrderEntity.getDayCount());
-        rechargeOrder.setRechargeState(rechargeOrderEntity.getRechargeState());
+        rechargeOrder.setRechargeState(rechargeOrderEntity.getRechargeState().name());
         rechargeOrder.setRechargeTime(rechargeOrderEntity.getRechargeTime());
 
         // 账户对象
@@ -371,15 +374,15 @@ public class ActivityRepository implements IActivityRepository {
 
             try {
                 if (Boolean.TRUE.equals(success)) {
-                    rechargeOrder.setRechargeState(RechargeState.USED.getCode());
+                    rechargeOrder.setRechargeState(RechargeState.USED.name());
                     rechargeOrderDao.updateRechargeState(rechargeOrder);
                 } else {
-                    rechargeOrder.setRechargeState(RechargeState.CANCELLED.getCode());
+                    rechargeOrder.setRechargeState(RechargeState.CANCELLED.name());
                     rechargeOrderDao.updateRechargeState(rechargeOrder);
                     throw new AppException("保存充值订单失败：orderId=" + rechargeOrder.getOrderId());
                 }
             } catch (Exception e) {
-                rechargeOrder.setRechargeState(RechargeState.CANCELLED.getCode());
+                rechargeOrder.setRechargeState(RechargeState.CANCELLED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
                 throw new AppException("保存充值订单失败：orderId=" + rechargeOrder.getOrderId());
             }
@@ -463,7 +466,7 @@ public class ActivityRepository implements IActivityRepository {
                     raffleOrder.setUserId(raffleOrderEntity.getUserId());
                     raffleOrder.setActivityId(raffleOrderEntity.getActivityId());
                     raffleOrder.setStrategyId(raffleOrderEntity.getStrategyId());
-                    raffleOrder.setRaffleState(raffleOrderEntity.getRaffleState());
+                    raffleOrder.setRaffleState(raffleOrderEntity.getRaffleState().name());
                     raffleOrder.setRaffleTime(raffleOrderEntity.getRaffleTime());
                     raffleOrderDao.saveRaffleOrder(raffleOrder);
 
