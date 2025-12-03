@@ -12,10 +12,10 @@ import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.TaskState;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
+import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +36,9 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
     @Resource
     private DistributeBehaviorRewardEvent distributeBehaviorRewardEvent;
 
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
+
     @Override
     protected List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType) {
         return behaviorRepository.queryBehaviorList(activityId, behaviorType);
@@ -49,7 +52,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
         for (BehaviorEntity behaviorEntity : behaviorEntityList) {
             // 0. 检查是否可用
             if (behaviorEntity.getBehaviorState().equals(BehaviorState.UNAVAILABLE)) {
-                log.info("【奖励】行为触发不可用：behaviorId={}, behavior_type={}, behavior_state={}", behaviorEntity.getBehaviorId(), behaviorEntity.getBehaviorType(), behaviorEntity.getBehaviorState());
+                log.info("【返利】行为触发不可用：behaviorId={}, behavior_type={}, behavior_state={}", behaviorEntity.getBehaviorId(), behaviorEntity.getBehaviorType(), behaviorEntity.getBehaviorState());
                 continue;
             }
 
@@ -58,7 +61,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
 
             // 2. 构造订单实体
             RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder()
-                        .orderId(RandomStringUtils.randomNumeric(12))
+                        .orderId(uniqueIdGenerator.nextRewardOrderId())
                         .bizId(bizId)
                         .userId(userId)
                         .behaviorId(behaviorEntity.getBehaviorId())
@@ -98,7 +101,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
         }
 
         if (rewardOrderAggregateList.isEmpty()) {
-            log.error("【奖励】当前行为无法触发任何【奖励】");
+            log.info("【返利】当前行为无法触发任何【返利】");
         } else {
             behaviorRepository.saveRewardOrder(userId, rewardOrderAggregateList);
         }

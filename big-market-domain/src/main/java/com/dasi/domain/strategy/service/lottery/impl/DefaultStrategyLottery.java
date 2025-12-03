@@ -52,7 +52,7 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
 
         RuleTreeVO ruleTreeVO = strategyRepository.queryRuleTreeVOByTreeId(treeId);
         if (ruleTreeVO == null) {
-            throw new AppException("规则树配置错误");
+            throw new AppException("（检查）找不到规则树配置：treeId=" + treeId);
         }
         IStrategyTreeEngine ruleTreeEngine = strategyTreeFactory.getTreeEngine(ruleTreeVO);
         return ruleTreeEngine.process(ruleCheckContext.getUserId(), ruleCheckContext.getStrategyId(), ruleCheckContext.getAwardId());

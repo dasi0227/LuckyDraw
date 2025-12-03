@@ -20,15 +20,12 @@ import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
-import com.dasi.types.exception.AppException;
 import com.dasi.types.model.Result;
+import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,10 +59,6 @@ public class ActivityController implements IActivityService {
     @GetMapping("/assemble")
     @Override
     public Result<Boolean> assemble(@RequestParam Long activityId) {
-        if (activityId == null) {
-            throw new AppException("API 请求参数为空");
-        }
-
         log.info("=========================== 活动装配：activityId={} ===========================", activityId);
         boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
         boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
@@ -77,9 +70,6 @@ public class ActivityController implements IActivityService {
     public Result<List<AwardListResponseDTO>> award(@RequestBody AwardListRequestDTO awardListRequestDTO) {
         String userId = awardListRequestDTO.getUserId();
         Long activityId = awardListRequestDTO.getActivityId();
-        if (StringUtils.isBlank(userId) || activityId == null) {
-            throw new AppException("API 请求参数为空");
-        }
 
         // 1. 先拿到当前活动对应的策略的所有奖品
         List<StrategyAwardEntity> strategyAwardEntityList = awardQuery.queryStrategyAwardListByActivityId(activityId);
@@ -123,16 +113,13 @@ public class ActivityController implements IActivityService {
         String userId = behaviorSignRequestDTO.getUserId();
         Long activityId = behaviorSignRequestDTO.getActivityId();
         String behaviorType = behaviorSignRequestDTO.getBehaviorType();
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(behaviorType) || activityId == null) {
-            throw new AppException("API 请求参数为空");
-        }
 
-        log.info("=========================== 账户签到：userId={},behavior={} ===========================", userId, behaviorType);
+        log.info("=========================== 账户活动：userId={},behavior={} ===========================", userId, behaviorType);
         BehaviorContext behaviorContext = BehaviorContext.builder()
                 .userId(userId)
                 .activityId(activityId)
                 .behaviorType(BehaviorType.valueOf(behaviorType.toUpperCase()))
-                .businessNo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .businessNo(TimeUtil.thisDay(false))
                 .build();
         BehaviorResult behaviorResult = behaviorReward.doBehaviorReward(behaviorContext);
 
@@ -145,9 +132,6 @@ public class ActivityController implements IActivityService {
     public Result<RaffleResponseDTO> raffle(@RequestBody RaffleRequestDTO raffleRequestDTO) {
         String userId = raffleRequestDTO.getUserId();
         Long activityId = raffleRequestDTO.getActivityId();
-        if (StringUtils.isBlank(userId) || activityId == null) {
-            throw new AppException("API 请求参数为空");
-        }
 
         // 1. 参与活动
         log.info("=========================== 参与活动：userId={},activityId={} ===========================", userId, activityId);

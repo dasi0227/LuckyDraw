@@ -10,9 +10,12 @@ import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.util.TimeUtil;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RMap;
@@ -20,10 +23,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,7 @@ public class StrategyRepository implements IStrategyRepository {
         }
 
         strategyId = activityDao.queryStrategyIdByActivityId(activityId);
+        if (strategyId == null) throw new AppException("（查询）StrategyId 不存在：activityId=" + activityId);
         redisService.setValue(cacheKey, strategyId);
         return strategyId;
     }
@@ -87,6 +89,7 @@ public class StrategyRepository implements IStrategyRepository {
         }
 
         activityId = activityDao.queryActivityIdByStrategyId(strategyId);
+        if (activityId == null) throw new AppException("（查询）ActivityId 不存在：strategyId=" + strategyId);
         redisService.setValue(cacheKey, activityId);
         return activityId;
     }
@@ -97,7 +100,7 @@ public class StrategyRepository implements IStrategyRepository {
         ActivityAccountDay activityAccountDay = new ActivityAccountDay();
         activityAccountDay.setUserId(userId);
         activityAccountDay.setActivityId(activityId);
-        activityAccountDay.setDay(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activityAccountDay.setDay(TimeUtil.thisDay(true));
         activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDay);
         if (activityAccountDay == null) return 0;
         return activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus();
@@ -114,8 +117,9 @@ public class StrategyRepository implements IStrategyRepository {
         }
 
         // 再查数据库
-        List<StrategyAward> list = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
-        strategyAwardEntityList = list.stream()
+        List<StrategyAward> strategyAwardList = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
+        if (strategyAwardList == null || strategyAwardList.isEmpty()) throw new AppException("（查询）StrategyAwardList 不存在：strategyId=" + strategyId);
+        strategyAwardEntityList = strategyAwardList.stream()
                 .map(strategyAward -> StrategyAwardEntity.builder()
                         .strategyId(strategyAward.getStrategyId())
                         .awardId(strategyAward.getAwardId())
@@ -145,6 +149,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 再查数据库
         Strategy strategy = strategyDao.queryStrategyByStrategyId(strategyId);
+        if (strategy == null) throw new AppException("（查询）Strategy 不存在：strategyId=" + strategyId);
         strategyEntity = StrategyEntity.builder()
                 .strategyId(strategy.getStrategyId())
                 .strategyDesc(strategy.getStrategyDesc())
@@ -170,6 +175,7 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRuleRequest.setStrategyId(strategyId);
         strategyRuleRequest.setRuleModel(ruleModel);
         StrategyRule strategyRuleResponse = strategyRuleDao.queryStrategyRuleByRuleModel(strategyRuleRequest);
+        if (strategyRuleResponse == null) throw new AppException("（查询）StrategyRule 不存在：strategyId=" + strategyId + ", ruleModel=" + ruleModel);
         strategyRuleEntity = StrategyRuleEntity.builder()
                 .strategyId(strategyRuleResponse.getStrategyId())
                 .ruleModel(strategyRuleResponse.getRuleModel())
@@ -196,6 +202,8 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRule.setStrategyId(strategyId);
         strategyRule.setRuleModel(ruleModel);
         ruleValue = strategyRuleDao.queryStrategyRuleValue(strategyRule);
+        if (StringUtils.isBlank(ruleValue)) throw new AppException("（查询）RuleValue 不存在：strategyId=" + strategyId + ", ruleModel=" + ruleModel);
+
 
         // 缓存后返回
         redisService.setValue(cacheKey, ruleValue);
@@ -213,6 +221,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 再查数据库
         Award award = awardDao.queryAwardByAwardId(awardId);
+        if (award == null) throw new AppException("（查询）Award 不存在：awardId=" + awardId);
         awardEntity = AwardEntity.builder()
                 .awardId(award.getAwardId())
                 .awardName(award.getAwardName())
@@ -239,6 +248,8 @@ public class StrategyRepository implements IStrategyRepository {
         strategyAward.setStrategyId(strategyId);
         strategyAward.setAwardId(awardId);
         treeId = strategyAwardDao.queryStrategyAwardTreeIdByStrategyIdAndAwardId(strategyAward);
+        if (treeId == null) throw new AppException("（查询）TreeId 不存在：strategyId=" + strategyId + ", awardId=" + awardId);
+
 
         // 缓存后返回
         redisService.setValue(cacheKey, treeId);
@@ -254,6 +265,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 2. 建立 RuleNodeVO 到 RuleEdgeVO 列表的映射
         List<RuleEdge> ruleEdgeList = ruleEdgeDao.queryRuleEdgeListByTreeId(treeId);
+        if (ruleEdgeList == null || ruleEdgeList.isEmpty()) throw new AppException("（查询）规则树边不存在：treeId=" + treeId);
         Map<String, List<RuleEdgeVO>> ruleNode2EdgeMap = new HashMap<>();
         for (RuleEdge ruleEdge : ruleEdgeList) {
             RuleEdgeVO ruleEdgeVO = RuleEdgeVO.builder()
@@ -270,6 +282,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 3. 建立 RuleTreeVO 到 RuleNodeVO 列表的映射
         List<RuleNode> ruleNodeList = ruleNodeDao.queryRuleNodeListByTreeId(treeId);
+        if (ruleNodeList == null || ruleNodeList.isEmpty()) throw new AppException("（查询）规则树节点不存在：treeId=" + treeId);
         Map<String, RuleNodeVO> ruleTree2NodeMap = new HashMap<>();
         for (RuleNode ruleNode : ruleNodeList) {
             RuleNodeVO ruleNodeVO = RuleNodeVO.builder()
@@ -283,6 +296,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 4. 构造 RuleTreeVO
         RuleTree ruleTree = ruleTreeDao.queryRuleTreeByTreeId(treeId);
+        if (ruleTree == null) throw new AppException("（查询）规则树不存在：treeId=" + treeId);
         RuleTreeVO ruleTreeVO = RuleTreeVO.builder()
                 .treeId(ruleTree.getTreeId())
                 .treeRoot(ruleTree.getTreeRoot())
@@ -364,17 +378,17 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public LocalDateTime queryActivityEndTimeByStrategyId(Long strategyId) {
         String cacheKey = RedisKey.ACTIVITY_END_TIME_KEY + strategyId;
-        LocalDateTime activityEndTime = redisService.getValue(cacheKey);
+        String activityEndTime = redisService.getValue(cacheKey);
         if (activityEndTime != null) {
-            return activityEndTime;
+            return LocalDateTime.parse(activityEndTime);
         }
 
         Long activityId = queryActivityIdByStrategyId(strategyId);
         Activity activity = activityDao.queryActivityByActivityId(activityId);
-        activityEndTime = activity.getActivityEndTime();
+        activityEndTime = activity.getActivityEndTime().toString();
         redisService.setValue(cacheKey, activityEndTime);
 
-        return activityEndTime;
+        return LocalDateTime.parse(activityEndTime);
     }
 
 }

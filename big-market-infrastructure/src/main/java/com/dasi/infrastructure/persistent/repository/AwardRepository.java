@@ -1,28 +1,26 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.dasi.domain.award.model.type.RaffleState;
+import com.dasi.domain.award.model.entity.AwardEntity;
 import com.dasi.domain.award.model.entity.RaffleAwardEntity;
+import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
+import com.dasi.domain.award.model.type.RaffleState;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
-import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.domain.award.model.entity.StrategyAwardEntity;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.util.TimeUtil;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,38 +92,35 @@ public class AwardRepository implements IAwardRepository {
         RaffleOrder raffleOrder = new RaffleOrder();
         raffleOrder.setUserId(raffleAwardEntity.getUserId());
         raffleOrder.setOrderId(raffleAwardEntity.getOrderId());
-        raffleOrder.setRaffleState(RaffleState.USED.name());
+        raffleOrder.setRaffleState(RaffleState.CREATED.name());
 
         // 2. 入库
         try {
             dbRouter.doRouter(userId);
-            Integer success = transactionTemplate.execute(status -> {
+            Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 写入记录并更新订单状态
+                    // 写入记录
                     raffleAwardDao.saveRaffleAward(raffleAward);
                     taskDao.saveTask(task);
-                    int count = raffleOrderDao.updateRaffleOrderState(raffleOrder);
+
                     // 更新订单状态
-                    if (count != 1) {
+                    if (raffleOrderDao.updateRaffleOrderState(raffleOrder) != 1) {
                         status.setRollbackOnly();
-                        log.error("【中奖】保存中奖记录失败（订单已经使用）：orderId={}", raffleOrder.getOrderId());
-                        return 0;
-                    } else {
-                        log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId());
-                        return 1;
+                        return false;
                     }
-                } catch (DuplicateKeyException e) {
-                    status.setRollbackOnly();
-                    log.error("【中奖】保存中奖记录失败（唯一约束冲突）：userId={}, activityId={}, awardId={}, error={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), e.getMessage());
-                    return 0;
+                    return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.error("【中奖】保存中奖记录失败（未知错误）：userId={}, activityId={}, awardId={}, error={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), e.getMessage());
-                    return 0;
+                    log.error("【中奖】保存中奖记录时发生错误：error={}", e.getMessage());
+                    return false;
                 }
             });
 
-            if (success != null && success.equals(0)) {
+            if (Boolean.TRUE.equals(success)) {
+                raffleOrder.setRaffleState(RaffleState.USED.name());
+                raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId());
+            } else {
                 raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
                 raffleOrderDao.updateRaffleOrderState(raffleOrder);
                 throw new AppException("保存中奖记录失败：orderId=" + raffleOrder.getOrderId());
@@ -140,12 +135,11 @@ public class AwardRepository implements IAwardRepository {
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
             task.setTaskState(TaskState.DISTRIBUTED.name());
             taskDao.updateTaskState(task);
-            log.error("【中奖】发送中奖记录到消息队列：userId={}, activityId={}, awardId={}, topic={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), task.getTopic());
+            log.info("【中奖】发送中奖记录消息：messageId={}", taskEntity.getMessageId());
         } catch (Exception e) {
             task.setTaskState(TaskState.FAILED.name());
             taskDao.updateTaskState(task);
-            log.error("【中奖】发送中奖记录到消息队列失败：userId={}, activityId={}, awardId={}, topic={}, error={}", raffleAwardEntity.getUserId(), raffleAwardEntity.getActivityId(), raffleAwardEntity.getAwardId(), task.getTopic(), e.getMessage());
-            throw new AppException("发送中奖记录到消息队列失败");
+            throw new AppException("（中奖）发送中奖记录消息失败：messageId=" + taskEntity.getMessageId());
         }
 
     }
@@ -166,8 +160,9 @@ public class AwardRepository implements IAwardRepository {
         }
 
         // 再查数据库
-        List<StrategyAward> list = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
-        strategyAwardEntityList = list.stream()
+        List<StrategyAward> strategyAwardList = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
+        if (strategyAwardList == null || strategyAwardList.isEmpty()) throw new AppException("（查询）StrategyAwardList 不存在：activityId=" + activityId);
+        strategyAwardEntityList = strategyAwardList.stream()
                 .map(strategyAward -> StrategyAwardEntity.builder()
                         .strategyId(strategyAward.getStrategyId())
                         .awardId(strategyAward.getAwardId())
@@ -200,6 +195,7 @@ public class AwardRepository implements IAwardRepository {
         for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
             Long awardId = strategyAwardEntity.getAwardId();
             Award award = awardDao.queryAwardByAwardId(awardId);
+            if (award == null) throw new AppException("（查询）Award 不存在：awardId=" + awardId);
             AwardEntity awardEntity = AwardEntity.builder()
                     .awardId(award.getAwardId())
                     .awardName(award.getAwardName())
@@ -245,7 +241,7 @@ public class AwardRepository implements IAwardRepository {
         ActivityAccountDay activityAccountDay = new ActivityAccountDay();
         activityAccountDay.setUserId(userId);
         activityAccountDay.setActivityId(activityId);
-        activityAccountDay.setDay(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activityAccountDay.setDay(TimeUtil.thisDay(true));
         activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDay);
         if (activityAccountDay == null) return 0;
         return activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus();

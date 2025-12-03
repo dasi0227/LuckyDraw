@@ -17,16 +17,20 @@ public class UpdateStrategyAwardStockJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void updateAwardStock() {
+        StrategyAwardStockEntity awardStock = strategyStock.getQueueValue();
+        if (awardStock == null) {
+            log.debug("【库存】无待更新");
+            return;
+        }
+
+        Long strategyId = awardStock.getStrategyId();
+        Long awardId = awardStock.getAwardId();
+
         try {
-            StrategyAwardStockEntity strategyAwardStockEntity = strategyStock.getQueueValue();
-            if (strategyAwardStockEntity != null) {
-                strategyStock.updateStrategyAwardStock(strategyAwardStockEntity);
-                log.info("【更新策略奖品库存】成功：strategyId={}, awardId={}", strategyAwardStockEntity.getStrategyId(), strategyAwardStockEntity.getAwardId());
-            } else {
-                log.debug("【更新策略奖品库存】无待更新");
-            }
+            strategyStock.updateStrategyAwardStock(awardStock);
+            log.info("【库存】更新成功：strategyId={}, awardId={}", strategyId, awardId);
         } catch (Exception e) {
-            log.error("【更新策略奖品库存】失败：error={}", e.getMessage());
+            log.error("【库存】更新失败：strategyId={}, awardId={}, error={}", strategyId, awardId, e.getMessage());
         }
     }
 

@@ -1,16 +1,17 @@
 package com.dasi.domain.behavior.event;
 
 import com.dasi.domain.behavior.model.type.RewardType;
+import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
+import com.dasi.types.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import javax.annotation.Resource;
 
 @Component
 public class DistributeBehaviorRewardEvent extends BaseEvent<DistributeBehaviorRewardEvent.DistributeBehaviorRewardMessage> {
@@ -23,12 +24,14 @@ public class DistributeBehaviorRewardEvent extends BaseEvent<DistributeBehaviorR
         return topic;
     }
 
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
 
     @Override
     public EventMessage<DistributeBehaviorRewardMessage> buildEventMessage(DistributeBehaviorRewardMessage data) {
         return EventMessage.<DistributeBehaviorRewardMessage>builder()
-                .messageId(RandomStringUtils.randomNumeric(12))
-                .time(LocalDateTime.now())
+                .messageId(uniqueIdGenerator.nextMessageId())
+                .time(TimeUtil.thisTime(true))
                 .data(data)
                 .build();
     }

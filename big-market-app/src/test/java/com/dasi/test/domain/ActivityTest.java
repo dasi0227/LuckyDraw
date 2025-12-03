@@ -61,7 +61,7 @@ public class ActivityTest {
                 RechargeResult rechargeResult = activityRecharge.doSkuRecharge(rechargeContext);
                 log.info("【充值结果】RechargeResult={}", rechargeResult);
             } catch (Exception e) {
-                log.error("【错误栈】", e);
+                log.info("【错误栈】", e);
             }
         }
     }
@@ -79,7 +79,7 @@ public class ActivityTest {
                 RaffleResult raffleResult = activityRaffle.doActivityRaffle(raffleContext);
                 log.info("【抽奖结果】RaffleResult={}", raffleResult);
             } catch (Exception e) {
-                log.error("【错误栈】", e);
+                log.info("【错误栈】", e);
             }
         }
     }

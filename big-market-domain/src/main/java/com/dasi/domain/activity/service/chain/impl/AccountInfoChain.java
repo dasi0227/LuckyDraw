@@ -7,12 +7,11 @@ import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
 import com.dasi.domain.activity.model.entity.ActivityAccountMonthEntity;
 import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
+import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component(ActionModel.ACCOUNT_INFO)
@@ -29,16 +28,16 @@ public class AccountInfoChain extends AbstractActivityChain {
 
         /* ========= 1. 查询总余额 ========= */
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
-        if (activityAccountEntity == null || activityAccountEntity.getTotalSurplus() <= 0) {
-            log.info("【活动责任链】account_info 接管，账户总余额不足：userId={}, activityId={}", userId, activityId);
+        if (activityAccountEntity.getTotalSurplus() <= 0) {
+            log.info("【检查】account_info 拦截（账户总余额不足）：userId={}, activityId={}, surplus={}", userId, activityId, activityAccountEntity.getTotalSurplus());
             return false;
         }
 
         /* ========= 2. 查询月余额 ========= */
-        String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        String month = TimeUtil.thisMonth(true);
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, month);
         if (activityAccountMonthEntity != null && activityAccountMonthEntity.getMonthSurplus() <= 0) {
-            log.info("【活动责任链】account_info 接管，账户月余额不足：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
+            log.info("【检查】account_info 拦截（账户月余额不足）：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
             return false;
         } else if (activityAccountMonthEntity == null) {
             activityAccountMonthEntity = ActivityAccountMonthEntity.builder()
@@ -51,10 +50,10 @@ public class AccountInfoChain extends AbstractActivityChain {
         }
 
         /* ========= 3. 查询日余额 ========= */
-        String day = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String day = TimeUtil.thisDay(true);
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, day);
         if (activityAccountDayEntity != null && activityAccountDayEntity.getDaySurplus() <= 0) {
-            log.info("【活动责任链】account_info 接管，账户日余额不足：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());
+            log.info("【检查】account_info 拦截（账户日余额不足）：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());
             return false;
         } else if (activityAccountDayEntity == null) {
             activityAccountDayEntity = ActivityAccountDayEntity.builder()
@@ -75,7 +74,7 @@ public class AccountInfoChain extends AbstractActivityChain {
                 .activityAccountDayEntity(activityAccountDayEntity)
                 .build();
         actionChainCheckAggregate.setRaffleOrderAggregate(raffleOrderAggregate);
-        log.info("【活动责任链】account_info 放行，账户余额充足：userId={}, activityId={}, total={}, month={}, day={}",
+        log.info("【检查】account_info 放行：userId={}, activityId={}, total={}, month={}, day={}",
                 userId, activityId,
                 activityAccountEntity.getTotalSurplus(), activityAccountEntity.getMonthSurplus(), activityAccountEntity.getDaySurplus());
 

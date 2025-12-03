@@ -60,7 +60,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
             Long awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
-            log.info("【策略责任链】rule_weight 接管：匹配积分={}，awardId={}", matchedThreshold, awardId);
+            log.info("【检查】rule_weight 拦截：weight={}，awardId={}", matchedThreshold, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_WEIGHT)
@@ -69,7 +69,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         }
 
         // 6. 放行走下一条规则
-        log.info("【策略责任链】rule_weight 放行");
+        log.info("【检查】rule_weight 放行");
         return next().logic(userId, strategyId);
     }
 

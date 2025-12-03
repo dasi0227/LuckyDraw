@@ -24,7 +24,10 @@ public class ScanUnsolvedTaskJob {
     private ITaskScan taskScan;
 
     @Resource
-    private ThreadPoolExecutor threadPoolExecutor;
+    private ThreadPoolExecutor scanExecutor;
+
+    @Resource
+    private ThreadPoolExecutor sendExecutor;
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void scanUnsolvedTask() {
@@ -32,32 +35,40 @@ public class ScanUnsolvedTaskJob {
             int dbCount = dbRouter.dbCount();
 
             for (int dbIdx = 1; dbIdx <= dbCount; dbIdx++) {
-                int finalDbIdx = dbIdx;
-                threadPoolExecutor.execute(() -> {
+                final int finalDbIdx = dbIdx;
+
+                scanExecutor.execute(() -> {
                     try {
+                        // 设置当前线程数据库路由
                         dbRouter.setDBKey(finalDbIdx);
                         dbRouter.setTBKey(0);
+
+                        // 查询任务
                         List<TaskEntity> taskEntityList = taskScan.queryUnsolvedTask();
-                        if (taskEntityList.isEmpty()) {
-                            log.debug("【扫描未处理奖品】没有发现：dbIdx={}", finalDbIdx);
+                        if (taskEntityList == null || taskEntityList.isEmpty()) {
+                            log.debug("【扫描】没有发现未处理任务：dbIdx={}", finalDbIdx);
                             return;
                         }
 
                         String messageIds = taskEntityList.stream()
                                 .map(TaskEntity::getMessageId)
                                 .collect(Collectors.joining(","));
-                        log.info("【扫描未处理奖品】发现：dbIdx={}, messageIds={}", finalDbIdx, messageIds);
+                        log.info("【扫描】发现未处理任务：dbIdx={}, messageIds={}", finalDbIdx, messageIds);
 
+                        // 处理每个任务
                         for (TaskEntity taskEntity : taskEntityList) {
-                            threadPoolExecutor.execute(() -> {
+                            sendExecutor.execute(() -> {
                                 try {
+                                    dbRouter.setDBKey(finalDbIdx);
+                                    dbRouter.setTBKey(0);
                                     taskScan.sendMessage(taskEntity);
-                                    log.info("【扫描未处理奖品】成功：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
+                                    log.info("【扫描】重新发送未完成任务成功：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
                                 } catch (Exception e) {
                                     taskEntity.setTaskState(TaskState.FAILED);
                                     taskScan.updateTaskState(taskEntity);
-                                    log.error("【扫描未处理奖品】失败：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
-                                    throw new RuntimeException(e);
+                                    log.error("【扫描】重新发送未完成任务失败：dbIdx={}, topic={}, messageId={}, error={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId(), e.getMessage());
+                                } finally {
+                                    dbRouter.clear();
                                 }
                             });
                         }
@@ -67,10 +78,7 @@ public class ScanUnsolvedTaskJob {
                 });
             }
         } catch (Exception e) {
-            log.error("【扫描未处理奖品】失败：error={}", e.getMessage());
-            throw new RuntimeException(e);
-        } finally {
-            dbRouter.clear();
+            log.error("【扫描】本次任务处理失败：error={}", e.getMessage());
         }
     }
 }

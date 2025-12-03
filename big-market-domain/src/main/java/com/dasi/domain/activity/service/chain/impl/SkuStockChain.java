@@ -28,17 +28,17 @@ public class SkuStockChain extends AbstractActivityChain {
         RechargeSkuEntity rechargeSkuEntity = actionChainCheckAggregate.getRechargeSkuEntity();
 
         if (rechargeSkuEntity.getStockSurplus() <= 0) {
-            log.info("【活动责任链】sku_stock 接管，库存为空：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
             return false;
         }
 
         Long surplus = activityStock.subtractRechargeSkuStock(rechargeSkuEntity.getSkuId(), activityEntity.getActivityEndTime());
         if (surplus == -1L) {
-            log.info("【活动责任链】sku_stock 接管，库存为空：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
             return false;
         }
         if (surplus == -2L) {
-            log.error("【活动责任链】sku_stock 接管，扣减库存失败：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.info("【检查】sku_stock 拦截（扣减失败）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
             return false;
         }
         RechargeSkuStock rechargeSkuStock = RechargeSkuStock.builder()
@@ -46,7 +46,7 @@ public class SkuStockChain extends AbstractActivityChain {
                 .activityId(activityEntity.getActivityId())
                 .build();
         activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStock);
-        log.info("【活动责任链】sku_stock 放行，扣减库存成功：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
+        log.info("【检查】sku_stock 放行：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
 
         return next().action(actionChainCheckAggregate);
     }

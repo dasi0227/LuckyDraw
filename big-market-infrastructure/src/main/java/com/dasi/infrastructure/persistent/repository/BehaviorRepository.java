@@ -22,7 +22,6 @@ import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -69,6 +68,7 @@ public class BehaviorRepository implements IBehaviorRepository {
         behaviorReq.setActivityId(activityId);
         behaviorReq.setBehaviorType(behaviorType.name());
         List<Behavior> behaviorList = behaviorDao.queryBehaviorList(behaviorReq);
+        if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("（查询）BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .behaviorId(behavior.getBehaviorId())
@@ -116,23 +116,18 @@ public class BehaviorRepository implements IBehaviorRepository {
                         task.setTaskState(taskEntity.getTaskState().name());
                         taskDao.saveTask(task);
 
-                    } catch (DuplicateKeyException e) {
-                        status.setRollbackOnly();
-                        log.error("【奖励】保存行为记录失败（唯一约束冲突）：userId={}, orderId={}, error={}", userId, rewardOrderAggregate.getRewardOrderEntity().getOrderId(), e.getMessage());
-                        return false;
                     } catch (Exception e) {
                         status.setRollbackOnly();
-                        log.error("【奖励】保存行为记录失败（未知错误）：userId={}, orderId={}, error={}", userId, rewardOrderAggregate.getRewardOrderEntity().getOrderId(), e.getMessage());
+                        log.error("【返利】保存返利订单时发生错误：error={}", e.getMessage());
                         return false;
                     }
                 }
                 return true;
             });
 
-
-            boolean flag = false;
             if (Boolean.TRUE.equals(success)) {
                 for (RewardOrderAggregate rewardOrderAggregate : rewardOrderAggregateList) {
+                    log.info("【返利】保存返利订单成功：orderId={}", rewardOrderAggregate.getRewardOrderEntity().getOrderId());
                     TaskEntity taskEntity = rewardOrderAggregate.getTaskEntity();
                     Task task = new Task();
                     task.setUserId(taskEntity.getUserId());
@@ -141,20 +136,15 @@ public class BehaviorRepository implements IBehaviorRepository {
                         eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                         task.setTaskState(TaskState.DISTRIBUTED.name());
                         taskDao.updateTaskState(task);
-                        log.error("【奖励】发送行为记录消息成功：messageId={}", taskEntity.getMessageId());
+                        log.info("【返利】发送返利订单消息成功：messageId={}", taskEntity.getMessageId());
                     } catch (Exception e) {
-                        flag = true;
                         task.setTaskState(TaskState.FAILED.name());
                         taskDao.updateTaskState(task);
-                        log.error("【奖励】发送行为记录消息失败：messageId={}", taskEntity.getMessageId());
+                        log.info("【返利】发送返利订单消息失败：messageId={}", taskEntity.getMessageId());
                     }
                 }
             } else {
-                throw new AppException("【奖励】行为触发奖励失败");
-            }
-
-            if (flag) {
-                throw new AppException("【奖励】行为触发奖励失败");
+                throw new AppException("（返利）保存返利订单失败");
             }
 
         } finally {

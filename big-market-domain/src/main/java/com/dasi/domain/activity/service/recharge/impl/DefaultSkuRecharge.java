@@ -10,7 +10,7 @@ import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.chain.ActivityChainFactory;
 import com.dasi.domain.activity.service.chain.IActivityChain;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.dasi.domain.common.IUniqueIdGenerator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 
 @Service
 public class DefaultSkuRecharge extends AbstractSkuRecharge {
+
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
 
     @Resource
     private ActivityChainFactory activityChainFactory;
@@ -33,8 +36,8 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
                 .rechargeSkuEntity(rechargeSkuEntity)
                 .rechargeQuotaEntity(rechargeQuotaEntity)
                 .build();
-        IActivityChain actionChain = activityChainFactory.getRechargeActionChain();
-        return actionChain.action(actionChainCheckAggregate);
+        IActivityChain activityChain = activityChainFactory.getRechargeActionChain();
+        return activityChain.action(actionChainCheckAggregate);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
 
         // 1. 构建订单
         RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
-                .orderId(RandomStringUtils.randomNumeric(12))
+                .orderId(uniqueIdGenerator.nextRechargeOrderId())
                 .bizId(rechargeContext.getBizId())
                 .userId(rechargeContext.getUserId())
                 .skuId(rechargeContext.getSkuId())
