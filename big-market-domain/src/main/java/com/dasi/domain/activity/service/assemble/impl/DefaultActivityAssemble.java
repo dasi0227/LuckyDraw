@@ -31,10 +31,10 @@ public class DefaultActivityAssemble implements IActivityAssemble {
             // 预热信息
             activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
             activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
-            log.info("【活动装配】skuId={}, surplus={}, activityId={}, quotaId={}", skuId, rechargeSkuEntity.getStockSurplus(), rechargeSkuEntity.getActivityId(), rechargeSkuEntity.getQuotaId());
+            log.info("【装配】权益库存：skuId={}, surplus={}, activityId={}, quotaId={}", skuId, rechargeSkuEntity.getStockSurplus(), rechargeSkuEntity.getActivityId(), rechargeSkuEntity.getQuotaId());
             return true;
         } catch (Exception e) {
-            log.error("【活动装配】未知错误：error={}", e.getMessage());
+            log.error("【装配】权益库存：error={}", e.getMessage());
             return false;
         }
     }

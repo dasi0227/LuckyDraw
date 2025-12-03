@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 public abstract class BaseEvent<T> {
 
@@ -20,7 +18,7 @@ public abstract class BaseEvent<T> {
     @AllArgsConstructor
     public static class EventMessage<T> {
         private String messageId;
-        private LocalDateTime time;
+        private String time;
         private T data;
     }
 

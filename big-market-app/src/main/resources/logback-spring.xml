@@ -45,13 +45,13 @@
     </appender>
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./data/log/log_error.log</file>
+        <file>./data/log/log.info.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{4} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./data/log/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>./data/log/log.info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
@@ -83,7 +83,7 @@
 
     <!-- 开发环境下，调低一些三方库日志噪音 -->
     <springProfile name="dev">
-        <logger name="com.zaxxer.hikari" level="WARN"/>
+        <logger name="com.zaxxer.hikari" level="ERROR"/>
         <logger name="org.redisson" level="WARN"/>
         <logger name="io.netty.resolver.dns" level="ERROR"/>
         <logger name="org.springframework.amqp" level="WARN"/>

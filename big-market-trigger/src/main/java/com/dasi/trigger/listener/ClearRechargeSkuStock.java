@@ -25,9 +25,9 @@ public class ClearRechargeSkuStock {
             Long skuId = eventMessage.getData();
             activityStock.clearRechargeSkuStock(skuId);
             activityStock.clearQueueValue();
-            log.info("【监听消息】清空充值权益库存成功：skuId={}", skuId);
+            log.info("【库存】清空充值权益库存成功：skuId={}", skuId);
         } catch (Exception e) {
-            log.info("【监听消息】清空充值权益库存失败：error={}", e.getMessage());
+            log.error("【库存】清空充值权益库存失败：error={}", e.getMessage());
             throw e;
         }
     }

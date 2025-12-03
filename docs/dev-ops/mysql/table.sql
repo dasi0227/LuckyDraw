@@ -10,7 +10,7 @@ CREATE TABLE task
 (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
     user_id     VARCHAR(32)     NOT NULL COMMENT '用户id',
-    message_id  VARCHAR(32)     NOT NULL COMMENT '消息id',
+    message_id  VARCHAR(64)     NOT NULL COMMENT '消息id',
     topic       VARCHAR(32)     NOT NULL COMMENT '消息主题',
     message     VARCHAR(512)    NOT NULL COMMENT '消息主体',
     task_state  VARCHAR(32)     NOT NULL COMMENT '任务状态',
@@ -269,7 +269,7 @@ DROP TABLE IF EXISTS recharge_order;
 CREATE TABLE recharge_order
 (
     id             BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    order_id       VARCHAR(32) UNIQUE NOT NULL COMMENT '充值订单id',
+    order_id       VARCHAR(64) UNIQUE NOT NULL COMMENT '充值订单id',
     biz_id         VARCHAR(32) UNIQUE NOT NULL COMMENT '业务幂等id',
     activity_id    BIGINT             NOT NULL COMMENT '活动id',
     quota_id       BIGINT             NOT NULL COMMENT '定量id',
@@ -294,7 +294,7 @@ DROP TABLE IF EXISTS raffle_order;
 CREATE TABLE raffle_order
 (
     id           BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    order_id     VARCHAR(32) UNIQUE NOT NULL COMMENT '订单id',
+    order_id     VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
     user_id      VARCHAR(32)        NOT NULL COMMENT '用户id',
     activity_id  BIGINT             NOT NULL COMMENT '活动id',
     strategy_id  BIGINT             NOT NULL COMMENT '策略id',
@@ -318,7 +318,7 @@ CREATE TABLE raffle_award
     activity_id BIGINT          NOT NULL COMMENT '活动id',
     award_id    INT             NOT NULL COMMENT '奖品id',
     strategy_id BIGINT          NOT NULL COMMENT '策略id',
-    order_id    VARCHAR(32)     NOT NULL COMMENT '订单id',
+    order_id    VARCHAR(64)     NOT NULL COMMENT '订单id',
     award_name  VARCHAR(32)     NOT NULL COMMENT '奖品标题',
     award_time  DATETIME        NOT NULL COMMENT '中奖时间',
     award_state VARCHAR(32)     NOT NULL COMMENT '奖品发放状态',
@@ -355,7 +355,7 @@ DROP TABLE IF EXISTS reward_order;
 CREATE TABLE IF NOT EXISTS reward_order
 (
     id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    order_id        VARCHAR(32) UNIQUE NOT NULL COMMENT '订单id',
+    order_id        VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
     biz_id          VARCHAR(32) UNIQUE NOT NULL COMMENT '业务id',
     user_id         VARCHAR(32)        NOT NULL COMMENT '用户id',
     behavior_id     BIGINT             NOT NULL COMMENT '行为id',

@@ -3,9 +3,9 @@ package com.dasi.test.domain;
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
+import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.domain.task.service.scan.ITaskScan;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +26,9 @@ public class AwardTest {
     @Resource
     private ITaskScan iTaskScan;
 
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
+
     @Test
     public void testAward() throws InterruptedException {
 
@@ -35,7 +38,7 @@ public class AwardTest {
                 .awardId(2001L)
                 .awardName("测试奖品2001")
                 .strategyId(1001L)
-                .orderId(RandomStringUtils.randomNumeric(12))
+                .orderId(uniqueIdGenerator.nextRaffleOrderId())
                 .build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
         log.info("【中奖】{}", distributeResult);

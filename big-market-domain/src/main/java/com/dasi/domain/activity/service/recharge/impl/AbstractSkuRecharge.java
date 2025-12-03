@@ -28,9 +28,9 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         String userId = rechargeContext.getUserId();
         String bizId = rechargeContext.getBizId();
         Long skuId = rechargeContext.getSkuId();
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(bizId) || skuId == null) {
-            throw new AppException("【用户充值】参数不正确");
-        }
+        if (StringUtils.isBlank(userId)) throw new AppException("（充值）缺少参数 userId");
+        if (StringUtils.isBlank(bizId)) throw new AppException("（充值）缺少参数 bizId");
+        if (skuId == null) throw new AppException("（充值）缺少参数 skuId");
 
         // 2. 查询活动的基础信息
         RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(rechargeContext.getSkuId());
@@ -40,7 +40,7 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         // 3. 活动规则校验
         Boolean available = checkRechargeAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
         if (!available) {
-            throw new AppException("【用户充值】基础信息检测失败");
+            throw new AppException("（充值）基础信息校验失败");
         }
 
         // 4. 充值并保存订单

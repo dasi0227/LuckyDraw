@@ -14,7 +14,6 @@ import com.dasi.types.event.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,9 +21,6 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class DispatchBehaviorReward {
-
-    @Value("${spring.rabbitmq.topic.distribute_behavior_reward}")
-    private String topic;
 
     @Resource
     private ISkuRecharge skuRecharge;
@@ -39,13 +35,14 @@ public class DispatchBehaviorReward {
         DistributeBehaviorRewardMessage distributeBehaviorRewardMessage = eventMessage.getData();
         String userId = distributeBehaviorRewardMessage.getUserId();
         String bizId = distributeBehaviorRewardMessage.getBizId();
+        String orderId = distributeBehaviorRewardMessage.getOrderId();
         RewardType rewardType = distributeBehaviorRewardMessage.getRewardType();
         String rewardValue = distributeBehaviorRewardMessage.getRewardValue();
 
         RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder()
-                .userId(distributeBehaviorRewardMessage.getUserId())
-                .bizId(distributeBehaviorRewardMessage.getBizId())
-                .orderId(distributeBehaviorRewardMessage.getOrderId())
+                .userId(userId)
+                .bizId(bizId)
+                .orderId(orderId)
                 .build();
 
         try {
@@ -57,30 +54,30 @@ public class DispatchBehaviorReward {
                         .bizId(bizId)
                         .skuId(skuId)
                         .build();
+                log.info("【发放】增加抽奖次数：userId={}, rewardType={}, rewardValue={}", userId, rewardType, rewardValue);
                 RechargeResult rechargeResult = skuRecharge.doSkuRecharge(rechargeContext);
-                log.info("【发放奖励】增加用户抽奖次数：orderId={}, total+={}, month+={}, day+={}", rechargeResult.getOrderId(), rechargeResult.getTotalCount(), rechargeResult.getMonthCount(), rechargeResult.getDayCount());
+                log.info("【发放】用户充值成功：userId={}, orderId={}", userId, rechargeResult.getOrderId());
             }
 
             // 3. 处理积分
             if (rewardType.equals(RewardType.POINT)) {
-                Integer point = Integer.valueOf(rewardValue);
-                log.info("【发放奖励】增加用户积分：point={}", point);
+                log.info("【发放】增加积分：userId={}, rewardType={}, rewardValue={}", userId, rewardType, rewardValue);
             }
 
             // 4. 改变状态
             rewardOrderEntity.setRewardState(RewardState.USED);
             int count = behaviorReward.updateRewardOrderState(rewardOrderEntity);
             if (count == 1) {
-                log.info("【发放奖励】成功：userId={}, bizId={}", userId, bizId);
+                log.info("【发放】更新返利订单成功：orderId={}", orderId);
             } else {
                 rewardOrderEntity.setRewardState(RewardState.CANCELLED);
                 behaviorReward.updateRewardOrderState(rewardOrderEntity);
-                log.error("【发放奖励】失败：userId={}, bizId={}", userId, bizId);
+                log.info("【发放】更新返利订单失败：orderId={}", orderId);
             }
         } catch (Exception e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.error("【发放奖励】失败：error={}", e.getMessage());
+            log.error("【发放】获取返利失败：error={}", e.getMessage());
         }
     }
 

@@ -17,16 +17,20 @@ public class UpdateRechargeSkuStockJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void updateRechargeSkuStock() {
+        RechargeSkuStock rechargeSkuStock = activityStock.getQueueValue();
+        if (rechargeSkuStock == null) {
+            log.debug("【库存】无待更新");
+            return;
+        }
+
+        Long skuId = rechargeSkuStock.getSkuId();
+        Long activityId = rechargeSkuStock.getActivityId();
+
         try {
-            RechargeSkuStock rechargeSkuStock = activityStock.getQueueValue();
-            if (rechargeSkuStock != null) {
-                activityStock.updateRechargeSkuStock(rechargeSkuStock.getSkuId());
-                log.info("【更新活动充值权益库存】成功：skuId={}, activityId={}", rechargeSkuStock.getSkuId(), rechargeSkuStock.getActivityId());
-            } else {
-                log.debug("【更新活动充值权益库存】无待更新");
-            }
+            activityStock.updateRechargeSkuStock(skuId);
+            log.info("【库存】更新活动 SKU 成功：skuId={}, activityId={}", skuId, activityId);
         } catch (Exception e) {
-            log.error("【更新活动充值权益库存】失败：error={}", e.getMessage());
+            log.error("【库存】更新活动 SKU 失败：skuId={}, activityId={}, error={}", skuId, activityId, e.getMessage());
         }
     }
 

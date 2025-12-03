@@ -23,8 +23,9 @@ public class TaskRepository implements ITaskRepository {
 
     @Override
     public List<TaskEntity> queryUnsolvedTask() {
-        List<Task> tasks = taskDao.queryUnsolvedTask();
-        return tasks.stream()
+        List<Task> taskList = taskDao.queryUnsolvedTask();
+        if (taskList == null || taskList.isEmpty()) return null;
+        return taskList.stream()
                 .map(task -> TaskEntity.builder()
                         .userId(task.getUserId())
                         .messageId(task.getMessageId())

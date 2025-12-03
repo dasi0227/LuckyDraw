@@ -1,15 +1,16 @@
 package com.dasi.domain.award.event;
 
+import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
+import com.dasi.types.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import javax.annotation.Resource;
 
 @Component
 public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardEvent.DistributeRaffleAwardMessage> {
@@ -22,11 +23,14 @@ public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardE
         return topic;
     }
 
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
+
     @Override
     public EventMessage<DistributeRaffleAwardMessage> buildEventMessage(DistributeRaffleAwardMessage data) {
         return EventMessage.<DistributeRaffleAwardMessage>builder()
-                .messageId(RandomStringUtils.randomNumeric(12))
-                .time(LocalDateTime.now())
+                .messageId(uniqueIdGenerator.nextMessageId())
+                .time(TimeUtil.thisTime(true))
                 .data(data)
                 .build();
     }
