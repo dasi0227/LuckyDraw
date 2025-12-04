@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 public class AccountSurplusSnapshot {
 
     // 来自总账户
-    Integer totalGeneralSurplus;
-    Integer monthGeneralSurplus;
-    Integer dayGeneralSurplus;
+    Integer totalSurplus;
     // 来自月账户
     Integer monthSurplus;
     // 来自日账户

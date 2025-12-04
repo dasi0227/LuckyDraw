@@ -1,11 +1,14 @@
 package com.dasi.domain.behavior.model.entity;
 
+import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.RewardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,8 +25,11 @@ public class RewardOrderEntity {
     /** 用户id */
     private String userId;
 
+    /** 活动id */
+    private Long activityId;
+
     /** 行为id */
-    private Long behaviorId;
+    private BehaviorType behaviorType;
 
     /** 奖励类型 */
     private RewardType rewardType;
@@ -36,5 +42,8 @@ public class RewardOrderEntity {
 
     /** 奖励状态 */
     private String rewardDesc;
+
+    /** 奖励时间 */
+    private LocalDateTime rewardTime;
 
 }

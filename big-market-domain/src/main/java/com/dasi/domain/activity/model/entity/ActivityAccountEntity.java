@@ -23,16 +23,10 @@ public class ActivityAccountEntity {
     /** 总余额 */
     private Integer totalSurplus;
 
-    /** 天分配 */
-    private Integer dayAllocate;
+    /** 天上限 */
+    private Integer dayLimit;
 
-    /** 天余额 */
-    private Integer daySurplus;
-
-    /** 月分配 */
-    private Integer monthAllocate;
-
-    /** 月余额 */
-    private Integer monthSurplus;
+    /** 月上限 */
+    private Integer monthLimit;
 
 }

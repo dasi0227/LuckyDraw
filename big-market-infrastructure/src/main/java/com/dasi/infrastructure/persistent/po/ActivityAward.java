@@ -1,28 +1,21 @@
-package com.dasi.domain.activity.model.entity;
+package com.dasi.infrastructure.persistent.po;
 
-import com.dasi.domain.activity.model.type.AwardState;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class RaffleAwardEntity {
+public class ActivityAward {
+
+    /** 自增id */
+    private Long id;
 
     /** 用户id */
     private String userId;
 
     /** 活动id */
     private Long activityId;
-
-    /** 策略id */
-    private Long strategyId;
-
+    
     /** 订单id */
     private String orderId;
 
@@ -36,6 +29,12 @@ public class RaffleAwardEntity {
     private LocalDateTime awardTime;
 
     /** 奖品发放状态 */
-    private AwardState awardState;
+    private String awardState;
+
+    /** 创建时间 */
+    private LocalDateTime createTime;
+
+    /** 更新时间 */
+    private LocalDateTime updateTime;
 
 }

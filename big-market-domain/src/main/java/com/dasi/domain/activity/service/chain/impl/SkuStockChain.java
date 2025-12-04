@@ -2,8 +2,8 @@ package com.dasi.domain.activity.service.chain.impl;
 
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
-import com.dasi.domain.activity.model.queue.RechargeSkuStock;
+import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
+import com.dasi.domain.activity.model.queue.ActivitySkuStock;
 import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.stock.IActivityStock;
@@ -25,28 +25,28 @@ public class SkuStockChain extends AbstractActivityChain {
     @Override
     public Boolean action(ActionChainCheckAggregate actionChainCheckAggregate) {
         ActivityEntity activityEntity = actionChainCheckAggregate.getActivityEntity();
-        RechargeSkuEntity rechargeSkuEntity = actionChainCheckAggregate.getRechargeSkuEntity();
+        ActivitySkuEntity activitySkuEntity = actionChainCheckAggregate.getActivitySkuEntity();
 
-        if (rechargeSkuEntity.getStockSurplus() <= 0) {
-            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+        if (activitySkuEntity.getStockSurplus() <= 0) {
+            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
             return false;
         }
 
-        Long surplus = activityStock.subtractRechargeSkuStock(rechargeSkuEntity.getSkuId(), activityEntity.getActivityEndTime());
+        Long surplus = activityStock.subtractActivitySkuStock(activitySkuEntity.getSkuId(), activityEntity.getActivityEndTime());
         if (surplus == -1L) {
-            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.info("【检查】sku_stock 拦截（库存为空）：activityId={}, skuId={}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
             return false;
         }
         if (surplus == -2L) {
-            log.info("【检查】sku_stock 拦截（扣减失败）：activityId={}, skuId={}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId());
+            log.info("【检查】sku_stock 拦截（扣减失败）：activityId={}, skuId={}", activityEntity.getActivityId(), activitySkuEntity.getSkuId());
             return false;
         }
-        RechargeSkuStock rechargeSkuStock = RechargeSkuStock.builder()
-                .skuId(rechargeSkuEntity.getSkuId())
+        ActivitySkuStock activitySkuStock = ActivitySkuStock.builder()
+                .skuId(activitySkuEntity.getSkuId())
                 .activityId(activityEntity.getActivityId())
                 .build();
-        activityRepository.sendRechargeSkuStockConsumeToMQ(rechargeSkuStock);
-        log.info("【检查】sku_stock 放行：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), rechargeSkuEntity.getSkuId(), surplus + 1, surplus);
+        activityRepository.sendActivitySkuStockConsumeToMQ(activitySkuStock);
+        log.info("【检查】sku_stock 放行：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
 
         return next().action(actionChainCheckAggregate);
     }

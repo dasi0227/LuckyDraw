@@ -9,55 +9,34 @@
         <result property="activityId"           column="activity_id"/>
         <result property="totalAllocate"        column="total_allocate"/>
         <result property="totalSurplus"         column="total_surplus"/>
-        <result property="dayAllocate"          column="day_allocate"/>
-        <result property="daySurplus"           column="day_surplus"/>
-        <result property="monthAllocate"        column="month_allocate"/>
-        <result property="monthSurplus"         column="month_surplus"/>
+        <result property="dayLimit"             column="day_limit"/>
+        <result property="monthLimit"           column="month_limit"/>
         <result property="createTime"           column="create_time"/>
         <result property="updateTime"           column="update_time"/>
     </resultMap>
 
     <select id="queryActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount" resultMap="dataMap">
-        SELECT user_id, activity_id, total_allocate, total_surplus, day_allocate, day_surplus, month_allocate, month_surplus
+        SELECT user_id, activity_id, total_allocate, total_surplus, month_limit, day_limit
         FROM activity_account
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </select>
 
     <insert id="createActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
-        INSERT INTO activity_account (user_id, activity_id, total_allocate, total_surplus, day_allocate, day_surplus, month_allocate, month_surplus)
-        VALUES (#{userId}, #{activityId}, #{totalAllocate}, #{totalSurplus}, #{dayAllocate}, #{daySurplus}, #{monthAllocate}, #{monthSurplus});
+        INSERT INTO activity_account (user_id, activity_id, total_allocate, total_surplus, month_limit, day_limit)
+        VALUES (#{userId}, #{activityId}, #{totalAllocate}, #{totalSurplus}, #{monthLimit}, #{dayLimit});
     </insert>
 
     <update id="rechargeActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET total_allocate = total_allocate + #{totalAllocate},
-            total_surplus = total_surplus + #{totalSurplus},
-            day_allocate = day_allocate + #{dayAllocate},
-            day_surplus = day_surplus + #{daySurplus},
-            month_allocate = month_allocate + #{monthAllocate},
-            month_surplus = month_surplus + #{monthSurplus}
+            total_surplus = total_surplus + #{totalSurplus}
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>
 
     <update id="subtractActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
-        SET total_surplus = total_surplus - 1,
-            day_surplus = day_surplus - 1,
-            month_surplus = month_surplus - 1
+        SET total_surplus = total_surplus - 1
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </update>
-
-    <update id="updateActivityAccountDaySurplus" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
-        UPDATE activity_account
-        SET day_surplus = #{daySurplus}
-        WHERE user_id = #{userId} AND activity_id = #{activityId};
-    </update>
-
-    <update id="updateActivityAccountMonthSurplus" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
-        UPDATE activity_account
-        SET month_surplus = #{monthSurplus}
-        WHERE user_id = #{userId} AND activity_id = #{activityId};
-    </update>
-
 
 </mapper>

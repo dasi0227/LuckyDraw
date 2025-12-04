@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehaviorSignRequestDTO {
+public class BehaviorRequestDTO {
 
     private String userId;
 
     private Long activityId;
-
-    private String behaviorType;
 
 }

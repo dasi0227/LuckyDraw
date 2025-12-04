@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RechargeContext {
 
+    private String bizId;
+
     private String userId;
 
     private Long skuId;
 
-    private String bizId;
 
 }

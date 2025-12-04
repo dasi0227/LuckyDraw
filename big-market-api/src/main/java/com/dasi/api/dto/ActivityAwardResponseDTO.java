@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AwardListResponseDTO {
+public class ActivityAwardResponseDTO {
 
     /** 奖品ID */
     private Long awardId;

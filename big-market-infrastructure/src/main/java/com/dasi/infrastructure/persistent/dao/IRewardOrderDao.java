@@ -14,4 +14,7 @@ public interface IRewardOrderDao {
     @DBRouter
     int updateRewardOrderState(RewardOrder rewardOrder);
 
+    @DBRouter
+    RewardOrder querySign(RewardOrder rewardOrderReq);
+
 }

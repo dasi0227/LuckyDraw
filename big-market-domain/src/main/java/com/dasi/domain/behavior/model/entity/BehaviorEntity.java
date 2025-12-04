@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BehaviorEntity {
 
-    /** 行为id */
-    private Long behaviorId;
-
     /** 活动id */
     private Long activityId;
 

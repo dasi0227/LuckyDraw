@@ -1,21 +1,18 @@
 package com.dasi.domain.activity.repository;
 
-import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.*;
-import com.dasi.domain.activity.model.queue.RechargeSkuStock;
+import com.dasi.domain.activity.model.queue.ActivitySkuStock;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IActivityRepository {
 
-    RechargeSkuEntity queryRechargeSkuBySkuId(Long skuId);
+    ActivitySkuEntity queryRechargeSkuBySkuId(Long skuId);
 
     ActivityEntity queryActivityByActivityId(Long activityId);
 
-    RechargeQuotaEntity queryRechargeQuotaByQuotaId(Long quotaId);
-
-    ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
+    ActivityAccountEntity queryActivityAccountByActivityId(String userId, Long activityId);
 
     ActivityAccountMonthEntity queryActivityAccountMonth(String userId, Long activityId, String month);
 
@@ -27,9 +24,9 @@ public interface IActivityRepository {
 
     Long subtractRechargeSkuStockSurplus(Long skuId, LocalDateTime activityEndTime);
 
-    void sendRechargeSkuStockConsumeToMQ(RechargeSkuStock rechargeSkuStock);
+    void sendActivitySkuStockConsumeToMQ(ActivitySkuStock activitySkuStock);
 
-    RechargeSkuStock getQueueValue();
+    ActivitySkuStock getQueueValue();
 
     void clearQueueValue();
 
@@ -37,10 +34,12 @@ public interface IActivityRepository {
 
     void clearRechargeSkuStock(Long skuId);
 
-    void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate);
+    void saveRaffleOrder(RaffleOrderEntity raffleOrderEntity);
 
     void saveRechargeOrder(RechargeOrderEntity rechargeOrderEntity);
 
-    List<RechargeSkuEntity> queryRechargeSkuByActivityId(Long activityId);
+    List<ActivitySkuEntity> queryRechargeSkuByActivityId(Long activityId);
+
+    void createActivityAccountIfAbsent(String userId, Long activityId);
 
 }

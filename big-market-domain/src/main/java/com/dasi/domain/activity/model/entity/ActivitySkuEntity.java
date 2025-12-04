@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RechargeSkuEntity {
+public class ActivitySkuEntity {
 
     /** 库存id */
     private Long skuId;
@@ -19,7 +19,7 @@ public class RechargeSkuEntity {
     private Long activityId;
 
     /** 定量id */
-    private Long quotaId;
+    private Integer count;
 
     /** 库存分配 */
     private Integer stockAllocate;

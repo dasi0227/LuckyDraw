@@ -14,6 +14,6 @@ public interface IActivityAccountMonthDao {
 
     void createActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
-    int rechargeActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
+    void rechargeActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
 }

@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.assemble.impl;
 
-import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
 import lombok.extern.slf4j.Slf4j;
@@ -18,20 +18,19 @@ public class DefaultActivityAssemble implements IActivityAssemble {
 
     @Override
     public boolean assembleRechargeSkuStockByActivityId(Long activityId) {
-        List<RechargeSkuEntity> rechargeSkuEntityList = activityRepository.queryRechargeSkuByActivityId(activityId);
-        return rechargeSkuEntityList.stream().allMatch(rechargeSkuEntity -> assembleRechargeSkuStockBySkuId(rechargeSkuEntity.getSkuId()));
+        List<ActivitySkuEntity> activitySkuEntityList = activityRepository.queryRechargeSkuByActivityId(activityId);
+        return activitySkuEntityList.stream().allMatch(rechargeSkuEntity -> assembleRechargeSkuStockBySkuId(rechargeSkuEntity.getSkuId()));
     }
 
     @Override
     public boolean assembleRechargeSkuStockBySkuId(Long skuId) {
         try {
             // 装配库存
-            RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(skuId);
-            activityRepository.cacheRechargeSkuStockSurplus(skuId, rechargeSkuEntity.getStockSurplus());
+            ActivitySkuEntity activitySkuEntity = activityRepository.queryRechargeSkuBySkuId(skuId);
+            activityRepository.cacheRechargeSkuStockSurplus(skuId, activitySkuEntity.getStockSurplus());
             // 预热信息
-            activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
-            activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
-            log.info("【装配】权益库存：skuId={}, surplus={}, activityId={}, quotaId={}", skuId, rechargeSkuEntity.getStockSurplus(), rechargeSkuEntity.getActivityId(), rechargeSkuEntity.getQuotaId());
+            activityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
+            log.info("【装配】权益库存：activityId={}, skuId={}, surplus={}", activitySkuEntity.getActivityId(), skuId, activitySkuEntity.getStockSurplus());
             return true;
         } catch (Exception e) {
             log.error("【装配】权益库存：error={}", e.getMessage());

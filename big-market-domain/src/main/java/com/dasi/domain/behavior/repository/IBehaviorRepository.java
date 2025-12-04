@@ -15,4 +15,5 @@ public interface IBehaviorRepository {
 
     List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType);
 
+    Boolean querySign(String userId, Long activityId);
 }

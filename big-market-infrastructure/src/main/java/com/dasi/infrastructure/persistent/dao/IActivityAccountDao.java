@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface IActivityAccountDao {
-    int rechargeActivityAccount(ActivityAccount activityAccount);
+    void rechargeActivityAccount(ActivityAccount activityAccount);
 
     void createActivityAccount(ActivityAccount activityAccount);
 
@@ -14,9 +14,5 @@ public interface IActivityAccountDao {
 
     @DBRouter
     ActivityAccount queryActivityAccount(ActivityAccount activityAccount);
-
-    void updateActivityAccountDaySurplus(ActivityAccount activityAccount);
-
-    void updateActivityAccountMonthSurplus(ActivityAccount activityAccount);
 
 }

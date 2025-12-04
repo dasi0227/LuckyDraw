@@ -6,14 +6,10 @@
         <id     property="id"                   column="id"/>
         <result property="orderId"              column="order_id"/>
         <result property="bizId"                column="biz_id"/>
-        <result property="activityId"           column="activity_id"/>
-        <result property="quotaId"              column="quota_id"/>
-        <result property="strategyId"           column="strategy_id"/>
         <result property="userId"               column="user_id"/>
+        <result property="activityId"           column="activity_id"/>
         <result property="skuId"                column="sku_id"/>
-        <result property="totalCount"           column="total_count"/>
-        <result property="monthCount"           column="month_count"/>
-        <result property="dayCount"             column="day_count"/>
+        <result property="count"                column="count"/>
         <result property="rechargeState"        column="recharge_state"/>
         <result property="rechargeTime"         column="recharge_time"/>
         <result property="createTime"           column="create_time"/>
@@ -21,9 +17,8 @@
     </resultMap>
 
     <insert id="saveRechargeOrder" parameterType="com.dasi.infrastructure.persistent.po.RechargeOrder">
-        INSERT
-        INTO recharge_order (order_id, biz_id, activity_id, quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, recharge_state, recharge_time)
-        VALUES (#{orderId}, #{bizId}, #{activityId}, #{quotaId}, #{strategyId}, #{userId}, #{skuId}, #{totalCount}, #{monthCount}, #{dayCount}, #{rechargeState}, #{rechargeTime});
+        INSERT INTO recharge_order (order_id, biz_id, activity_id, user_id, sku_id, count, recharge_state, recharge_time)
+        VALUES (#{orderId}, #{bizId}, #{activityId}, #{userId}, #{skuId}, #{count}, #{rechargeState}, #{rechargeTime})
     </insert>
 
     <update id="updateRechargeState" parameterType="com.dasi.infrastructure.persistent.po.RechargeOrder">
@@ -33,7 +28,7 @@
     </update>
 
     <select id="queryRechargeOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
-        SELECT order_id, biz_id, activity_id, quota_id, strategy_id, user_id, sku_id, total_count, month_count, day_count, recharge_state, recharge_time
+        SELECT order_id, biz_id, activity_id, user_id, sku_id, count, recharge_state, recharge_time
         FROM recharge_order
         WHERE user_id = #{userId};
     </select>

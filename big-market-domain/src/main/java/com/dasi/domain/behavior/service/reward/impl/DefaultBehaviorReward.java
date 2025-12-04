@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,30 +46,32 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
     }
 
     @Override
-    protected List<RewardOrderEntity> saveRewardOrder(String userId, String businessNo, List<BehaviorEntity> behaviorEntityList) {
+    protected List<RewardOrderEntity> saveRewardOrder(Long activityId, String userId, String businessNo, List<BehaviorEntity> behaviorEntityList) {
         List<RewardOrderEntity> rewardOrderEntityList = new ArrayList<>();
         List<RewardOrderAggregate> rewardOrderAggregateList = new ArrayList<>();
 
         for (BehaviorEntity behaviorEntity : behaviorEntityList) {
             // 0. 检查是否可用
             if (behaviorEntity.getBehaviorState().equals(BehaviorState.UNAVAILABLE)) {
-                log.info("【返利】行为触发不可用：behaviorId={}, behavior_type={}, behavior_state={}", behaviorEntity.getBehaviorId(), behaviorEntity.getBehaviorType(), behaviorEntity.getBehaviorState());
+                log.info("【返利】行为触发不可用：activityId={}, behavior_type={}, behavior_state={}", activityId, behaviorEntity.getBehaviorType(), behaviorEntity.getBehaviorState());
                 continue;
             }
 
             // 1. 构造业务ID
-            String bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + behaviorEntity.getBehaviorId();
+            String bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + behaviorEntity.getBehaviorType() + Delimiter.UNDERSCORE + behaviorEntity.getRewardType() + Delimiter.UNDERSCORE + behaviorEntity.getRewardValue();
 
             // 2. 构造订单实体
             RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder()
                         .orderId(uniqueIdGenerator.nextRewardOrderId())
                         .bizId(bizId)
                         .userId(userId)
-                        .behaviorId(behaviorEntity.getBehaviorId())
+                        .activityId(behaviorEntity.getActivityId())
+                        .behaviorType(behaviorEntity.getBehaviorType())
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .rewardState(RewardState.CREATED)
                         .rewardDesc(behaviorEntity.getRewardDesc())
+                        .rewardTime(LocalDateTime.now())
                         .build();
             rewardOrderEntityList.add(rewardOrderEntity);
 

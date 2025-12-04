@@ -11,4 +11,5 @@ public interface IActivityDao {
     Long queryStrategyIdByActivityId(Long activityId);
 
     Long queryActivityIdByStrategyId(Long strategyId);
+
 }

@@ -37,7 +37,8 @@ public class UniqueIdGenerator implements IUniqueIdGenerator {
         String date = TimeUtil.thisDay(false);
         String cacheKey = RedisKey.PREFIX + type + Delimiter.COLON + date;
         long seq = redisService.incr(cacheKey);
-        return type.substring(0, 3)
+        return type
+                + "-"
                 + date
                 + "-"
                 + String.format("%06d", seq)
