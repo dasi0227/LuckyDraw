@@ -1,6 +1,6 @@
 package com.dasi.trigger.job;
 
-import com.dasi.domain.activity.model.queue.RechargeSkuStock;
+import com.dasi.domain.activity.model.queue.ActivitySkuStock;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,14 +17,14 @@ public class UpdateRechargeSkuStockJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void updateRechargeSkuStock() {
-        RechargeSkuStock rechargeSkuStock = activityStock.getQueueValue();
-        if (rechargeSkuStock == null) {
+        ActivitySkuStock activitySkuStock = activityStock.getQueueValue();
+        if (activitySkuStock == null) {
             log.debug("【库存】无待更新");
             return;
         }
 
-        Long skuId = rechargeSkuStock.getSkuId();
-        Long activityId = rechargeSkuStock.getActivityId();
+        Long skuId = activitySkuStock.getSkuId();
+        Long activityId = activitySkuStock.getActivityId();
 
         try {
             activityStock.updateRechargeSkuStock(skuId);

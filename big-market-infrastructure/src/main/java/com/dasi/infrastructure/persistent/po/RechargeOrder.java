@@ -19,26 +19,14 @@ public class RechargeOrder {
     /** 活动id */
     private Long activityId;
 
-    /** 定量id */
-    private Long quotaId;
-
-    /** 策略id */
-    private Long strategyId;
-
     /** 用户id */
     private String userId;
 
     /** 库存id */
     private Long skuId;
 
-    /** 本次下单获得的总次数 */
-    private Integer totalCount;
-
-    /** 本次下单获得的月次数 */
-    private Integer monthCount;
-
-    /** 本次下单获得的日次数 */
-    private Integer dayCount;
+    /** 本次下单获得的次数 */
+    private Integer count;
 
     /** 订单状态 */
     private String rechargeState;

@@ -1,6 +1,5 @@
 package com.dasi.domain.activity.service.raffle.impl;
 
-import com.dasi.domain.activity.model.aggregate.RaffleOrderAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
 import com.dasi.domain.activity.model.io.RaffleContext;
@@ -39,12 +38,12 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
 
         // 2. 活动与用户校验
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
-        RaffleOrderAggregate raffleOrderAggregate = checkRaffleAvailable(userId, activityEntity);
-        if (raffleOrderAggregate == null) {
+        Boolean available = checkRaffleAvailable(userId, activityEntity);
+        if (Boolean.FALSE.equals(available)) {
             throw new AppException("（抽奖）基础信息校验失败");
         }
 
-        // 3. 查询还未执行完成的抽奖
+        // 3. 查询还未执行完成的抽奖，如果没有则新建
         RaffleOrderEntity raffleOrderEntity = activityRepository.queryUnusedRaffleOrder(userId, activityId);
         if (raffleOrderEntity != null) {
             log.info("【抽奖】存在未完成的抽奖：orderId={}, raffle_state={}", raffleOrderEntity.getOrderId(), raffleOrderEntity.getRaffleState());
@@ -64,8 +63,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         }
 
         // 4. 保存订单
-        raffleOrderAggregate.setRaffleOrderEntity(raffleOrderEntity);
-        saveRaffleOrder(raffleOrderAggregate);
+        saveRaffleOrder(raffleOrderEntity);
 
         return RaffleResult.builder()
                 .orderId(raffleOrderEntity.getOrderId())
@@ -73,8 +71,8 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
                 .build();
     }
 
-    protected abstract void saveRaffleOrder(RaffleOrderAggregate raffleOrderAggregate);
+    protected abstract void saveRaffleOrder(RaffleOrderEntity raffleOrderEntity);
 
-    protected abstract RaffleOrderAggregate checkRaffleAvailable(String userId, ActivityEntity activityEntity);
+    protected abstract Boolean checkRaffleAvailable(String userId, ActivityEntity activityEntity);
 
 }

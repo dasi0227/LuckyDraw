@@ -10,7 +10,6 @@ import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
-import com.dasi.types.util.TimeUtil;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
@@ -25,10 +24,7 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -61,7 +57,7 @@ public class StrategyRepository implements IStrategyRepository {
     private IActivityDao activityDao;
 
     @Resource
-    private IActivityAccountDayDao activityAccountDayDao;
+    private IActivityAccountDao activityAccountDao;
 
     @Resource
     private IRedisService redisService;
@@ -95,15 +91,32 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public int queryUserLotteryCount(String userId, Long strategyId) {
-        Long activityId = queryActivityIdByStrategyId(strategyId);
-        ActivityAccountDay activityAccountDay = new ActivityAccountDay();
-        activityAccountDay.setUserId(userId);
-        activityAccountDay.setActivityId(activityId);
-        activityAccountDay.setDay(TimeUtil.thisDay(true));
-        activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDay);
-        if (activityAccountDay == null) return 0;
-        return activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus();
+    public int queryUserLotteryCountByActivityId(String userId, Long activityId) {
+        Long strategyId = queryStrategyIdByActivityId(activityId);
+        return queryUserLotteryCountByStrategyId(userId, strategyId);
+    }
+
+
+    // TODO：这里用总账户的分配 - 剩余来计算 LOCK 次数，因此这里必须确保账户已经存在
+    @Override
+    public int queryUserLotteryCountByStrategyId(String userId, Long strategyId) {
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(userId);
+        activityAccount.setActivityId(strategyId);
+        activityAccount = activityAccountDao.queryActivityAccount(activityAccount);
+        if (activityAccount == null) return 0;
+        return activityAccount.getTotalAllocate() - activityAccount.getTotalSurplus();
+    }
+
+    @Override
+    public List<StrategyAwardEntity> queryStrategyAwardListByActivityId(Long activityId) {
+        Long strategyId = redisService.getValue(RedisKey.STRATEGY_ID_KEY + activityId);
+        if (strategyId == null) {
+            strategyId = activityDao.queryStrategyIdByActivityId(activityId);
+        }
+        if (strategyId == null) throw new AppException("（查询）StrategyId 不存在：activityId=" + activityId);
+
+        return queryStrategyAwardListByStrategyId(strategyId);
     }
 
     @Override
@@ -306,6 +319,62 @@ public class StrategyRepository implements IStrategyRepository {
         // 5. 缓存后返回
         redisService.setValue(cacheKey, ruleTreeVO);
         return ruleTreeVO;
+    }
+
+    @Override
+    public Map<String, AwardEntity> queryAwardMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId) {
+        // 先查缓存
+        String cacheKey = RedisKey.AWARD_MAP_KEY + activityId;
+        Map<String, AwardEntity> awardEntityMap = redisService.getValue(cacheKey);
+        if (awardEntityMap != null && !awardEntityMap.isEmpty()) {
+            return awardEntityMap;
+        }
+
+        // 再查数据库
+        awardEntityMap = new HashMap<>();
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
+            Long awardId = strategyAwardEntity.getAwardId();
+            Award award = awardDao.queryAwardByAwardId(awardId);
+            if (award == null) throw new AppException("（查询）Award 不存在：awardId=" + awardId);
+            AwardEntity awardEntity = AwardEntity.builder()
+                    .awardId(award.getAwardId())
+                    .awardName(award.getAwardName())
+                    .awardConfig(award.getAwardConfig())
+                    .awardDesc(award.getAwardDesc())
+                    .build();
+            awardEntityMap.put(String.valueOf(awardId), awardEntity);
+        }
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, awardEntityMap);
+        return awardEntityMap;
+    }
+
+    @Override
+    public Map<String, Integer> queryRuleLockLimitMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId) {
+        // 先查缓存
+        String cacheKey = RedisKey.RULE_LOCK_LIMIT_MAP_KEY + activityId;
+        Map<String, Integer> ruleLockLimitMap = redisService.getValue(cacheKey);
+        if (ruleLockLimitMap != null && !ruleLockLimitMap.isEmpty()) {
+            return ruleLockLimitMap;
+        }
+
+        // 再查数据库
+        ruleLockLimitMap = new HashMap<>();
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
+            Long awardId = strategyAwardEntity.getAwardId();
+            String treeId = strategyAwardEntity.getTreeId();
+            if (StringUtils.isBlank(treeId)) {
+                ruleLockLimitMap.put(String.valueOf(awardId), 0);
+            } else {
+                Integer lockCount = ruleNodeDao.queryRuleLockLimitByTreeId(treeId);
+                ruleLockLimitMap.put(String.valueOf(awardId), lockCount == null ? 0 : lockCount);
+            }
+        }
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, ruleLockLimitMap);
+        return ruleLockLimitMap;
     }
 
     @Override

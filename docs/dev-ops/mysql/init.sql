@@ -27,8 +27,7 @@ VALUES (1001, 'rule_blacklist', '2004:dasi', '黑名单：dasi'),
 
 DROP TABLE IF EXISTS strategy_award;
 CREATE TABLE strategy_award LIKE big_market_table.strategy_award;
-INSERT INTO strategy_award (strategy_id, award_id, tree_id, award_title, award_allocate, award_surplus, award_rate,
-                            award_index)
+INSERT INTO strategy_award (strategy_id, award_id, tree_id, award_title, award_allocate, award_surplus, award_rate, award_index)
 VALUES (1001, 2001, 'tree_stock', '【测试策略1001测试奖品2001】普通奖品，走tree_stock', 15, 15, 0.1500, 1),
        (1001, 2002, 'tree_stock', '【测试策略1001测试奖品2002】普通奖品，走tree_stock', 80, 80, 0.8000, 2),
        (1001, 2003, 'tree_lock', '【测试策略1001测试奖品2003】稀有奖品，走tree_stock', 5, 5, 0.0500, 3);
@@ -61,28 +60,22 @@ CREATE TABLE activity LIKE big_market_table.activity;
 INSERT INTO activity (activity_id, strategy_id, activity_name, activity_desc, activity_state, activity_begin_time, activity_end_time)
 VALUES (10001, 1001, '测试活动', '测试活动描述', 'UNDERWAY', '2025-11-25 00:00:00', '2025-12-25 00:00:00');
 
-DROP TABLE IF EXISTS recharge_quota;
-CREATE TABLE recharge_quota LIKE big_market_table.recharge_quota;
-INSERT INTO recharge_quota (quota_id, total_count, month_count, day_count)
-VALUES (20001, 2, 1, 1),
-       (20002, 3, 3, 3);
-
-DROP TABLE IF EXISTS recharge_sku;
-CREATE TABLE recharge_sku LIKE big_market_table.recharge_sku;
-INSERT INTO recharge_sku (sku_id, activity_id, quota_id, stock_allocate, stock_surplus)
-VALUES (30001, 10001, 20001, 100, 100),
-       (30002, 10001, 20002, 100, 100);
+DROP TABLE IF EXISTS activity_sku;
+CREATE TABLE activity_sku LIKE big_market_table.activity_sku;
+INSERT INTO activity_sku (sku_id, activity_id, count, stock_allocate, stock_surplus)
+VALUES (30001, 10001, 1, 100, 100),
+       (30002, 10001, 3, 100, 100);
 
 DROP TABLE IF EXISTS behavior;
 CREATE TABLE behavior LIKE big_market_table.behavior;
 INSERT INTO behavior
-(behavior_id, activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc)
-VALUES (100001, 10001, 'SIGN', 'AVAILABLE', 'SKU', '30001', '签到：获得抽奖次数（2，1，1）'),
-       (100002, 10001, 'SIGN', 'AVAILABLE', 'POINT', '2', '签到：获得 2 积分'),
-       (100003, 10001, 'LIKE', 'AVAILABLE', 'POINT', '1', '点赞：获得 1 积分'),
-       (100004, 10001, 'COMMENT', 'AVAILABLE', 'POINT', '5', '评论：获得 5 积分'),
-       (100005, 10001, 'SHARE', 'AVAILABLE', 'SKU', '30002', '转发：获得抽奖次数（3，3，3）'),
-       (100006, 10001, 'SHARE', 'AVAILABLE', 'POINT', '5', '转发：获得 5 积分');
+(activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc)
+VALUES (10001, 'SIGN', 'AVAILABLE', 'SKU', '30001', '签到：获得抽奖次数（2，1，1）'),
+       (10001, 'SIGN', 'AVAILABLE', 'POINT', '2', '签到：获得 2 积分'),
+       (10001, 'LIKE', 'AVAILABLE', 'POINT', '1', '点赞：获得 1 积分'),
+       (10001, 'COMMENT', 'AVAILABLE', 'POINT', '5', '评论：获得 5 积分'),
+       (10001, 'SHARE', 'AVAILABLE', 'SKU', '30002', '转发：获得抽奖次数（3，3，3）'),
+       ( 10001, 'SHARE', 'AVAILABLE', 'POINT', '5', '转发：获得 5 积分');
 
 /* =============
 分库 big_market_01
@@ -101,14 +94,14 @@ CREATE TABLE activity_account_day LIKE big_market_table.activity_account_day;
 DROP TABLE IF EXISTS activity_account_month;
 CREATE TABLE activity_account_month LIKE big_market_table.activity_account_month;
 -- 中奖
-DROP TABLE IF EXISTS raffle_award_000;
-CREATE TABLE IF NOT EXISTS raffle_award_000 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_001;
-CREATE TABLE IF NOT EXISTS raffle_award_001 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_002;
-CREATE TABLE IF NOT EXISTS raffle_award_002 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_003;
-CREATE TABLE IF NOT EXISTS raffle_award_003 LIKE big_market_table.raffle_award;
+DROP TABLE IF EXISTS activity_award_000;
+CREATE TABLE IF NOT EXISTS activity_award_000 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_001;
+CREATE TABLE IF NOT EXISTS activity_award_001 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_002;
+CREATE TABLE IF NOT EXISTS activity_award_002 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_003;
+CREATE TABLE IF NOT EXISTS activity_award_003 LIKE big_market_table.activity_award;
 -- 充值
 DROP TABLE IF EXISTS recharge_order_000;
 CREATE TABLE IF NOT EXISTS recharge_order_000 LIKE big_market_table.recharge_order;
@@ -154,14 +147,14 @@ CREATE TABLE activity_account_day LIKE big_market_table.activity_account_day;
 DROP TABLE IF EXISTS activity_account_month;
 CREATE TABLE activity_account_month LIKE big_market_table.activity_account_month;
 -- 中奖
-DROP TABLE IF EXISTS raffle_award_000;
-CREATE TABLE IF NOT EXISTS raffle_award_000 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_001;
-CREATE TABLE IF NOT EXISTS raffle_award_001 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_002;
-CREATE TABLE IF NOT EXISTS raffle_award_002 LIKE big_market_table.raffle_award;
-DROP TABLE IF EXISTS raffle_award_003;
-CREATE TABLE IF NOT EXISTS raffle_award_003 LIKE big_market_table.raffle_award;
+DROP TABLE IF EXISTS activity_award_000;
+CREATE TABLE IF NOT EXISTS activity_award_000 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_001;
+CREATE TABLE IF NOT EXISTS activity_award_001 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_002;
+CREATE TABLE IF NOT EXISTS activity_award_002 LIKE big_market_table.activity_award;
+DROP TABLE IF EXISTS activity_award_003;
+CREATE TABLE IF NOT EXISTS activity_award_003 LIKE big_market_table.activity_award;
 -- 充值
 DROP TABLE IF EXISTS recharge_order_000;
 CREATE TABLE IF NOT EXISTS recharge_order_000 LIKE big_market_table.recharge_order;

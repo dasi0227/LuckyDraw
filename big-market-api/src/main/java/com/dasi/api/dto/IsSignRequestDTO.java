@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehaviorSignResponseDTO {
+public class IsSignRequestDTO {
 
-    private List<String> rewardDescList;
+    private Long activityId;
+
+    private String userId;
 
 }

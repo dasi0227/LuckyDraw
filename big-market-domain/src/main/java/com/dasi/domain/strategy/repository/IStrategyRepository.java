@@ -1,6 +1,5 @@
 package com.dasi.domain.strategy.repository;
 
-
 import com.dasi.domain.strategy.model.entity.*;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 
@@ -16,7 +15,9 @@ public interface IStrategyRepository {
 
     Long queryActivityIdByStrategyId(Long strategyId);
 
-    int queryUserLotteryCount(String userId, Long strategyId);
+    int queryUserLotteryCountByActivityId(String userId, Long activityId);
+
+    int queryUserLotteryCountByStrategyId(String userId, Long strategyId);
 
     StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
 
@@ -47,4 +48,10 @@ public interface IStrategyRepository {
     void updateStrategyAwardStock(Long strategyId, Long awardId);
 
     LocalDateTime queryActivityEndTimeByStrategyId(Long strategyId);
+
+    List<StrategyAwardEntity> queryStrategyAwardListByActivityId(Long activityId);
+
+    Map<String, AwardEntity> queryAwardMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId);
+
+    Map<String, Integer> queryRuleLockLimitMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId);
 }

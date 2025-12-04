@@ -17,7 +17,7 @@ public class ActivityAccountMonth {
     private String userId;
 
     /** yyyy-mm */
-    private String month;
+    private String monthKey;
 
     /** 月次数 */
     private Integer monthAllocate;

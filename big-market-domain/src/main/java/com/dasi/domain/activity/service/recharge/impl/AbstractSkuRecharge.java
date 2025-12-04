@@ -4,8 +4,7 @@ import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
 import com.dasi.domain.activity.model.io.RechargeContext;
 import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
-import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
-import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.recharge.ISkuRecharge;
 import com.dasi.types.exception.AppException;
@@ -33,28 +32,28 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         if (skuId == null) throw new AppException("（充值）缺少参数 skuId");
 
         // 2. 查询活动的基础信息
-        RechargeSkuEntity rechargeSkuEntity = activityRepository.queryRechargeSkuBySkuId(rechargeContext.getSkuId());
-        ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(rechargeSkuEntity.getActivityId());
-        RechargeQuotaEntity rechargeQuotaEntity = activityRepository.queryRechargeQuotaByQuotaId(rechargeSkuEntity.getQuotaId());
+        ActivitySkuEntity activitySkuEntity = activityRepository.queryRechargeSkuBySkuId(rechargeContext.getSkuId());
+        ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
 
         // 3. 活动规则校验
-        Boolean available = checkRechargeAvailable(rechargeSkuEntity, activityEntity, rechargeQuotaEntity);
-        if (!available) {
+        Boolean available = checkRechargeAvailable(activitySkuEntity, activityEntity);
+        if (Boolean.FALSE.equals(available)) {
             throw new AppException("（充值）基础信息校验失败");
         }
 
-        // 4. 充值并保存订单
-        RechargeOrderEntity rechargeOrderEntity = createRechargeOrder(rechargeContext, activityEntity, rechargeQuotaEntity);
+        // 4. 创建账户
+        activityRepository.createActivityAccountIfAbsent(userId, activityEntity.getActivityId());
+
+        // 5. 充值并保存订单
+        RechargeOrderEntity rechargeOrderEntity = createRechargeOrder(rechargeContext, activitySkuEntity);
         return RechargeResult.builder()
                 .orderId(rechargeOrderEntity.getOrderId())
-                .totalCount(rechargeOrderEntity.getTotalCount())
-                .monthCount(rechargeOrderEntity.getMonthCount())
-                .dayCount(rechargeOrderEntity.getDayCount())
+                .count(rechargeOrderEntity.getCount())
                 .build();
     }
 
-    protected abstract RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
+    protected abstract RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activityEntity);
 
-    protected abstract Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity);
+    protected abstract Boolean checkRechargeAvailable(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity);
 
 }

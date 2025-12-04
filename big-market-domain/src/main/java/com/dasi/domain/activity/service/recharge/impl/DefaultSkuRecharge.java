@@ -3,8 +3,7 @@ package com.dasi.domain.activity.service.recharge.impl;
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
-import com.dasi.domain.activity.model.entity.RechargeQuotaEntity;
-import com.dasi.domain.activity.model.entity.RechargeSkuEntity;
+import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.model.io.RechargeContext;
 import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.repository.IActivityRepository;
@@ -30,33 +29,28 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
     }
 
     @Override
-    public Boolean checkRechargeAvailable(RechargeSkuEntity rechargeSkuEntity, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    public Boolean checkRechargeAvailable(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity) {
         ActionChainCheckAggregate actionChainCheckAggregate = ActionChainCheckAggregate.builder()
                 .activityEntity(activityEntity)
-                .rechargeSkuEntity(rechargeSkuEntity)
-                .rechargeQuotaEntity(rechargeQuotaEntity)
+                .activitySkuEntity(activitySkuEntity)
                 .build();
         IActivityChain activityChain = activityChainFactory.getRechargeActionChain();
         return activityChain.action(actionChainCheckAggregate);
     }
 
     @Override
-    protected RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivityEntity activityEntity, RechargeQuotaEntity rechargeQuotaEntity) {
+    protected RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activitySkuEntity) {
 
         // 1. 构建订单
         RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
                 .orderId(uniqueIdGenerator.nextRechargeOrderId())
                 .bizId(rechargeContext.getBizId())
+                .activityId(activitySkuEntity.getActivityId())
                 .userId(rechargeContext.getUserId())
                 .skuId(rechargeContext.getSkuId())
-                .activityId(activityEntity.getActivityId())
-                .quotaId(rechargeQuotaEntity.getQuotaId())
-                .strategyId(activityEntity.getStrategyId())
-                .totalCount(rechargeQuotaEntity.getTotalCount())
-                .monthCount(rechargeQuotaEntity.getMonthCount())
-                .dayCount(rechargeQuotaEntity.getDayCount())
-                .rechargeTime(LocalDateTime.now())
+                .count(activitySkuEntity.getCount())
                 .rechargeState(RechargeState.CREATED)
+                .rechargeTime(LocalDateTime.now())
                 .build();
 
         // 2. 充值到账

@@ -29,6 +29,10 @@ public class Result<T> implements Serializable {
         return build(data, ResultInfo.SUCCESS.getCode(), ResultInfo.SUCCESS.getInfo());
     }
 
+    public static <T> Result<T> success(String info) {
+        return build(null, ResultInfo.SUCCESS.getCode(), info);
+    }
+
     public static <T> Result<T> error() {
         return build(null, ResultInfo.ERROR.getCode(), ResultInfo.ERROR.getInfo());
     }

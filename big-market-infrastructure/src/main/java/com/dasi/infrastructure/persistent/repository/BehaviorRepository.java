@@ -71,7 +71,7 @@ public class BehaviorRepository implements IBehaviorRepository {
         if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("（查询）BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
-                        .behaviorId(behavior.getBehaviorId())
+                        .activityId(behavior.getActivityId())
                         .behaviorType(BehaviorType.valueOf(behavior.getBehaviorType()))
                         .behaviorState(BehaviorState.valueOf(behavior.getBehaviorState()))
                         .rewardType(RewardType.valueOf(behavior.getRewardType()))
@@ -87,6 +87,15 @@ public class BehaviorRepository implements IBehaviorRepository {
     }
 
     @Override
+    public Boolean querySign(String userId, Long activityId) {
+        RewardOrder rewardOrderReq = new RewardOrder();
+        rewardOrderReq.setUserId(userId);
+        rewardOrderReq.setActivityId(activityId);
+        RewardOrder rewardOrder = rewardOrderDao.querySign(rewardOrderReq);
+        return rewardOrder != null;
+    }
+
+    @Override
     public void saveRewardOrder(String userId, List<RewardOrderAggregate> rewardOrderAggregateList) {
         try {
             dbRouter.doRouter(userId);
@@ -99,11 +108,13 @@ public class BehaviorRepository implements IBehaviorRepository {
                         rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
                         rewardOrder.setBizId(rewardOrderEntity.getBizId());
                         rewardOrder.setUserId(rewardOrderEntity.getUserId());
-                        rewardOrder.setBehaviorId(rewardOrderEntity.getBehaviorId());
+                        rewardOrder.setActivityId(rewardOrderEntity.getActivityId());
+                        rewardOrder.setBehaviorType(rewardOrderEntity.getBehaviorType());
                         rewardOrder.setRewardType(rewardOrderEntity.getRewardType().name());
                         rewardOrder.setRewardValue(rewardOrderEntity.getRewardValue());
                         rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
                         rewardOrder.setRewardDesc(rewardOrderEntity.getRewardDesc());
+                        rewardOrder.setRewardTime(rewardOrderEntity.getRewardTime());
                         rewardOrderDao.saveRewardOrder(rewardOrder);
 
                         // 写入数据库

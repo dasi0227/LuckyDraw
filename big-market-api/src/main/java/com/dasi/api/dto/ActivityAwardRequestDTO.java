@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.queue;
+package com.dasi.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class RechargeSkuStock {
-
-    private Long skuId;
+@NoArgsConstructor
+public class ActivityAwardRequestDTO {
 
     private Long activityId;
+
+    private String userId;
 
 }

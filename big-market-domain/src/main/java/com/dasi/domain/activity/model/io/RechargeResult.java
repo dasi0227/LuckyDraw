@@ -13,10 +13,6 @@ public class RechargeResult {
 
     private String orderId;
 
-    private Integer totalCount;
-
-    private Integer monthCount;
-
-    private Integer dayCount;
+    private Integer count;
 
 }

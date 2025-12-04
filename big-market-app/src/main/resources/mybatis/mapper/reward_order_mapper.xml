@@ -7,18 +7,20 @@
         <result property="orderId"         column="order_id"/>
         <result property="bizId"           column="biz_id"/>
         <result property="userId"          column="user_id"/>
-        <result property="behaviorId"      column="behavior_id"/>
+        <result property="activityId"      column="activity_id"/>
+        <result property="behaviorType"    column="behavior_type"/>
         <result property="rewardType"      column="reward_type"/>
         <result property="rewardValue"     column="reward_value"/>
         <result property="rewardState"     column="reward_state"/>
         <result property="rewardDesc"      column="reward_desc"/>
+        <result property="rewardTime"      column="reward_time"/>
         <result property="createTime"      column="create_time"/>
         <result property="updateTime"      column="update_time"/>
     </resultMap>
 
     <insert id="saveRewardOrder" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
-        INSERT INTO reward_order (order_id, biz_id, user_id, behavior_id, reward_type, reward_value, reward_state, reward_desc)
-        VALUES (#{orderId}, #{bizId}, #{userId}, #{behaviorId}, #{rewardType}, #{rewardValue}, #{rewardState}, #{rewardDesc})
+        INSERT INTO reward_order (order_id, biz_id, user_id, activity_id, behavior_type, reward_type, reward_value, reward_state, reward_desc, reward_time)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{activityId}, #{behaviorType}, #{rewardType}, #{rewardValue}, #{rewardState}, #{rewardDesc}, #{rewardTime})
     </insert>
 
     <update id="updateRewardOrderState" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
@@ -26,6 +28,15 @@
         SET reward_state = #{rewardState}
         WHERE user_id = #{userId} AND biz_id = #{bizId} AND order_id = #{orderId};
     </update>
+
+    <select id="querySign" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder" resultMap="dataMap">
+        SELECT order_id, biz_id, user_id, activity_id, behavior_type, reward_type, reward_value, reward_state, reward_desc, reward_time
+        FROM reward_order
+        WHERE behavior_type = 'SIGN' AND user_id = #{userId} AND activity_id = #{activityId}
+              AND reward_time >= CURDATE()
+              AND reward_time &lt; DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+        LIMIT 1
+    </select>
 
 
 </mapper>

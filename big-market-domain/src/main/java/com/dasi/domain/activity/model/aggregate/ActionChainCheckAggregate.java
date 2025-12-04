@@ -18,10 +18,8 @@ public class ActionChainCheckAggregate {
 
     private ActivityEntity activityEntity;
 
-    private RechargeSkuEntity rechargeSkuEntity;
+    private ActivitySkuEntity activitySkuEntity;
 
-    private RechargeQuotaEntity rechargeQuotaEntity;
-
-    private RaffleOrderAggregate raffleOrderAggregate;
+    private RaffleOrderEntity raffleOrderEntity;
 
 }

@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.queue.RechargeSkuStock;
+import com.dasi.domain.activity.model.queue.ActivitySkuStock;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ public class DefaultActivityStock implements IActivityStock {
     private IActivityRepository activityRepository;
 
     @Override
-    public Long subtractRechargeSkuStock(Long skuId, LocalDateTime activityEndTime) {
+    public Long subtractActivitySkuStock(Long skuId, LocalDateTime activityEndTime) {
         return activityRepository.subtractRechargeSkuStockSurplus(skuId, activityEndTime);
     }
 
     @Override
-    public RechargeSkuStock getQueueValue() {
+    public ActivitySkuStock getQueueValue() {
         return activityRepository.getQueueValue();
     }
 

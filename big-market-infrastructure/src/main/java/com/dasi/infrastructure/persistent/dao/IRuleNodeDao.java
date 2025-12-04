@@ -10,5 +10,5 @@ public interface IRuleNodeDao {
 
     List<RuleNode> queryRuleNodeListByTreeId(String treeId);
 
-    Integer queryRuleNodeLockCountByTreeId(String treeId);
+    Integer queryRuleLockLimitByTreeId(String treeId);
 }

@@ -18,7 +18,7 @@ public class ActivityAccountDay {
     private String userId;
 
     /** yyyy-mm-dd */
-    private String day;
+    private String dayKey;
 
     /** 日次数 */
     private Integer dayAllocate;

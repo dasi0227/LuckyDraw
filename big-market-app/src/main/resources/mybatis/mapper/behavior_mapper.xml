@@ -4,7 +4,6 @@
 
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Behavior">
         <id     property="id"             column="id"/>
-        <result property="behaviorId"     column="behavior_id"/>
         <result property="activityId"     column="activity_id"/>
         <result property="behaviorType"   column="behavior_type"/>
         <result property="behaviorState"  column="behavior_state"/>
@@ -16,7 +15,7 @@
     </resultMap>
 
     <select id="queryBehaviorList" parameterType="com.dasi.infrastructure.persistent.po.Behavior" resultMap="dataMap">
-        SELECT behavior_id, activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc
+        SELECT activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc
         FROM behavior
         WHERE behavior_type = #{behaviorType} AND activity_id = #{activityId}
     </select>

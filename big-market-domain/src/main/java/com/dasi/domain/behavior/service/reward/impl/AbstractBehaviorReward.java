@@ -40,7 +40,7 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
         List<BehaviorEntity> behaviorEntityList = queryBehaviorList(activityId, behaviorType);
 
         // 3. 保存订单
-        List<RewardOrderEntity> rewardOrderEntityList = saveRewardOrder(userId, businessNo, behaviorEntityList);
+        List<RewardOrderEntity> rewardOrderEntityList = saveRewardOrder(activityId, userId, businessNo, behaviorEntityList);
         if (rewardOrderEntityList == null) {
             throw new AppException("（返利）行为触发奖励失败");
         }
@@ -62,6 +62,6 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
 
     protected abstract List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType);
 
-    protected abstract List<RewardOrderEntity> saveRewardOrder(String userId, String businessNo, List<BehaviorEntity> behaviorEntityList);
+    protected abstract List<RewardOrderEntity> saveRewardOrder(Long activityId, String userId, String businessNo, List<BehaviorEntity> behaviorEntityList);
 
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RechargeSku {
+public class ActivitySku {
 
     /** 自增id */
     private Long id;
@@ -17,7 +17,7 @@ public class RechargeSku {
     private Long activityId;
 
     /** 定量id */
-    private Long quotaId;
+    private Integer count;
 
     /** 库存分配 */
     private Integer stockAllocate;

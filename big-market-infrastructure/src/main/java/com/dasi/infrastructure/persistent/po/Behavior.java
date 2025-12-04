@@ -10,9 +10,6 @@ public class Behavior {
     /** 自增id */
     private Long id;
 
-    /** 行为id */
-    private Long behaviorId;
-
     /** 活动id */
     private Long activityId;
 
