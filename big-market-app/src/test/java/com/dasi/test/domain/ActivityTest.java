@@ -44,13 +44,13 @@ public class ActivityTest {
 
     @Test
     public void testRecharge() throws InterruptedException {
-        Long skuId = 3001L;
+        Long skuId = 30001L;
 
         // 装配
         boolean success = activityAssemble.assembleRechargeSkuStockBySkuId(skuId);
 
         // 充值
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 1; i++) {
             log.info("=================== 第 {} 次充值 ===================", i);
             try {
                 RechargeContext rechargeContext = new RechargeContext();

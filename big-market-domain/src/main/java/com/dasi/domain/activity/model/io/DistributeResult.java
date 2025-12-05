@@ -1,4 +1,4 @@
-package com.dasi.domain.award.model.io;
+package com.dasi.domain.activity.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

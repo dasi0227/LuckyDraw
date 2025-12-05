@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ScanUnsolvedTaskJob {
 
     @Resource
-    private IDBRouterStrategy dbRouter;
+    private IDBRouterStrategy dbRouterStrategy;
 
     @Resource
     private ITaskScan taskScan;
@@ -32,7 +32,7 @@ public class ScanUnsolvedTaskJob {
     @Scheduled(cron = "0/5 * * * * ?")
     public void scanUnsolvedTask() {
         try {
-            int dbCount = dbRouter.dbCount();
+            int dbCount = dbRouterStrategy.dbCount();
 
             for (int dbIdx = 1; dbIdx <= dbCount; dbIdx++) {
                 final int finalDbIdx = dbIdx;
@@ -40,8 +40,8 @@ public class ScanUnsolvedTaskJob {
                 scanExecutor.execute(() -> {
                     try {
                         // 设置当前线程数据库路由
-                        dbRouter.setDBKey(finalDbIdx);
-                        dbRouter.setTBKey(0);
+                        dbRouterStrategy.setDBKey(finalDbIdx);
+                        dbRouterStrategy.setTBKey(0);
 
                         // 查询任务
                         List<TaskEntity> taskEntityList = taskScan.queryUnsolvedTask();
@@ -59,8 +59,8 @@ public class ScanUnsolvedTaskJob {
                         for (TaskEntity taskEntity : taskEntityList) {
                             sendExecutor.execute(() -> {
                                 try {
-                                    dbRouter.setDBKey(finalDbIdx);
-                                    dbRouter.setTBKey(0);
+                                    dbRouterStrategy.setDBKey(finalDbIdx);
+                                    dbRouterStrategy.setTBKey(0);
                                     taskScan.sendMessage(taskEntity);
                                     log.info("【扫描】重新发送未完成任务成功：dbIdx={}, topic={}, messageId={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId());
                                 } catch (Exception e) {
@@ -68,12 +68,12 @@ public class ScanUnsolvedTaskJob {
                                     taskScan.updateTaskState(taskEntity);
                                     log.error("【扫描】重新发送未完成任务失败：dbIdx={}, topic={}, messageId={}, error={}", finalDbIdx, taskEntity.getTopic(), taskEntity.getMessageId(), e.getMessage());
                                 } finally {
-                                    dbRouter.clear();
+                                    dbRouterStrategy.clear();
                                 }
                             });
                         }
                     } finally {
-                        dbRouter.clear();
+                        dbRouterStrategy.clear();
                     }
                 });
             }

@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.activity.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,19 +7,28 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ActivityAccountResponseDTO {
+@AllArgsConstructor
+public class QueryAccountResult {
+
+    private Integer totalAllocate;
+
+    private Integer totalSurplus;
 
     private String monthKey;
-    private String dayKey;
+
     private Integer monthLimit;
-    private Integer dayLimit;
-    private Integer totalAllocate;
-    private Integer totalSurplus;
+
     private Integer monthAllocate;
+
     private Integer monthSurplus;
+
+    private String dayKey;
+
+    private Integer dayLimit;
+
     private Integer dayAllocate;
+
     private Integer daySurplus;
 
 }

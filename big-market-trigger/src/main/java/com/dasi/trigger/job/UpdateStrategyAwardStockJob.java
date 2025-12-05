@@ -28,9 +28,9 @@ public class UpdateStrategyAwardStockJob {
 
         try {
             strategyStock.updateStrategyAwardStock(awardStock);
-            log.info("【库存】更新成功：strategyId={}, awardId={}", strategyId, awardId);
+            log.info("【库存】更新策略奖品库存成功：strategyId={}, awardId={}", strategyId, awardId);
         } catch (Exception e) {
-            log.error("【库存】更新失败：strategyId={}, awardId={}, error={}", strategyId, awardId, e.getMessage());
+            log.error("【库存】更新策略奖品库存失败：strategyId={}, awardId={}, error={}", strategyId, awardId, e.getMessage());
         }
     }
 

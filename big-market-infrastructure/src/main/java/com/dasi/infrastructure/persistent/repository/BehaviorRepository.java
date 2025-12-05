@@ -22,6 +22,7 @@ import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -46,7 +47,7 @@ public class BehaviorRepository implements IBehaviorRepository {
     private IRedisService redisService;
 
     @Resource
-    private IDBRouterStrategy dbRouter;
+    private IDBRouterStrategy dbRouterStrategy;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -88,45 +89,53 @@ public class BehaviorRepository implements IBehaviorRepository {
 
     @Override
     public Boolean querySign(String userId, Long activityId) {
-        RewardOrder rewardOrderReq = new RewardOrder();
-        rewardOrderReq.setUserId(userId);
-        rewardOrderReq.setActivityId(activityId);
-        RewardOrder rewardOrder = rewardOrderDao.querySign(rewardOrderReq);
-        return rewardOrder != null;
+        try {
+            dbRouterStrategy.doRouter(userId);
+
+            RewardOrder rewardOrderReq = new RewardOrder();
+            rewardOrderReq.setUserId(userId);
+            rewardOrderReq.setActivityId(activityId);
+            RewardOrder rewardOrder = rewardOrderDao.querySign(rewardOrderReq);
+            return rewardOrder != null;
+        } finally {
+            dbRouterStrategy.clear();
+        }
     }
 
     @Override
     public void saveRewardOrder(String userId, List<RewardOrderAggregate> rewardOrderAggregateList) {
         try {
-            dbRouter.doRouter(userId);
+            dbRouterStrategy.doRouter(userId);
             Boolean success = transactionTemplate.execute(status -> {
                 for (RewardOrderAggregate rewardOrderAggregate : rewardOrderAggregateList) {
+                    RewardOrderEntity rewardOrderEntity = rewardOrderAggregate.getRewardOrderEntity();
+                    RewardOrder rewardOrder = new RewardOrder();
+                    rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
+                    rewardOrder.setBizId(rewardOrderEntity.getBizId());
+                    rewardOrder.setUserId(rewardOrderEntity.getUserId());
+                    rewardOrder.setActivityId(rewardOrderEntity.getActivityId());
+                    rewardOrder.setBehaviorType(rewardOrderEntity.getBehaviorType());
+                    rewardOrder.setRewardType(rewardOrderEntity.getRewardType().name());
+                    rewardOrder.setRewardValue(rewardOrderEntity.getRewardValue());
+                    rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
+                    rewardOrder.setRewardDesc(rewardOrderEntity.getRewardDesc());
+                    rewardOrder.setRewardTime(rewardOrderEntity.getRewardTime());
+
+                    TaskEntity taskEntity = rewardOrderAggregate.getTaskEntity();
+                    Task task = new Task();
+                    task.setUserId(taskEntity.getUserId());
+                    task.setMessageId(taskEntity.getMessageId());
+                    task.setTopic(taskEntity.getTopic());
+                    task.setMessage(taskEntity.getMessage());
+                    task.setTaskState(taskEntity.getTaskState().name());
+
                     try {
-                        // 写入数据库
-                        RewardOrderEntity rewardOrderEntity = rewardOrderAggregate.getRewardOrderEntity();
-                        RewardOrder rewardOrder = new RewardOrder();
-                        rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
-                        rewardOrder.setBizId(rewardOrderEntity.getBizId());
-                        rewardOrder.setUserId(rewardOrderEntity.getUserId());
-                        rewardOrder.setActivityId(rewardOrderEntity.getActivityId());
-                        rewardOrder.setBehaviorType(rewardOrderEntity.getBehaviorType());
-                        rewardOrder.setRewardType(rewardOrderEntity.getRewardType().name());
-                        rewardOrder.setRewardValue(rewardOrderEntity.getRewardValue());
-                        rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
-                        rewardOrder.setRewardDesc(rewardOrderEntity.getRewardDesc());
-                        rewardOrder.setRewardTime(rewardOrderEntity.getRewardTime());
                         rewardOrderDao.saveRewardOrder(rewardOrder);
-
-                        // 写入数据库
-                        TaskEntity taskEntity = rewardOrderAggregate.getTaskEntity();
-                        Task task = new Task();
-                        task.setUserId(taskEntity.getUserId());
-                        task.setMessageId(taskEntity.getMessageId());
-                        task.setTopic(taskEntity.getTopic());
-                        task.setMessage(taskEntity.getMessage());
-                        task.setTaskState(taskEntity.getTaskState().name());
                         taskDao.saveTask(task);
-
+                    } catch (DuplicateKeyException e) {
+                        status.setRollbackOnly();
+                        log.info("【返利】用户已通过当前行为获取奖励：userId={}, activityId={}, behaviorType={}", rewardOrderEntity.getUserId(), rewardOrderEntity.getActivityId(), rewardOrderEntity.getBehaviorType());
+                        throw new AppException("（返利）用户已通过当前行为获取奖励：behaviorType=" + rewardOrderEntity.getBehaviorType());
                     } catch (Exception e) {
                         status.setRollbackOnly();
                         log.error("【返利】保存返利订单时发生错误：error={}", e.getMessage());
@@ -159,18 +168,24 @@ public class BehaviorRepository implements IBehaviorRepository {
             }
 
         } finally {
-            dbRouter.clear();
+            dbRouterStrategy.clear();
         }
     }
 
     @Override
     public int updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
-        RewardOrder rewardOrder = new RewardOrder();
-        rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
-        rewardOrder.setBizId(rewardOrderEntity.getBizId());
-        rewardOrder.setUserId(rewardOrderEntity.getUserId());
-        rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
-        return rewardOrderDao.updateRewardOrderState(rewardOrder);
+        try {
+            dbRouterStrategy.doRouter(rewardOrderEntity.getUserId());
+
+            RewardOrder rewardOrder = new RewardOrder();
+            rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
+            rewardOrder.setBizId(rewardOrderEntity.getBizId());
+            rewardOrder.setUserId(rewardOrderEntity.getUserId());
+            rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
+            return rewardOrderDao.updateRewardOrderState(rewardOrder);
+        } finally {
+            dbRouterStrategy.clear();
+        }
     }
 
 

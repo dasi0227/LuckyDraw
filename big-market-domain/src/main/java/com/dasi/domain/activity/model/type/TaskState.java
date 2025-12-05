@@ -1,4 +1,4 @@
-package com.dasi.domain.award.model.type;
+package com.dasi.domain.activity.model.type;
 
 public enum TaskState {
 

@@ -16,12 +16,12 @@
         <result property="updateTime"  column="update_time"/>
     </resultMap>
 
-    <insert id="saveRaffleAward" parameterType="com.dasi.infrastructure.persistent.po.ActivityAward">
+    <insert id="saveActivityAward" parameterType="com.dasi.infrastructure.persistent.po.ActivityAward">
         INSERT INTO activity_award (user_id, activity_id, order_id, award_id, award_name, award_time, award_state)
         VALUES (#{userId}, #{activityId}, #{orderId}, #{awardId}, #{awardName}, #{awardTime}, #{awardState})
     </insert>
 
-    <update id="updateRaffleAwardState" parameterType="com.dasi.infrastructure.persistent.po.ActivityAward">
+    <update id="updateActivityAwardState" parameterType="com.dasi.infrastructure.persistent.po.ActivityAward">
         UPDATE activity_award
         SET award_state = #{awardState}
         WHERE order_id = #{orderId} AND user_id = #{userId} AND award_id = #{awardId}

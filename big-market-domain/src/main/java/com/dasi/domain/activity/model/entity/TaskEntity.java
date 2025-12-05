@@ -1,6 +1,6 @@
-package com.dasi.domain.award.model.entity;
+package com.dasi.domain.activity.model.entity;
 
-import com.dasi.domain.award.model.type.TaskState;
+import com.dasi.domain.activity.model.type.TaskState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

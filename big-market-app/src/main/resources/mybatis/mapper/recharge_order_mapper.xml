@@ -27,10 +27,4 @@
         WHERE order_id = #{orderId} AND user_id = #{userId} AND biz_id = #{bizId}
     </update>
 
-    <select id="queryRechargeOrderListByUserId" parameterType="java.lang.String" resultMap="dataMap">
-        SELECT order_id, biz_id, activity_id, user_id, sku_id, count, recharge_state, recharge_time
-        FROM recharge_order
-        WHERE user_id = #{userId};
-    </select>
-
 </mapper>

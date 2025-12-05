@@ -1,4 +1,4 @@
-package com.dasi.domain.award.model.io;
+package com.dasi.domain.activity.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +15,10 @@ public class DistributeContext {
 
     private Long activityId;
 
+    private String orderId;
+
     private Long awardId;
 
     private String awardName;
-
-    private Long strategyId;
-
-    private String orderId;
 
 }

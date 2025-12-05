@@ -76,14 +76,14 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
             rewardOrderEntityList.add(rewardOrderEntity);
 
             // 3. 构造消息实体
-            DistributeBehaviorRewardMessage distributeRaffleAwardMessage = DistributeBehaviorRewardMessage.builder()
+            DistributeBehaviorRewardMessage distributeBehaviorRewardMessage = DistributeBehaviorRewardMessage.builder()
                         .userId(rewardOrderEntity.getUserId())
                         .bizId(rewardOrderEntity.getBizId())
                         .orderId(rewardOrderEntity.getOrderId())
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .build();
-            EventMessage<DistributeBehaviorRewardMessage> eventMessage = distributeBehaviorRewardEvent.buildEventMessage(distributeRaffleAwardMessage);
+            EventMessage<DistributeBehaviorRewardMessage> eventMessage = distributeBehaviorRewardEvent.buildEventMessage(distributeBehaviorRewardMessage);
 
             // 4. 构造任务实体
             TaskEntity taskEntity = TaskEntity.builder()

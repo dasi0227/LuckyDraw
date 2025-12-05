@@ -1,9 +1,10 @@
 package com.dasi.domain.activity.service.query;
 
-import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
+import com.dasi.domain.activity.model.io.QueryAccountContext;
+import com.dasi.domain.activity.model.io.QueryAccountResult;
 
 public interface IActivityQuery {
 
-    ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
+    QueryAccountResult queryActivityAccount(QueryAccountContext queryAccountContext);
 
 }

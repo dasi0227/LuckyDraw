@@ -1,6 +1,5 @@
 package com.dasi.infrastructure.persistent.dao;
 
-import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import cn.bugstack.middleware.db.router.annotation.DBRouterStrategy;
 import com.dasi.infrastructure.persistent.po.ActivityAward;
 import org.apache.ibatis.annotations.Mapper;
@@ -9,9 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 @DBRouterStrategy(splitTable = true)
 public interface IActivityAwardDao {
 
-    void saveRaffleAward(ActivityAward activityAward);
+    void saveActivityAward(ActivityAward activityAward);
 
-    @DBRouter
-    int updateRaffleAwardState(ActivityAward activityAward);
+    void updateActivityAwardState(ActivityAward activityAward);
 
 }

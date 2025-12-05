@@ -2,16 +2,11 @@ package com.dasi.trigger.http;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
-import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
-import com.dasi.domain.activity.model.io.RaffleContext;
-import com.dasi.domain.activity.model.io.RaffleResult;
+import com.dasi.domain.activity.model.io.*;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
+import com.dasi.domain.activity.service.distribute.IAwardDistribute;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
-import com.dasi.domain.award.model.io.DistributeContext;
-import com.dasi.domain.award.model.io.DistributeResult;
-import com.dasi.domain.award.service.distribute.IAwardDistribute;
-import com.dasi.domain.award.service.query.IAwardQuery;
 import com.dasi.domain.behavior.model.io.BehaviorContext;
 import com.dasi.domain.behavior.model.io.BehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
@@ -48,9 +43,6 @@ public class BigMarketController implements IBigMarketService {
 
     @Resource
     private IAwardDistribute awardDistribute;
-
-    @Resource
-    private IAwardQuery awardQuery;
 
     @Resource
     private IBehaviorQuery behaviorQuery;
@@ -94,7 +86,7 @@ public class BigMarketController implements IBigMarketService {
 
         // 3. 记录中奖
         log.info("=========================== 记录中奖 ===========================");
-        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).awardName(lotteryResult.getAwardName()).strategyId(raffleResult.getStrategyId()).orderId(raffleResult.getOrderId()).build();
+        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).awardName(lotteryResult.getAwardName()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
         RaffleResponseDTO raffleResponseDTO = RaffleResponseDTO.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).build();
@@ -119,6 +111,8 @@ public class BigMarketController implements IBigMarketService {
     public Result<Boolean> isSign(@RequestBody IsSignRequestDTO isSignRequestDTO) {
         String userId = isSignRequestDTO.getUserId();
         Long activityId = isSignRequestDTO.getActivityId();
+
+        log.info("=========================== 查询签到：userId={} ===========================", userId);
         Boolean flag = behaviorQuery.querySign(userId, activityId);
         return Result.success(flag);
     }
@@ -138,11 +132,11 @@ public class BigMarketController implements IBigMarketService {
 
     @PostMapping("/behavior/share")
     @Override
-    public Result<BehaviorResponseDTO> behaviorShare(BehaviorRequestDTO behaviorRequestDTO) {
+    public Result<BehaviorResponseDTO> behaviorShare(@RequestBody BehaviorRequestDTO behaviorRequestDTO) {
         String userId = behaviorRequestDTO.getUserId();
         Long activityId = behaviorRequestDTO.getActivityId();
 
-        log.info("=========================== 账户转发：userId={} ===========================", userId);
+        log.info("=========================== 账户分享：userId={} ===========================", userId);
         BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.SHARE);
 
         BehaviorResponseDTO behaviorResponseDTO = BehaviorResponseDTO.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
@@ -151,7 +145,7 @@ public class BigMarketController implements IBigMarketService {
 
     @PostMapping("/behavior/comment")
     @Override
-    public Result<BehaviorResponseDTO> behaviorComment(BehaviorRequestDTO behaviorRequestDTO) {
+    public Result<BehaviorResponseDTO> behaviorComment(@RequestBody BehaviorRequestDTO behaviorRequestDTO) {
         String userId = behaviorRequestDTO.getUserId();
         Long activityId = behaviorRequestDTO.getActivityId();
 
@@ -179,11 +173,22 @@ public class BigMarketController implements IBigMarketService {
         Long activityId = activityAccountRequestDTO.getActivityId();
 
         log.info("=========================== 账户查询：userId={} ===========================", userId);
-        ActivityAccountEntity activityAccountEntity = activityQuery.queryActivityAccount(userId, activityId);
+        QueryAccountContext queryAccountContext = QueryAccountContext.builder().userId(userId).activityId(activityId).build();
+        QueryAccountResult queryAccountResult = activityQuery.queryActivityAccount(queryAccountContext);
+        ActivityAccountResponseDTO activityAccountResponseDTO = ActivityAccountResponseDTO.builder()
+                .monthKey(queryAccountResult.getMonthKey())
+                .dayKey(queryAccountResult.getDayKey())
+                .monthLimit(queryAccountResult.getMonthLimit())
+                .dayLimit(queryAccountResult.getDayLimit())
+                .totalAllocate(queryAccountResult.getTotalAllocate())
+                .totalSurplus(queryAccountResult.getTotalSurplus())
+                .monthAllocate(queryAccountResult.getMonthAllocate())
+                .monthSurplus(queryAccountResult.getMonthSurplus())
+                .dayAllocate(queryAccountResult.getDayAllocate())
+                .daySurplus(queryAccountResult.getDaySurplus())
+                .build();
 
-
-
-        return null;
+        return Result.success(activityAccountResponseDTO);
     }
 
 

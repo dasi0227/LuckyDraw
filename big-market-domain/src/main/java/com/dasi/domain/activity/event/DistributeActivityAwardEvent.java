@@ -1,4 +1,4 @@
-package com.dasi.domain.award.event;
+package com.dasi.domain.activity.event;
 
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardEvent.DistributeRaffleAwardMessage> {
+public class DistributeActivityAwardEvent extends BaseEvent<DistributeActivityAwardEvent.DistributeActivityAwardMessage> {
 
     @Value("${spring.rabbitmq.topic.distribute_raffle_award}")
     private String topic;
@@ -27,8 +27,8 @@ public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardE
     private IUniqueIdGenerator uniqueIdGenerator;
 
     @Override
-    public EventMessage<DistributeRaffleAwardMessage> buildEventMessage(DistributeRaffleAwardMessage data) {
-        return EventMessage.<DistributeRaffleAwardMessage>builder()
+    public EventMessage<DistributeActivityAwardMessage> buildEventMessage(DistributeActivityAwardMessage data) {
+        return EventMessage.<DistributeActivityAwardMessage>builder()
                 .messageId(uniqueIdGenerator.nextMessageId())
                 .time(TimeUtil.thisTime(true))
                 .data(data)
@@ -39,7 +39,7 @@ public class DistributeRaffleAwardEvent extends BaseEvent<DistributeRaffleAwardE
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistributeRaffleAwardMessage {
+    public static class DistributeActivityAwardMessage {
 
         private String userId;
 

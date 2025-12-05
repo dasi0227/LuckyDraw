@@ -16,7 +16,7 @@
 
     <insert id="createActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
         INSERT INTO activity_account_month (activity_id, user_id, month_key, month_allocate, month_surplus)
-        VALUES (#{activityId}, #{userId}, #{month}, #{monthAllocate}, #{monthSurplus})
+        VALUES (#{activityId}, #{userId}, #{monthKey}, #{monthAllocate}, #{monthSurplus})
     </insert>
 
     <update id="subtractActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">

@@ -12,7 +12,7 @@ public interface IActivityRepository {
 
     ActivityEntity queryActivityByActivityId(Long activityId);
 
-    ActivityAccountEntity queryActivityAccountByActivityId(String userId, Long activityId);
+    ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
 
     ActivityAccountMonthEntity queryActivityAccountMonth(String userId, Long activityId, String month);
 
@@ -41,5 +41,9 @@ public interface IActivityRepository {
     List<ActivitySkuEntity> queryRechargeSkuByActivityId(Long activityId);
 
     void createActivityAccountIfAbsent(String userId, Long activityId);
+
+    void saveActivityAward(ActivityAwardEntity activityAwardEntity, TaskEntity taskEntity);
+
+    void updateActivityAwardState(ActivityAwardEntity activityAwardEntity);
 
 }

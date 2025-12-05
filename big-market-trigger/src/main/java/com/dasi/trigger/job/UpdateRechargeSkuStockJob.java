@@ -28,9 +28,9 @@ public class UpdateRechargeSkuStockJob {
 
         try {
             activityStock.updateRechargeSkuStock(skuId);
-            log.info("【库存】更新活动 SKU 成功：skuId={}, activityId={}", skuId, activityId);
+            log.info("【库存】更新活动 SKU 库存成功：skuId={}, activityId={}", skuId, activityId);
         } catch (Exception e) {
-            log.error("【库存】更新活动 SKU 失败：skuId={}, activityId={}, error={}", skuId, activityId, e.getMessage());
+            log.error("【库存】更新活动 SKU 库存失败：skuId={}, activityId={}, error={}", skuId, activityId, e.getMessage());
         }
     }
 

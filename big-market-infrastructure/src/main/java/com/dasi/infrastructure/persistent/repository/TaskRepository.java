@@ -1,5 +1,6 @@
 package com.dasi.infrastructure.persistent.repository;
 
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.task.model.entity.TaskEntity;
 import com.dasi.domain.task.model.type.TaskState;
 import com.dasi.domain.task.repository.ITaskRepository;
@@ -20,6 +21,9 @@ public class TaskRepository implements ITaskRepository {
 
     @Resource
     private EventPublisher eventPublisher;
+
+    @Resource
+    private IDBRouterStrategy dbRouterStrategy;
 
     @Override
     public List<TaskEntity> queryUnsolvedTask() {
@@ -46,6 +50,8 @@ public class TaskRepository implements ITaskRepository {
         task.setTaskState(taskEntity.getTaskState().name());
 
         try {
+            dbRouterStrategy.doRouter(taskEntity.getUserId());
+
             eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
             task.setTaskState(TaskState.DISTRIBUTED.name());
             taskDao.updateTaskState(task);
@@ -53,6 +59,8 @@ public class TaskRepository implements ITaskRepository {
             task.setTaskState(TaskState.FAILED.name());
             taskDao.updateTaskState(task);
             throw new RuntimeException(e);
+        } finally {
+            dbRouterStrategy.clear();
         }
     }
 

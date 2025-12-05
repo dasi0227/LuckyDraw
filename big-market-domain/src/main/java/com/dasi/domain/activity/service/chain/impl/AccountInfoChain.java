@@ -26,7 +26,7 @@ public class AccountInfoChain extends AbstractActivityChain {
         Long activityId = actionChainCheckAggregate.getActivityId();
 
         /* ========= 1. 查询总余额 ========= */
-        ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccountByActivityId(userId, activityId);
+        ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
         if (activityAccountEntity == null) {
             log.info("【检查】account_info 拦截（账户不存在）：userId={}, activityId={}", userId, activityId);
             return false;

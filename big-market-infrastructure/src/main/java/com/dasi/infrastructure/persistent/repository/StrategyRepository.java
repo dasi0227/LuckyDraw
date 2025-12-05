@@ -1,5 +1,6 @@
 package com.dasi.infrastructure.persistent.repository;
 
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.strategy.model.entity.*;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleCheckType;
@@ -62,6 +63,9 @@ public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IRedisService redisService;
 
+    @Resource
+    private IDBRouterStrategy dbRouterStrategy;
+
     @Override
     public Long queryStrategyIdByActivityId(Long activityId) {
         String cacheKey = RedisKey.STRATEGY_ID_KEY + activityId;
@@ -100,12 +104,18 @@ public class StrategyRepository implements IStrategyRepository {
     // TODO：这里用总账户的分配 - 剩余来计算 LOCK 次数，因此这里必须确保账户已经存在
     @Override
     public int queryUserLotteryCountByStrategyId(String userId, Long strategyId) {
-        ActivityAccount activityAccount = new ActivityAccount();
-        activityAccount.setUserId(userId);
-        activityAccount.setActivityId(strategyId);
-        activityAccount = activityAccountDao.queryActivityAccount(activityAccount);
-        if (activityAccount == null) return 0;
-        return activityAccount.getTotalAllocate() - activityAccount.getTotalSurplus();
+        try {
+            dbRouterStrategy.doRouter(userId);
+
+            ActivityAccount activityAccount = new ActivityAccount();
+            activityAccount.setUserId(userId);
+            activityAccount.setActivityId(strategyId);
+            activityAccount = activityAccountDao.queryActivityAccount(activityAccount);
+            if (activityAccount == null) return 0;
+            return activityAccount.getTotalAllocate() - activityAccount.getTotalSurplus();
+        } finally {
+            dbRouterStrategy.clear();
+        }
     }
 
     @Override

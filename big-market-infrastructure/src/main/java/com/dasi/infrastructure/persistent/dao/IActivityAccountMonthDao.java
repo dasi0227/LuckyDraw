@@ -7,12 +7,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IActivityAccountMonthDao {
 
-    @DBRouter
     ActivityAccountMonth queryActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
-    int subtractActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
-
     void createActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
+
+    int subtractActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
     void rechargeActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 

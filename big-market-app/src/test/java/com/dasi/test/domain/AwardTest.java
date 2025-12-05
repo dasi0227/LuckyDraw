@@ -1,8 +1,8 @@
 package com.dasi.test.domain;
 
-import com.dasi.domain.award.model.io.DistributeContext;
-import com.dasi.domain.award.model.io.DistributeResult;
-import com.dasi.domain.award.service.distribute.IAwardDistribute;
+import com.dasi.domain.activity.model.io.DistributeContext;
+import com.dasi.domain.activity.model.io.DistributeResult;
+import com.dasi.domain.activity.service.distribute.IAwardDistribute;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.domain.task.service.scan.ITaskScan;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,6 @@ public class AwardTest {
                 .activityId(1001L)
                 .awardId(2001L)
                 .awardName("测试奖品2001")
-                .strategyId(1001L)
                 .orderId(uniqueIdGenerator.nextRaffleOrderId())
                 .build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
