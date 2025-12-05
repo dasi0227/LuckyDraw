@@ -1,6 +1,7 @@
 package com.dasi.domain.strategy.repository;
 
 import com.dasi.domain.strategy.model.entity.*;
+import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
 
 import java.time.LocalDateTime;
@@ -41,9 +42,9 @@ public interface IStrategyRepository {
 
     long subtractStrategyAwardStock(String cacheKey, LocalDateTime activityEndTime);
 
-    void sendStrategyAwardStockConsumeToMQ(StrategyAwardStockEntity strategyAwardStockEntity);
+    void sendStrategyAwardStockConsumeToMQ(StrategyAwardStock strategyAwardStock);
 
-    StrategyAwardStockEntity getQueueValue();
+    StrategyAwardStock getQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Long awardId);
 

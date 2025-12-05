@@ -2,7 +2,7 @@ package com.dasi.domain.strategy.service.tree.impl;
 
 import com.dasi.domain.strategy.annotation.RuleConfig;
 import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
+import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
@@ -33,7 +33,7 @@ public class RuleStockTree implements IStrategyTree {
         long surplus = strategyStock.subtractStrategyAwardCount(strategyId, awardId, activityEndTime);
         if (surplus >= 0L) {
             log.info("【检查】RULE_STOCK 放行：awardId={}, surplus={}->{}", awardId, surplus + 1, surplus);
-            StrategyAwardStockEntity stockUpdateRequest = StrategyAwardStockEntity.builder()
+            StrategyAwardStock stockUpdateRequest = StrategyAwardStock.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
                     .build();

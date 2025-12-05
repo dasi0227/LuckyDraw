@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DistributeResult {
+public class ActivitySkuStock {
 
-    private Long awardId;
+    private Long skuId;
 
-    private String awardName;
-
-    private String messageId;
+    private Long activityId;
 
 }

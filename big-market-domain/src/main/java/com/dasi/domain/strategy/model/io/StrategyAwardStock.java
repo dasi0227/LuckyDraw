@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.entity;
+package com.dasi.domain.strategy.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StrategyAwardStockEntity {
+public class StrategyAwardStock {
 
     private Long strategyId;
 

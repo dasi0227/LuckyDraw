@@ -1,8 +1,8 @@
-package com.dasi.domain.activity.service.deliver.impl;
+package com.dasi.domain.award.service.deliver.impl;
 
-import com.dasi.domain.activity.model.io.DeliverContext;
-import com.dasi.domain.activity.model.io.DeliverResult;
-import com.dasi.domain.activity.service.deliver.IAwardDeliver;
+import com.dasi.domain.award.model.io.DeliverContext;
+import com.dasi.domain.award.model.io.DeliverResult;
+import com.dasi.domain.award.service.deliver.IAwardDeliver;
 import org.springframework.stereotype.Service;
 
 @Service

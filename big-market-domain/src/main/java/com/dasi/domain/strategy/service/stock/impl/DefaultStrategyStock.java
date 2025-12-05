@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.service.stock.impl;
 
-import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
+import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.stock.IStrategyStock;
 import com.dasi.types.constant.Delimiter;
@@ -23,13 +23,13 @@ public class DefaultStrategyStock implements IStrategyStock {
     }
 
     @Override
-    public StrategyAwardStockEntity getQueueValue() {
+    public StrategyAwardStock getQueueValue() {
         return strategyRepository.getQueueValue();
     }
 
     @Override
-    public void updateStrategyAwardStock(StrategyAwardStockEntity strategyAwardStockEntity) {
-        strategyRepository.updateStrategyAwardStock(strategyAwardStockEntity.getStrategyId(), strategyAwardStockEntity.getAwardId());
+    public void updateStrategyAwardStock(StrategyAwardStock strategyAwardStock) {
+        strategyRepository.updateStrategyAwardStock(strategyAwardStock.getStrategyId(), strategyAwardStock.getAwardId());
     }
 
 }

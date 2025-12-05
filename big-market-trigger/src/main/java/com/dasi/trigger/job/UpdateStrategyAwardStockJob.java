@@ -1,6 +1,6 @@
 package com.dasi.trigger.job;
 
-import com.dasi.domain.strategy.model.entity.StrategyAwardStockEntity;
+import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.service.stock.IStrategyStock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +17,7 @@ public class UpdateStrategyAwardStockJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void updateAwardStock() {
-        StrategyAwardStockEntity awardStock = strategyStock.getQueueValue();
+        StrategyAwardStock awardStock = strategyStock.getQueueValue();
         if (awardStock == null) {
             log.debug("【库存】无待更新");
             return;

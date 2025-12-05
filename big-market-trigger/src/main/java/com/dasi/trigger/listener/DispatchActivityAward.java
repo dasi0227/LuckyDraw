@@ -2,10 +2,10 @@ package com.dasi.trigger.listener;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.dasi.domain.activity.event.DistributeActivityAwardEvent.DistributeActivityAwardMessage;
-import com.dasi.domain.activity.model.io.DeliverContext;
-import com.dasi.domain.activity.model.io.DeliverResult;
-import com.dasi.domain.activity.service.deliver.IAwardDeliver;
+import com.dasi.domain.award.event.DistributeActivityAwardEvent.DistributeActivityAwardMessage;
+import com.dasi.domain.award.model.io.DeliverContext;
+import com.dasi.domain.award.model.io.DeliverResult;
+import com.dasi.domain.award.service.deliver.IAwardDeliver;
 import com.dasi.types.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
