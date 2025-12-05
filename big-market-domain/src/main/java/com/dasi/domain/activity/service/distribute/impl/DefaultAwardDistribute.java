@@ -73,9 +73,4 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         return DistributeResult.builder().awardId(activityAwardEntity.getAwardId()).awardName(activityAwardEntity.getAwardName()).messageId(taskEntity.getMessageId()).build();
     }
 
-    @Override
-    public void updateActivityAwardState(ActivityAwardEntity activityAwardEntity) {
-        activityRepository.updateActivityAwardState(activityAwardEntity);
-    }
-
 }

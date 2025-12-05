@@ -60,8 +60,8 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
         // 1. 策略无权重规则 → 直接返回
         if (!strategyEntity.hasRuleWeight()) return;
 
-        // 2. 查询 rule_weight 规则
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.getCode());
+        // 2. 查询 RULE_WEIGHT 规则
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.name());
         if (strategyRuleEntity == null) throw new AppException("（装配）当前策略下没有配置权重规则：strategyId=" + strategyId);
 
         // 3. 权重下概率装配

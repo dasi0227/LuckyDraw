@@ -21,7 +21,7 @@
     <select id="queryRuleLockLimitByTreeId" parameterType="java.lang.String" resultType="java.lang.Integer">
         SELECT rule_value
         FROM rule_node
-        WHERE tree_id = #{treeId} and rule_model = 'rule_lock'
+        WHERE tree_id = #{treeId} and rule_model = 'RULE_LOCK'
     </select>
 
 </mapper>

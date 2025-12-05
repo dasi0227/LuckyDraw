@@ -24,7 +24,7 @@ public class RuleBlacklistChain extends AbstractStrategyChain {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_BLACKLIST.getCode());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_BLACKLIST.name());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
@@ -36,7 +36,7 @@ public class RuleBlacklistChain extends AbstractStrategyChain {
 
         // 3. 判断是否位于黑名单之中
         if (Arrays.asList(blackIds).contains(userId)) {
-            log.info("【检查】rule_blacklist 拦截：userId={}, awardId={}", userId, awardId);
+            log.info("【检查】RULE_BLACKLIST 拦截：userId={}, awardId={}", userId, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_BLACKLIST)
@@ -45,7 +45,7 @@ public class RuleBlacklistChain extends AbstractStrategyChain {
         }
 
         // 4. 放行走下一条规则
-        log.info("【检查】rule_blacklist 放行");
+        log.info("【检查】RULE_BLACKLIST 放行");
         return next().logic(userId, strategyId);
     }
 
