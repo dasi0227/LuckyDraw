@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityAwardRequestDTO {
+public class BehaviorResponse {
 
-    private Long activityId;
-
-    private String userId;
+    private List<String> rewardDescList;
 
 }

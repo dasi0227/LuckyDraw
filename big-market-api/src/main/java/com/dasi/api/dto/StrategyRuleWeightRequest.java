@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleResponseDTO {
+public class StrategyRuleWeightRequest {
 
-    private Long awardId;
+    private String userId;
 
-    private String awardName;
+    private Long activityId;
 
 }

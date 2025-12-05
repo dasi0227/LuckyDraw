@@ -81,7 +81,7 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public ActivitySkuEntity queryRechargeSkuBySkuId(Long skuId) {
         ActivitySku activitySku = rechargeSkuDao.queryRechargeSkuBySkuId(skuId);
-        if (activitySku == null) throw new AppException("（查询）ActivitySku 不存在：skuId=" + skuId);
+        if (activitySku == null) throw new AppException("（数据库）ActivitySku 不存在：skuId=" + skuId);
         return ActivitySkuEntity.builder()
                 .skuId(activitySku.getSkuId())
                 .activityId(activitySku.getActivityId())
@@ -102,7 +102,7 @@ public class ActivityRepository implements IActivityRepository {
 
         // 再查数据库
         List<ActivitySku> activitySkuList = rechargeSkuDao.queryRechargeSkuByActivityId(activityId);
-        if (activitySkuList == null || activitySkuList.isEmpty()) throw new AppException("（查询）RechargeSkuList 不存在：activityId=" + activityId);
+        if (activitySkuList == null || activitySkuList.isEmpty()) throw new AppException("（数据库）RechargeSkuList 不存在：activityId=" + activityId);
         activitySkuEntityList = activitySkuList.stream()
                 .map(activitySku -> ActivitySkuEntity.builder()
                         .skuId(activitySku.getSkuId())
@@ -130,7 +130,7 @@ public class ActivityRepository implements IActivityRepository {
 
         // 再查数据库
         Activity activity = activityDao.queryActivityByActivityId(activityId);
-        if (activity == null) throw new AppException("（查询）Activity 不存在：activity=Id" + activityId);
+        if (activity == null) throw new AppException("（数据库）Activity 不存在：activity=Id" + activityId);
         activityEntity = ActivityEntity.builder()
                 .activityId(activity.getActivityId())
                 .activityName(activity.getActivityName())

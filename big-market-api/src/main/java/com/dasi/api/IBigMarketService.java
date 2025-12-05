@@ -8,22 +8,24 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface IBigMarketService {
 
-    Result<Boolean> isSign(IsSignRequestDTO isSignRequestDTO);
+    Result<Boolean> querySign(QuerySign querySign);
 
     Result<Void> assemble(Long activityId);
 
-    Result<RaffleResponseDTO> raffle(RaffleRequestDTO raffleRequestDTO);
+    Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
 
-    Result<BehaviorResponseDTO> behaviorSign(BehaviorRequestDTO behaviorRequestDTO);
+    Result<BehaviorResponse> behaviorSign(BehaviorRequest behaviorRequest);
 
-    Result<BehaviorResponseDTO> behaviorLike(BehaviorRequestDTO behaviorRequestDTO);
+    Result<BehaviorResponse> behaviorLike(BehaviorRequest behaviorRequest);
 
-    Result<BehaviorResponseDTO> behaviorShare(BehaviorRequestDTO behaviorRequestDTO);
+    Result<BehaviorResponse> behaviorShare(BehaviorRequest behaviorRequest);
 
-    Result<BehaviorResponseDTO> behaviorComment(BehaviorRequestDTO behaviorRequestDTO);
+    Result<BehaviorResponse> behaviorComment(BehaviorRequest behaviorRequest);
 
-    Result<ActivityAccountResponseDTO> queryActivityAccount(ActivityAccountRequestDTO activityAccountRequestDTO);
+    Result<QueryAccountResponse> queryActivityAccount(QueryAccountRequest queryAccountRequest);
 
-    Result<List<ActivityAwardResponseDTO>> queryActivityAward(ActivityAwardRequestDTO activityAwardRequestDTO);
+    Result<List<ActivityAwardResponse>> queryActivityAward(ActivityAwardRequest activityAwardRequest);
+
+    Result<StrategyRuleWeightResponse> queryStrategyRuleWeight(StrategyRuleWeightRequest strategyRuleWeightRequest);
 
 }

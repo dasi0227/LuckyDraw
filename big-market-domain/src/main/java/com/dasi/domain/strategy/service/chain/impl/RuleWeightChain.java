@@ -25,7 +25,6 @@ public class RuleWeightChain extends AbstractStrategyChain {
     @Resource
     private IStrategyLottery strategyLottery;
 
-    public Long userScore = 0L;
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
@@ -36,23 +35,24 @@ public class RuleWeightChain extends AbstractStrategyChain {
         }
 
         // 2. 解析得到积分阈值和对应的奖品列表
-        Map<Long, String> weightMap = new HashMap<>();
+        Map<Integer, String> weightMap = new HashMap<>();
         for (String group : ruleValue.split(Delimiter.SPACE)) {
             if (StringUtils.isBlank(group)) continue;
             String[] parts = group.split(Delimiter.COLON);
             if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
-            weightMap.put(Long.parseLong(parts[0]), parts[1]);
+            weightMap.put(Integer.parseInt(parts[0]), parts[1]);
         }
         if (weightMap.isEmpty()) {
             return next().logic(userId, strategyId);
         }
 
         // 3. 按积分阈值从高到低排序
-        List<Long> thresholds = new ArrayList<>(weightMap.keySet());
+        List<Integer> thresholds = new ArrayList<>(weightMap.keySet());
         thresholds.sort(Comparator.reverseOrder());
 
         // 4. 根据用户积分判断能够到达的积分阈值
-        Long matchedThreshold = thresholds.stream()
+        int userScore = strategyRepository.queryUserScoreByStrategyId(userId, strategyId);
+        Integer matchedThreshold = thresholds.stream()
                 .filter(key -> userScore >= key)
                 .findFirst()
                 .orElse(null);
@@ -60,7 +60,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
             Long awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
-            log.info("【检查】rule_weight 拦截：weight={}，awardId={}", matchedThreshold, awardId);
+            log.info("【检查】rule_weight 拦截：userScore={}, weight={}，awardId={}", userScore, matchedThreshold, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_WEIGHT)
@@ -69,7 +69,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         }
 
         // 6. 放行走下一条规则
-        log.info("【检查】rule_weight 放行");
+        log.info("【检查】rule_weight 放行：userScore={}", userScore);
         return next().logic(userId, strategyId);
     }
 
