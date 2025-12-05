@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityAccountRequestDTO {
-
-    private Long activityId;
+public class RaffleRequest {
 
     private String userId;
+
+    private Long activityId;
 
 }

@@ -8,7 +8,9 @@ import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public abstract class AbstractStrategyLottery implements IStrategyLottery {
@@ -21,6 +23,13 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
     @Override
     public LotteryResult doStrategyLottery(LotteryContext lotteryContext) {
+
+        String userId = lotteryContext.getUserId();
+        Long strategyId = lotteryContext.getStrategyId();
+        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
+        if (strategyId == null) throw new AppException("（抽奖）缺少参数 strategyId");
+
+
         // 1. 构造输入输出
         RuleCheckContext ruleCheckContext = RuleCheckContext.builder()
                 .userId(lotteryContext.getUserId())

@@ -69,7 +69,7 @@ public class BehaviorRepository implements IBehaviorRepository {
         behaviorReq.setActivityId(activityId);
         behaviorReq.setBehaviorType(behaviorType.name());
         List<Behavior> behaviorList = behaviorDao.queryBehaviorList(behaviorReq);
-        if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("（查询）BehaviorList 不存在：activityId=" + activityId);
+        if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("（数据库）BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .activityId(behavior.getActivityId())

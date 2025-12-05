@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityAccountResponseDTO {
+public class QueryAccountResponse {
 
     private String monthKey;
     private String dayKey;
