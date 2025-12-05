@@ -1,7 +1,7 @@
 package com.dasi.domain.activity.repository;
 
 import com.dasi.domain.activity.model.entity.*;
-import com.dasi.domain.activity.model.queue.ActivitySkuStock;
+import com.dasi.domain.activity.model.io.ActivitySkuStock;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,9 +41,5 @@ public interface IActivityRepository {
     List<ActivitySkuEntity> queryRechargeSkuByActivityId(Long activityId);
 
     void createActivityAccountIfAbsent(String userId, Long activityId);
-
-    void saveActivityAward(ActivityAwardEntity activityAwardEntity, TaskEntity taskEntity);
-
-    void updateActivityAwardState(ActivityAwardEntity activityAwardEntity);
 
 }

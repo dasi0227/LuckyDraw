@@ -3,7 +3,7 @@ package com.dasi.domain.activity.service.chain.impl;
 import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
-import com.dasi.domain.activity.model.queue.ActivitySkuStock;
+import com.dasi.domain.activity.model.io.ActivitySkuStock;
 import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.stock.IActivityStock;

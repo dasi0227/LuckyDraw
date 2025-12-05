@@ -3,11 +3,10 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.activity.event.RechargeSkuStockEmptyEvent;
 import com.dasi.domain.activity.model.entity.*;
-import com.dasi.domain.activity.model.queue.ActivitySkuStock;
+import com.dasi.domain.activity.model.io.ActivitySkuStock;
 import com.dasi.domain.activity.model.type.ActivityState;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.model.type.RechargeState;
-import com.dasi.domain.activity.model.type.TaskState;
 import com.dasi.domain.activity.model.vo.AccountSurplusSnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
@@ -47,12 +46,6 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IRechargeOrderDao rechargeOrderDao;
-
-    @Resource
-    private ITaskDao taskDao;
-
-    @Resource
-    private IActivityAwardDao activityAwardDao;
 
     @Resource
     private IActivityAccountDao activityAccountDao;
@@ -570,101 +563,6 @@ public class ActivityRepository implements IActivityRepository {
                 throw new AppException("（抽奖）保存抽奖订单失败：orderId=" + orderId);
             }
 
-        } finally {
-            dbRouterStrategy.clear();
-        }
-    }
-
-    @Override
-    public void saveActivityAward(ActivityAwardEntity activityAwardEntity, TaskEntity taskEntity) {
-
-        String userId = activityAwardEntity.getUserId();
-
-        // 1. 构建数据库对象
-        ActivityAward activityAward = new ActivityAward();
-        activityAward.setUserId(activityAwardEntity.getUserId());
-        activityAward.setActivityId(activityAwardEntity.getActivityId());
-        activityAward.setOrderId(activityAwardEntity.getOrderId());
-        activityAward.setAwardId(activityAwardEntity.getAwardId());
-        activityAward.setAwardName(activityAwardEntity.getAwardName());
-        activityAward.setAwardTime(activityAwardEntity.getAwardTime());
-        activityAward.setAwardState(activityAwardEntity.getAwardState().name());
-
-        Task task = new Task();
-        task.setUserId(taskEntity.getUserId());
-        task.setMessageId(taskEntity.getMessageId());
-        task.setTopic(taskEntity.getTopic());
-        task.setMessage(taskEntity.getMessage());
-        task.setTaskState(taskEntity.getTaskState().name());
-
-        RaffleOrder raffleOrder = new RaffleOrder();
-        raffleOrder.setUserId(activityAwardEntity.getUserId());
-        raffleOrder.setOrderId(activityAwardEntity.getOrderId());
-        raffleOrder.setRaffleState(RaffleState.CREATED.name());
-
-        try {
-            dbRouterStrategy.doRouter(userId);
-
-            // 2. 入库
-            Boolean success = transactionTemplate.execute(status -> {
-                try {
-                    // 写入记录
-                    activityAwardDao.saveActivityAward(activityAward);
-                    taskDao.saveTask(task);
-
-                    // 更新订单状态
-                    if (raffleOrderDao.updateRaffleOrderState(raffleOrder) != 1) {
-                        status.setRollbackOnly();
-                        return false;
-                    }
-                    return true;
-                } catch (Exception e) {
-                    status.setRollbackOnly();
-                    log.error("【中奖】保存中奖记录时发生错误：error={}", e.getMessage());
-                    return false;
-                }
-            });
-
-            if (Boolean.TRUE.equals(success)) {
-                raffleOrder.setRaffleState(RaffleState.USED.name());
-                raffleOrderDao.updateRaffleOrderState(raffleOrder);
-                log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", activityAwardEntity.getUserId(), activityAwardEntity.getActivityId(), activityAwardEntity.getAwardId());
-
-                // 3. 发送到消息队列
-                try {
-                    eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-                    task.setTaskState(TaskState.DISTRIBUTED.name());
-                    taskDao.updateTaskState(task);
-                    log.info("【中奖】发送中奖记录消息：messageId={}", taskEntity.getMessageId());
-                } catch (Exception e) {
-                    task.setTaskState(TaskState.FAILED.name());
-                    taskDao.updateTaskState(task);
-                    throw new AppException("（中奖）发送中奖记录消息失败：messageId=" + taskEntity.getMessageId());
-                }
-
-            } else {
-                raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
-                raffleOrderDao.updateRaffleOrderState(raffleOrder);
-                throw new AppException("保存中奖记录失败：orderId=" + raffleOrder.getOrderId());
-            }
-
-        } finally {
-            dbRouterStrategy.clear();
-        }
-
-    }
-
-    @Override
-    public void updateActivityAwardState(ActivityAwardEntity activityAwardEntity) {
-        try {
-            dbRouterStrategy.doRouter(activityAwardEntity.getUserId());
-
-            ActivityAward activityAward = new ActivityAward();
-            activityAward.setUserId(activityAwardEntity.getUserId());
-            activityAward.setOrderId(activityAwardEntity.getOrderId());
-            activityAward.setAwardId(activityAwardEntity.getAwardId());
-            activityAward.setAwardState(activityAwardEntity.getAwardState().name());
-            activityAwardDao.updateActivityAwardState(activityAward);
         } finally {
             dbRouterStrategy.clear();
         }

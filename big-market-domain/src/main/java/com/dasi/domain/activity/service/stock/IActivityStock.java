@@ -1,6 +1,6 @@
 package com.dasi.domain.activity.service.stock;
 
-import com.dasi.domain.activity.model.queue.ActivitySkuStock;
+import com.dasi.domain.activity.model.io.ActivitySkuStock;
 
 import java.time.LocalDateTime;
 

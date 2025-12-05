@@ -1,16 +1,16 @@
-package com.dasi.domain.activity.service.distribute.impl;
+package com.dasi.domain.award.service.distribute.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.dasi.domain.activity.event.DistributeActivityAwardEvent;
-import com.dasi.domain.activity.event.DistributeActivityAwardEvent.DistributeActivityAwardMessage;
-import com.dasi.domain.activity.model.entity.ActivityAwardEntity;
-import com.dasi.domain.activity.model.entity.TaskEntity;
-import com.dasi.domain.activity.model.io.DistributeContext;
-import com.dasi.domain.activity.model.io.DistributeResult;
-import com.dasi.domain.activity.model.type.AwardState;
-import com.dasi.domain.activity.model.type.TaskState;
-import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.distribute.IAwardDistribute;
+import com.dasi.domain.award.event.DistributeActivityAwardEvent;
+import com.dasi.domain.award.event.DistributeActivityAwardEvent.DistributeActivityAwardMessage;
+import com.dasi.domain.award.model.entity.ActivityAwardEntity;
+import com.dasi.domain.award.model.entity.TaskEntity;
+import com.dasi.domain.award.model.io.DistributeContext;
+import com.dasi.domain.award.model.io.DistributeResult;
+import com.dasi.domain.award.model.type.AwardState;
+import com.dasi.domain.award.model.type.TaskState;
+import com.dasi.domain.award.repository.IAwardRepository;
+import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +19,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
+
 @Service
 public class DefaultAwardDistribute implements IAwardDistribute {
 
     @Resource
-    private IActivityRepository activityRepository;
+    private IAwardRepository awardRepository;
 
     @Resource
     private DistributeActivityAwardEvent distributeActivityAwardEvent;
@@ -68,7 +69,7 @@ public class DefaultAwardDistribute implements IAwardDistribute {
                 .awardTime(LocalDateTime.now())
                 .awardState(AwardState.CREATED)
                 .build();
-        activityRepository.saveActivityAward(activityAwardEntity, taskEntity);
+        awardRepository.saveActivityAward(activityAwardEntity, taskEntity);
 
         return DistributeResult.builder().awardId(activityAwardEntity.getAwardId()).awardName(activityAwardEntity.getAwardName()).messageId(taskEntity.getMessageId()).build();
     }

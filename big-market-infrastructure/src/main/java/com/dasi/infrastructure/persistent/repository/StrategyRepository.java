@@ -2,6 +2,7 @@ package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.strategy.model.entity.*;
+import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleCheckType;
 import com.dasi.domain.strategy.model.vo.RuleEdgeVO;
@@ -466,18 +467,18 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public void sendStrategyAwardStockConsumeToMQ(StrategyAwardStockEntity strategyAwardStockEntity) {
+    public void sendStrategyAwardStockConsumeToMQ(StrategyAwardStock strategyAwardStock) {
         String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
-        RBlockingQueue<StrategyAwardStockEntity> blockingQueue = redisService.getBlockingQueue(queueKey);
-        RDelayedQueue<StrategyAwardStockEntity> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
+        RDelayedQueue<StrategyAwardStock> delayedQueue = redisService.getDelayedQueue(blockingQueue);
         // 构造延迟队列，三秒后才放入
-        delayedQueue.offer(strategyAwardStockEntity, 3, TimeUnit.SECONDS);
+        delayedQueue.offer(strategyAwardStock, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public StrategyAwardStockEntity getQueueValue() {
+    public StrategyAwardStock getQueueValue() {
         String queueKey = RedisKey.STRATEGY_AWARD_STOCK_QUEUE_KEY;
-        RBlockingQueue<StrategyAwardStockEntity> blockingQueue = redisService.getBlockingQueue(queueKey);
+        RBlockingQueue<StrategyAwardStock> blockingQueue = redisService.getBlockingQueue(queueKey);
         return blockingQueue.poll();
     }
 

@@ -1,6 +1,6 @@
 package com.dasi.trigger.job;
 
-import com.dasi.domain.activity.model.queue.ActivitySkuStock;
+import com.dasi.domain.activity.model.io.ActivitySkuStock;
 import com.dasi.domain.activity.service.stock.IActivityStock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

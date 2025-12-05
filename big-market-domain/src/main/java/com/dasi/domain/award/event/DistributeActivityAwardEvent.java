@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.event;
+package com.dasi.domain.award.event;
 
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;

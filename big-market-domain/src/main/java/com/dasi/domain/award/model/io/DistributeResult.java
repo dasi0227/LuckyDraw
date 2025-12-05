@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.queue;
+package com.dasi.domain.award.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivitySkuStock {
+public class DistributeResult {
 
-    private Long skuId;
+    private Long awardId;
 
-    private Long activityId;
+    private String awardName;
+
+    private String messageId;
 
 }
