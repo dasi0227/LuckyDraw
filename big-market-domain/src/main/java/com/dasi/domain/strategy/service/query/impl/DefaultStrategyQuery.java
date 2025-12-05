@@ -71,7 +71,7 @@ public class DefaultStrategyQuery implements IStrategyQuery {
         // 1. 基础信息
         Long strategyId = strategyRepository.queryStrategyIdByActivityId(activityId);
         int userScore = strategyRepository.queryUserScoreByStrategyId(userId, strategyId);
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.getCode());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.name());
         List<StrategyAwardEntity> strategyAwardEntityList = strategyRepository.queryStrategyAwardListByActivityId(activityId);
         Map<String, AwardEntity> awardEntityMap = strategyRepository.queryAwardMapByActivityId(strategyAwardEntityList, activityId);
 

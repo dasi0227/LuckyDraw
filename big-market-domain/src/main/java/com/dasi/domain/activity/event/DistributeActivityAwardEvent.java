@@ -43,9 +43,9 @@ public class DistributeActivityAwardEvent extends BaseEvent<DistributeActivityAw
 
         private String userId;
 
-        private Long awardId;
-
         private String orderId;
+
+        private Long awardId;
 
     }
 

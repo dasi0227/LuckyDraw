@@ -29,7 +29,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
         // 1. 获取规则值
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.getCode());
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.name());
         if (StringUtils.isBlank(ruleValue)) {
             return next().logic(userId, strategyId);
         }
@@ -60,7 +60,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
             Long awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
-            log.info("【检查】rule_weight 拦截：userScore={}, weight={}，awardId={}", userScore, matchedThreshold, awardId);
+            log.info("【检查】RULE_WEIGHT 拦截：userScore={}, weight={}，awardId={}", userScore, matchedThreshold, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_WEIGHT)
@@ -69,7 +69,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         }
 
         // 6. 放行走下一条规则
-        log.info("【检查】rule_weight 放行：userScore={}", userScore);
+        log.info("【检查】RULE_WEIGHT 放行：userScore={}", userScore);
         return next().logic(userId, strategyId);
     }
 

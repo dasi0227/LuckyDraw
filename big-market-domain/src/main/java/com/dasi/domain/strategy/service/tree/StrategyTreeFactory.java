@@ -21,8 +21,8 @@ public class StrategyTreeFactory {
             // 只有带有 @RuleConfig 注解的才能放入集合
             RuleConfig config = AnnotationUtils.findAnnotation(ruleTree.getClass(), RuleConfig.class);
             if (null != config) {
-                // 规则名字作为 key，对应的责任链作为 value
-                this.ruleTreeMap.put(config.ruleModel().getCode(), ruleTree);
+                // 规则名字作为 key，对应的树作为 value
+                this.ruleTreeMap.put(config.ruleModel().name(), ruleTree);
             }
         });
     }

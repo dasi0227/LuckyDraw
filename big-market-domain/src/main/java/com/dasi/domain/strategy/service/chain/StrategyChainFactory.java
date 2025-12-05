@@ -29,8 +29,7 @@ public class StrategyChainFactory {
             // 只有带有 @RuleConfig 注解的才能放入集合
             RuleConfig ruleConfig = AnnotationUtils.findAnnotation(ruleChain.getClass(), RuleConfig.class);
             if (null != ruleConfig) {
-                // 规则名字作为 key，对应的责任链作为 value
-                this.ruleChainMap.put(ruleConfig.ruleModel().getCode(), ruleChain);
+                this.ruleChainMap.put(ruleConfig.ruleModel().name(), ruleChain);
             }
         });
     }
@@ -42,7 +41,7 @@ public class StrategyChainFactory {
 
         // 没有前置规则：直接返回默认链的 clone
         if (StringUtils.isBlank(ruleModelsStr)) {
-            IStrategyChain defaultChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode());
+            IStrategyChain defaultChain = ruleChainMap.get(RuleModel.RULE_DEFAULT.name());
             return defaultChain.clone();
         }
 
@@ -60,7 +59,7 @@ public class StrategyChainFactory {
         for (int i = 1; i < ruleModels.length; i++) {
             current = current.appendNext(ruleChainMap.get(ruleModels[i]).clone());
         }
-        current.appendNext(ruleChainMap.get(RuleModel.RULE_DEFAULT.getCode()).clone());
+        current.appendNext(ruleChainMap.get(RuleModel.RULE_DEFAULT.name()).clone());
         return head;
     }
 }

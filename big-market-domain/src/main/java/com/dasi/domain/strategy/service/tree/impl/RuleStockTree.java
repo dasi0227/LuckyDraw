@@ -32,7 +32,7 @@ public class RuleStockTree implements IStrategyTree {
 
         long surplus = strategyStock.subtractStrategyAwardCount(strategyId, awardId, activityEndTime);
         if (surplus >= 0L) {
-            log.info("【检查】rule_stock 放行：awardId={}, surplus={}->{}", awardId, surplus + 1, surplus);
+            log.info("【检查】RULE_STOCK 放行：awardId={}, surplus={}->{}", awardId, surplus + 1, surplus);
             StrategyAwardStockEntity stockUpdateRequest = StrategyAwardStockEntity.builder()
                     .awardId(awardId)
                     .strategyId(strategyId)
@@ -45,7 +45,7 @@ public class RuleStockTree implements IStrategyTree {
                     .ruleModel(RuleModel.RULE_STOCK)
                     .build();
         } else {
-            log.info("【检查】rule_stock 拦截：surplus={}", surplus);
+            log.info("【检查】RULE_STOCK 拦截：surplus={}", surplus);
             return RuleCheckResult.builder()
                     .awardId(null)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)

@@ -7,14 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RuleModel {
 
-    RULE_WEIGHT("rule_weight"),
-    RULE_BLACKLIST("rule_blacklist"),
-    RULE_LOCK("rule_lock"),
-    RULE_LUCK("rule_luck"),
-    RULE_DEFAULT("rule_default"),
-    RULE_STOCK("rule_stock"),
-    ;
-
-    private final String code;
+    RULE_WEIGHT,
+    RULE_BLACKLIST,
+    RULE_LOCK,
+    RULE_LUCK,
+    RULE_DEFAULT,
+    RULE_STOCK;
 
 }
