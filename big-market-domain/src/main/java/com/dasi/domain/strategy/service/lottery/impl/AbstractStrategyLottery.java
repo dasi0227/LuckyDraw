@@ -1,10 +1,9 @@
 package com.dasi.domain.strategy.service.lottery.impl;
 
+import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
 import com.dasi.domain.strategy.model.io.RuleCheckContext;
 import com.dasi.domain.strategy.model.io.RuleCheckResult;
-import com.dasi.domain.strategy.model.io.LotteryContext;
-import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
@@ -42,7 +41,8 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
         // 3. 判断是否需要继续
         if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
-            return buildLotteryResult(ruleCheckResult.getAwardId());
+            log.info("【抽奖】得到奖品：awardId={}", ruleCheckResult.getAwardId());
+            return LotteryResult.builder().awardId(ruleCheckResult.getAwardId()).build();
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
         }
@@ -51,19 +51,11 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
         ruleCheckResult = afterCheck(ruleCheckContext);
 
         // 5. 返回结果
-        return buildLotteryResult(ruleCheckResult.getAwardId());
+        log.info("【抽奖】得到奖品：awardId={}", ruleCheckResult.getAwardId());
+        return LotteryResult.builder().awardId(ruleCheckResult.getAwardId()).build();
     }
 
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);
     protected abstract RuleCheckResult afterCheck(RuleCheckContext ruleCheckContext);
-
-    private LotteryResult buildLotteryResult(Long awardId) {
-        AwardEntity awardEntity = strategyRepository.queryAwardByAwardId(awardId);
-        return LotteryResult.builder()
-                .awardId(awardId)
-                .awardName(awardEntity.getAwardName())
-                .awardConfig(awardEntity.getAwardConfig())
-                .build();
-    }
 
 }

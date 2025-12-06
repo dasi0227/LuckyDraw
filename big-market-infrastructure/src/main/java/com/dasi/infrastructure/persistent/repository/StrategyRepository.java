@@ -270,30 +270,6 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public AwardEntity queryAwardByAwardId(Long awardId) {
-        // 先查缓存
-        String cacheKey = RedisKey.AWARD_KEY + awardId;
-        AwardEntity awardEntity = redisService.getValue(cacheKey);
-        if (awardEntity != null) {
-            return awardEntity;
-        }
-
-        // 再查数据库
-        Award award = awardDao.queryAwardByAwardId(awardId);
-        if (award == null) throw new AppException("（数据库）Award 不存在：awardId=" + awardId);
-        awardEntity = AwardEntity.builder()
-                .awardId(award.getAwardId())
-                .awardName(award.getAwardName())
-                .awardConfig(award.getAwardConfig())
-                .awardDesc(award.getAwardDesc())
-                .build();
-
-        // 缓存后返回
-        redisService.setValue(cacheKey, awardEntity);
-        return awardEntity;
-    }
-
-    @Override
     public String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Long awardId) {
         // 先查缓存
         String cacheKey = RedisKey.TREE_ID_KEY + strategyId + Delimiter.UNDERSCORE + awardId;

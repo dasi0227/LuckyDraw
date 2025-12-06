@@ -156,11 +156,11 @@ public class BehaviorRepository implements IBehaviorRepository {
                         eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                         task.setTaskState(TaskState.DISTRIBUTED.name());
                         taskDao.updateTaskState(task);
-                        log.info("【返利】发送返利订单消息成功：messageId={}", taskEntity.getMessageId());
+                        log.info("【返利】发送返利消息成功：messageId={}", taskEntity.getMessageId());
                     } catch (Exception e) {
                         task.setTaskState(TaskState.FAILED.name());
                         taskDao.updateTaskState(task);
-                        log.info("【返利】发送返利订单消息失败：messageId={}", taskEntity.getMessageId());
+                        log.info("【返利】发送返利消息失败：messageId={}", taskEntity.getMessageId());
                     }
                 }
             } else {
@@ -173,7 +173,7 @@ public class BehaviorRepository implements IBehaviorRepository {
     }
 
     @Override
-    public int updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
+    public void updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
         try {
             dbRouterStrategy.doRouter(rewardOrderEntity.getUserId());
 
@@ -182,7 +182,7 @@ public class BehaviorRepository implements IBehaviorRepository {
             rewardOrder.setBizId(rewardOrderEntity.getBizId());
             rewardOrder.setUserId(rewardOrderEntity.getUserId());
             rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
-            return rewardOrderDao.updateRewardOrderState(rewardOrder);
+            rewardOrderDao.updateRewardOrderState(rewardOrder);
         } finally {
             dbRouterStrategy.clear();
         }

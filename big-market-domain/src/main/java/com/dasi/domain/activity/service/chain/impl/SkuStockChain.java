@@ -46,7 +46,7 @@ public class SkuStockChain extends AbstractActivityChain {
                 .activityId(activityEntity.getActivityId())
                 .build();
         activityRepository.sendActivitySkuStockConsumeToMQ(activitySkuStock);
-        log.info("【检查】sku_stock 放行：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
+        log.info("【检查】SKU_STOCK 放行：activityId={}，skuId={}, surplus={}->{}", activityEntity.getActivityId(), activitySkuEntity.getSkuId(), surplus + 1, surplus);
 
         return next().action(actionChainCheckAggregate);
     }

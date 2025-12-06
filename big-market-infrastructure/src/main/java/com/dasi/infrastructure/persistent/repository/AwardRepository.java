@@ -1,18 +1,24 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.dasi.domain.activity.model.type.RaffleState;
+import com.dasi.domain.award.model.type.RaffleState;
 import com.dasi.domain.award.model.entity.ActivityAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
+import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.IActivityAwardDao;
+import com.dasi.infrastructure.persistent.dao.IAwardDao;
 import com.dasi.infrastructure.persistent.dao.IRaffleOrderDao;
 import com.dasi.infrastructure.persistent.dao.ITaskDao;
 import com.dasi.infrastructure.persistent.po.ActivityAward;
+import com.dasi.infrastructure.persistent.po.Award;
 import com.dasi.infrastructure.persistent.po.RaffleOrder;
 import com.dasi.infrastructure.persistent.po.Task;
+import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -25,6 +31,9 @@ import javax.annotation.Resource;
 public class AwardRepository implements IAwardRepository {
 
     @Resource
+    private IAwardDao awardDao;
+
+    @Resource
     private IRaffleOrderDao raffleOrderDao;
 
     @Resource
@@ -32,6 +41,9 @@ public class AwardRepository implements IAwardRepository {
 
     @Resource
     private IActivityAwardDao activityAwardDao;
+
+    @Resource
+    private IRedisService redisService;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -46,6 +58,7 @@ public class AwardRepository implements IAwardRepository {
     public void saveActivityAward(ActivityAwardEntity activityAwardEntity, TaskEntity taskEntity) {
 
         String userId = activityAwardEntity.getUserId();
+        String orderId = activityAwardEntity.getOrderId();
 
         // 1. 构建数据库对象
         ActivityAward activityAward = new ActivityAward();
@@ -80,10 +93,7 @@ public class AwardRepository implements IAwardRepository {
                     taskDao.saveTask(task);
 
                     // 更新订单状态
-                    if (raffleOrderDao.updateRaffleOrderState(raffleOrder) != 1) {
-                        status.setRollbackOnly();
-                        return false;
-                    }
+                    raffleOrderDao.updateRaffleOrderState(raffleOrder);
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -93,26 +103,27 @@ public class AwardRepository implements IAwardRepository {
             });
 
             if (Boolean.TRUE.equals(success)) {
-                raffleOrder.setRaffleState(RaffleState.USED.name());
-                raffleOrderDao.updateRaffleOrderState(raffleOrder);
-                log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", activityAwardEntity.getUserId(), activityAwardEntity.getActivityId(), activityAwardEntity.getAwardId());
-
                 // 3. 发送到消息队列
                 try {
+                    raffleOrder.setRaffleState(RaffleState.USED.name());
+                    raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                    log.info("【中奖】使用抽奖订单成功：orderId={}", orderId);
+
                     eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                     task.setTaskState(TaskState.DISTRIBUTED.name());
                     taskDao.updateTaskState(task);
-                    log.info("【中奖】发送中奖记录消息：messageId={}", taskEntity.getMessageId());
+                    log.info("【中奖】发送中奖消息成功：messageId={}", taskEntity.getMessageId());
                 } catch (Exception e) {
                     task.setTaskState(TaskState.FAILED.name());
                     taskDao.updateTaskState(task);
-                    throw new AppException("（中奖）发送中奖记录消息失败：messageId=" + taskEntity.getMessageId());
+                    raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
+                    raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                    throw new AppException("（中奖）发送中奖消息失败：messageId=" + taskEntity.getMessageId());
                 }
-
             } else {
                 raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
                 raffleOrderDao.updateRaffleOrderState(raffleOrder);
-                throw new AppException("保存中奖记录失败：orderId=" + raffleOrder.getOrderId());
+                throw new AppException("（中奖）使用抽奖订单失败：orderId=" + orderId);
             }
 
         } finally {
@@ -137,4 +148,28 @@ public class AwardRepository implements IAwardRepository {
         }
     }
 
+    @Override
+    public AwardEntity queryAwardByAwardId(Long awardId) {
+        // 先查缓存
+        String cacheKey = RedisKey.AWARD_KEY + awardId;
+        AwardEntity awardEntity = redisService.getValue(cacheKey);
+        if (awardEntity != null) {
+            return awardEntity;
+        }
+
+        // 再查数据库
+        Award award = awardDao.queryAwardByAwardId(awardId);
+        if (award == null) throw new AppException("（数据库）Award 不存在：awardId=" + awardId);
+        awardEntity = AwardEntity.builder()
+                .awardId(award.getAwardId())
+                .awardType(AwardType.valueOf(award.getAwardType()))
+                .awardName(award.getAwardName())
+                .awardConfig(award.getAwardConfig())
+                .awardDesc(award.getAwardDesc())
+                .build();
+
+        // 缓存后返回
+        redisService.setValue(cacheKey, awardEntity);
+        return awardEntity;
+    }
 }

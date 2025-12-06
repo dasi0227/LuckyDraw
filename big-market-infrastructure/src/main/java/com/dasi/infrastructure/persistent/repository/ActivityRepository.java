@@ -453,7 +453,7 @@ public class ActivityRepository implements IActivityRepository {
                 rechargeOrder.setRechargeState(RechargeState.USED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
 
-                log.info("【充值】userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
+                log.info("【充值】账户余额变化：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
@@ -552,7 +552,7 @@ public class ActivityRepository implements IActivityRepository {
             // TODO：是否需要更新抽奖订单状态
             if (Boolean.TRUE.equals(success)) {
                 AccountSurplusSnapshot after = getAccountSurplusSnapshot(userId, activityId);
-                log.info("【抽奖】userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
+                log.info("【抽奖】账户余额变化：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),

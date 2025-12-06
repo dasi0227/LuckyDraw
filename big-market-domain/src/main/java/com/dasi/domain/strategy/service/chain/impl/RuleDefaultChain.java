@@ -21,7 +21,7 @@ public class RuleDefaultChain extends AbstractStrategyChain {
     @Override
     public RuleCheckResult logic(String userId, Long strategyId) {
         Long awardId = strategyLottery.getLotteryAward(strategyId);
-        log.info("【检查】rule_default 拦截：awardId={}", awardId);
+        log.info("【检查】RULE_DEFAULT 拦截：awardId={}", awardId);
         return RuleCheckResult.builder()
                 .awardId(awardId)
                 .ruleModel(RuleModel.RULE_DEFAULT)

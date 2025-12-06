@@ -1,8 +1,8 @@
 package com.dasi.domain.behavior.service.reward.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.dasi.domain.behavior.event.DistributeBehaviorRewardEvent;
-import com.dasi.domain.behavior.event.DistributeBehaviorRewardEvent.DistributeBehaviorRewardMessage;
+import com.dasi.domain.behavior.event.DispatchBehaviorRewardEvent;
+import com.dasi.domain.behavior.event.DispatchBehaviorRewardEvent.DispatchBehaviorRewardMessage;
 import com.dasi.domain.behavior.model.aggregate.RewardOrderAggregate;
 import com.dasi.domain.behavior.model.entity.BehaviorEntity;
 import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
@@ -35,7 +35,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
     private IBehaviorRepository behaviorRepository;
 
     @Resource
-    private DistributeBehaviorRewardEvent distributeBehaviorRewardEvent;
+    private DispatchBehaviorRewardEvent dispatchBehaviorRewardEvent;
 
     @Resource
     private IUniqueIdGenerator uniqueIdGenerator;
@@ -76,20 +76,20 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
             rewardOrderEntityList.add(rewardOrderEntity);
 
             // 3. 构造消息实体
-            DistributeBehaviorRewardMessage distributeBehaviorRewardMessage = DistributeBehaviorRewardMessage.builder()
+            DispatchBehaviorRewardMessage dispatchBehaviorRewardMessage = DispatchBehaviorRewardMessage.builder()
                         .userId(rewardOrderEntity.getUserId())
                         .bizId(rewardOrderEntity.getBizId())
                         .orderId(rewardOrderEntity.getOrderId())
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .build();
-            EventMessage<DistributeBehaviorRewardMessage> eventMessage = distributeBehaviorRewardEvent.buildEventMessage(distributeBehaviorRewardMessage);
+            EventMessage<DispatchBehaviorRewardMessage> eventMessage = dispatchBehaviorRewardEvent.buildEventMessage(dispatchBehaviorRewardMessage);
 
             // 4. 构造任务实体
             TaskEntity taskEntity = TaskEntity.builder()
                         .userId(userId)
                         .messageId(eventMessage.getMessageId())
-                        .topic(distributeBehaviorRewardEvent.getTopic())
+                        .topic(dispatchBehaviorRewardEvent.getTopic())
                         .message(JSON.toJSONString(eventMessage)  )
                         .taskState(TaskState.CREATED)
                         .build();
@@ -113,8 +113,8 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
     }
 
     @Override
-    public int updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
-        return behaviorRepository.updateRewardOrderState(rewardOrderEntity);
+    public void updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
+        behaviorRepository.updateRewardOrderState(rewardOrderEntity);
     }
 
 }

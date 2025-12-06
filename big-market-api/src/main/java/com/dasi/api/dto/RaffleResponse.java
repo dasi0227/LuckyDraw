@@ -13,6 +13,8 @@ public class RaffleResponse {
 
     private Long awardId;
 
+    private String awardType;
+
     private String awardName;
 
 }

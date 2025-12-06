@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IUserAwardDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.UserAward">
+        <id     property="id"         column="id"/>
+        <result property="orderId"     column="order_id"/>
+        <result property="userId"      column="user_id"/>
+        <result property="awardId"     column="award_id"/>
+        <result property="awardType"   column="award_type"/>
+        <result property="awardName"   column="award_name"/>
+        <result property="awardDesc"   column="award_desc"/>
+        <result property="createTime"  column="create_time"/>
+        <result property="updateTime"  column="update_time"/>
+    </resultMap>
+
+    <insert id="saveUserAward" parameterType="com.dasi.infrastructure.persistent.po.UserAward">
+        INSERT INTO user_award (order_id, user_id, award_id, award_type, award_name, award_desc)
+        VALUES (#{orderId}, #{userId}, #{awardId}, #{awardType}, #{awardName}, #{awardDesc})
+    </insert>
+
+    <select id="queryUserAwardByOrderId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT *
+        FROM user_award
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

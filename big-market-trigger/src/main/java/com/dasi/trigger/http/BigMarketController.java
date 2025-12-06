@@ -74,6 +74,7 @@ public class BigMarketController implements IBigMarketService {
     @PostMapping("/raffle")
     @Override
     public Result<RaffleResponse> raffle(@RequestBody RaffleRequest raffleRequest) {
+
         String userId = raffleRequest.getUserId();
         Long activityId = raffleRequest.getActivityId();
 
@@ -88,11 +89,11 @@ public class BigMarketController implements IBigMarketService {
         LotteryResult lotteryResult = strategyLottery.doStrategyLottery(lotteryContext);
 
         // 3. 记录中奖
-        log.info("=========================== 记录中奖 ===========================");
-        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).awardName(lotteryResult.getAwardName()).orderId(raffleResult.getOrderId()).build();
+        log.info("=========================== 记录中奖：userId={},activityId={} ===========================", userId, activityId);
+        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
-        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).build();
+        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardType(distributeResult.getAwardType()).awardName(distributeResult.getAwardName()).build();
         return Result.success(raffleResponse);
     }
 

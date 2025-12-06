@@ -122,5 +122,5 @@ spring:
         prefetch: 1
     topic:
       recharge_sku_stock_empty: recharge_sku_stock_empty
-      distribute_raffle_award: distribute_raffle_award
-      distribute_behavior_reward: distribute_behavior_reward
+      dispatch_raffle_award: dispatch_raffle_award
+      dispatch_behavior_reward: dispatch_behavior_reward

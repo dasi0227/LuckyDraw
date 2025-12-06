@@ -1,6 +1,6 @@
-package com.dasi.domain.strategy.model.entity;
+package com.dasi.domain.award.model.entity;
 
-import com.dasi.domain.strategy.model.type.AwardType;
+import com.dasi.domain.award.model.type.AwardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

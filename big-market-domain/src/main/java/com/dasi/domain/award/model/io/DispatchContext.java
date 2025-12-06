@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeliverContext {
+public class DispatchContext {
 
     private String userId;
 

@@ -1,18 +1,23 @@
 package com.dasi.infrastructure.persistent.po;
 
-
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Award {
+public class UserAward {
 
     /** 自增ID */
-    private Integer id;
+    private Long id;
+
+    /** 订单ID */
+    private String orderId;
+
+    /** 用户ID */
+    private String userId;
 
     /** 奖品ID */
-    private Long awardId;
+    private String awardId;
 
     /** 奖品类型 */
     private String awardType;
@@ -23,13 +28,10 @@ public class Award {
     /** 奖品描述 */
     private String awardDesc;
 
-    /** 奖品配置 */
-    private String awardConfig;
-
     /** 创建时间 */
     private LocalDateTime createTime;
 
     /** 更新时间 */
     private LocalDateTime updateTime;
-
+    
 }

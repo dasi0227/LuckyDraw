@@ -53,7 +53,6 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
                 .map(RewardOrderEntity::getOrderId)
                 .collect(Collectors.toList());
 
-        log.info("【返利】成功获得：{}", rewardDescList);
         return BehaviorResult.builder()
                 .orderIds(orderIds)
                 .rewardDescList(rewardDescList)

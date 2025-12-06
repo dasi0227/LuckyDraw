@@ -1,5 +1,6 @@
-package com.dasi.domain.award.event;
+package com.dasi.domain.behavior.event;
 
+import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.util.TimeUtil;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class DistributeActivityAwardEvent extends BaseEvent<DistributeActivityAwardEvent.DistributeActivityAwardMessage> {
+public class DispatchBehaviorRewardEvent extends BaseEvent<DispatchBehaviorRewardEvent.DispatchBehaviorRewardMessage> {
 
-    @Value("${spring.rabbitmq.topic.distribute_raffle_award}")
+    @Value("${spring.rabbitmq.topic.dispatch_behavior_reward}")
     private String topic;
 
     @Override
@@ -27,8 +28,8 @@ public class DistributeActivityAwardEvent extends BaseEvent<DistributeActivityAw
     private IUniqueIdGenerator uniqueIdGenerator;
 
     @Override
-    public EventMessage<DistributeActivityAwardMessage> buildEventMessage(DistributeActivityAwardMessage data) {
-        return EventMessage.<DistributeActivityAwardMessage>builder()
+    public EventMessage<DispatchBehaviorRewardMessage> buildEventMessage(DispatchBehaviorRewardMessage data) {
+        return EventMessage.<DispatchBehaviorRewardMessage>builder()
                 .messageId(uniqueIdGenerator.nextMessageId())
                 .time(TimeUtil.thisTime(true))
                 .data(data)
@@ -39,14 +40,17 @@ public class DistributeActivityAwardEvent extends BaseEvent<DistributeActivityAw
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistributeActivityAwardMessage {
+    public static class DispatchBehaviorRewardMessage {
 
         private String userId;
 
+        private String bizId;
+
         private String orderId;
 
-        private Long awardId;
+        private RewardType rewardType;
+
+        private String rewardValue;
 
     }
-
 }

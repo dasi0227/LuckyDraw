@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IUserAccountDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.UserAccount">
+        <id     property="id"        column="id"/>
+        <result property="userId"     column="user_id"/>
+        <result property="userState"  column="user_state"/>
+        <result property="userPoint"  column="user_point"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="queryUserAccountByUserId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT user_id, user_state, user_point
+        FROM user_account
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 创建 -->
+    <insert id="createUserAccount" parameterType="com.dasi.infrastructure.persistent.po.UserAccount">
+        INSERT INTO user_account (user_id, user_state, user_point)
+        VALUES (#{userId}, #{userState}, #{userPoint})
+    </insert>
+
+    <!-- 增加积分 -->
+    <update id="increaseUserPoint" parameterType="java.lang.Integer">
+        UPDATE user_account
+        SET user_point = user_point + #{userPoint}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 消耗积分 -->
+    <update id="consumeUserPoint" parameterType="java.lang.Integer">
+        UPDATE user_account
+        SET user_point = user_point - #{userPoint}
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

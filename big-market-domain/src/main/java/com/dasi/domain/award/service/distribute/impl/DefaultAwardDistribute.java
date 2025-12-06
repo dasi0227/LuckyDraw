@@ -1,8 +1,8 @@
 package com.dasi.domain.award.service.distribute.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.dasi.domain.award.event.DistributeActivityAwardEvent;
-import com.dasi.domain.award.event.DistributeActivityAwardEvent.DistributeActivityAwardMessage;
+import com.dasi.domain.award.event.DispatchActivityAwardEvent;
+import com.dasi.domain.award.event.DispatchActivityAwardEvent.DispatchActivityAwardMessage;
 import com.dasi.domain.award.model.entity.ActivityAwardEntity;
 import com.dasi.domain.award.model.entity.TaskEntity;
 import com.dasi.domain.award.model.io.DistributeContext;
@@ -11,6 +11,7 @@ import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
+import com.dasi.domain.award.model.entity.AwardEntity;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +28,7 @@ public class DefaultAwardDistribute implements IAwardDistribute {
     private IAwardRepository awardRepository;
 
     @Resource
-    private DistributeActivityAwardEvent distributeActivityAwardEvent;
+    private DispatchActivityAwardEvent dispatchActivityAwardEvent;
 
     @Override
     public DistributeResult doAwardDistribute(DistributeContext distributeContext) {
@@ -43,35 +44,43 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         if (awardId == null) throw new AppException("（抽奖）缺少参数 awardId");
 
         // 2. 构建消息对象
-        DistributeActivityAwardMessage distributeActivityAwardMessage = DistributeActivityAwardMessage.builder()
+        DispatchActivityAwardMessage dispatchActivityAwardMessage = DispatchActivityAwardMessage.builder()
                 .userId(distributeContext.getUserId())
                 .awardId(distributeContext.getAwardId())
                 .orderId(distributeContext.getOrderId())
                 .build();
-        BaseEvent.EventMessage<DistributeActivityAwardMessage> eventMessage = distributeActivityAwardEvent.buildEventMessage(distributeActivityAwardMessage);
+        BaseEvent.EventMessage<DispatchActivityAwardMessage> eventMessage = dispatchActivityAwardEvent.buildEventMessage(dispatchActivityAwardMessage);
 
         // 3. 构建任务对象
         TaskEntity taskEntity = TaskEntity.builder()
                 .userId(distributeContext.getUserId())
                 .messageId(eventMessage.getMessageId())
-                .topic(distributeActivityAwardEvent.getTopic())
+                .topic(dispatchActivityAwardEvent.getTopic())
                 .message(JSON.toJSONString(eventMessage))
                 .taskState(TaskState.CREATED)
                 .build();
 
-        // 4. 保存
+        // 4. 查询奖品信息
+        AwardEntity awardEntity = awardRepository.queryAwardByAwardId(awardId);
+
+        // 5. 保存中奖记录
         ActivityAwardEntity activityAwardEntity = ActivityAwardEntity.builder()
                 .userId(distributeContext.getUserId())
                 .activityId(distributeContext.getActivityId())
                 .orderId(distributeContext.getOrderId())
                 .awardId(distributeContext.getAwardId())
-                .awardName(distributeContext.getAwardName())
+                .awardName(awardEntity.getAwardName())
                 .awardTime(LocalDateTime.now())
                 .awardState(AwardState.CREATED)
                 .build();
         awardRepository.saveActivityAward(activityAwardEntity, taskEntity);
 
-        return DistributeResult.builder().awardId(activityAwardEntity.getAwardId()).awardName(activityAwardEntity.getAwardName()).messageId(taskEntity.getMessageId()).build();
+        return DistributeResult.builder()
+                .messageId(taskEntity.getMessageId())
+                .awardId(activityAwardEntity.getAwardId())
+                .awardName(awardEntity.getAwardName())
+                .awardType(awardEntity.getAwardType().name())
+                .build();
     }
 
 }

@@ -11,7 +11,7 @@ public interface IBehaviorRepository {
 
     void saveRewardOrder(String userId, List<RewardOrderAggregate> rewardOrderAggregateList);
 
-    int updateRewardOrderState(RewardOrderEntity rewardOrderEntity);
+    void updateRewardOrderState(RewardOrderEntity rewardOrderEntity);
 
     List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType);
 

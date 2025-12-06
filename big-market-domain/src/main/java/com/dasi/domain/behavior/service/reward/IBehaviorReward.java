@@ -8,6 +8,6 @@ public interface IBehaviorReward {
 
     BehaviorResult doBehaviorReward(BehaviorContext behaviorContext);
 
-    int updateRewardOrderState(RewardOrderEntity rewardOrderEntity);
+    void updateRewardOrderState(RewardOrderEntity rewardOrderEntity);
 
 }

@@ -3,100 +3,45 @@
 
     <contextName>logback</contextName>
 
-    <!-- 从 Spring 读取 logging.path，有需要再用 -->
-    <springProperty scope="context" name="log.path" source="logging.path"/>
-
-    <!-- Spring Boot 自带的高亮/异常格式 -->
-    <conversionRule conversionWord="clr"
-                    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex"
-                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
-
-    <!-- 控制台输出：INFO -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{4} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- ========= 文件输出（当前全部关闭，如需启用取消下面大段注释） ========= -->
-    <!--
-    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./data/log/log_info.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{4} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./data/log/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>15</maxHistory>
-            <totalSizeCap>10GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./data/log/log.info.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{4} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./data/log/log.info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>5GB</totalSizeCap>
-        </rollingPolicy>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
-        </filter>
-    </appender>
-
-    <appender name="ASYNC_FILE_INFO" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>0</discardingThreshold>
-        <queueSize>8192</queueSize>
-        <neverBlock>true</neverBlock>
-        <includeCallerData>false</includeCallerData>
-        <appender-ref ref="INFO_FILE"/>
-    </appender>
-
-    <appender name="ASYNC_FILE_ERROR" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>0</discardingThreshold>
-        <queueSize>1024</queueSize>
-        <neverBlock>true</neverBlock>
-        <includeCallerData>false</includeCallerData>
-        <appender-ref ref="ERROR_FILE"/>
-    </appender>
-    -->
+    <!-- 日志输出路径 -->
+    <property name="LOG_PATH" value="./log"/>
 
     <!-- 开发环境下，调低一些三方库日志噪音 -->
     <springProfile name="dev">
         <logger name="com.zaxxer.hikari" level="ERROR"/>
-        <logger name="org.redisson" level="WARN"/>
+        <logger name="org.redisson" level="ERROR"/>
         <logger name="io.netty.resolver.dns" level="ERROR"/>
-        <logger name="org.springframework.amqp" level="WARN"/>
-        <logger name="org.springframework.boot.web.servlet.context" level="WARN"/>
-        org.springframework.boot
+        <logger name="org.springframework.amqp" level="ERROR"/>
+        <logger name="org.springframework.boot.web.servlet.context" level="ERROR"/>
     </springProfile>
 
-    <!-- 根日志：只输出到控制台 -->
+    <!--  公共转换规则 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- ================== 控制台输出（主业务日志） ================== -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{1} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <!-- 如果以后想重新打开文件日志，就在这里再挂上异步 appender -->
-        <!-- <appender-ref ref="ASYNC_FILE_INFO"/> -->
-        <!-- <appender-ref ref="ASYNC_FILE_ERROR"/> -->
     </root>
+
+    <!-- ================== job.log（定时任务日志） ================== -->
+    <appender name="JOB_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/job.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-8.-8thread] %-5p %-40class{1} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <logger name="com.dasi.trigger.job" level="INFO" additivity="false">
+        <appender-ref ref="JOB_FILE"/>
+    </logger>
 
 </configuration>

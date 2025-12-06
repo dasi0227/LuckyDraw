@@ -10,7 +10,7 @@ public interface IRewardOrderDao {
 
     void saveRewardOrder(RewardOrder rewardOrder);
 
-    int updateRewardOrderState(RewardOrder rewardOrder);
+    void updateRewardOrderState(RewardOrder rewardOrder);
 
     RewardOrder querySign(RewardOrder rewardOrderReq);
 

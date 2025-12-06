@@ -1,4 +1,4 @@
-package com.dasi.domain.award.model.io;
+package com.dasi.domain.behavior.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DistributeContext {
+public class DispatchContext {
 
     private String userId;
-
-    private Long activityId;
 
     private String orderId;
 

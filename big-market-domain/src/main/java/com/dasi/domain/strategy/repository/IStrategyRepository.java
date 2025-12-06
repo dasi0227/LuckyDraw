@@ -26,8 +26,6 @@ public interface IStrategyRepository {
 
     String queryStrategyRuleValue(Long strategyId, String ruleModel);
 
-    AwardEntity queryAwardByAwardId(Long awardId);
-
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 
     String queryStrategyAwardTreeIdByStrategyIdAndAwardId(Long strategyId, Long awardId);

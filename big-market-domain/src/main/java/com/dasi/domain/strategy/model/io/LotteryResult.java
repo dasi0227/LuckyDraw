@@ -13,8 +13,4 @@ public class LotteryResult {
 
     private Long awardId;
 
-    private String awardName;
-
-    private String awardConfig;
-
 }

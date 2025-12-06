@@ -5,7 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.dasi.domain.activity.model.io.RechargeContext;
 import com.dasi.domain.activity.model.io.RechargeResult;
 import com.dasi.domain.activity.service.recharge.ISkuRecharge;
-import com.dasi.domain.behavior.event.DistributeBehaviorRewardEvent.DistributeBehaviorRewardMessage;
+import com.dasi.domain.behavior.event.DispatchBehaviorRewardEvent.DispatchBehaviorRewardMessage;
 import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.RewardType;
@@ -28,16 +28,17 @@ public class DispatchBehaviorReward {
     @Resource
     private IBehaviorReward behaviorReward;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.distribute_behavior_reward}"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch_behavior_reward}"))
     public void dispatchBehaviorReward(String message) {
+
         // 1. 解析消息
-        BaseEvent.EventMessage<DistributeBehaviorRewardMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<DistributeBehaviorRewardMessage>>() {}.getType());
-        DistributeBehaviorRewardMessage distributeBehaviorRewardMessage = eventMessage.getData();
-        String userId = distributeBehaviorRewardMessage.getUserId();
-        String bizId = distributeBehaviorRewardMessage.getBizId();
-        String orderId = distributeBehaviorRewardMessage.getOrderId();
-        RewardType rewardType = distributeBehaviorRewardMessage.getRewardType();
-        String rewardValue = distributeBehaviorRewardMessage.getRewardValue();
+        BaseEvent.EventMessage<DispatchBehaviorRewardMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<DispatchBehaviorRewardMessage>>() {}.getType());
+        DispatchBehaviorRewardMessage dispatchBehaviorRewardMessage = eventMessage.getData();
+        String userId = dispatchBehaviorRewardMessage.getUserId();
+        String bizId = dispatchBehaviorRewardMessage.getBizId();
+        String orderId = dispatchBehaviorRewardMessage.getOrderId();
+        RewardType rewardType = dispatchBehaviorRewardMessage.getRewardType();
+        String rewardValue = dispatchBehaviorRewardMessage.getRewardValue();
 
         RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder()
                 .userId(userId)
@@ -49,35 +50,24 @@ public class DispatchBehaviorReward {
             // 2. 处理 SKU
             if (rewardType.equals(RewardType.SKU)) {
                 Long skuId = Long.valueOf(rewardValue);
-                RechargeContext rechargeContext = RechargeContext.builder()
-                        .userId(userId)
-                        .bizId(bizId)
-                        .skuId(skuId)
-                        .build();
-                log.info("【发放】增加抽奖次数：userId={}, rewardType={}, rewardValue={}", userId, rewardType, rewardValue);
+                log.info("=========================== 账户充值：userId={},skuId={} ===========================", userId, skuId);
+                RechargeContext rechargeContext = RechargeContext.builder().userId(userId).bizId(bizId).skuId(skuId).build();
                 RechargeResult rechargeResult = skuRecharge.doSkuRecharge(rechargeContext);
-                log.info("【发放】用户充值成功：userId={}, orderId={}", userId, rechargeResult.getOrderId());
             }
 
-            // 3. 处理积分
+            // 3. TODO：处理积分
             if (rewardType.equals(RewardType.POINT)) {
-                log.info("【发放】增加积分：userId={}, rewardType={}, rewardValue={}", userId, rewardType, rewardValue);
+                Integer point = Integer.parseInt(rewardValue);
+                log.info("=========================== 账户积分：userId={},point={} ===========================", userId, point);
             }
 
             // 4. 改变状态
             rewardOrderEntity.setRewardState(RewardState.USED);
-            int count = behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            if (count == 1) {
-                log.info("【发放】更新返利订单成功：orderId={}", orderId);
-            } else {
-                rewardOrderEntity.setRewardState(RewardState.CANCELLED);
-                behaviorReward.updateRewardOrderState(rewardOrderEntity);
-                log.info("【发放】更新返利订单失败：orderId={}", orderId);
-            }
+            behaviorReward.updateRewardOrderState(rewardOrderEntity);
         } catch (Exception e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.error("【发放】获取返利失败：error={}", e.getMessage());
+            log.error("【发放】发放活动奖励时失败：error={}", e.getMessage());
         }
     }
 
