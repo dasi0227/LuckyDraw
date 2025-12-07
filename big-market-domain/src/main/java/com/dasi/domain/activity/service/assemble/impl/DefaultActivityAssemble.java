@@ -33,7 +33,7 @@ public class DefaultActivityAssemble implements IActivityAssemble {
             log.info("【装配】权益库存：activityId={}, skuId={}, surplus={}", activitySkuEntity.getActivityId(), skuId, activitySkuEntity.getStockSurplus());
             return true;
         } catch (Exception e) {
-            log.error("【装配】权益库存：error={}", e.getMessage());
+            log.error("【装配】权益库存：skuId={}, error={}", skuId, e.getMessage());
             return false;
         }
     }

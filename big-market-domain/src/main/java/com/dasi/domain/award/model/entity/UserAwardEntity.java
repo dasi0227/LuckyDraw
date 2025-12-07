@@ -1,14 +1,8 @@
-package com.dasi.infrastructure.persistent.po;
-
-import lombok.Data;
+package com.dasi.domain.award.model.entity;
 
 import java.time.LocalDateTime;
 
-@Data
-public class UserAward {
-
-    /** 自增ID */
-    private Long id;
+public class UserAwardEntity {
 
     /** 订单ID */
     private String orderId;
@@ -28,13 +22,7 @@ public class UserAward {
     /** 奖品描述 */
     private String awardDesc;
 
-    /** 奖品时间 */
+    /** 奖品描述 */
     private LocalDateTime awardTime;
-
-    /** 创建时间 */
-    private LocalDateTime createTime;
-
-    /** 更新时间 */
-    private LocalDateTime updateTime;
 
 }

@@ -377,6 +377,7 @@ CREATE TABLE user_award
     award_type  VARCHAR(32)        NOT NULL COMMENT '奖品类型',
     award_name  VARCHAR(32)        NOT NULL COMMENT '奖品名称',
     award_desc  VARCHAR(256)       NOT NULL COMMENT '奖品描述',
+    award_time  DATETIME           NOT NULL COMMENT '奖品时间',
     create_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB

@@ -11,13 +11,14 @@
         <result property="awardType"   column="award_type"/>
         <result property="awardName"   column="award_name"/>
         <result property="awardDesc"   column="award_desc"/>
+        <result property="awardTime"   column="award_time"/>
         <result property="createTime"  column="create_time"/>
         <result property="updateTime"  column="update_time"/>
     </resultMap>
 
     <insert id="saveUserAward" parameterType="com.dasi.infrastructure.persistent.po.UserAward">
-        INSERT INTO user_award (order_id, user_id, award_id, award_type, award_name, award_desc)
-        VALUES (#{orderId}, #{userId}, #{awardId}, #{awardType}, #{awardName}, #{awardDesc})
+        INSERT INTO user_award (order_id, user_id, award_id, award_type, award_name, award_desc, award_time)
+        VALUES (#{orderId}, #{userId}, #{awardId}, #{awardType}, #{awardName}, #{awardDesc}, #{awardTime})
     </insert>
 
     <select id="queryUserAwardByOrderId" parameterType="java.lang.String" resultMap="dataMap">

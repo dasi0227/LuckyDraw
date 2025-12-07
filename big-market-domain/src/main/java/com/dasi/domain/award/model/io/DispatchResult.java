@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DispatchResult {
 
-    private String userId;
+    /** 奖品类型 */
+    private String awardType;
+
+    /** 奖品名称 */
+    private String awardName;
 
 }

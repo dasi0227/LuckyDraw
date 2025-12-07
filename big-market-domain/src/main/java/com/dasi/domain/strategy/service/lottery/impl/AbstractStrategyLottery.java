@@ -25,8 +25,8 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
         String userId = lotteryContext.getUserId();
         Long strategyId = lotteryContext.getStrategyId();
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (strategyId == null) throw new AppException("（抽奖）缺少参数 strategyId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (strategyId == null) throw new AppException("缺少参数 strategyId");
 
 
         // 1. 构造输入输出
@@ -41,7 +41,6 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
         // 3. 判断是否需要继续
         if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
-            log.info("【抽奖】得到奖品：awardId={}", ruleCheckResult.getAwardId());
             return LotteryResult.builder().awardId(ruleCheckResult.getAwardId()).build();
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
@@ -51,7 +50,6 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
         ruleCheckResult = afterCheck(ruleCheckContext);
 
         // 5. 返回结果
-        log.info("【抽奖】得到奖品：awardId={}", ruleCheckResult.getAwardId());
         return LotteryResult.builder().awardId(ruleCheckResult.getAwardId()).build();
     }
 

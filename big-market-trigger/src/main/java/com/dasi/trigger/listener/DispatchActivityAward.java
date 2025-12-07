@@ -22,18 +22,22 @@ public class DispatchActivityAward {
     private IAwardDispatch awardDispatch;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "dispatch_raffle_award"))
-    public void deliverActivityAward(String message) {
+    public void dispatchActivityAward(String message) {
+
         EventMessage<DispatchActivityAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DispatchActivityAwardMessage>>() {}.getType());
         DispatchActivityAwardMessage dispatchActivityAwardMessage = eventMessage.getData();
 
-        DispatchContext dispatchContext = DispatchContext.builder()
-                .userId(dispatchActivityAwardMessage.getUserId())
-                .orderId(dispatchActivityAwardMessage.getOrderId())
-                .awardId(dispatchActivityAwardMessage.getAwardId())
-                .build();
+        String userId = dispatchActivityAwardMessage.getUserId();
+        String orderId = dispatchActivityAwardMessage.getOrderId();
+        Long awardId = dispatchActivityAwardMessage.getAwardId();
 
+        log.info("=========================== 账户获奖：userId={},awardId={} ===========================", userId, awardId);
+        DispatchContext dispatchContext = DispatchContext.builder()
+                .userId(userId)
+                .orderId(orderId)
+                .awardId(awardId)
+                .build();
         DispatchResult dispatchResult = awardDispatch.doAwardDispatch(dispatchContext);
-        log.info("【投递】{}", dispatchResult);
     }
 
 }

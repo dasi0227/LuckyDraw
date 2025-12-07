@@ -25,8 +25,8 @@ public class DefaultStrategyQuery implements IStrategyQuery {
     @Override
     public List<ActivityAwardDetail> queryActivityAward(String userId, Long activityId) {
 
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (activityId == null) throw new AppException("（抽奖）缺少参数 activityId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 1. 先拿到当前活动对应的策略的所有奖品
         List<StrategyAwardEntity> strategyAwardEntityList = strategyRepository.queryStrategyAwardListByActivityId(activityId);
@@ -65,8 +65,8 @@ public class DefaultStrategyQuery implements IStrategyQuery {
     @Override
     public StrategyRuleWeightDetail queryStrategyRuleWeight(String userId, Long activityId) {
 
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (activityId == null) throw new AppException("（抽奖）缺少参数 activityId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 1. 基础信息
         Long strategyId = strategyRepository.queryStrategyIdByActivityId(activityId);

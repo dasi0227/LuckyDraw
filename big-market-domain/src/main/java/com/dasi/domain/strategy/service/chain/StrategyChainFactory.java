@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.service.chain;
 
-import com.dasi.domain.strategy.annotation.RuleConfig;
+import com.dasi.domain.strategy.annotation.RuleModelConfig;
 import com.dasi.domain.strategy.model.entity.StrategyEntity;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,20 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class StrategyChainFactory {
 
+    @Resource
+    private IStrategyRepository strategyRepository;
+
     private final Map<String, IStrategyChain> ruleChainPrototypeCache = new ConcurrentHashMap<>();
 
     private final Map<String, IStrategyChain> ruleChainMap = new ConcurrentHashMap<>();
 
-    private final IStrategyRepository strategyRepository;
-
     // 注入所有实现了 IStrategyChain 接口的实现类，统一存入集合之中
-    public StrategyChainFactory(List<IStrategyChain> ruleChainList, IStrategyRepository strategyRepository) {
-        this.strategyRepository = strategyRepository;
+    public StrategyChainFactory(List<IStrategyChain> ruleChainList) {
         ruleChainList.forEach(ruleChain -> {
-            // 只有带有 @RuleConfig 注解的才能放入集合
-            RuleConfig ruleConfig = AnnotationUtils.findAnnotation(ruleChain.getClass(), RuleConfig.class);
-            if (null != ruleConfig) {
-                this.ruleChainMap.put(ruleConfig.ruleModel().name(), ruleChain);
+            // 只有带有 @RuleModelConfig 注解的才能放入集合
+            RuleModelConfig ruleModelConfig = AnnotationUtils.findAnnotation(ruleChain.getClass(), RuleModelConfig.class);
+            if (null != ruleModelConfig) {
+                this.ruleChainMap.put(ruleModelConfig.ruleModel().name(), ruleChain);
             }
         });
     }

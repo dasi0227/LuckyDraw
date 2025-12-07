@@ -13,7 +13,7 @@ VALUES (1001, '【测试策略1001】黑名单+权重', 'RULE_BLACKLIST,RULE_WEI
 DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
 INSERT INTO award (award_id, award_type, award_name, award_config, award_desc)
-VALUES (2001, 'FIXED_USER_POINT', '【黑名单奖品2001】1积分', '10', '黑名单奖品'),
+VALUES (2001, 'FIXED_USER_POINT', '【黑名单奖品2001】1积分', '1', '黑名单奖品'),
        (2002, 'FIXED_USER_POINT', '【兜底奖品2002】10积分', '10', '兜底奖品'),
        (2011, 'RANDOM_USER_POINT', '【积分奖品2011】随机积分', '1,50', '积分奖品'),
        (2012, 'RANDOM_USER_POINT', '【积分奖品2012】随机积分', '1,100', '积分奖品'),

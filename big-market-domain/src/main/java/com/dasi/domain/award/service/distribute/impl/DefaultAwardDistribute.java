@@ -38,10 +38,10 @@ public class DefaultAwardDistribute implements IAwardDistribute {
         Long activityId = distributeContext.getActivityId();
         String orderId = distributeContext.getOrderId();
         Long awardId = distributeContext.getAwardId();
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (activityId == null) throw new AppException("（抽奖）缺少参数 activityId");
-        if (StringUtils.isBlank(orderId)) throw new AppException("（抽奖）缺少参数 orderId");
-        if (awardId == null) throw new AppException("（抽奖）缺少参数 awardId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
+        if (StringUtils.isBlank(orderId)) throw new AppException("缺少参数 orderId");
+        if (awardId == null) throw new AppException("缺少参数 awardId");
 
         // 2. 构建消息对象
         DispatchActivityAwardMessage dispatchActivityAwardMessage = DispatchActivityAwardMessage.builder()

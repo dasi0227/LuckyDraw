@@ -69,7 +69,7 @@ public class BehaviorRepository implements IBehaviorRepository {
         behaviorReq.setActivityId(activityId);
         behaviorReq.setBehaviorType(behaviorType.name());
         List<Behavior> behaviorList = behaviorDao.queryBehaviorList(behaviorReq);
-        if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("（数据库）BehaviorList 不存在：activityId=" + activityId);
+        if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .activityId(behavior.getActivityId())
@@ -134,8 +134,7 @@ public class BehaviorRepository implements IBehaviorRepository {
                         taskDao.saveTask(task);
                     } catch (DuplicateKeyException e) {
                         status.setRollbackOnly();
-                        log.info("【返利】用户已通过当前行为获取奖励：userId={}, activityId={}, behaviorType={}", rewardOrderEntity.getUserId(), rewardOrderEntity.getActivityId(), rewardOrderEntity.getBehaviorType());
-                        throw new AppException("（返利）用户已通过当前行为获取奖励：behaviorType=" + rewardOrderEntity.getBehaviorType());
+                        throw new AppException("用户已通过当前行为获取返利：behaviorType=" + rewardOrderEntity.getBehaviorType());
                     } catch (Exception e) {
                         status.setRollbackOnly();
                         log.error("【返利】保存返利订单时发生错误：error={}", e.getMessage());
@@ -164,7 +163,7 @@ public class BehaviorRepository implements IBehaviorRepository {
                     }
                 }
             } else {
-                throw new AppException("（返利）保存返利订单失败");
+                throw new AppException("保存返利订单失败");
             }
 
         } finally {

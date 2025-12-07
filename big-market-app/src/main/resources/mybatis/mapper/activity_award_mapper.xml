@@ -27,4 +27,10 @@
         WHERE order_id = #{orderId} AND user_id = #{userId} AND award_id = #{awardId}
     </update>
 
+    <select id="queryActivityAwardByOrderId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT user_id, activity_id, order_id, award_id, award_name, award_time, award_state
+        FROM activity_award
+        WHERE order_id = #{orderId}
+    </select>
+
 </mapper>

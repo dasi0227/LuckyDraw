@@ -1,6 +1,5 @@
 package com.dasi.domain.strategy.model.entity;
 
-import com.dasi.domain.strategy.model.type.AwardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +13,6 @@ public class AwardEntity {
 
     /** 奖品ID */
     private Long awardId;
-
-    /** 奖品类型 */
-    private AwardType awardType;
 
     /** 奖品名称 */
     private String awardName;

@@ -79,17 +79,17 @@ public class BigMarketController implements IBigMarketService {
         Long activityId = raffleRequest.getActivityId();
 
         // 1. 参与活动
-        log.info("=========================== 参与活动：userId={},activityId={} ===========================", userId, activityId);
+        log.info("=========================== 账户活动：userId={},activityId={} ===========================", userId, activityId);
         RaffleContext raffleContext = RaffleContext.builder().userId(userId).activityId(activityId).build();
         RaffleResult raffleResult = activityRaffle.doActivityRaffle(raffleContext);
 
         // 2. 执行抽奖
-        log.info("=========================== 执行抽奖：userId={},strategyId={} ===========================", userId, raffleResult.getStrategyId());
+        log.info("=========================== 账户抽奖：userId={},strategyId={} ===========================", userId, raffleResult.getStrategyId());
         LotteryContext lotteryContext = LotteryContext.builder().userId(userId).strategyId(raffleResult.getStrategyId()).build();
         LotteryResult lotteryResult = strategyLottery.doStrategyLottery(lotteryContext);
 
         // 3. 记录中奖
-        log.info("=========================== 记录中奖：userId={},activityId={} ===========================", userId, activityId);
+        log.info("=========================== 账户中奖：userId={},awardId={} ===========================", userId, lotteryResult.getAwardId());
         DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
@@ -102,10 +102,7 @@ public class BigMarketController implements IBigMarketService {
     public Result<BehaviorResponse> behaviorSign(@RequestBody BehaviorRequest behaviorRequest) {
         String userId = behaviorRequest.getUserId();
         Long activityId = behaviorRequest.getActivityId();
-
-        log.info("=========================== 账户签到：userId={} ===========================", userId);
         BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.SIGN);
-
         BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
         return Result.success(behaviorResponse);
     }
@@ -115,10 +112,7 @@ public class BigMarketController implements IBigMarketService {
     public Result<BehaviorResponse> behaviorLike(@RequestBody BehaviorRequest behaviorRequest) {
         String userId = behaviorRequest.getUserId();
         Long activityId = behaviorRequest.getActivityId();
-
-        log.info("=========================== 账户点赞：userId={} ===========================", userId);
         BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.LIKE);
-
         BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
         return Result.success(behaviorResponse);
     }
@@ -128,10 +122,7 @@ public class BigMarketController implements IBigMarketService {
     public Result<BehaviorResponse> behaviorShare(@RequestBody BehaviorRequest behaviorRequest) {
         String userId = behaviorRequest.getUserId();
         Long activityId = behaviorRequest.getActivityId();
-
-        log.info("=========================== 账户分享：userId={} ===========================", userId);
         BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.SHARE);
-
         BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
         return Result.success(behaviorResponse);
     }
@@ -141,15 +132,13 @@ public class BigMarketController implements IBigMarketService {
     public Result<BehaviorResponse> behaviorComment(@RequestBody BehaviorRequest behaviorRequest) {
         String userId = behaviorRequest.getUserId();
         Long activityId = behaviorRequest.getActivityId();
-
-        log.info("=========================== 账户评论：userId={} ===========================", userId);
         BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.COMMENT);
-
         BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
         return Result.success(behaviorResponse);
     }
 
     private BehaviorResult behavior(String userId, Long activityId, BehaviorType behaviorType) {
+        log.info("=========================== 账户返利：userId={},behaviorType={} ===========================", userId, behaviorType);
         BehaviorContext behaviorContext = BehaviorContext.builder()
                 .userId(userId)
                 .activityId(activityId)

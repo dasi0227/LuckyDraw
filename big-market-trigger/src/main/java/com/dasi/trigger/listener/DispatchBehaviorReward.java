@@ -67,7 +67,7 @@ public class DispatchBehaviorReward {
         } catch (Exception e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.error("【发放】发放活动奖励时失败：error={}", e.getMessage());
+            log.error("【获奖】发放活动奖励时失败：error={}", e.getMessage());
         }
     }
 
