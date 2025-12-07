@@ -26,8 +26,8 @@ public class DefaultActivityQuery implements IActivityQuery {
         // 1. 参数校验
         String userId = queryAccountContext.getUserId();
         Long activityId = queryAccountContext.getActivityId();
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (activityId == null) throw new AppException("（抽奖）缺少参数 activityId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 2. 创建账户
         activityRepository.createActivityAccountIfAbsent(userId, activityId);

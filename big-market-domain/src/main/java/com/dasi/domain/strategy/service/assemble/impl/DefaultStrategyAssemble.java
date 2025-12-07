@@ -37,7 +37,7 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
         try {
             // 1. 查询当前策略的奖品列表
             List<StrategyAwardEntity> strategyAwardEntityList = strategyRepository.queryStrategyAwardListByStrategyId(strategyId);
-            if (strategyAwardEntityList == null || strategyAwardEntityList.isEmpty()) throw new AppException("（装配）当前策略下没有配置奖品：strategyId=" + strategyId);
+            if (strategyAwardEntityList == null || strategyAwardEntityList.isEmpty()) throw new AppException("当前策略下没有配置奖品：strategyId=" + strategyId);
 
             // 2. 库存装配
             assembleStrategyAwardStockSurplus(strategyId, strategyAwardEntityList);
@@ -62,7 +62,7 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
 
         // 2. 查询 RULE_WEIGHT 规则
         StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.name());
-        if (strategyRuleEntity == null) throw new AppException("（装配）当前策略下没有配置权重规则：strategyId=" + strategyId);
+        if (strategyRuleEntity == null) throw new AppException("当前策略下没有配置权重规则：strategyId=" + strategyId);
 
         // 3. 权重下概率装配
         Map<String, List<Long>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
@@ -80,7 +80,7 @@ public class DefaultStrategyAssemble implements IStrategyAssemble {
     }
 
     private void assembleStrategyAwardRate(Long strategyId, String weight, List<StrategyAwardEntity> strategyAwardEntityList) {
-        if (strategyAwardEntityList.isEmpty()) throw new AppException("（装配）当前权重下没有配置奖品：strategyId=" + strategyId + ", weight=" + weight);
+        if (strategyAwardEntityList.isEmpty()) throw new AppException("当前权重下没有配置奖品：strategyId=" + strategyId + ", weight=" + weight);
 
         String awardIds = strategyAwardEntityList.stream()
                 .map(entity -> String.valueOf(entity.getAwardId()))

@@ -83,7 +83,7 @@ public class StrategyRepository implements IStrategyRepository {
         }
 
         strategyId = activityDao.queryStrategyIdByActivityId(activityId);
-        if (strategyId == null) throw new AppException("（数据库）StrategyId 不存在：activityId=" + activityId);
+        if (strategyId == null) throw new AppException("StrategyId 不存在：activityId=" + activityId);
         redisService.setValue(cacheKey, strategyId);
         return strategyId;
     }
@@ -97,7 +97,7 @@ public class StrategyRepository implements IStrategyRepository {
         }
 
         activityId = activityDao.queryActivityIdByStrategyId(strategyId);
-        if (activityId == null) throw new AppException("（数据库）ActivityId 不存在：strategyId=" + strategyId);
+        if (activityId == null) throw new AppException("ActivityId 不存在：strategyId=" + strategyId);
         redisService.setValue(cacheKey, activityId);
         return activityId;
     }
@@ -132,7 +132,7 @@ public class StrategyRepository implements IStrategyRepository {
         if (strategyId == null) {
             strategyId = activityDao.queryStrategyIdByActivityId(activityId);
         }
-        if (strategyId == null) throw new AppException("（数据库）StrategyId 不存在：activityId=" + activityId);
+        if (strategyId == null) throw new AppException("StrategyId 不存在：activityId=" + activityId);
 
         return queryStrategyAwardListByStrategyId(strategyId);
     }
@@ -179,7 +179,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 再查数据库
         List<StrategyAward> strategyAwardList = strategyAwardDao.queryStrategyAwardListByStrategyId(strategyId);
-        if (strategyAwardList == null || strategyAwardList.isEmpty()) throw new AppException("（数据库）StrategyAwardList 不存在：strategyId=" + strategyId);
+        if (strategyAwardList == null || strategyAwardList.isEmpty()) throw new AppException("StrategyAwardList 不存在：strategyId=" + strategyId);
         strategyAwardEntityList = strategyAwardList.stream()
                 .map(strategyAward -> StrategyAwardEntity.builder()
                         .strategyId(strategyAward.getStrategyId())
@@ -210,7 +210,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 再查数据库
         Strategy strategy = strategyDao.queryStrategyByStrategyId(strategyId);
-        if (strategy == null) throw new AppException("（数据库）Strategy 不存在：strategyId=" + strategyId);
+        if (strategy == null) throw new AppException("Strategy 不存在：strategyId=" + strategyId);
         strategyEntity = StrategyEntity.builder()
                 .strategyId(strategy.getStrategyId())
                 .strategyDesc(strategy.getStrategyDesc())
@@ -236,7 +236,7 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRuleRequest.setStrategyId(strategyId);
         strategyRuleRequest.setRuleModel(ruleModel);
         StrategyRule strategyRuleResponse = strategyRuleDao.queryStrategyRuleByRuleModel(strategyRuleRequest);
-        if (strategyRuleResponse == null) throw new AppException("（数据库）StrategyRule 不存在：strategyId=" + strategyId + ", ruleModel=" + ruleModel);
+        if (strategyRuleResponse == null) throw new AppException("StrategyRule 不存在：strategyId=" + strategyId + ", ruleModel=" + ruleModel);
         strategyRuleEntity = StrategyRuleEntity.builder()
                 .strategyId(strategyRuleResponse.getStrategyId())
                 .ruleModel(strategyRuleResponse.getRuleModel())
@@ -283,7 +283,7 @@ public class StrategyRepository implements IStrategyRepository {
         strategyAward.setStrategyId(strategyId);
         strategyAward.setAwardId(awardId);
         treeId = strategyAwardDao.queryStrategyAwardTreeIdByStrategyIdAndAwardId(strategyAward);
-        if (treeId == null) throw new AppException("（数据库）TreeId 不存在：strategyId=" + strategyId + ", awardId=" + awardId);
+        if (treeId == null) throw new AppException("TreeId 不存在：strategyId=" + strategyId + ", awardId=" + awardId);
 
 
         // 缓存后返回
@@ -300,7 +300,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 2. 建立 RuleNodeVO 到 RuleEdgeVO 列表的映射
         List<RuleEdge> ruleEdgeList = ruleEdgeDao.queryRuleEdgeListByTreeId(treeId);
-        if (ruleEdgeList == null || ruleEdgeList.isEmpty()) throw new AppException("（数据库）规则树边不存在：treeId=" + treeId);
+        if (ruleEdgeList == null || ruleEdgeList.isEmpty()) throw new AppException("规则树边不存在：treeId=" + treeId);
         Map<String, List<RuleEdgeVO>> ruleNode2EdgeMap = new HashMap<>();
         for (RuleEdge ruleEdge : ruleEdgeList) {
             RuleEdgeVO ruleEdgeVO = RuleEdgeVO.builder()
@@ -317,7 +317,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 3. 建立 RuleTreeVO 到 RuleNodeVO 列表的映射
         List<RuleNode> ruleNodeList = ruleNodeDao.queryRuleNodeListByTreeId(treeId);
-        if (ruleNodeList == null || ruleNodeList.isEmpty()) throw new AppException("（数据库）规则树节点不存在：treeId=" + treeId);
+        if (ruleNodeList == null || ruleNodeList.isEmpty()) throw new AppException("规则树节点不存在：treeId=" + treeId);
         Map<String, RuleNodeVO> ruleTree2NodeMap = new HashMap<>();
         for (RuleNode ruleNode : ruleNodeList) {
             RuleNodeVO ruleNodeVO = RuleNodeVO.builder()
@@ -331,7 +331,7 @@ public class StrategyRepository implements IStrategyRepository {
 
         // 4. 构造 RuleTreeVO
         RuleTree ruleTree = ruleTreeDao.queryRuleTreeByTreeId(treeId);
-        if (ruleTree == null) throw new AppException("（数据库）规则树不存在：treeId=" + treeId);
+        if (ruleTree == null) throw new AppException("规则树不存在：treeId=" + treeId);
         RuleTreeVO ruleTreeVO = RuleTreeVO.builder()
                 .treeId(ruleTree.getTreeId())
                 .treeRoot(ruleTree.getTreeRoot())
@@ -357,7 +357,7 @@ public class StrategyRepository implements IStrategyRepository {
         for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
             Long awardId = strategyAwardEntity.getAwardId();
             Award award = awardDao.queryAwardByAwardId(awardId);
-            if (award == null) throw new AppException("（数据库）Award 不存在：awardId=" + awardId);
+            if (award == null) throw new AppException("Award 不存在：awardId=" + awardId);
             AwardEntity awardEntity = AwardEntity.builder()
                     .awardId(award.getAwardId())
                     .awardName(award.getAwardName())

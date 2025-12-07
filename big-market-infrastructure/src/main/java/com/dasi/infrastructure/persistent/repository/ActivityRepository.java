@@ -74,7 +74,7 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public ActivitySkuEntity queryRechargeSkuBySkuId(Long skuId) {
         ActivitySku activitySku = rechargeSkuDao.queryRechargeSkuBySkuId(skuId);
-        if (activitySku == null) throw new AppException("（数据库）ActivitySku 不存在：skuId=" + skuId);
+        if (activitySku == null) throw new AppException("ActivitySku 不存在：skuId=" + skuId);
         return ActivitySkuEntity.builder()
                 .skuId(activitySku.getSkuId())
                 .activityId(activitySku.getActivityId())
@@ -95,7 +95,7 @@ public class ActivityRepository implements IActivityRepository {
 
         // 再查数据库
         List<ActivitySku> activitySkuList = rechargeSkuDao.queryRechargeSkuByActivityId(activityId);
-        if (activitySkuList == null || activitySkuList.isEmpty()) throw new AppException("（数据库）RechargeSkuList 不存在：activityId=" + activityId);
+        if (activitySkuList == null || activitySkuList.isEmpty()) throw new AppException("RechargeSkuList 不存在：activityId=" + activityId);
         activitySkuEntityList = activitySkuList.stream()
                 .map(activitySku -> ActivitySkuEntity.builder()
                         .skuId(activitySku.getSkuId())
@@ -123,7 +123,7 @@ public class ActivityRepository implements IActivityRepository {
 
         // 再查数据库
         Activity activity = activityDao.queryActivityByActivityId(activityId);
-        if (activity == null) throw new AppException("（数据库）Activity 不存在：activity=Id" + activityId);
+        if (activity == null) throw new AppException("Activity 不存在：activity=Id" + activityId);
         activityEntity = ActivityEntity.builder()
                 .activityId(activity.getActivityId())
                 .activityName(activity.getActivityName())
@@ -327,8 +327,6 @@ public class ActivityRepository implements IActivityRepository {
                         account.setMonthLimit(-1);
                         account.setDayLimit(-1);
                         activityAccountDao.createActivityAccount(account);
-                        log.info("【创建】总账户：userId={}, activityId={}, totalAllocate={}, totalSurplus={}, monthLimit={}, dayLimit={}",
-                                userId, activityId, 0, 0, -1, -1);
                     }
 
                     // TODO：当前可用次数，用来初始化日/月账户（这里先用 totalSurplus，后面再按 limit 规则改）
@@ -349,8 +347,6 @@ public class ActivityRepository implements IActivityRepository {
                         dayAccount.setDayAllocate(count);
                         dayAccount.setDaySurplus(count);
                         activityAccountDayDao.createActivityAccountDay(dayAccount);
-                        log.info("【创建】日账户：userId={}, activityId={}, day={}, dayAllocate=daySurplus={}",
-                                userId, activityId, dayKey, count);
                     }
 
                     /* ========== 3. 查询/创建 月账户 ========== */
@@ -368,15 +364,12 @@ public class ActivityRepository implements IActivityRepository {
                         monthAccount.setMonthAllocate(count);
                         monthAccount.setMonthSurplus(count);
                         activityAccountMonthDao.createActivityAccountMonth(monthAccount);
-                        log.info("【创建】月账户：userId={}, activityId={}, month={}, monthAllocate=monthSurplus={}",
-                                userId, activityId, monthKey, count);
                     }
 
                     return null;
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.error("【创建】创建账户时发生错误：error={}", e.getMessage());
-                    throw new AppException("（创建）创建账户时发生错误：userId=" + userId + ", activityId=" + activityId);
+                    throw new AppException("创建账户失败：userId=" + userId + ", activityId=" + activityId);
                 }
             });
         } finally {
@@ -453,7 +446,7 @@ public class ActivityRepository implements IActivityRepository {
                 rechargeOrder.setRechargeState(RechargeState.USED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
 
-                log.info("【充值】账户余额变化：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
+                log.info("【充值】增加账户余额成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
@@ -463,7 +456,7 @@ public class ActivityRepository implements IActivityRepository {
             } else {
                 rechargeOrder.setRechargeState(RechargeState.CANCELLED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
-                throw new AppException("（充值）保存充值订单失败：orderId=" + orderId);
+                throw new AppException("保存充值订单失败：orderId=" + orderId);
             }
 
         } finally {
@@ -497,7 +490,7 @@ public class ActivityRepository implements IActivityRepository {
                     count = activityAccountDao.subtractActivityAccount(activityAccount);
                     if (count == 0) {
                         status.setRollbackOnly();
-                        log.info("【抽奖】账户不存在：userId={}, activityId={}", userId, activityId);
+                        log.info("【活动】账户不存在：userId={}, activityId={}", userId, activityId);
                         return false;
                     }
 
@@ -511,7 +504,7 @@ public class ActivityRepository implements IActivityRepository {
                     count = activityAccountMonthDao.subtractActivityAccountMonth(activityAccountMonth);
                     if (count == 0) {
                         status.setRollbackOnly();
-                        log.info("【抽奖】月账户不存在：userId={}, activityId={}, month={}", userId, activityId, monthKey);
+                        log.info("【活动】月账户不存在：userId={}, activityId={}, month={}", userId, activityId, monthKey);
                         return false;
                     }
 
@@ -525,7 +518,7 @@ public class ActivityRepository implements IActivityRepository {
                     count = activityAccountDayDao.subtractActivityAccountDay(activityAccountDay);
                     if (count == 0) {
                         status.setRollbackOnly();
-                        log.info("【抽奖】日账户不存在：userId={}, activityId={}, day={}", userId, activityId, dayKey);
+                        log.info("【活动】日账户不存在：userId={}, activityId={}, day={}", userId, activityId, dayKey);
                         return false;
                     }
 
@@ -543,7 +536,7 @@ public class ActivityRepository implements IActivityRepository {
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.error("【抽奖】保存抽奖订单时发生错误：error={}", e.getMessage());
+                    log.error("【活动】保存抽奖订单时发生错误：error={}", e.getMessage());
                     return false;
                 }
             });
@@ -552,15 +545,15 @@ public class ActivityRepository implements IActivityRepository {
             // TODO：是否需要更新抽奖订单状态
             if (Boolean.TRUE.equals(success)) {
                 AccountSurplusSnapshot after = getAccountSurplusSnapshot(userId, activityId);
-                log.info("【抽奖】账户余额变化：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
+                log.info("【活动】消耗账户余额成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
                         dayKey,     before.getDaySurplus(),    after.getDaySurplus()
                 );
-                log.info("【抽奖】保存抽奖订单成功：orderId={}", orderId);
+                log.info("【活动】保存抽奖订单成功：orderId={}", orderId);
             } else {
-                throw new AppException("（抽奖）保存抽奖订单失败：orderId=" + orderId);
+                throw new AppException("保存抽奖订单失败：orderId=" + orderId);
             }
 
         } finally {

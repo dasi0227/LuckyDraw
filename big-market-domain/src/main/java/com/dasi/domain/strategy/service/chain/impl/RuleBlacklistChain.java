@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.service.chain.impl;
 
-import com.dasi.domain.strategy.annotation.RuleConfig;
+import com.dasi.domain.strategy.annotation.RuleModelConfig;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleModel.RULE_BLACKLIST)
+@RuleModelConfig(ruleModel = RuleModel.RULE_BLACKLIST)
 public class RuleBlacklistChain extends AbstractStrategyChain {
 
     @Resource
@@ -36,7 +36,7 @@ public class RuleBlacklistChain extends AbstractStrategyChain {
 
         // 3. 判断是否位于黑名单之中
         if (Arrays.asList(blackIds).contains(userId)) {
-            log.info("【检查】RULE_BLACKLIST 拦截：userId={}, awardId={}", userId, awardId);
+            log.info("【抽奖】RULE_BLACKLIST 拦截：userId={}, awardId={}", userId, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_BLACKLIST)
@@ -45,7 +45,7 @@ public class RuleBlacklistChain extends AbstractStrategyChain {
         }
 
         // 4. 放行走下一条规则
-        log.info("【检查】RULE_BLACKLIST 放行");
+        log.info("【抽奖】RULE_BLACKLIST 放行：userId={}", userId);
         return next().logic(userId, strategyId);
     }
 

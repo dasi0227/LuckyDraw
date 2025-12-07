@@ -33,20 +33,19 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         // 1. 参数校验
         String userId = raffleContext.getUserId();
         Long activityId = raffleContext.getActivityId();
-        if (StringUtils.isBlank(userId)) throw new AppException("（抽奖）缺少参数 userId");
-        if (activityId == null) throw new AppException("（抽奖）缺少参数 activityId");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 2. 活动与用户校验
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
         Boolean available = checkRaffleAvailable(userId, activityEntity);
         if (Boolean.FALSE.equals(available)) {
-            throw new AppException("（抽奖）基础信息校验失败");
+            throw new AppException("活动信息校验失败");
         }
 
         // 3. 查询还未执行完成的抽奖，如果没有则新建
         RaffleOrderEntity raffleOrderEntity = activityRepository.queryUnusedRaffleOrder(userId, activityId);
         if (raffleOrderEntity != null) {
-            log.info("【抽奖】存在未完成的抽奖：orderId={}, raffle_state={}", raffleOrderEntity.getOrderId(), raffleOrderEntity.getRaffleState());
             return RaffleResult.builder()
                     .orderId(raffleOrderEntity.getOrderId())
                     .strategyId(raffleOrderEntity.getStrategyId())

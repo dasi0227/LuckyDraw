@@ -1,6 +1,6 @@
-package com.dasi.domain.strategy.annotation;
+package com.dasi.domain.award.annotation;
 
-import com.dasi.domain.strategy.model.type.RuleModel;
+import com.dasi.domain.award.model.type.AwardType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RuleConfig {
-    RuleModel ruleModel();
+public @interface AwardTypeConfig {
+    AwardType awardType();
 }

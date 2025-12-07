@@ -1,6 +1,6 @@
 package com.dasi.domain.strategy.service.chain.impl;
 
-import com.dasi.domain.strategy.annotation.RuleConfig;
+import com.dasi.domain.strategy.annotation.RuleModelConfig;
 import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleModel;
@@ -16,7 +16,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-@RuleConfig(ruleModel = RuleModel.RULE_WEIGHT)
+@RuleModelConfig(ruleModel = RuleModel.RULE_WEIGHT)
 public class RuleWeightChain extends AbstractStrategyChain {
 
     @Resource
@@ -50,7 +50,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         List<Integer> thresholds = new ArrayList<>(weightMap.keySet());
         thresholds.sort(Comparator.reverseOrder());
 
-        // 4. 根据用户积分判断能够到达的积分阈值
+        // 4. TODO：根据用户积分判断能够到达的积分阈值
         int userScore = strategyRepository.queryUserScoreByStrategyId(userId, strategyId);
         Integer matchedThreshold = thresholds.stream()
                 .filter(key -> userScore >= key)
@@ -60,7 +60,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         // 5. 如果匹配上积分阈值，则在当前积分阈值下抽奖
         if (matchedThreshold != null) {
             Long awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
-            log.info("【检查】RULE_WEIGHT 拦截：userScore={}, weight={}，awardId={}", userScore, matchedThreshold, awardId);
+            log.info("【抽奖】RULE_WEIGHT 拦截：userScore={}, weight={}，awardId={}", userScore, matchedThreshold, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)
                     .ruleModel(RuleModel.RULE_WEIGHT)
@@ -69,7 +69,7 @@ public class RuleWeightChain extends AbstractStrategyChain {
         }
 
         // 6. 放行走下一条规则
-        log.info("【检查】RULE_WEIGHT 放行：userScore={}", userScore);
+        log.info("【抽奖】RULE_WEIGHT 放行：userScore={}", userScore);
         return next().logic(userId, strategyId);
     }
 

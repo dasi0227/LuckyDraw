@@ -31,10 +31,10 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
         Long activityId = behaviorContext.getActivityId();
         BehaviorType behaviorType = behaviorContext.getBehaviorType();
         String businessNo = behaviorContext.getBusinessNo();
-        if (StringUtils.isBlank(businessNo)) throw new AppException("（返利）缺少参数 businessNo");
-        if (StringUtils.isBlank(userId)) throw new AppException("（返利）缺少参数 userId");
-        if (activityId == null) throw new AppException("（返利）缺少参数 activityId");
-        if (behaviorType == null) throw new AppException("（返利）缺少参数 behaviorType");
+        if (StringUtils.isBlank(businessNo)) throw new AppException("缺少参数 businessNo");
+        if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
+        if (activityId == null) throw new AppException("缺少参数 activityId");
+        if (behaviorType == null) throw new AppException("缺少参数 behaviorType");
 
         // 2. 查询行为奖励
         List<BehaviorEntity> behaviorEntityList = queryBehaviorList(activityId, behaviorType);
@@ -42,7 +42,7 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
         // 3. 保存订单
         List<RewardOrderEntity> rewardOrderEntityList = saveRewardOrder(activityId, userId, businessNo, behaviorEntityList);
         if (rewardOrderEntityList == null) {
-            throw new AppException("（返利）行为触发奖励失败");
+            throw new AppException("返利失败");
         }
 
         // 4. 返回订单信息
