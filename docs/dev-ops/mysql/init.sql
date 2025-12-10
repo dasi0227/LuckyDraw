@@ -12,13 +12,14 @@ VALUES (1001, '【测试策略1001】黑名单+权重', 'RULE_BLACKLIST,RULE_WEI
 
 DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
-INSERT INTO award (award_id, award_type, award_name, award_config, award_desc)
-VALUES (2001, 'FIXED_USER_POINT', '【黑名单奖品2001】1积分', '1', '黑名单奖品'),
-       (2002, 'FIXED_USER_POINT', '【兜底奖品2002】10积分', '10', '兜底奖品'),
-       (2011, 'RANDOM_USER_POINT', '【积分奖品2011】随机积分', '1,50', '积分奖品'),
-       (2012, 'RANDOM_USER_POINT', '【积分奖品2012】随机积分', '1,100', '积分奖品'),
-       (2013, 'DISCOUNT_COUPON', '【普通奖品2013】5元优惠券', NULL, '普通奖品'),
-       (2014, 'PHYSICAL_PRIZE', '【稀有奖品2014】IPhone17', NULL, '稀有奖品');
+INSERT INTO award (award_id, award_type, award_name, award_value, award_desc)
+VALUES (2001, 'FIXED_USER_POINT', '【黑名单奖品】1 积分', '1', '黑名单奖品'),
+       (2002, 'FIXED_USER_POINT', '【兜底奖品】10 积分', '10', '兜底奖品'),
+       (2011, 'RANDOM_USER_POINT', '【积分奖品】随机积分', '1,50', '积分奖品'),
+       (2012, 'RANDOM_USER_POINT', '【积分奖品】随机积分', '1,100', '积分奖品'),
+       (2013, 'DISCOUNT_COUPON', '【普通奖品】7 天限时 5 元优惠券', '604800', '普通奖品'),
+       (2014, 'PHYSICAL_PRIZE', '【稀有奖品】2 天限时 IPhone17', '172800', '稀有奖品'),
+       (2015, 'PHYSICAL_PRIZE', '【稀有奖品】2 天限时海贼王手办', '172800', '稀有奖品');
 
 DROP TABLE IF EXISTS strategy_rule;
 CREATE TABLE strategy_rule LIKE big_market_table.strategy_rule;
@@ -43,11 +44,11 @@ VALUES ('TREE_LOCK', '测试规则树TREE_LOCK', '先走 lock 再走 stock', 'RU
 DROP TABLE IF EXISTS rule_node;
 CREATE TABLE rule_node LIKE big_market_table.rule_node;
 INSERT INTO rule_node (tree_id, rule_model, rule_desc, rule_value)
-VALUES ('TREE_LOCK', 'RULE_LOCK', '【RULE_LOCK】达到10次才解锁', '10'),
-       ('TREE_LOCK', 'RULE_STOCK', '【RULE_STOCK】库存扣减1', NULL),
-       ('TREE_LOCK', 'RULE_LUCK', '【RULE_LUCK】兜底奖品2002', '2002'),
-       ('TREE_STOCK', 'RULE_STOCK', '【RULE_STOCK】库存扣减1', NULL),
-       ('TREE_STOCK', 'RULE_LUCK', '【RULE_LUCK】兜底奖品2002', '2002');
+VALUES ('TREE_LOCK', 'RULE_LOCK', '达到10次才解锁', '10'),
+       ('TREE_LOCK', 'RULE_STOCK', '库存扣减1', NULL),
+       ('TREE_LOCK', 'RULE_LUCK', '兜底奖品2002', '2002'),
+       ('TREE_STOCK', 'RULE_STOCK', '库存扣减1', NULL),
+       ('TREE_STOCK', 'RULE_LUCK', '兜底奖品2002', '2002');
 
 DROP TABLE IF EXISTS rule_edge;
 CREATE TABLE rule_edge LIKE big_market_table.rule_edge;
@@ -65,19 +66,32 @@ VALUES (10001, 1001, '测试活动', '测试活动描述', 'UNDERWAY', '2025-11-
 DROP TABLE IF EXISTS activity_sku;
 CREATE TABLE activity_sku LIKE big_market_table.activity_sku;
 INSERT INTO activity_sku (sku_id, activity_id, count, stock_allocate, stock_surplus)
-VALUES (30001, 10001, 1, 100, 100),
-       (30002, 10001, 3, 100, 100);
+VALUES (30001, 10001, 3, 100, 100),
+       (30002, 10001, 100, 100, 100);
 
 DROP TABLE IF EXISTS behavior;
 CREATE TABLE behavior LIKE big_market_table.behavior;
-INSERT INTO behavior
-(activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc)
-VALUES (10001, 'SIGN', 'AVAILABLE', 'SKU', '30001', '签到：获得抽奖次数（2，1，1）'),
-       (10001, 'SIGN', 'AVAILABLE', 'POINT', '2', '签到：获得 2 积分'),
-       (10001, 'LIKE', 'AVAILABLE', 'POINT', '1', '点赞：获得 1 积分'),
-       (10001, 'COMMENT', 'AVAILABLE', 'POINT', '5', '评论：获得 5 积分'),
-       (10001, 'SHARE', 'AVAILABLE', 'SKU', '30002', '转发：获得抽奖次数（3，3，3）'),
-       (10001, 'SHARE', 'AVAILABLE', 'POINT', '5', '转发：获得 5 积分');
+INSERT INTO behavior (activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc)
+VALUES (10001, 'SIGN', 'AVAILABLE', 'SKU', '30001', '签到：获得 3 次抽奖'),
+       (10001, 'SIGN', 'AVAILABLE', 'POINT', '100008', '签到：获得 10 积分'),
+       (10001, 'SHARE', 'AVAILABLE', 'SKU', '30002', '转发：获得 100 次抽奖'),
+       (10001, 'SHARE', 'AVAILABLE', 'POINT', '100009', '转发：获得 100000000 积分'),
+       (10001, 'COMMENT', 'AVAILABLE', 'POINT', '100007', '评论：获得 20 积分'),
+       (10001, 'LIKE', 'AVAILABLE', 'POINT', '100008', '点赞：获得 10 积分');
+
+DROP TABLE IF EXISTS trade;
+CREATE TABLE trade LIKE big_market_table.trade;
+INSERT INTO trade (trade_id, activity_id, trade_type, trade_point, trade_value, trade_desc)
+VALUES (100001, 10001, 'CONVERT_RAFFLE', '100', '1', '兑换抽奖：100 积分换 1 次抽奖'),
+       (100002, 10001, 'CONVERT_RAFFLE', '150', '2', '兑换抽奖：150 积分换 2 次抽奖'),
+       (100003, 10001, 'CONVERT_RAFFLE', '250', '4', '兑换抽奖：250 积分换 4 次抽奖'),
+       (100004, 10001, 'CONVERT_AWARD', '1000', '2013', '兑换奖品：1000 积分换 5 元优惠券'),
+       (100006, 10001, 'CONVERT_AWARD', '10000', '2015', '兑换奖品：10000 积分换海贼王手办'),
+       (100005, 10001, 'CONVERT_AWARD', '100000', '2014', '兑换奖品：100000 积分换 iPhone17'),
+       (100007, 10001, 'POINT_RECHARGE', '0', '20', '增加积分：增加 20 积分'),
+       (100008, 10001, 'POINT_RECHARGE', '0', '10', '增加积分：增加 10 积分'),
+       (100009, 10001, 'POINT_RECHARGE', '0', '100000000', '增加积分：增加 100000000 积分');
+
 
 /* =============
 分库 big_market_01
@@ -142,6 +156,15 @@ DROP TABLE IF EXISTS reward_order_002;
 CREATE TABLE IF NOT EXISTS reward_order_002 LIKE big_market_table.reward_order;
 DROP TABLE IF EXISTS reward_order_003;
 CREATE TABLE IF NOT EXISTS reward_order_003 LIKE big_market_table.reward_order;
+-- 交易
+DROP TABLE IF EXISTS trade_order_000;
+CREATE TABLE IF NOT EXISTS trade_order_000 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_001;
+CREATE TABLE IF NOT EXISTS trade_order_001 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_002;
+CREATE TABLE IF NOT EXISTS trade_order_002 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_003;
+CREATE TABLE IF NOT EXISTS trade_order_003 LIKE big_market_table.trade_order;
 
 /* =============
 分库 big_market_02
@@ -206,3 +229,12 @@ DROP TABLE IF EXISTS reward_order_002;
 CREATE TABLE IF NOT EXISTS reward_order_002 LIKE big_market_table.reward_order;
 DROP TABLE IF EXISTS reward_order_003;
 CREATE TABLE IF NOT EXISTS reward_order_003 LIKE big_market_table.reward_order;
+-- 交易
+DROP TABLE IF EXISTS trade_order_000;
+CREATE TABLE IF NOT EXISTS trade_order_000 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_001;
+CREATE TABLE IF NOT EXISTS trade_order_001 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_002;
+CREATE TABLE IF NOT EXISTS trade_order_002 LIKE big_market_table.trade_order;
+DROP TABLE IF EXISTS trade_order_003;
+CREATE TABLE IF NOT EXISTS trade_order_003 LIKE big_market_table.trade_order;

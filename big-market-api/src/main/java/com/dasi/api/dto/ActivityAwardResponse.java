@@ -26,7 +26,7 @@ public class ActivityAwardResponse {
     private String awardDesc;
 
     /** 奖品配置 */
-    private String awardConfig;
+    private String awardValue;
 
     /** 奖品中奖概率 */
     private BigDecimal awardRate;

@@ -1,13 +1,16 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
+import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.entity.ActivityAwardEntity;
 import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.entity.UserAccountEntity;
 import com.dasi.domain.award.model.io.DispatchContext;
 import com.dasi.domain.award.model.io.DispatchResult;
-import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.dispatch.IAwardDispatch;
 import com.dasi.domain.award.service.dispatch.IAwardDispatchHandler;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
@@ -40,24 +43,35 @@ public class AwardDispatch implements IAwardDispatch {
 
         String userId = dispatchContext.getUserId();
         Long awardId = dispatchContext.getAwardId();
+        String orderId = dispatchContext.getOrderId();
 
         // 创建账户
         awardRepository.createUserAccountIfAbsent(userId);
 
-        // 获取奖品类型
+        // 获取账户、奖品、获奖记录
+        UserAccountEntity userAccountEntity = awardRepository.queryUserAccountByUserId(userId);
         AwardEntity awardEntity = awardRepository.queryAwardByAwardId(awardId);
-        AwardType awardType = awardEntity.getAwardType();
+        ActivityAwardEntity activityAwardEntity = awardRepository.queryActivityAwardByOrderId(userId, orderId);
 
         // 分发奖品到账户
-        IAwardDispatchHandler awardDispatchHandler = awardDispatchHandlerMap.get(awardType.name());
+        String awardType = awardEntity.getAwardType().name();
+        String awardName = awardEntity.getAwardName();
+        IAwardDispatchHandler awardDispatchHandler = awardDispatchHandlerMap.get(awardType);
         if (awardDispatchHandler == null) {
-            log.error("【获奖】当前奖品类型没有配置投递逻辑：awardType={}", awardType);
-            return null;
+            throw new AppException("当前奖品类型没有配置获奖逻辑：awardType={}" + awardType);
         } else {
-            awardDispatchHandler.dispatchHandle(dispatchContext, awardEntity);
+            DispatchHandleAggregate dispatchHandleAggregate = DispatchHandleAggregate.builder()
+                        .userId(dispatchContext.getUserId())
+                        .awardId(dispatchContext.getAwardId())
+                        .orderId(dispatchContext.getOrderId())
+                        .awardEntity(awardEntity)
+                        .activityAwardEntity(activityAwardEntity)
+                        .userAccountEntity(userAccountEntity)
+                        .build();
+            awardDispatchHandler.dispatchHandle(dispatchHandleAggregate);
             return DispatchResult.builder()
-                    .awardType(awardEntity.getAwardType().name())
-                    .awardName(awardEntity.getAwardName())
+                    .awardType(awardType)
+                    .awardName(awardName)
                     .build();
         }
     }

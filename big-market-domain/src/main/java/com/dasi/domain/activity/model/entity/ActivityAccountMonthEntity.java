@@ -20,6 +20,9 @@ public class ActivityAccountMonthEntity {
     /** yyyy-mm */
     private String monthKey;
 
+    /** 月上限 */
+    private Integer monthLimit;
+
     /** 月次数 */
     private Integer monthAllocate;
 

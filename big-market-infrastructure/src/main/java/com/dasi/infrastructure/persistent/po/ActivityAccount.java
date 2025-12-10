@@ -16,17 +16,17 @@ public class ActivityAccount {
     /** 活动id */
     private Long activityId;
 
-    /** 总分配 */
-    private Integer totalAllocate;
-
-    /** 总余额 */
-    private Integer totalSurplus;
-
     /** 天上限 */
     private Integer dayLimit;
 
     /** 月上限 */
     private Integer monthLimit;
+
+    /** 总分配 */
+    private Integer totalAllocate;
+
+    /** 总抽奖次数 */
+    private Integer totalSurplus;
 
     /** 创建时间 */
     private LocalDateTime createTime;

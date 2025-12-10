@@ -7,6 +7,7 @@ import com.dasi.domain.award.model.io.DispatchContext;
 import com.dasi.domain.award.model.io.DispatchResult;
 import com.dasi.domain.award.service.dispatch.IAwardDispatch;
 import com.dasi.types.event.BaseEvent.EventMessage;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -23,21 +24,26 @@ public class DispatchActivityAward {
 
     @RabbitListener(queuesToDeclare = @Queue(value = "dispatch_raffle_award"))
     public void dispatchActivityAward(String message) {
+        try {
+            EventMessage<DispatchActivityAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DispatchActivityAwardMessage>>() {}.getType());
+            DispatchActivityAwardMessage dispatchActivityAwardMessage = eventMessage.getData();
 
-        EventMessage<DispatchActivityAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DispatchActivityAwardMessage>>() {}.getType());
-        DispatchActivityAwardMessage dispatchActivityAwardMessage = eventMessage.getData();
+            String userId = dispatchActivityAwardMessage.getUserId();
+            String orderId = dispatchActivityAwardMessage.getOrderId();
+            Long awardId = dispatchActivityAwardMessage.getAwardId();
 
-        String userId = dispatchActivityAwardMessage.getUserId();
-        String orderId = dispatchActivityAwardMessage.getOrderId();
-        Long awardId = dispatchActivityAwardMessage.getAwardId();
-
-        log.info("=========================== 账户获奖：userId={},awardId={} ===========================", userId, awardId);
-        DispatchContext dispatchContext = DispatchContext.builder()
-                .userId(userId)
-                .orderId(orderId)
-                .awardId(awardId)
-                .build();
-        DispatchResult dispatchResult = awardDispatch.doAwardDispatch(dispatchContext);
+            DispatchContext dispatchContext = DispatchContext.builder()
+                    .userId(userId)
+                    .orderId(orderId)
+                    .awardId(awardId)
+                    .build();
+            // TODO：通过websocket发送结果
+            DispatchResult dispatchResult = awardDispatch.doAwardDispatch(dispatchContext);
+        } catch (AppException e) {
+            log.debug("【业务异常】", e);
+        } catch (Exception e) {
+            log.error("【系统异常】", e);
+        }
     }
 
 }

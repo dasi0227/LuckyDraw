@@ -1,5 +1,6 @@
 package com.dasi.domain.award.model.entity;
 
+import com.dasi.domain.award.model.type.UserState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class UserAccountEntity {
     private String userId;
 
     /** 用户状态 */
-    private String userState;
+    private UserState userState;
 
     /** 用户积分 */
     private Integer userPoint;

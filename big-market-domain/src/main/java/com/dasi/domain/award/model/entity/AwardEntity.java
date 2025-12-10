@@ -25,6 +25,6 @@ public class AwardEntity {
     private String awardDesc;
 
     /** 奖品配置 */
-    private String awardConfig;
+    private String awardValue;
 
 }

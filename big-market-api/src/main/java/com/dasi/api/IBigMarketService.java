@@ -28,4 +28,6 @@ public interface IBigMarketService {
 
     Result<StrategyRuleWeightResponse> queryStrategyRuleWeight(StrategyRuleWeightRequest strategyRuleWeightRequest);
 
+    Result<TradeResponse> trade(TradeRequest tradeRequest);
+
 }

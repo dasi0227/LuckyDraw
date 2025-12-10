@@ -1,13 +1,13 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
-import com.dasi.domain.award.model.aggregate.AwardDispatchHandleAggregate;
-import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.domain.award.model.io.DispatchContext;
+import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
 import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.dispatch.IAwardDispatchHandler;
+import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -21,24 +21,14 @@ public class FixedUserPointDispatchHandler implements IAwardDispatchHandler {
     private IAwardRepository awardRepository;
 
     @Override
-    public void dispatchHandle(DispatchContext dispatchContext, AwardEntity awardEntity) {
-
-        // 1. 获取配置信息
-        String awardConfig = awardEntity.getAwardConfig();
-
-        // 2. 转换为积分值
-        Integer fixedPoint = Integer.parseInt(awardConfig);
-
-        // 3. 增加账户积分
-        AwardDispatchHandleAggregate awardDispatchHandleAggregate = AwardDispatchHandleAggregate.builder()
-                .userId(dispatchContext.getUserId())
-                .awardId(dispatchContext.getAwardId())
-                .orderId(dispatchContext.getOrderId())
-                .userPoint(fixedPoint)
-                .awardEntity(awardEntity)
-                .build();
-        awardRepository.increaseUserAccountPoint(awardDispatchHandleAggregate);
-
+    public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
+        String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
+        if (!StringUtils.isNumeric(awardValue)) {
+            throw new AppException("固定积分配置错误：awardValue={}" + awardValue);
+        }
+        int fixedPoint = Integer.parseInt(awardValue);
+        dispatchHandleAggregate.setUserPoint(fixedPoint);
+        awardRepository.increaseUserAccountPoint(dispatchHandleAggregate);
     }
 
 }

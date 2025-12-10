@@ -14,6 +14,9 @@ import com.dasi.domain.behavior.model.io.BehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
+import com.dasi.domain.point.model.io.TradeContext;
+import com.dasi.domain.point.model.io.TradeResult;
+import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.ActivityAwardDetail;
 import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
@@ -57,6 +60,9 @@ public class BigMarketController implements IBigMarketService {
     private IStrategyQuery strategyQuery;
 
     @Resource
+    private IPointTrade pointTrade;
+
+    @Resource
     private IActivityAssemble activityAssemble;
 
     @Resource
@@ -65,10 +71,22 @@ public class BigMarketController implements IBigMarketService {
     @PostMapping("/assemble")
     @Override
     public Result<Void> assemble(@RequestParam Long activityId) {
-        log.info("=========================== 活动装配：activityId={} ===========================", activityId);
         boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
         boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
         return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
+    }
+
+    @PostMapping("/trade")
+    @Override
+    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
+
+        String userId = tradeRequest.getUserId();
+        Long tradeId = tradeRequest.getTradeId();
+
+        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).businessNo(TimeUtil.thisDay(false)).build();
+        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
+        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
+        return Result.success(tradeResponse);
     }
 
     @PostMapping("/raffle")
@@ -79,17 +97,14 @@ public class BigMarketController implements IBigMarketService {
         Long activityId = raffleRequest.getActivityId();
 
         // 1. 参与活动
-        log.info("=========================== 账户活动：userId={},activityId={} ===========================", userId, activityId);
         RaffleContext raffleContext = RaffleContext.builder().userId(userId).activityId(activityId).build();
         RaffleResult raffleResult = activityRaffle.doActivityRaffle(raffleContext);
 
         // 2. 执行抽奖
-        log.info("=========================== 账户抽奖：userId={},strategyId={} ===========================", userId, raffleResult.getStrategyId());
         LotteryContext lotteryContext = LotteryContext.builder().userId(userId).strategyId(raffleResult.getStrategyId()).build();
         LotteryResult lotteryResult = strategyLottery.doStrategyLottery(lotteryContext);
 
         // 3. 记录中奖
-        log.info("=========================== 账户中奖：userId={},awardId={} ===========================", userId, lotteryResult.getAwardId());
         DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
@@ -138,7 +153,6 @@ public class BigMarketController implements IBigMarketService {
     }
 
     private BehaviorResult behavior(String userId, Long activityId, BehaviorType behaviorType) {
-        log.info("=========================== 账户返利：userId={},behaviorType={} ===========================", userId, behaviorType);
         BehaviorContext behaviorContext = BehaviorContext.builder()
                 .userId(userId)
                 .activityId(activityId)
@@ -200,7 +214,7 @@ public class BigMarketController implements IBigMarketService {
                         .awardName(activityAwardDetail.getAwardName())
                         .awardTitle(activityAwardDetail.getAwardTitle())
                         .awardDesc(activityAwardDetail.getAwardDesc())
-                        .awardConfig(activityAwardDetail.getAwardConfig())
+                        .awardValue(activityAwardDetail.getAwardValue())
                         .awardRate(activityAwardDetail.getAwardRate())
                         .awardIndex(activityAwardDetail.getAwardIndex())
                         .limitLotteryCount(activityAwardDetail.getLimitLotteryCount())

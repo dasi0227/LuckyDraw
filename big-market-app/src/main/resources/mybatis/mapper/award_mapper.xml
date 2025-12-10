@@ -7,14 +7,14 @@
         <result column="award_id"     property="awardId"/>
         <result column="award_type"   property="awardType"/>
         <result column="award_name"   property="awardName"/>
-        <result column="award_config" property="awardConfig"/>
+        <result column="award_value" property="awardValue"/>
         <result column="award_desc"   property="awardDesc"/>
         <result column="create_time"  property="createTime"/>
         <result column="update_time"  property="updateTime"/>
     </resultMap>
 
     <select id="queryAwardByAwardId" parameterType="java.lang.Long" resultMap="dataMap">
-        select award_id, award_type, award_name, award_config, award_desc
+        select award_id, award_type, award_name, award_value, award_desc
         from award
         where award_id = #{awardId}
     </select>
