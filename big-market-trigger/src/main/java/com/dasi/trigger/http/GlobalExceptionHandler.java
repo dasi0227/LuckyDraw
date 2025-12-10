@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
     public Result<Void> handleAppException(AppException ex) {
-        log.debug("【业务异常】", ex);
+        log.error("【业务异常】", ex);
         return Result.error(ex.getMessage());
     }
 

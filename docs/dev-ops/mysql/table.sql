@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS trade
     trade_type   VARCHAR(32)   NOT NULL COMMENT '交易类型',
     trade_point  VARCHAR(32)   NOT NULL COMMENT '交易积分',
     trade_value  VARCHAR(32)   NOT NULL COMMENT '交易结果',
+    trade_name   VARCHAR(32)   NOT NULL COMMENT '交易名称',
     trade_desc   VARCHAR(256)  NOT NULL COMMENT '交易描述',
     create_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -228,22 +229,6 @@ CREATE TABLE activity_sku
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='权益库存表';
 
 /* =======================================
-用户表：存储用户的积分信息
-======================================= */
-DROP TABLE IF EXISTS user_account;
-CREATE TABLE user_account
-(
-    id          BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    user_id     VARCHAR(32) UNIQUE NOT NULL COMMENT '用户id',
-    user_state  VARCHAR(32)        NOT NULL COMMENT '用户状态',
-    user_point  INT                NOT NULL COMMENT '用户积分',
-    create_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户表';
-
-/* =======================================
 活动账户表：活动获得的抽奖次数记录
 ======================================= */
 DROP TABLE IF EXISTS activity_account;
@@ -252,6 +237,7 @@ CREATE TABLE activity_account
     id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
     user_id        VARCHAR(32)     NOT NULL COMMENT '用户id',
     activity_id    BIGINT          NOT NULL COMMENT '活动id',
+    activity_point INT             NOT NULL COMMENT '用户积分',
     month_limit    INT             NOT NULL COMMENT '月上限',
     day_limit      INT             NOT NULL COMMENT '天上限',
     total_allocate INT             NOT NULL COMMENT '总分配',

@@ -47,6 +47,7 @@ public class AwardDistribute implements IAwardDistribute {
                 .userId(distributeContext.getUserId())
                 .awardId(distributeContext.getAwardId())
                 .orderId(distributeContext.getOrderId())
+                .activityId(distributeContext.getActivityId())
                 .build();
         BaseEvent.EventMessage<DispatchActivityAwardMessage> eventMessage = dispatchActivityAwardEvent.buildEventMessage(dispatchActivityAwardMessage);
 

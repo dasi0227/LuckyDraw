@@ -54,6 +54,6 @@ public interface IStrategyRepository {
 
     Map<String, Integer> queryRuleLockLimitMapByActivityId(List<StrategyAwardEntity> strategyAwardEntityList, Long activityId);
 
-    int queryUserPointByUserId(String userId);
+    int queryActivityAccountPoint(String userId, Long activityId);
 
 }

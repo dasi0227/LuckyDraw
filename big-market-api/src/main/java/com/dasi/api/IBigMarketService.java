@@ -8,6 +8,21 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface IBigMarketService {
 
+    Result<List<QueryConvertResponse>> queryConvert(QueryConvertRequest queryConvertRequest);
+
+
+
+
+
+
+
+
+
+
+
+
+    Result<QueryAccountResponse> queryActivityAccount(QueryAccountRequest queryAccountRequest);
+
     Result<Boolean> querySign(QuerySign querySign);
 
     Result<Void> assemble(Long activityId);
@@ -22,12 +37,11 @@ public interface IBigMarketService {
 
     Result<BehaviorResponse> behaviorComment(BehaviorRequest behaviorRequest);
 
-    Result<QueryAccountResponse> queryActivityAccount(QueryAccountRequest queryAccountRequest);
 
     Result<List<ActivityAwardResponse>> queryActivityAward(ActivityAwardRequest activityAwardRequest);
 
     Result<StrategyRuleWeightResponse> queryStrategyRuleWeight(StrategyRuleWeightRequest strategyRuleWeightRequest);
 
-    Result<TradeResponse> trade(TradeRequest tradeRequest);
+    Result<ConvertResponse> convert(ConvertRequest convertRequest);
 
 }

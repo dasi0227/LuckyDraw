@@ -8,10 +8,16 @@ public interface IActivityAccountDao {
 
     ActivityAccount queryActivityAccount(ActivityAccount activityAccount);
 
+    Integer queryActivityAccountPoint(ActivityAccount activityAccount);
+
     void createActivityAccount(ActivityAccount activityAccount);
 
-    void rechargeActivityAccount(ActivityAccount activityAccount);
+    void increaseActivityAccountRaffle(ActivityAccount activityAccount);
 
-    int subtractActivityAccount(ActivityAccount activityAccount);
+    int decreaseActivityAccountRaffle(ActivityAccount activityAccount);
+
+    void increaseActivityAccountPoint(ActivityAccount activityAccount);
+
+    void decreaseActivityAccountPoint(ActivityAccount activityAccount);
 
 }

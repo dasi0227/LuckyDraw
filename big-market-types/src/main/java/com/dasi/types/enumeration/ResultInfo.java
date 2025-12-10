@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public enum ResultInfo {
 
-    SUCCESS("0000", "成功"),
-    ERROR("0001", "失败")
+    SUCCESS("200", "成功"),
+    ERROR("500", "失败")
 
     ;
 

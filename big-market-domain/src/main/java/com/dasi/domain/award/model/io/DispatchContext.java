@@ -17,4 +17,6 @@ public class DispatchContext {
 
     private Long awardId;
 
+    private Long activityId;
+
 }

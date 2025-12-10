@@ -2,21 +2,27 @@ package com.dasi.trigger.http;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
-import com.dasi.domain.activity.model.io.*;
+import com.dasi.domain.activity.model.io.QueryAccountContext;
+import com.dasi.domain.activity.model.io.QueryAccountResult;
+import com.dasi.domain.activity.model.io.RaffleContext;
+import com.dasi.domain.activity.model.io.RaffleResult;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
-import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
+import com.dasi.domain.award.service.distribute.IAwardDistribute;
 import com.dasi.domain.behavior.model.io.BehaviorContext;
 import com.dasi.domain.behavior.model.io.BehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.point.model.io.TradeContext;
-import com.dasi.domain.point.model.io.TradeResult;
-import com.dasi.domain.point.service.trade.IPointTrade;
+import com.dasi.domain.trade.model.io.ConvertContext;
+import com.dasi.domain.trade.model.io.QueryConvertContext;
+import com.dasi.domain.trade.model.io.QueryConvertResult;
+import com.dasi.domain.trade.model.io.ConvertResult;
+import com.dasi.domain.trade.service.query.ITradeQuery;
+import com.dasi.domain.trade.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.ActivityAwardDetail;
 import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
@@ -60,6 +66,9 @@ public class BigMarketController implements IBigMarketService {
     private IStrategyQuery strategyQuery;
 
     @Resource
+    private ITradeQuery tradeQuery;
+
+    @Resource
     private IPointTrade pointTrade;
 
     @Resource
@@ -67,6 +76,61 @@ public class BigMarketController implements IBigMarketService {
 
     @Resource
     private IStrategyAssemble strategyAssemble;
+
+    /**
+     * 获取活动的交易信息
+     *
+     * @param queryConvertRequest activityId
+     * @return tradeId、tradePoint、tradeName
+     */
+    @PostMapping("/query/convert")
+    @Override
+    public Result<List<QueryConvertResponse>> queryConvert(@RequestBody QueryConvertRequest queryConvertRequest) {
+
+        Long activityId = queryConvertRequest.getActivityId();
+
+        QueryConvertContext queryConvertContext = QueryConvertContext.builder().activityId(activityId).build();
+        List<QueryConvertResult> queryConvertResultList = tradeQuery.queryConvertListByActivityId(queryConvertContext);
+        List<QueryConvertResponse> queryConvertResponseList = queryConvertResultList.stream()
+                .map(queryConvertResult -> QueryConvertResponse.builder()
+                        .tradeId(queryConvertResult.getTradeId())
+                        .tradePoint(queryConvertResult.getTradePoint())
+                        .tradeName(queryConvertResult.getTradeName())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Result.success(queryConvertResponseList);
+
+    }
+
+    /**
+     * 获取用户在当前活动的信息
+     *
+     * @param queryAccountRequest activityId、userId
+     * @return tradeId、tradePoint、tradeName
+     */
+    @PostMapping("/query/account")
+    @Override
+    public Result<QueryAccountResponse> queryActivityAccount(@RequestBody QueryAccountRequest queryAccountRequest) {
+
+        String userId = queryAccountRequest.getUserId();
+        Long activityId = queryAccountRequest.getActivityId();
+
+        QueryAccountContext queryAccountContext = QueryAccountContext.builder().userId(userId).activityId(activityId).build();
+        QueryAccountResult queryAccountResult = activityQuery.queryActivityAccount(queryAccountContext);
+        QueryAccountResponse queryAccountResponse = QueryAccountResponse.builder()
+                .userPoint(queryAccountResult.getUserPoint())
+                .totalSurplus(queryAccountResult.getTotalSurplus())
+                .monthSurplus(queryAccountResult.getMonthSurplus())
+                .daySurplus(queryAccountResult.getDaySurplus())
+                .monthRecharge(queryAccountResult.getMonthRecharge())
+                .dayRecharge(queryAccountResult.getDayRecharge())
+                .build();
+
+        return Result.success(queryAccountResponse);
+    }
+
+
 
     @PostMapping("/assemble")
     @Override
@@ -76,17 +140,18 @@ public class BigMarketController implements IBigMarketService {
         return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
     }
 
-    @PostMapping("/trade")
+    @PostMapping("/convert")
     @Override
-    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
+    public Result<ConvertResponse> convert(@RequestBody ConvertRequest convertRequest) {
 
-        String userId = tradeRequest.getUserId();
-        Long tradeId = tradeRequest.getTradeId();
+        String userId = convertRequest.getUserId();
+        Long tradeId = convertRequest.getTradeId();
+        Long activityId = convertRequest.getActivityId();
 
-        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).businessNo(TimeUtil.thisDay(false)).build();
-        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
-        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
-        return Result.success(tradeResponse);
+        ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).businessNo(TimeUtil.thisDay(false)).activityId(activityId).build();
+        ConvertResult convertResult = pointTrade.doPointTrade(convertContext);
+        ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(convertResult.getTradeDesc()).build();
+        return Result.success(convertResponse);
     }
 
     @PostMapping("/raffle")
@@ -172,32 +237,6 @@ public class BigMarketController implements IBigMarketService {
         Boolean flag = behaviorQuery.querySign(userId, activityId);
         return Result.success(flag);
     }
-
-    @PostMapping("/account")
-    @Override
-    public Result<QueryAccountResponse> queryActivityAccount(@RequestBody QueryAccountRequest queryAccountRequest) {
-        String userId = queryAccountRequest.getUserId();
-        Long activityId = queryAccountRequest.getActivityId();
-
-        log.info("=========================== 查询账户：userId={} ===========================", userId);
-        QueryAccountContext queryAccountContext = QueryAccountContext.builder().userId(userId).activityId(activityId).build();
-        QueryAccountResult queryAccountResult = activityQuery.queryActivityAccount(queryAccountContext);
-        QueryAccountResponse queryAccountResponse = QueryAccountResponse.builder()
-                .monthKey(queryAccountResult.getMonthKey())
-                .dayKey(queryAccountResult.getDayKey())
-                .monthLimit(queryAccountResult.getMonthLimit())
-                .dayLimit(queryAccountResult.getDayLimit())
-                .totalAllocate(queryAccountResult.getTotalAllocate())
-                .totalSurplus(queryAccountResult.getTotalSurplus())
-                .monthAllocate(queryAccountResult.getMonthAllocate())
-                .monthSurplus(queryAccountResult.getMonthSurplus())
-                .dayAllocate(queryAccountResult.getDayAllocate())
-                .daySurplus(queryAccountResult.getDaySurplus())
-                .build();
-
-        return Result.success(queryAccountResponse);
-    }
-
 
     @PostMapping("/award")
     @Override

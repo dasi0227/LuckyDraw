@@ -308,9 +308,6 @@ public class ActivityRepository implements IActivityRepository {
 
             transactionTemplate.execute(status -> {
                 try {
-                    String dayKey = TimeUtil.thisDay(true);
-                    String monthKey = TimeUtil.thisMonth(true);
-
                     /* ========== 1. 查询/创建 总账户 ========== */
                     ActivityAccount accountReq = new ActivityAccount();
                     accountReq.setUserId(userId);
@@ -320,6 +317,7 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccount = new ActivityAccount();
                         activityAccount.setUserId(userId);
                         activityAccount.setActivityId(activityId);
+                        activityAccount.setActivityPoint(0);
                         activityAccount.setTotalAllocate(0);
                         activityAccount.setTotalSurplus(0);
                         activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
@@ -328,6 +326,7 @@ public class ActivityRepository implements IActivityRepository {
                     }
 
                     /* ========== 2. 查询/创建 日账户 ========== */
+                    String dayKey = TimeUtil.thisDay(true);
                     ActivityAccountDay dayReq = new ActivityAccountDay();
                     dayReq.setUserId(userId);
                     dayReq.setActivityId(activityId);
@@ -345,6 +344,7 @@ public class ActivityRepository implements IActivityRepository {
                     }
 
                     /* ========== 3. 查询/创建 月账户 ========== */
+                    String monthKey = TimeUtil.thisMonth(true);
                     ActivityAccountMonth monthReq = new ActivityAccountMonth();
                     monthReq.setUserId(userId);
                     monthReq.setActivityId(activityId);
@@ -418,19 +418,19 @@ public class ActivityRepository implements IActivityRepository {
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 执行总账户的充值
-                    activityAccountDao.rechargeActivityAccount(activityAccount);
+                    activityAccountDao.increaseActivityAccountRaffle(activityAccount);
 
                     // 执行月账户的充值
                     int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());
                     activityAccountMonth.setMonthAllocate(monthDelta);
                     activityAccountMonth.setMonthSurplus(monthDelta);
-                    activityAccountMonthDao.rechargeActivityAccountMonth(activityAccountMonth);
+                    activityAccountMonthDao.increaseActivityAccountMonthRaffle(activityAccountMonth);
 
                     // 执行日账户的充值
                     int dayDelta   = Math.min(count, before.getDayLimit() - before.getDayAllocate());
                     activityAccountDay.setDayAllocate(dayDelta);
                     activityAccountDay.setDaySurplus(dayDelta);
-                    activityAccountDayDao.rechargeActivityAccountDay(activityAccountDay);
+                    activityAccountDayDao.increaseActivityAccountDay(activityAccountDay);
 
                     // 写入订单
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
@@ -502,41 +502,12 @@ public class ActivityRepository implements IActivityRepository {
             AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    int count;
+                    // 更新账户抽奖次数
+                    activityAccountDao.decreaseActivityAccountRaffle(activityAccount);
+                    activityAccountMonthDao.decreaseActivityAccountMonthRaffle(activityAccountMonth);
+                    activityAccountDayDao.decreaseActivityAccountDay(activityAccountDay);
 
-                    /* ===================
-                    // 1. 更新账户总抽奖次数
-                    ====================*/
-                    count = activityAccountDao.subtractActivityAccount(activityAccount);
-                    if (count == 0) {
-                        status.setRollbackOnly();
-                        log.info("【活动】账户不存在：userId={}, activityId={}", userId, activityId);
-                        return false;
-                    }
-
-                    /* ===================
-                    // 2. 保存/更新账户月抽奖次数
-                    ====================*/
-                    count = activityAccountMonthDao.subtractActivityAccountMonth(activityAccountMonth);
-                    if (count == 0) {
-                        status.setRollbackOnly();
-                        log.info("【活动】月账户不存在：userId={}, activityId={}, month={}", userId, activityId, monthKey);
-                        return false;
-                    }
-
-                    /* ===================
-                    // 3. 保存/更新账户日抽奖次数
-                    ====================*/
-                    count = activityAccountDayDao.subtractActivityAccountDay(activityAccountDay);
-                    if (count == 0) {
-                        status.setRollbackOnly();
-                        log.info("【活动】日账户不存在：userId={}, activityId={}, day={}", userId, activityId, dayKey);
-                        return false;
-                    }
-
-                    /* ===================
-                    // 4. 保存抽奖订单
-                    ====================*/
+                    // 保存抽奖订单
                     raffleOrderDao.saveRaffleOrder(raffleOrder);
                     return true;
                 } catch (Exception e) {

@@ -51,7 +51,8 @@ public class RuleWeightChain extends AbstractStrategyChain {
         thresholds.sort(Comparator.reverseOrder());
 
         // 4. 获取用户积分
-        int userScore = strategyRepository.queryUserPointByUserId(userId);
+        Long activityId = strategyRepository.queryActivityIdByStrategyId(strategyId);
+        int userScore = strategyRepository.queryActivityAccountPoint(userId, activityId);
         Integer matchedThreshold = thresholds.stream()
                 .filter(key -> userScore >= key)
                 .findFirst()

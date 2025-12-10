@@ -9,6 +9,7 @@ import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.constant.DefaultValue;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class AwardRepository implements IAwardRepository {
     private IActivityAwardDao activityAwardDao;
 
     @Resource
-    private IUserAccountDao userAccountDao;
+    private IActivityAccountDao activityAccountDao;
 
     @Resource
     private IUserAwardDao userAwardDao;
@@ -50,16 +51,22 @@ public class AwardRepository implements IAwardRepository {
 
 
     @Override
-    public UserAccountEntity queryUserAccountByUserId(String userId) {
+    public ActivityAccountEntity queryActivityAccount(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            UserAccount userAccount = userAccountDao.queryUserAccountByUserId(userId);
-            if (userAccount == null) throw new AppException("UserAccount 不存在：userId=" + userId);
-            return UserAccountEntity.builder()
-                    .userId(userAccount.getUserId())
-                    .userState(UserState.valueOf(userAccount.getUserState()))
-                    .userPoint(userAccount.getUserPoint())
+            ActivityAccount activityAccount = new ActivityAccount();
+            activityAccount.setUserId(userId);
+            activityAccount.setActivityId(activityId);
+            activityAccount = activityAccountDao.queryActivityAccount(activityAccount);
+            if (activityAccount == null) return null;
+            return ActivityAccountEntity.builder()
+                    .userId(activityAccount.getUserId())
+                    .activityId(activityAccount.getActivityId())
+                    .totalAllocate(activityAccount.getTotalAllocate())
+                    .totalSurplus(activityAccount.getTotalSurplus())
+                    .dayLimit(activityAccount.getDayLimit())
+                    .monthLimit(activityAccount.getMonthLimit())
                     .build();
         } finally {
             dbRouterStrategy.clear();
@@ -236,16 +243,23 @@ public class AwardRepository implements IAwardRepository {
     }
 
     @Override
-    public void createUserAccountIfAbsent(String userId) {
+    public void createActivityAccountIfAbsent(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
-            UserAccount userAccount = userAccountDao.queryUserAccountByUserId(userId);
-            if (userAccount == null) {
-                userAccount = new UserAccount();
-                userAccount.setUserId(userId);
-                userAccount.setUserState(UserState.ENABLE.name());
-                userAccount.setUserPoint(0);
-                userAccountDao.createUserAccount(userAccount);
+            ActivityAccount activityAccountReq = new ActivityAccount();
+            activityAccountReq.setUserId(userId);
+            activityAccountReq.setActivityId(activityId);
+            ActivityAccount activityAccount = activityAccountDao.queryActivityAccount(activityAccountReq);
+            if (activityAccount == null) {
+                activityAccount = new ActivityAccount();
+                activityAccount.setUserId(userId);
+                activityAccount.setActivityId(activityId);
+                activityAccount.setActivityPoint(0);
+                activityAccount.setTotalAllocate(0);
+                activityAccount.setTotalSurplus(0);
+                activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
+                activityAccount.setDayLimit(DefaultValue.DAY_LIMIT);
+                activityAccountDao.createActivityAccount(activityAccount);
             }
         } finally {
             dbRouterStrategy.clear();
@@ -253,17 +267,17 @@ public class AwardRepository implements IAwardRepository {
     }
 
     @Override
-    public void increaseUserAccountPoint(DispatchHandleAggregate dispatchHandleAggregate) {
+    public void increaseActivityAccountPoint(DispatchHandleAggregate dispatchHandleAggregate) {
 
         String orderId = dispatchHandleAggregate.getOrderId();
         String userId = dispatchHandleAggregate.getUserId();
-        Integer userPoint = dispatchHandleAggregate.getUserPoint();
+        Integer activityPoint = dispatchHandleAggregate.getActivityPoint();
 
-        UserAccountEntity userAccountEntity = dispatchHandleAggregate.getUserAccountEntity();
-        UserAccount userAccount = new UserAccount();
-        userAccount.setUserId(userAccountEntity.getUserId());
-        userAccount.setUserState(userAccountEntity.getUserState().name());
-        userAccount.setUserPoint(userPoint);
+        ActivityAccountEntity activityAccountEntity = dispatchHandleAggregate.getActivityAccountEntity();
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(activityAccountEntity.getUserId());
+        activityAccount.setActivityId(activityAccountEntity.getActivityId());
+        activityAccount.setActivityPoint(activityPoint);
 
         ActivityAwardEntity activityAwardEntity = dispatchHandleAggregate.getActivityAwardEntity();
         ActivityAward activityAward = new ActivityAward();
@@ -278,10 +292,10 @@ public class AwardRepository implements IAwardRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = userAccountDao.queryUserPointByUserId(userId);
+            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    userAccountDao.increaseUserAccountPoint(userAccount);
+                    activityAccountDao.increaseActivityAccountPoint(activityAccount);
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -289,7 +303,7 @@ public class AwardRepository implements IAwardRepository {
                     return false;
                 }
             });
-            Integer after = userAccountDao.queryUserPointByUserId(userId);
+            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
 
 
             if (Boolean.TRUE.equals(success)) {

@@ -27,8 +27,8 @@ public class FixedUserPointDispatchHandler implements IAwardDispatchHandler {
             throw new AppException("固定积分配置错误：awardValue={}" + awardValue);
         }
         int fixedPoint = Integer.parseInt(awardValue);
-        dispatchHandleAggregate.setUserPoint(fixedPoint);
-        awardRepository.increaseUserAccountPoint(dispatchHandleAggregate);
+        dispatchHandleAggregate.setActivityPoint(fixedPoint);
+        awardRepository.increaseActivityAccountPoint(dispatchHandleAggregate);
     }
 
 }

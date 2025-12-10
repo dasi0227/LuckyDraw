@@ -47,9 +47,6 @@ public class StrategyRepository implements IStrategyRepository {
     private IStrategyDao strategyDao;
 
     @Resource
-    private IUserAccountDao userAccountDao;
-
-    @Resource
     private IStrategyRuleDao strategyRuleDao;
 
     @Resource
@@ -144,10 +141,13 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public int queryUserPointByUserId(String userId) {
+    public int queryActivityAccountPoint(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
-            return userAccountDao.queryUserPointByUserId(userId);
+            ActivityAccount activityAccount = new ActivityAccount();
+            activityAccount.setUserId(userId);
+            activityAccount.setActivityId(activityId);
+            return activityAccountDao.queryActivityAccountPoint(activityAccount);
         } finally {
             dbRouterStrategy.clear();
         }

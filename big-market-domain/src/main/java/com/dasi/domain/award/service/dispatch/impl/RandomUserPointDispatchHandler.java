@@ -29,8 +29,8 @@ public class RandomUserPointDispatchHandler implements IAwardDispatchHandler {
             throw new AppException("随机积分配置错误：awardValue={}" + awardValue);
         }
         int randomPoint = ThreadLocalRandom.current().nextInt(Integer.parseInt(pointRange[0]), Integer.parseInt(pointRange[1]) + 1);
-        dispatchHandleAggregate.setUserPoint(randomPoint);
-        awardRepository.increaseUserAccountPoint(dispatchHandleAggregate);
+        dispatchHandleAggregate.setActivityPoint(randomPoint);
+        awardRepository.increaseActivityAccountPoint(dispatchHandleAggregate);
     }
 
 }

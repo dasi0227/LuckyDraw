@@ -39,18 +39,7 @@ public class ActivityQuery implements IActivityQuery {
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, dayKey);
 
         // 4. 构建
-        return QueryAccountResult.builder()
-                .totalAllocate(activityAccountEntity.getTotalAllocate())
-                .totalSurplus(activityAccountEntity.getTotalSurplus())
-                .monthKey(monthKey)
-                .monthLimit(activityAccountEntity.getMonthLimit())
-                .monthAllocate(activityAccountMonth.getMonthAllocate())
-                .monthSurplus(activityAccountMonth.getMonthSurplus())
-                .dayKey(dayKey)
-                .dayLimit(activityAccountEntity.getDayLimit())
-                .dayAllocate(activityAccountDayEntity.getDayAllocate())
-                .daySurplus(activityAccountDayEntity.getDaySurplus())
-                .build();
+        return null;
     }
 
 }

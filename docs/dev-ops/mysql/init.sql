@@ -81,16 +81,16 @@ VALUES (10001, 'SIGN', 'AVAILABLE', 'SKU', '30001', '签到：获得 3 次抽奖
 
 DROP TABLE IF EXISTS trade;
 CREATE TABLE trade LIKE big_market_table.trade;
-INSERT INTO trade (trade_id, activity_id, trade_type, trade_point, trade_value, trade_desc)
-VALUES (100001, 10001, 'CONVERT_RAFFLE', '100', '1', '兑换抽奖：100 积分换 1 次抽奖'),
-       (100002, 10001, 'CONVERT_RAFFLE', '150', '2', '兑换抽奖：150 积分换 2 次抽奖'),
-       (100003, 10001, 'CONVERT_RAFFLE', '250', '4', '兑换抽奖：250 积分换 4 次抽奖'),
-       (100004, 10001, 'CONVERT_AWARD', '1000', '2013', '兑换奖品：1000 积分换 5 元优惠券'),
-       (100006, 10001, 'CONVERT_AWARD', '10000', '2015', '兑换奖品：10000 积分换海贼王手办'),
-       (100005, 10001, 'CONVERT_AWARD', '100000', '2014', '兑换奖品：100000 积分换 iPhone17'),
-       (100007, 10001, 'POINT_RECHARGE', '0', '20', '增加积分：增加 20 积分'),
-       (100008, 10001, 'POINT_RECHARGE', '0', '10', '增加积分：增加 10 积分'),
-       (100009, 10001, 'POINT_RECHARGE', '0', '100000000', '增加积分：增加 100000000 积分');
+INSERT INTO trade (trade_id, activity_id, trade_type, trade_point, trade_value, trade_name, trade_desc)
+VALUES (100001, 10001, 'CONVERT_RAFFLE', '100', '1', '1 次抽奖机会', '兑换抽奖：100 积分换 1 次抽奖'),
+       (100002, 10001, 'CONVERT_RAFFLE', '150', '2', '2 次抽奖机会', '兑换抽奖：150 积分换 2 次抽奖'),
+       (100003, 10001, 'CONVERT_RAFFLE', '250', '4', '4 次抽奖机会', '兑换抽奖：250 积分换 4 次抽奖'),
+       (100004, 10001, 'CONVERT_AWARD', '1000', '2013', '5 元优惠券', '兑换奖品：1000 积分换 5 元优惠券'),
+       (100006, 10001, 'CONVERT_AWARD', '10000', '2015', '海贼王手办', '兑换奖品：10000 积分换海贼王手办'),
+       (100005, 10001, 'CONVERT_AWARD', '100000', '2014', 'iPhone17', '兑换奖品：100000 积分换 iPhone17'),
+       (100007, 10001, 'POINT_RECHARGE', '0', '20', '20积分', '增加积分：增加 20 积分'),
+       (100008, 10001, 'POINT_RECHARGE', '0', '10', '10积分', '增加积分：增加 10 积分'),
+       (100009, 10001, 'POINT_RECHARGE', '0', '100000000', '100000000积分', '增加积分：增加 100000000 积分');
 
 
 /* =============
@@ -103,8 +103,6 @@ USE big_market_01;
 DROP TABLE IF EXISTS task;
 CREATE TABLE task LIKE big_market_table.task;
 -- 账户
-DROP TABLE IF EXISTS user_account;
-CREATE TABLE user_account LIKE big_market_table.user_account;
 DROP TABLE IF EXISTS activity_account;
 CREATE TABLE activity_account LIKE big_market_table.activity_account;
 DROP TABLE IF EXISTS activity_account_day;
@@ -176,8 +174,6 @@ USE big_market_02;
 DROP TABLE IF EXISTS task;
 CREATE TABLE task LIKE big_market_table.task;
 -- 账户
-DROP TABLE IF EXISTS user_account;
-CREATE TABLE user_account LIKE big_market_table.user_account;
 DROP TABLE IF EXISTS activity_account;
 CREATE TABLE activity_account LIKE big_market_table.activity_account;
 DROP TABLE IF EXISTS activity_account_day;

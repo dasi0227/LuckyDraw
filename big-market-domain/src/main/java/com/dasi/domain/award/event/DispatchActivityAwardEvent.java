@@ -47,6 +47,8 @@ public class DispatchActivityAwardEvent extends BaseEvent<DispatchActivityAwardE
 
         private Long awardId;
 
+        private Long activityId;
+
     }
 
 }

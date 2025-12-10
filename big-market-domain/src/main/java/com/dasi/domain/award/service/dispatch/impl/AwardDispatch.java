@@ -2,9 +2,9 @@ package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
 import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.entity.ActivityAccountEntity;
 import com.dasi.domain.award.model.entity.ActivityAwardEntity;
 import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.domain.award.model.entity.UserAccountEntity;
 import com.dasi.domain.award.model.io.DispatchContext;
 import com.dasi.domain.award.model.io.DispatchResult;
 import com.dasi.domain.award.repository.IAwardRepository;
@@ -44,12 +44,13 @@ public class AwardDispatch implements IAwardDispatch {
         String userId = dispatchContext.getUserId();
         Long awardId = dispatchContext.getAwardId();
         String orderId = dispatchContext.getOrderId();
+        Long activityId = dispatchContext.getActivityId();
 
         // 创建账户
-        awardRepository.createUserAccountIfAbsent(userId);
+        awardRepository.createActivityAccountIfAbsent(userId, activityId);
 
         // 获取账户、奖品、获奖记录
-        UserAccountEntity userAccountEntity = awardRepository.queryUserAccountByUserId(userId);
+        ActivityAccountEntity activityAccountEntity = awardRepository.queryActivityAccount(userId, activityId);
         AwardEntity awardEntity = awardRepository.queryAwardByAwardId(awardId);
         ActivityAwardEntity activityAwardEntity = awardRepository.queryActivityAwardByOrderId(userId, orderId);
 
@@ -66,7 +67,7 @@ public class AwardDispatch implements IAwardDispatch {
                         .orderId(dispatchContext.getOrderId())
                         .awardEntity(awardEntity)
                         .activityAwardEntity(activityAwardEntity)
-                        .userAccountEntity(userAccountEntity)
+                        .activityAccountEntity(activityAccountEntity)
                         .build();
             awardDispatchHandler.dispatchHandle(dispatchHandleAggregate);
             return DispatchResult.builder()

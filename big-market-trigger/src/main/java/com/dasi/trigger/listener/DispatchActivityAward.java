@@ -31,16 +31,18 @@ public class DispatchActivityAward {
             String userId = dispatchActivityAwardMessage.getUserId();
             String orderId = dispatchActivityAwardMessage.getOrderId();
             Long awardId = dispatchActivityAwardMessage.getAwardId();
+            Long activityId = dispatchActivityAwardMessage.getActivityId();
 
             DispatchContext dispatchContext = DispatchContext.builder()
                     .userId(userId)
                     .orderId(orderId)
                     .awardId(awardId)
+                    .activityId(activityId)
                     .build();
             // TODO：通过websocket发送结果
             DispatchResult dispatchResult = awardDispatch.doAwardDispatch(dispatchContext);
         } catch (AppException e) {
-            log.debug("【业务异常】", e);
+            log.error("【业务异常】", e);
         } catch (Exception e) {
             log.error("【系统异常】", e);
         }
