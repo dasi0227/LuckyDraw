@@ -17,18 +17,27 @@ public class UniqueIdGenerator implements IUniqueIdGenerator {
     @Resource
     private IRedisService redisService;
 
+    @Override
     public String nextRechargeOrderId() {
         return buildOrderId(RedisKey.RECHARGE_ORDER_ID_KEY);
     }
 
+    @Override
     public String nextRaffleOrderId() {
         return buildOrderId(RedisKey.RAFFLE_ORDER_ID_KEY);
     }
 
+    @Override
     public String nextRewardOrderId() {
         return buildOrderId(RedisKey.REWARD_ORDER_ID_KEY);
     }
 
+    @Override
+    public String nextTradeOrderId() {
+        return buildOrderId(RedisKey.TRADE_ORDER_ID_KEY);
+    }
+
+    @Override
     public String nextMessageId() {
         return UUID.randomUUID().toString();
     }

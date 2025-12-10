@@ -50,8 +50,8 @@ public class RuleWeightChain extends AbstractStrategyChain {
         List<Integer> thresholds = new ArrayList<>(weightMap.keySet());
         thresholds.sort(Comparator.reverseOrder());
 
-        // 4. TODO：根据用户积分判断能够到达的积分阈值
-        int userScore = strategyRepository.queryUserScoreByStrategyId(userId, strategyId);
+        // 4. 获取用户积分
+        int userScore = strategyRepository.queryUserPointByUserId(userId);
         Integer matchedThreshold = thresholds.stream()
                 .filter(key -> userScore >= key)
                 .findFirst()

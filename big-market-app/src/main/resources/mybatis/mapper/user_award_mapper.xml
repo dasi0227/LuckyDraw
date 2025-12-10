@@ -4,27 +4,22 @@
 <mapper namespace="com.dasi.infrastructure.persistent.dao.IUserAwardDao">
 
     <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.UserAward">
-        <id     property="id"         column="id"/>
-        <result property="orderId"     column="order_id"/>
-        <result property="userId"      column="user_id"/>
-        <result property="awardId"     column="award_id"/>
-        <result property="awardType"   column="award_type"/>
-        <result property="awardName"   column="award_name"/>
-        <result property="awardDesc"   column="award_desc"/>
-        <result property="awardTime"   column="award_time"/>
-        <result property="createTime"  column="create_time"/>
-        <result property="updateTime"  column="update_time"/>
+        <id     property="id"               column="id"/>
+        <result property="orderId"          column="order_id"/>
+        <result property="userId"           column="user_id"/>
+        <result property="awardId"          column="award_id"/>
+        <result property="awardType"        column="award_type"/>
+        <result property="awardName"        column="award_name"/>
+        <result property="awardDesc"        column="award_desc"/>
+        <result property="awardDeadline"    column="award_deadline"/>
+        <result property="awardTime"        column="award_time"/>
+        <result property="createTime"       column="create_time"/>
+        <result property="updateTime"       column="update_time"/>
     </resultMap>
 
     <insert id="saveUserAward" parameterType="com.dasi.infrastructure.persistent.po.UserAward">
-        INSERT INTO user_award (order_id, user_id, award_id, award_type, award_name, award_desc, award_time)
-        VALUES (#{orderId}, #{userId}, #{awardId}, #{awardType}, #{awardName}, #{awardDesc}, #{awardTime})
+        INSERT INTO user_award (order_id, user_id, award_id, award_type, award_name, award_desc, award_deadline, award_time)
+        VALUES (#{orderId}, #{userId}, #{awardId}, #{awardType}, #{awardName}, #{awardDesc}, #{awardDeadline}, #{awardTime})
     </insert>
-
-    <select id="queryUserAwardByOrderId" parameterType="java.lang.String" resultMap="dataMap">
-        SELECT *
-        FROM user_award
-        WHERE order_id = #{orderId}
-    </select>
 
 </mapper>

@@ -7,12 +7,13 @@ import com.dasi.domain.activity.model.io.ActivitySkuStock;
 import com.dasi.domain.activity.model.type.ActivityState;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.model.type.RechargeState;
-import com.dasi.domain.activity.model.vo.AccountSurplusSnapshot;
+import com.dasi.domain.activity.model.vo.AccountSnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
+import com.dasi.types.constant.DefaultValue;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
@@ -300,8 +301,6 @@ public class ActivityRepository implements IActivityRepository {
         rechargeSkuDao.clearRechargeSkuStock(skuId);
     }
 
-
-    // TODO：月限制和日限制的逻辑还没实现
     @Override
     public void createActivityAccountIfAbsent(String userId, Long activityId) {
         try {
@@ -316,37 +315,33 @@ public class ActivityRepository implements IActivityRepository {
                     ActivityAccount accountReq = new ActivityAccount();
                     accountReq.setUserId(userId);
                     accountReq.setActivityId(activityId);
-                    ActivityAccount account = activityAccountDao.queryActivityAccount(accountReq);
-
-                    if (account == null) {
-                        account = new ActivityAccount();
-                        account.setUserId(userId);
-                        account.setActivityId(activityId);
-                        account.setTotalAllocate(0);
-                        account.setTotalSurplus(0);
-                        account.setMonthLimit(-1);
-                        account.setDayLimit(-1);
-                        activityAccountDao.createActivityAccount(account);
+                    ActivityAccount activityAccount = activityAccountDao.queryActivityAccount(accountReq);
+                    if (activityAccount == null) {
+                        activityAccount = new ActivityAccount();
+                        activityAccount.setUserId(userId);
+                        activityAccount.setActivityId(activityId);
+                        activityAccount.setTotalAllocate(0);
+                        activityAccount.setTotalSurplus(0);
+                        activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
+                        activityAccount.setDayLimit(DefaultValue.DAY_LIMIT);
+                        activityAccountDao.createActivityAccount(activityAccount);
                     }
-
-                    // TODO：当前可用次数，用来初始化日/月账户（这里先用 totalSurplus，后面再按 limit 规则改）
-                    Integer count = account.getTotalSurplus();
 
                     /* ========== 2. 查询/创建 日账户 ========== */
                     ActivityAccountDay dayReq = new ActivityAccountDay();
                     dayReq.setUserId(userId);
                     dayReq.setActivityId(activityId);
                     dayReq.setDayKey(dayKey);
-                    ActivityAccountDay dayAccount = activityAccountDayDao.queryActivityAccountDay(dayReq);
-
-                    if (dayAccount == null) {
-                        dayAccount = new ActivityAccountDay();
-                        dayAccount.setActivityId(activityId);
-                        dayAccount.setUserId(userId);
-                        dayAccount.setDayKey(dayKey);
-                        dayAccount.setDayAllocate(count);
-                        dayAccount.setDaySurplus(count);
-                        activityAccountDayDao.createActivityAccountDay(dayAccount);
+                    ActivityAccountDay activityAccountDay = activityAccountDayDao.queryActivityAccountDay(dayReq);
+                    if (activityAccountDay == null) {
+                        activityAccountDay = new ActivityAccountDay();
+                        activityAccountDay.setActivityId(activityId);
+                        activityAccountDay.setUserId(userId);
+                        activityAccountDay.setDayKey(dayKey);
+                        activityAccountDay.setDayLimit(DefaultValue.DAY_LIMIT);
+                        activityAccountDay.setDayAllocate(Math.min(DefaultValue.DAY_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountDay.setDaySurplus(Math.min(DefaultValue.DAY_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountDayDao.createActivityAccountDay(activityAccountDay);
                     }
 
                     /* ========== 3. 查询/创建 月账户 ========== */
@@ -354,16 +349,16 @@ public class ActivityRepository implements IActivityRepository {
                     monthReq.setUserId(userId);
                     monthReq.setActivityId(activityId);
                     monthReq.setMonthKey(monthKey);
-                    ActivityAccountMonth monthAccount = activityAccountMonthDao.queryActivityAccountMonth(monthReq);
-
-                    if (monthAccount == null) {
-                        monthAccount = new ActivityAccountMonth();
-                        monthAccount.setActivityId(activityId);
-                        monthAccount.setUserId(userId);
-                        monthAccount.setMonthKey(monthKey);
-                        monthAccount.setMonthAllocate(count);
-                        monthAccount.setMonthSurplus(count);
-                        activityAccountMonthDao.createActivityAccountMonth(monthAccount);
+                    ActivityAccountMonth activityAccountMonth = activityAccountMonthDao.queryActivityAccountMonth(monthReq);
+                    if (activityAccountMonth == null) {
+                        activityAccountMonth = new ActivityAccountMonth();
+                        activityAccountMonth.setActivityId(activityId);
+                        activityAccountMonth.setUserId(userId);
+                        activityAccountMonth.setMonthKey(monthKey);
+                        activityAccountMonth.setMonthLimit(DefaultValue.MONTH_LIMIT);
+                        activityAccountMonth.setMonthAllocate(Math.min(DefaultValue.MONTH_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountMonth.setMonthSurplus(Math.min(DefaultValue.MONTH_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountMonthDao.createActivityAccountMonth(activityAccountMonth);
                     }
 
                     return null;
@@ -396,8 +391,6 @@ public class ActivityRepository implements IActivityRepository {
         String userId = rechargeOrderEntity.getUserId();
         Long activityId = rechargeOrderEntity.getActivityId();
         Integer count = rechargeOrderEntity.getCount();
-        String monthKey = TimeUtil.thisMonth(true);
-        String dayKey = TimeUtil.thisDay(true);
 
         // 创建用于充值的账户
         ActivityAccount activityAccount = new ActivityAccount();
@@ -406,30 +399,39 @@ public class ActivityRepository implements IActivityRepository {
         activityAccount.setTotalAllocate(count);
         activityAccount.setTotalSurplus(count);
 
+        String monthKey = TimeUtil.thisMonth(true);
         ActivityAccountMonth activityAccountMonth = new ActivityAccountMonth();
         activityAccountMonth.setActivityId(activityId);
         activityAccountMonth.setUserId(userId);
         activityAccountMonth.setMonthKey(monthKey);
-        activityAccountMonth.setMonthAllocate(count);
-        activityAccountMonth.setMonthSurplus(count);
 
+        String dayKey = TimeUtil.thisDay(true);
         ActivityAccountDay activityAccountDay = new ActivityAccountDay();
         activityAccountDay.setActivityId(activityId);
         activityAccountDay.setUserId(userId);
         activityAccountDay.setDayKey(dayKey);
-        activityAccountDay.setDayAllocate(count);
-        activityAccountDay.setDaySurplus(count);
 
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSurplusSnapshot before = getAccountSurplusSnapshot(userId, activityId);
+            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 执行充值
+                    // 执行总账户的充值
                     activityAccountDao.rechargeActivityAccount(activityAccount);
+
+                    // 执行月账户的充值
+                    int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());
+                    activityAccountMonth.setMonthAllocate(monthDelta);
+                    activityAccountMonth.setMonthSurplus(monthDelta);
                     activityAccountMonthDao.rechargeActivityAccountMonth(activityAccountMonth);
+
+                    // 执行日账户的充值
+                    int dayDelta   = Math.min(count, before.getDayLimit() - before.getDayAllocate());
+                    activityAccountDay.setDayAllocate(dayDelta);
+                    activityAccountDay.setDaySurplus(dayDelta);
                     activityAccountDayDao.rechargeActivityAccountDay(activityAccountDay);
+
                     // 写入订单
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
                     return true;
@@ -439,14 +441,13 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
+            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                AccountSurplusSnapshot after = getAccountSurplusSnapshot(userId, activityId);
-
                 rechargeOrder.setRechargeState(RechargeState.USED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
 
-                log.info("【充值】增加账户余额成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
+                log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
@@ -473,20 +474,39 @@ public class ActivityRepository implements IActivityRepository {
         String monthKey = TimeUtil.thisMonth(true);
         String dayKey = TimeUtil.thisDay(true);
 
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(userId);
+        activityAccount.setActivityId(activityId);
+
+        ActivityAccountMonth activityAccountMonth = new ActivityAccountMonth();
+        activityAccountMonth.setUserId(userId);
+        activityAccountMonth.setActivityId(activityId);
+        activityAccountMonth.setMonthKey(monthKey);
+
+        ActivityAccountDay activityAccountDay = new ActivityAccountDay();
+        activityAccountDay.setUserId(userId);
+        activityAccountDay.setActivityId(activityId);
+        activityAccountDay.setDayKey(dayKey);
+
+        RaffleOrder raffleOrder = new RaffleOrder();
+        raffleOrder.setOrderId(raffleOrderEntity.getOrderId());
+        raffleOrder.setUserId(raffleOrderEntity.getUserId());
+        raffleOrder.setActivityId(raffleOrderEntity.getActivityId());
+        raffleOrder.setStrategyId(raffleOrderEntity.getStrategyId());
+        raffleOrder.setRaffleState(raffleOrderEntity.getRaffleState().name());
+        raffleOrder.setRaffleTime(raffleOrderEntity.getRaffleTime());
+
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSurplusSnapshot before = getAccountSurplusSnapshot(userId, activityId);
+            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     int count;
 
                     /* ===================
-                    // 1. 更新账户总余额
+                    // 1. 更新账户总抽奖次数
                     ====================*/
-                    ActivityAccount activityAccount = new ActivityAccount();
-                    activityAccount.setUserId(userId);
-                    activityAccount.setActivityId(activityId);
                     count = activityAccountDao.subtractActivityAccount(activityAccount);
                     if (count == 0) {
                         status.setRollbackOnly();
@@ -495,12 +515,8 @@ public class ActivityRepository implements IActivityRepository {
                     }
 
                     /* ===================
-                    // 2. 保存/更新账户月余额
+                    // 2. 保存/更新账户月抽奖次数
                     ====================*/
-                    ActivityAccountMonth activityAccountMonth = new ActivityAccountMonth();
-                    activityAccountMonth.setUserId(userId);
-                    activityAccountMonth.setActivityId(activityId);
-                    activityAccountMonth.setMonthKey(monthKey);
                     count = activityAccountMonthDao.subtractActivityAccountMonth(activityAccountMonth);
                     if (count == 0) {
                         status.setRollbackOnly();
@@ -509,12 +525,8 @@ public class ActivityRepository implements IActivityRepository {
                     }
 
                     /* ===================
-                    // 3. 保存/更新账户日余额
+                    // 3. 保存/更新账户日抽奖次数
                     ====================*/
-                    ActivityAccountDay activityAccountDay = new ActivityAccountDay();
-                    activityAccountDay.setUserId(userId);
-                    activityAccountDay.setActivityId(activityId);
-                    activityAccountDay.setDayKey(dayKey);
                     count = activityAccountDayDao.subtractActivityAccountDay(activityAccountDay);
                     if (count == 0) {
                         status.setRollbackOnly();
@@ -525,13 +537,6 @@ public class ActivityRepository implements IActivityRepository {
                     /* ===================
                     // 4. 保存抽奖订单
                     ====================*/
-                    RaffleOrder raffleOrder = new RaffleOrder();
-                    raffleOrder.setOrderId(raffleOrderEntity.getOrderId());
-                    raffleOrder.setUserId(raffleOrderEntity.getUserId());
-                    raffleOrder.setActivityId(raffleOrderEntity.getActivityId());
-                    raffleOrder.setStrategyId(raffleOrderEntity.getStrategyId());
-                    raffleOrder.setRaffleState(raffleOrderEntity.getRaffleState().name());
-                    raffleOrder.setRaffleTime(raffleOrderEntity.getRaffleTime());
                     raffleOrderDao.saveRaffleOrder(raffleOrder);
                     return true;
                 } catch (Exception e) {
@@ -540,12 +545,12 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
+            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
-
-            // TODO：是否需要更新抽奖订单状态
             if (Boolean.TRUE.equals(success)) {
-                AccountSurplusSnapshot after = getAccountSurplusSnapshot(userId, activityId);
-                log.info("【活动】消耗账户余额成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
+                raffleOrder.setRaffleState(RaffleState.USED.name());
+                raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
                         monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
@@ -553,6 +558,8 @@ public class ActivityRepository implements IActivityRepository {
                 );
                 log.info("【活动】保存抽奖订单成功：orderId={}", orderId);
             } else {
+                raffleOrder.setRaffleState(RaffleState.CANCELLED.name());
+                raffleOrderDao.updateRaffleOrderState(raffleOrder);
                 throw new AppException("保存抽奖订单失败：orderId=" + orderId);
             }
 
@@ -561,7 +568,7 @@ public class ActivityRepository implements IActivityRepository {
         }
     }
 
-    private AccountSurplusSnapshot getAccountSurplusSnapshot(String userId, Long activityId) {
+    private AccountSnapshot getAccountSnapshot(String userId, Long activityId) {
         // ===== 1. 总账户 =====
         ActivityAccount accountReq = new ActivityAccount();
         accountReq.setUserId(userId);
@@ -585,9 +592,14 @@ public class ActivityRepository implements IActivityRepository {
         ActivityAccountDay dayAccount = activityAccountDayDao.queryActivityAccountDay(dayReq);
 
         // ===== 4. 组装快照 =====
-        return AccountSurplusSnapshot.builder()
+        return AccountSnapshot.builder()
+                .totalAllocate(account == null ? 0 : account.getTotalAllocate())
                 .totalSurplus(account == null ? 0 : account.getTotalSurplus())
+                .monthLimit(monthAccount == null ? 0 : monthAccount.getMonthLimit())
+                .monthAllocate(monthAccount == null ? 0 : monthAccount.getMonthAllocate())
                 .monthSurplus(monthAccount == null ? 0 : monthAccount.getMonthSurplus())
+                .dayLimit(dayAccount == null ? 0 : dayAccount.getDayLimit())
+                .dayAllocate(dayAccount == null ? 0 : dayAccount.getDayAllocate())
                 .daySurplus(dayAccount == null ? 0 : dayAccount.getDaySurplus())
                 .build();
     }

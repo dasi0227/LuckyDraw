@@ -1,9 +1,7 @@
 package com.dasi.domain.award.repository;
 
-import com.dasi.domain.award.model.aggregate.AwardDispatchHandleAggregate;
-import com.dasi.domain.award.model.entity.ActivityAwardEntity;
-import com.dasi.domain.award.model.entity.TaskEntity;
-import com.dasi.domain.award.model.entity.AwardEntity;
+import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.entity.*;
 
 public interface IAwardRepository {
 
@@ -13,6 +11,11 @@ public interface IAwardRepository {
 
     void createUserAccountIfAbsent(String userId);
 
-    void increaseUserAccountPoint(AwardDispatchHandleAggregate awardDispatchHandleAggregate);
+    void increaseUserAccountPoint(DispatchHandleAggregate dispatchHandleAggregate);
 
+    UserAccountEntity queryUserAccountByUserId(String userId);
+
+    ActivityAwardEntity queryActivityAwardByOrderId(String userId, String orderId);
+
+    void saveUserAward(DispatchHandleAggregate dispatchHandleAggregate);
 }

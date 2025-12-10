@@ -20,6 +20,9 @@ public class ActivityAccountDay {
     /** yyyy-mm-dd */
     private String dayKey;
 
+    /** 日上限 */
+    private Integer dayLimit;
+
     /** 日次数 */
     private Integer dayAllocate;
 

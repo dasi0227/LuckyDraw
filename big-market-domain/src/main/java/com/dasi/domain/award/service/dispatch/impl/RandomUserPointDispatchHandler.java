@@ -1,9 +1,7 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
-import com.dasi.domain.award.model.aggregate.AwardDispatchHandleAggregate;
-import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.domain.award.model.io.DispatchContext;
+import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
 import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.dispatch.IAwardDispatchHandler;
@@ -24,27 +22,15 @@ public class RandomUserPointDispatchHandler implements IAwardDispatchHandler {
     private IAwardRepository awardRepository;
 
     @Override
-    public void dispatchHandle(DispatchContext dispatchContext, AwardEntity awardEntity) {
-
-        // 1. 获取配置信息
-        String awardConfig = awardEntity.getAwardConfig();
-
-        // 2. 生成随机值
-        String[] pointRange = awardConfig.split(Delimiter.COMMA);
+    public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
+        String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
+        String[] pointRange = awardValue.split(Delimiter.COMMA);
         if (pointRange.length != 2) {
-            throw new AppException("随机积分配置错误：awardConfig={}" + awardConfig);
+            throw new AppException("随机积分配置错误：awardValue={}" + awardValue);
         }
         int randomPoint = ThreadLocalRandom.current().nextInt(Integer.parseInt(pointRange[0]), Integer.parseInt(pointRange[1]) + 1);
-
-        // 3. 增加账户积分
-        AwardDispatchHandleAggregate awardDispatchHandleAggregate = AwardDispatchHandleAggregate.builder()
-                .userId(dispatchContext.getUserId())
-                .awardId(dispatchContext.getAwardId())
-                .orderId(dispatchContext.getOrderId())
-                .userPoint(randomPoint)
-                .awardEntity(awardEntity)
-                .build();
-        awardRepository.increaseUserAccountPoint(awardDispatchHandleAggregate);
+        dispatchHandleAggregate.setUserPoint(randomPoint);
+        awardRepository.increaseUserAccountPoint(dispatchHandleAggregate);
     }
 
 }

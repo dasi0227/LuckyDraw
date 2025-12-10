@@ -1,8 +1,8 @@
 package com.dasi.domain.activity.service.recharge.impl;
 
 import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
-import com.dasi.domain.activity.model.io.RechargeContext;
-import com.dasi.domain.activity.model.io.RechargeResult;
+import com.dasi.domain.activity.model.io.SkuRechargeContext;
+import com.dasi.domain.activity.model.io.SkuRechargeResult;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
 import com.dasi.domain.activity.repository.IActivityRepository;
@@ -21,18 +21,18 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
     }
 
     @Override
-    public RechargeResult doSkuRecharge(RechargeContext rechargeContext) {
+    public SkuRechargeResult doSkuRecharge(SkuRechargeContext skuRechargeContext) {
 
         // 1. 参数校验
-        String userId = rechargeContext.getUserId();
-        String bizId = rechargeContext.getBizId();
-        Long skuId = rechargeContext.getSkuId();
+        String userId = skuRechargeContext.getUserId();
+        String bizId = skuRechargeContext.getBizId();
+        Long skuId = skuRechargeContext.getSkuId();
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (StringUtils.isBlank(bizId)) throw new AppException("缺少参数 bizId");
         if (skuId == null) throw new AppException("缺少参数 skuId");
 
         // 2. 查询活动的基础信息
-        ActivitySkuEntity activitySkuEntity = activityRepository.queryRechargeSkuBySkuId(rechargeContext.getSkuId());
+        ActivitySkuEntity activitySkuEntity = activityRepository.queryRechargeSkuBySkuId(skuRechargeContext.getSkuId());
         ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activitySkuEntity.getActivityId());
 
         // 3. 活动规则校验
@@ -45,14 +45,11 @@ public abstract class AbstractSkuRecharge implements ISkuRecharge {
         activityRepository.createActivityAccountIfAbsent(userId, activityEntity.getActivityId());
 
         // 5. 充值并保存订单
-        RechargeOrderEntity rechargeOrderEntity = createRechargeOrder(rechargeContext, activitySkuEntity);
-        return RechargeResult.builder()
-                .orderId(rechargeOrderEntity.getOrderId())
-                .count(rechargeOrderEntity.getCount())
-                .build();
+        RechargeOrderEntity rechargeOrderEntity = saveRechargeOrder(skuRechargeContext, activitySkuEntity);
+        return SkuRechargeResult.builder().count(rechargeOrderEntity.getCount()).build();
     }
 
-    protected abstract RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activityEntity);
+    protected abstract RechargeOrderEntity saveRechargeOrder(SkuRechargeContext skuRechargeContext, ActivitySkuEntity activityEntity);
 
     protected abstract Boolean checkRechargeAvailable(ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity);
 

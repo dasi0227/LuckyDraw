@@ -39,7 +39,7 @@
     </update>
 
     <!-- 消耗积分 -->
-    <update id="decreaseUserPoint" parameterType="com.dasi.infrastructure.persistent.po.UserAccount">
+    <update id="decreaseUserAccountPoint" parameterType="com.dasi.infrastructure.persistent.po.UserAccount">
         UPDATE user_account
         SET user_point = user_point - #{userPoint}
         WHERE user_id = #{userId}

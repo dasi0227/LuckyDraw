@@ -17,7 +17,7 @@ public class UserAward {
     private String userId;
 
     /** 奖品ID */
-    private String awardId;
+    private Long awardId;
 
     /** 奖品类型 */
     private String awardType;
@@ -27,6 +27,9 @@ public class UserAward {
 
     /** 奖品描述 */
     private String awardDesc;
+
+    /** 奖品期限 */
+    private LocalDateTime awardDeadline;
 
     /** 奖品时间 */
     private LocalDateTime awardTime;

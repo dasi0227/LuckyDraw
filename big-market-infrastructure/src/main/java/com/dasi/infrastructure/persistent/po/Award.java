@@ -24,7 +24,7 @@ public class Award {
     private String awardDesc;
 
     /** 奖品配置 */
-    private String awardConfig;
+    private String awardValue;
 
     /** 创建时间 */
     private LocalDateTime createTime;

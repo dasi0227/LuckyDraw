@@ -8,6 +8,7 @@
         <result property="activityId"  column="activity_id"/>
         <result property="userId"      column="user_id"/>
         <result property="dayKey"      column="day_key"/>
+        <result property="dayLimit"    column="day_limit"/>
         <result property="dayAllocate" column="day_allocate"/>
         <result property="daySurplus"  column="day_surplus"/>
         <result property="createTime"  column="create_time"/>
@@ -15,8 +16,8 @@
     </resultMap>
 
     <insert id="createActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
-        INSERT INTO activity_account_day (activity_id, user_id, day_key, day_allocate, day_surplus)
-        VALUES (#{activityId}, #{userId}, #{dayKey}, #{dayAllocate}, #{daySurplus})
+        INSERT INTO activity_account_day (activity_id, user_id, day_key, day_limit, day_allocate, day_surplus)
+        VALUES (#{activityId}, #{userId}, #{dayKey}, #{dayLimit}, #{dayAllocate}, #{daySurplus})
     </insert>
 
     <update id="subtractActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
@@ -33,7 +34,7 @@
     </update>
 
     <select id="queryActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay" resultMap="dataMap">
-        SELECT activity_id, user_id, day_key, day_allocate, day_surplus
+        SELECT activity_id, user_id, day_key, day_limit, day_allocate, day_surplus
         FROM activity_account_day
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND day_key = #{dayKey}
     </select>

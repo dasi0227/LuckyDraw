@@ -27,18 +27,18 @@ public class AccountInfoChain extends AbstractActivityChain {
         String userId = actionChainCheckAggregate.getUserId();
         Long activityId = actionChainCheckAggregate.getActivityId();
 
-        /* ========= 1. 查询总余额 ========= */
+        /* ========= 1. 查询总抽奖次数 ========= */
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
         if (activityAccountEntity == null) {
             log.info("【活动】ACCOUNT_INFO 拦截（账户不存在）：userId={}, activityId={}", userId, activityId);
             return false;
         }
         if (activityAccountEntity.getTotalSurplus() <= 0) {
-            log.info("【活动】ACCOUNT_INFO 拦截（账户总余额不足）：userId={}, activityId={}, surplus={}", userId, activityId, activityAccountEntity.getTotalSurplus());
+            log.info("【活动】ACCOUNT_INFO 拦截（账户总抽奖次数不足）：userId={}, activityId={}, surplus={}", userId, activityId, activityAccountEntity.getTotalSurplus());
             return false;
         }
 
-        /* ========= 2. 查询月余额 ========= */
+        /* ========= 2. 查询月抽奖次数 ========= */
         String month = TimeUtil.thisMonth(true);
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, month);
         if (activityAccountMonthEntity == null) {
@@ -46,11 +46,11 @@ public class AccountInfoChain extends AbstractActivityChain {
             return false;
         }
         if (activityAccountMonthEntity.getMonthSurplus() <= 0) {
-            log.info("【活动】ACCOUNT_INFO 拦截（账户月余额不足）：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
+            log.info("【活动】ACCOUNT_INFO 拦截（账户月抽奖次数不足）：userId={}, activityId={}, month={}, monthSurplus={}", userId, activityId, month, activityAccountMonthEntity.getMonthSurplus());
             return false;
         }
 
-        /* ========= 3. 查询日余额 ========= */
+        /* ========= 3. 查询日抽奖次数 ========= */
         String day = TimeUtil.thisDay(true);
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, day);
         if (activityAccountDayEntity == null) {
@@ -58,7 +58,7 @@ public class AccountInfoChain extends AbstractActivityChain {
             return false;
         }
         if (activityAccountMonthEntity.getMonthSurplus() <= 0) {
-            log.info("【活动】ACCOUNT_INFO 拦截（账户日余额不足）：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());
+            log.info("【活动】ACCOUNT_INFO 拦截（账户日抽奖次数不足）：userId={}, activityId={}, day={}, daySurplus={}", userId, activityId, day, activityAccountDayEntity.getDaySurplus());
             return false;
         }
 

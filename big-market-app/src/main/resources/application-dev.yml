@@ -119,8 +119,11 @@ spring:
     password: jason2004
     listener:
       simple:
+        retry:
+          enabled: false
         prefetch: 1
     topic:
       recharge_sku_stock_empty: recharge_sku_stock_empty
       dispatch_raffle_award: dispatch_raffle_award
       dispatch_behavior_reward: dispatch_behavior_reward
+      dispatch_trade_outcome: dispatch_trade_outcome

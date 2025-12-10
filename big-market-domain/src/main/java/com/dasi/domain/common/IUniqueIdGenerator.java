@@ -5,6 +5,7 @@ public interface IUniqueIdGenerator {
     String nextRechargeOrderId();
     String nextRaffleOrderId();
     String nextRewardOrderId();
+    String nextTradeOrderId();
     String nextMessageId();
 
 }

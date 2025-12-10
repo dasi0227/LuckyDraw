@@ -8,6 +8,7 @@
         <result property="activityId"    column="activity_id"/>
         <result property="userId"        column="user_id"/>
         <result property="monthKey"      column="month_key"/>
+        <result property="monthLimit"    column="month_limit"/>
         <result property="monthAllocate" column="month_allocate"/>
         <result property="monthSurplus"  column="month_surplus"/>
         <result property="createTime"    column="create_time"/>
@@ -15,8 +16,8 @@
     </resultMap>
 
     <insert id="createActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
-        INSERT INTO activity_account_month (activity_id, user_id, month_key, month_allocate, month_surplus)
-        VALUES (#{activityId}, #{userId}, #{monthKey}, #{monthAllocate}, #{monthSurplus})
+        INSERT INTO activity_account_month (activity_id, user_id, month_key, month_limit, month_allocate, month_surplus)
+        VALUES (#{activityId}, #{userId}, #{monthKey}, #{monthLimit}, #{monthAllocate}, #{monthSurplus})
     </insert>
 
     <update id="subtractActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth">
@@ -33,7 +34,7 @@
     </update>
 
     <select id="queryActivityAccountMonth" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountMonth" resultMap="dataMap">
-        SELECT user_id, activity_id, month_key, month_allocate, month_surplus
+        SELECT user_id, activity_id, month_key, month_limit, month_allocate, month_surplus
         FROM activity_account_month
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND month_key = #{monthKey}
     </select>

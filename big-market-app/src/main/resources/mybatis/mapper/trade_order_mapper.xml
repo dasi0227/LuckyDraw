@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.ITradeOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.TradeOrder">
+        <id     property="id"         column="id"/>
+        <result property="orderId"    column="order_id"/>
+        <result property="bizId"      column="biz_id"/>
+        <result property="userId"     column="user_id"/>
+        <result property="tradeId"    column="trade_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="tradeType"  column="trade_type"/>
+        <result property="tradeState" column="trade_state"/>
+        <result property="tradeTime"  column="trade_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="saveTradeOrder" parameterType="com.dasi.infrastructure.persistent.po.TradeOrder">
+        INSERT INTO trade_order (order_id, biz_id, user_id, trade_id, activity_id, trade_type, trade_state, trade_time)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{tradeId}, #{activityId}, #{tradeType}, #{tradeState}, #{tradeTime});
+    </insert>
+
+    <update id="updateTradeState" parameterType="com.dasi.infrastructure.persistent.po.TradeOrder">
+        UPDATE trade_order
+        SET trade_state = #{tradeState}
+        WHERE order_id = #{orderId};
+    </update>
+
+</mapper>

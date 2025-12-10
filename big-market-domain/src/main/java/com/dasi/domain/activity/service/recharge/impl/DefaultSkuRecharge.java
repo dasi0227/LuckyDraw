@@ -4,7 +4,7 @@ import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RechargeOrderEntity;
 import com.dasi.domain.activity.model.entity.ActivitySkuEntity;
-import com.dasi.domain.activity.model.io.RechargeContext;
+import com.dasi.domain.activity.model.io.SkuRechargeContext;
 import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.domain.activity.service.chain.ActivityChainFactory;
@@ -39,15 +39,15 @@ public class DefaultSkuRecharge extends AbstractSkuRecharge {
     }
 
     @Override
-    protected RechargeOrderEntity createRechargeOrder(RechargeContext rechargeContext, ActivitySkuEntity activitySkuEntity) {
+    protected RechargeOrderEntity saveRechargeOrder(SkuRechargeContext skuRechargeContext, ActivitySkuEntity activitySkuEntity) {
 
         // 1. 构建订单
         RechargeOrderEntity rechargeOrderEntity = RechargeOrderEntity.builder()
                 .orderId(uniqueIdGenerator.nextRechargeOrderId())
-                .bizId(rechargeContext.getBizId())
+                .bizId(skuRechargeContext.getBizId())
                 .activityId(activitySkuEntity.getActivityId())
-                .userId(rechargeContext.getUserId())
-                .skuId(rechargeContext.getSkuId())
+                .userId(skuRechargeContext.getUserId())
+                .skuId(skuRechargeContext.getSkuId())
                 .count(activitySkuEntity.getCount())
                 .rechargeState(RechargeState.CREATED)
                 .rechargeTime(LocalDateTime.now())

@@ -20,7 +20,7 @@ public class ActivityAccountEntity {
     /** 总分配 */
     private Integer totalAllocate;
 
-    /** 总余额 */
+    /** 总抽奖次数 */
     private Integer totalSurplus;
 
     /** 天上限 */

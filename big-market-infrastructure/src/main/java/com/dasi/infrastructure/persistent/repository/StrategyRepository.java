@@ -1,7 +1,10 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
-import com.dasi.domain.strategy.model.entity.*;
+import com.dasi.domain.strategy.model.entity.AwardEntity;
+import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
+import com.dasi.domain.strategy.model.entity.StrategyEntity;
+import com.dasi.domain.strategy.model.entity.StrategyRuleEntity;
 import com.dasi.domain.strategy.model.io.StrategyAwardStock;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
 import com.dasi.domain.strategy.model.type.RuleCheckType;
@@ -15,7 +18,6 @@ import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
-import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBlockingQueue;
@@ -27,7 +29,10 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -40,6 +45,9 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Resource
     private IStrategyDao strategyDao;
+
+    @Resource
+    private IUserAccountDao userAccountDao;
 
     @Resource
     private IStrategyRuleDao strategyRuleDao;
@@ -108,8 +116,6 @@ public class StrategyRepository implements IStrategyRepository {
         return queryUserLotteryCountByStrategyId(userId, strategyId);
     }
 
-
-    // TODO：这里用总账户的分配 - 剩余来计算 LOCK 次数，因此这里必须确保账户已经存在
     @Override
     public int queryUserLotteryCountByStrategyId(String userId, Long strategyId) {
         try {
@@ -137,31 +143,11 @@ public class StrategyRepository implements IStrategyRepository {
         return queryStrategyAwardListByStrategyId(strategyId);
     }
 
-    // TODO：补充分数算法逻辑
     @Override
-    public int queryUserScoreByStrategyId(String userId, Long strategyId) {
-        Long activityId = queryActivityIdByStrategyId(strategyId);
-
+    public int queryUserPointByUserId(String userId) {
         try {
             dbRouterStrategy.doRouter(userId);
-
-            int userScore = 0;
-
-            ActivityAccountDay activityAccountDayReq = new ActivityAccountDay();
-            activityAccountDayReq.setUserId(userId);
-            activityAccountDayReq.setActivityId(activityId);
-            activityAccountDayReq.setDayKey(TimeUtil.thisDay(true));
-            ActivityAccountDay activityAccountDay = activityAccountDayDao.queryActivityAccountDay(activityAccountDayReq);
-            userScore += (activityAccountDay.getDayAllocate() - activityAccountDay.getDaySurplus()) * 1000;
-
-            ActivityAccountMonth activityAccountMonthReq = new ActivityAccountMonth();
-            activityAccountMonthReq.setUserId(userId);
-            activityAccountMonthReq.setActivityId(activityId);
-            activityAccountMonthReq.setMonthKey(TimeUtil.thisMonth(true));
-            ActivityAccountMonth activityAccountMonth = activityAccountMonthDao.queryActivityAccountMonth(activityAccountMonthReq);
-            userScore += (activityAccountMonth.getMonthAllocate() - activityAccountMonth.getMonthSurplus()) * 500;
-
-            return userScore;
+            return userAccountDao.queryUserPointByUserId(userId);
         } finally {
             dbRouterStrategy.clear();
         }
@@ -361,7 +347,7 @@ public class StrategyRepository implements IStrategyRepository {
             AwardEntity awardEntity = AwardEntity.builder()
                     .awardId(award.getAwardId())
                     .awardName(award.getAwardName())
-                    .awardConfig(award.getAwardConfig())
+                    .awardValue(award.getAwardValue())
                     .awardDesc(award.getAwardDesc())
                     .build();
             awardEntityMap.put(String.valueOf(awardId), awardEntity);
