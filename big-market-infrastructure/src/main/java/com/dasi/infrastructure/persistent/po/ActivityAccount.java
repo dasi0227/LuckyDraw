@@ -16,6 +16,9 @@ public class ActivityAccount {
     /** 活动id */
     private Long activityId;
 
+    /** 用户积分 */
+    private Integer activityPoint;
+
     /** 天上限 */
     private Integer dayLimit;
 

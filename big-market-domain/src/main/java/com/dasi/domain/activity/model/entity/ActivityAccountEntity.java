@@ -17,6 +17,9 @@ public class ActivityAccountEntity {
     /** 活动id */
     private Long activityId;
 
+    /** 用户积分 */
+    private Integer activityPoint;
+
     /** 总分配 */
     private Integer totalAllocate;
 

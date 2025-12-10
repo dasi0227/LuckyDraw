@@ -10,9 +10,9 @@ import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.point.model.io.PointRechargeContext;
-import com.dasi.domain.point.model.io.PointRechargeResult;
-import com.dasi.domain.point.service.recharge.IPointRecharge;
+import com.dasi.domain.trade.model.io.PointRechargeContext;
+import com.dasi.domain.trade.model.io.PointRechargeResult;
+import com.dasi.domain.trade.service.recharge.IPointRecharge;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +44,7 @@ public class DispatchBehaviorReward {
         String userId = dispatchBehaviorRewardMessage.getUserId();
         String bizId = dispatchBehaviorRewardMessage.getBizId();
         String orderId = dispatchBehaviorRewardMessage.getOrderId();
+        Long activityId = dispatchBehaviorRewardMessage.getActivityId();
 
         RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder().userId(userId).bizId(bizId).orderId(orderId).build();
         RewardType rewardType = dispatchBehaviorRewardMessage.getRewardType();
@@ -59,7 +60,7 @@ public class DispatchBehaviorReward {
                     break;
                 case POINT:
                     Long tradeId = Long.parseLong(rewardValue);
-                    PointRechargeContext pointRechargeContext = PointRechargeContext.builder().userId(userId).bizId(bizId).tradeId(tradeId).build();
+                    PointRechargeContext pointRechargeContext = PointRechargeContext.builder().userId(userId).bizId(bizId).tradeId(tradeId).activityId(activityId).build();
                     PointRechargeResult pointRechargeResult = pointRecharge.doPointRecharge(pointRechargeContext);
                     break;
                 default:
@@ -71,7 +72,7 @@ public class DispatchBehaviorReward {
         } catch (AppException e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.debug("【业务异常】", e);
+            log.error("【业务异常】", e);
         } catch (Exception e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);

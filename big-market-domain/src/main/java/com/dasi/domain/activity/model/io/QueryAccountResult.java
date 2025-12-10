@@ -11,24 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QueryAccountResult {
 
-    private Integer totalAllocate;
+    private Integer userPoint;
 
     private Integer totalSurplus;
 
-    private String monthKey;
-
-    private Integer monthLimit;
-
-    private Integer monthAllocate;
-
     private Integer monthSurplus;
 
-    private String dayKey;
-
-    private Integer dayLimit;
-
-    private Integer dayAllocate;
-
     private Integer daySurplus;
+
+    private Integer monthRecharge;
+
+    private Integer dayRecharge;
 
 }

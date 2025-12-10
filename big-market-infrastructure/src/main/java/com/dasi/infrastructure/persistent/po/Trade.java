@@ -14,9 +14,11 @@ public class Trade {
 
     private String tradeType;
 
-    private String tradePoint;
+    private Integer tradePoint;
 
     private String tradeValue;
+
+    private String tradeName;
 
     private String tradeDesc;
 

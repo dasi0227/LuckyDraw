@@ -20,13 +20,13 @@
         VALUES (#{activityId}, #{userId}, #{dayKey}, #{dayLimit}, #{dayAllocate}, #{daySurplus})
     </insert>
 
-    <update id="subtractActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+    <update id="decreaseActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
         UPDATE activity_account_day
         SET day_surplus = day_surplus - 1
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND day_key = #{dayKey}
     </update>
 
-    <update id="rechargeActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+    <update id="increaseActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
         UPDATE activity_account_day
         SET day_allocate = day_allocate + #{dayAllocate},
             day_surplus = day_surplus + #{daySurplus}

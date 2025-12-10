@@ -9,11 +9,11 @@ public interface IAwardRepository {
 
     AwardEntity queryAwardByAwardId(Long awardId);
 
-    void createUserAccountIfAbsent(String userId);
+    void createActivityAccountIfAbsent(String userId, Long activityId);
 
-    void increaseUserAccountPoint(DispatchHandleAggregate dispatchHandleAggregate);
+    void increaseActivityAccountPoint(DispatchHandleAggregate dispatchHandleAggregate);
 
-    UserAccountEntity queryUserAccountByUserId(String userId);
+    ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
 
     ActivityAwardEntity queryActivityAwardByOrderId(String userId, String orderId);
 

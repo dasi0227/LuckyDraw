@@ -1,6 +1,5 @@
 package com.dasi.infrastructure.persistent.dao;
 
-import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import com.dasi.infrastructure.persistent.po.ActivityAccountMonth;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,8 +10,8 @@ public interface IActivityAccountMonthDao {
 
     void createActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
 
-    int subtractActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
+    void decreaseActivityAccountMonthRaffle(ActivityAccountMonth activityAccountMonth);
 
-    void rechargeActivityAccountMonth(ActivityAccountMonth activityAccountMonth);
+    void increaseActivityAccountMonthRaffle(ActivityAccountMonth activityAccountMonth);
 
 }

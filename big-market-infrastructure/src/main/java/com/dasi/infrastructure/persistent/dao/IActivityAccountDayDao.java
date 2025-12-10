@@ -10,8 +10,8 @@ public interface IActivityAccountDayDao {
 
     void createActivityAccountDay(ActivityAccountDay activityAccountDay);
 
-    int subtractActivityAccountDay(ActivityAccountDay activityAccountDay);
+    void decreaseActivityAccountDay(ActivityAccountDay activityAccountDay);
 
-    void rechargeActivityAccountDay(ActivityAccountDay activityAccountDay);
+    void increaseActivityAccountDay(ActivityAccountDay activityAccountDay);
 
 }

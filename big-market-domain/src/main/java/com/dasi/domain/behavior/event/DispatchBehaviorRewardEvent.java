@@ -48,6 +48,8 @@ public class DispatchBehaviorRewardEvent extends BaseEvent<DispatchBehaviorRewar
 
         private String orderId;
 
+        private Long activityId;
+
         private RewardType rewardType;
 
         private String rewardValue;
