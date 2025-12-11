@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface IBehaviorDao {
 
-    List<Behavior> queryBehaviorList(Behavior behaviorReq);
+    List<Behavior> queryBehaviorListByBehaviorType(Behavior behavior);
+
+    List<Behavior> queryDistinctBehaviorByActivityId(Long activityId);
 
 }

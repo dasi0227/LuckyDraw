@@ -7,7 +7,6 @@ import com.dasi.domain.behavior.model.aggregate.RewardOrderAggregate;
 import com.dasi.domain.behavior.model.entity.BehaviorEntity;
 import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.entity.TaskEntity;
-import com.dasi.domain.behavior.model.type.BehaviorState;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.TaskState;
@@ -42,7 +41,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
 
     @Override
     protected List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType) {
-        return behaviorRepository.queryBehaviorList(activityId, behaviorType);
+        return behaviorRepository.queryBehaviorListByBehaviorType(activityId, behaviorType);
     }
 
     @Override
@@ -51,12 +50,6 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
         List<RewardOrderAggregate> rewardOrderAggregateList = new ArrayList<>();
 
         for (BehaviorEntity behaviorEntity : behaviorEntityList) {
-            // 0. 检查是否可用
-            if (behaviorEntity.getBehaviorState().equals(BehaviorState.UNAVAILABLE)) {
-                log.info("【返利】行为触发不可用：activityId={}, behavior_type={}, behavior_state={}", activityId, behaviorEntity.getBehaviorType(), behaviorEntity.getBehaviorState());
-                continue;
-            }
-
             // 1. 构造业务ID
             String bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + behaviorEntity.getBehaviorType() + Delimiter.UNDERSCORE + behaviorEntity.getRewardType() + Delimiter.UNDERSCORE + behaviorEntity.getRewardValue();
 

@@ -1,8 +1,8 @@
 package com.dasi.domain.trade.service.query;
 
 import com.dasi.domain.trade.model.entity.TradeEntity;
-import com.dasi.domain.trade.model.io.QueryConvertContext;
-import com.dasi.domain.trade.model.io.QueryConvertResult;
+import com.dasi.domain.trade.model.io.QueryActivityConvertContext;
+import com.dasi.domain.trade.model.io.QueryActivityConvertResult;
 import com.dasi.domain.trade.repository.ITradeRepository;
 import com.dasi.types.exception.AppException;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,15 @@ public class TradeQuery implements ITradeQuery {
     private ITradeRepository tradeRepository;
 
     @Override
-    public List<QueryConvertResult> queryConvertListByActivityId(QueryConvertContext queryConvertContext) {
+    public List<QueryActivityConvertResult> queryActivityConvertList(QueryActivityConvertContext queryActivityConvertContext) {
 
-        Long activityId = queryConvertContext.getActivityId();
+        Long activityId = queryActivityConvertContext.getActivityId();
         if (activityId == null) throw new AppException("缺少参数 activityId");
 
-        List<TradeEntity> tradeEntityList = tradeRepository.queryConvertListByActivityId(activityId);
+        List<TradeEntity> tradeEntityList = tradeRepository.queryActivityConvertList(activityId);
 
         return tradeEntityList.stream()
-                .map(tradeEntity -> QueryConvertResult.builder()
+                .map(tradeEntity -> QueryActivityConvertResult.builder()
                         .tradeId(tradeEntity.getTradeId())
                         .tradePoint(tradeEntity.getTradePoint())
                         .tradeName(tradeEntity.getTradeName())

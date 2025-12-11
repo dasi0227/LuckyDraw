@@ -5,7 +5,6 @@ import com.dasi.domain.behavior.model.aggregate.RewardOrderAggregate;
 import com.dasi.domain.behavior.model.entity.BehaviorEntity;
 import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.entity.TaskEntity;
-import com.dasi.domain.behavior.model.type.BehaviorState;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.behavior.model.type.TaskState;
@@ -56,7 +55,7 @@ public class BehaviorRepository implements IBehaviorRepository {
     private EventPublisher eventPublisher;
 
     @Override
-    public List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType) {
+    public List<BehaviorEntity> queryBehaviorListByBehaviorType(Long activityId, BehaviorType behaviorType) {
         // 1. 先查缓存
         String cacheKey = RedisKey.BEHAVIOR_LIST + activityId + Delimiter.UNDERSCORE + behaviorType;
         List<BehaviorEntity> behaviorEntityList = redisService.getValue(cacheKey);
@@ -68,13 +67,13 @@ public class BehaviorRepository implements IBehaviorRepository {
         Behavior behaviorReq = new Behavior();
         behaviorReq.setActivityId(activityId);
         behaviorReq.setBehaviorType(behaviorType.name());
-        List<Behavior> behaviorList = behaviorDao.queryBehaviorList(behaviorReq);
+        List<Behavior> behaviorList = behaviorDao.queryBehaviorListByBehaviorType(behaviorReq);
         if (behaviorList == null || behaviorList.isEmpty()) throw new AppException("BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .activityId(behavior.getActivityId())
                         .behaviorType(BehaviorType.valueOf(behavior.getBehaviorType()))
-                        .behaviorState(BehaviorState.valueOf(behavior.getBehaviorState()))
+                        .behaviorName(behavior.getBehaviorName())
                         .rewardType(RewardType.valueOf(behavior.getRewardType()))
                         .rewardValue(behavior.getRewardValue())
                         .rewardDesc(behavior.getRewardDesc())
@@ -88,18 +87,42 @@ public class BehaviorRepository implements IBehaviorRepository {
     }
 
     @Override
-    public Boolean querySign(String userId, Long activityId) {
+    public List<BehaviorEntity> queryDistinctBehaviorListByActivityId(Long activityId) {
+        String cacheKey = RedisKey.DISTINCT_BEHAVIOR_LIST + activityId;
+        List<BehaviorEntity> behaviorEntityList = redisService.getValue(cacheKey);
+        if (behaviorEntityList != null && !behaviorEntityList.isEmpty()) {
+            return behaviorEntityList;
+        }
+
+        List<Behavior> behaviorList = behaviorDao.queryDistinctBehaviorByActivityId(activityId);
+        if (behaviorList == null) throw new AppException("BehaviorList 不存在：activityId=" + activityId);
+        behaviorEntityList = behaviorList.stream()
+                .map(behavior -> BehaviorEntity.builder()
+                        .behaviorType(BehaviorType.valueOf(behavior.getBehaviorType()))
+                        .behaviorName(behavior.getBehaviorName())
+                        .build())
+                .collect(Collectors.toList());
+
+        redisService.setValue(cacheKey, behaviorEntityList);
+        return behaviorEntityList;
+    }
+
+    @Override
+    public Boolean queryExistBehaviorToday(RewardOrderEntity rewardOrderEntity) {
+
+        String userId = rewardOrderEntity.getUserId();
+        RewardOrder rewardOrder = new RewardOrder();
+        rewardOrder.setUserId(rewardOrderEntity.getUserId());
+        rewardOrder.setActivityId(rewardOrderEntity.getActivityId());
+        rewardOrder.setBehaviorType(rewardOrderEntity.getBehaviorType());
+
         try {
             dbRouterStrategy.doRouter(userId);
-
-            RewardOrder rewardOrderReq = new RewardOrder();
-            rewardOrderReq.setUserId(userId);
-            rewardOrderReq.setActivityId(activityId);
-            RewardOrder rewardOrder = rewardOrderDao.querySign(rewardOrderReq);
-            return rewardOrder != null;
+            return rewardOrderDao.queryExistBehaviorToday(rewardOrder) > 0;
         } finally {
             dbRouterStrategy.clear();
         }
+
     }
 
     @Override

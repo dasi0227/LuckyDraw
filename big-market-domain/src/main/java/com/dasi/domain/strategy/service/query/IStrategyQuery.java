@@ -1,14 +1,16 @@
 package com.dasi.domain.strategy.service.query;
 
-import com.dasi.domain.strategy.model.io.ActivityAwardDetail;
-import com.dasi.domain.strategy.model.io.StrategyRuleWeightDetail;
+import com.dasi.domain.strategy.model.io.QueryActivityAwardContext;
+import com.dasi.domain.strategy.model.io.QueryActivityAwardResult;
+import com.dasi.domain.strategy.model.io.QueryActivityLuckContext;
+import com.dasi.domain.strategy.model.io.QueryActivityLuckResult;
 
 import java.util.List;
 
 public interface IStrategyQuery {
 
-    List<ActivityAwardDetail> queryActivityAward(String userId, Long activityId);
+    List<QueryActivityAwardResult> queryActivityAward(QueryActivityAwardContext queryActivityAwardContext);
 
-    StrategyRuleWeightDetail queryStrategyRuleWeight(String userId, Long activityId);
+    QueryActivityLuckResult queryActivityLuck(QueryActivityLuckContext queryActivityLuckContext);
 
 }

@@ -42,23 +42,22 @@ public class PointTrade implements IPointTrade {
         String userId = convertContext.getUserId();
         Long tradeId = convertContext.getTradeId();
         String businessNo = convertContext.getBusinessNo();
-        Long activityId = convertContext.getActivityId();
         if (StringUtils.isBlank(businessNo)) throw new AppException("缺少参数 businessNo");
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (tradeId == null) throw new AppException("缺少参数 tradeId");
-        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 2. 检查积分
         TradeEntity tradeEntity = tradeRepository.queryTradeByTradeId(tradeId);
-        Integer userPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
+        Long activityId = tradeEntity.getActivityId();
+        Integer accountPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
         Integer tradePoint = tradeEntity.getTradePoint();
-        if (userPoint < tradePoint) {
-            log.info("【兑换】当前用户的积分不够：userId={}, userPoint={}, tradePoint={}", userId, userPoint, tradePoint);
+        if (accountPoint < tradePoint) {
+            log.info("【兑换】当前用户的积分不够：userId={}, accountPoint={}, tradePoint={}", userId, accountPoint, tradePoint);
             throw new AppException("兑换失败：tradeId=" + tradeId);
         }
 
         // 3. 构建订单对象
-        String bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + tradeEntity.getTradeType() + Delimiter.UNDERSCORE + tradeEntity.getTradeValue() + Delimiter.UNDERSCORE + System.currentTimeMillis();
+        String bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + tradeEntity.getTradeType() + Delimiter.UNDERSCORE + tradeEntity.getTradeValue();
         String orderId = uniqueIdGenerator.nextTradeOrderId();
         TradeOrderEntity tradeOrderEntity = TradeOrderEntity.builder()
                 .orderId(orderId)
@@ -76,7 +75,6 @@ public class PointTrade implements IPointTrade {
                 .orderId(orderId)
                 .userId(userId)
                 .tradeId(tradeId)
-                .activityId(activityId)
                 .tradeType(tradeEntity.getTradeType())
                 .build();
         BaseEvent.EventMessage<DispatchTradeOutcomeMessage> eventMessage = dispatchTradeOutcomeEvent.buildEventMessage(dispatchTradeOutcomeMessage);

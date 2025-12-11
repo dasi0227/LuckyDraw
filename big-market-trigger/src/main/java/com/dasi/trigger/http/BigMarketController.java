@@ -2,8 +2,8 @@ package com.dasi.trigger.http;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
-import com.dasi.domain.activity.model.io.QueryAccountContext;
-import com.dasi.domain.activity.model.io.QueryAccountResult;
+import com.dasi.domain.activity.model.io.QueryActivityAccountContext;
+import com.dasi.domain.activity.model.io.QueryActivityAccountResult;
 import com.dasi.domain.activity.model.io.RaffleContext;
 import com.dasi.domain.activity.model.io.RaffleResult;
 import com.dasi.domain.activity.service.assemble.IActivityAssemble;
@@ -11,25 +11,27 @@ import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
+import com.dasi.domain.award.model.io.QueryUserAwardContext;
+import com.dasi.domain.award.model.io.QueryUserAwardResult;
 import com.dasi.domain.award.service.distribute.IAwardDistribute;
+import com.dasi.domain.award.service.query.IAwardQuery;
 import com.dasi.domain.behavior.model.io.BehaviorContext;
 import com.dasi.domain.behavior.model.io.BehaviorResult;
+import com.dasi.domain.behavior.model.io.QueryActivityBehaviorContext;
+import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.trade.model.io.ConvertContext;
-import com.dasi.domain.trade.model.io.QueryConvertContext;
-import com.dasi.domain.trade.model.io.QueryConvertResult;
-import com.dasi.domain.trade.model.io.ConvertResult;
-import com.dasi.domain.trade.service.query.ITradeQuery;
-import com.dasi.domain.trade.service.trade.IPointTrade;
-import com.dasi.domain.strategy.model.io.ActivityAwardDetail;
-import com.dasi.domain.strategy.model.io.LotteryContext;
-import com.dasi.domain.strategy.model.io.LotteryResult;
-import com.dasi.domain.strategy.model.io.StrategyRuleWeightDetail;
+import com.dasi.domain.strategy.model.io.*;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
+import com.dasi.domain.trade.model.io.ConvertContext;
+import com.dasi.domain.trade.model.io.ConvertResult;
+import com.dasi.domain.trade.model.io.QueryActivityConvertContext;
+import com.dasi.domain.trade.model.io.QueryActivityConvertResult;
+import com.dasi.domain.trade.service.query.ITradeQuery;
+import com.dasi.domain.trade.service.trade.IPointTrade;
 import com.dasi.types.model.Result;
 import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +68,9 @@ public class BigMarketController implements IBigMarketService {
     private IStrategyQuery strategyQuery;
 
     @Resource
+    private IAwardQuery awardQuery;
+
+    @Resource
     private ITradeQuery tradeQuery;
 
     @Resource
@@ -78,57 +83,156 @@ public class BigMarketController implements IBigMarketService {
     private IStrategyAssemble strategyAssemble;
 
     /**
-     * 获取活动的交易信息
+     * 查询用户在当前活动的基本信息
      *
-     * @param queryConvertRequest activityId
-     * @return tradeId、tradePoint、tradeName
+     * @param queryActivityAccountRequest activityId, userId
+     * @return accountPoint, totalSurplus, monthSurplus, daySurplus, monthRecharge, dayRecharge
+     */
+    @PostMapping("/query/account")
+    @Override
+    public Result<QueryActivityAccountResponse> queryActivityAccount(@RequestBody QueryActivityAccountRequest queryActivityAccountRequest) {
+
+        String userId = queryActivityAccountRequest.getUserId();
+        Long activityId = queryActivityAccountRequest.getActivityId();
+
+        QueryActivityAccountContext queryActivityAccountContext = QueryActivityAccountContext.builder().userId(userId).activityId(activityId).build();
+        QueryActivityAccountResult queryActivityAccountResult = activityQuery.queryActivityAccount(queryActivityAccountContext);
+        QueryActivityAccountResponse queryActivityAccountResponse = QueryActivityAccountResponse.builder()
+                .accountPoint(queryActivityAccountResult.getAccountPoint())
+                .totalSurplus(queryActivityAccountResult.getTotalSurplus())
+                .monthSurplus(queryActivityAccountResult.getMonthSurplus())
+                .daySurplus(queryActivityAccountResult.getDaySurplus())
+                .monthPending(queryActivityAccountResult.getMonthPending())
+                .dayPending(queryActivityAccountResult.getDayPending())
+                .build();
+
+        return Result.success(queryActivityAccountResponse);
+    }
+
+    /**
+     * 查询当前活动的积分兑换信息
+     *
+     * @param queryActivityConvertRequest activityId
+     * @return tradeId, tradePoint, tradeName
      */
     @PostMapping("/query/convert")
     @Override
-    public Result<List<QueryConvertResponse>> queryConvert(@RequestBody QueryConvertRequest queryConvertRequest) {
+    public Result<List<QueryActivityConvertResponse>> queryActivityConvert(@RequestBody QueryActivityConvertRequest queryActivityConvertRequest) {
 
-        Long activityId = queryConvertRequest.getActivityId();
+        Long activityId = queryActivityConvertRequest.getActivityId();
 
-        QueryConvertContext queryConvertContext = QueryConvertContext.builder().activityId(activityId).build();
-        List<QueryConvertResult> queryConvertResultList = tradeQuery.queryConvertListByActivityId(queryConvertContext);
-        List<QueryConvertResponse> queryConvertResponseList = queryConvertResultList.stream()
-                .map(queryConvertResult -> QueryConvertResponse.builder()
-                        .tradeId(queryConvertResult.getTradeId())
-                        .tradePoint(queryConvertResult.getTradePoint())
-                        .tradeName(queryConvertResult.getTradeName())
+        QueryActivityConvertContext queryActivityConvertContext = QueryActivityConvertContext.builder().activityId(activityId).build();
+        List<QueryActivityConvertResult> queryActivityConvertResultList = tradeQuery.queryActivityConvertList(queryActivityConvertContext);
+        List<QueryActivityConvertResponse> queryActivityConvertResponseList = queryActivityConvertResultList.stream()
+                .map(queryActivityConvertResult -> QueryActivityConvertResponse.builder()
+                        .tradeId(queryActivityConvertResult.getTradeId())
+                        .tradePoint(queryActivityConvertResult.getTradePoint())
+                        .tradeName(queryActivityConvertResult.getTradeName())
                         .build())
                 .collect(Collectors.toList());
 
-        return Result.success(queryConvertResponseList);
+        return Result.success(queryActivityConvertResponseList);
 
     }
 
     /**
-     * 获取用户在当前活动的信息
-     *
-     * @param queryAccountRequest activityId、userId
-     * @return tradeId、tradePoint、tradeName
+     * 查询用户在当前活动的抽奖奖品列表
+     * @param queryActivityAwardRequest activityId, userId
+     * @return 每个奖品的元信息，以及在策略下的抽奖信息
      */
-    @PostMapping("/query/account")
+    @PostMapping("/query/award")
     @Override
-    public Result<QueryAccountResponse> queryActivityAccount(@RequestBody QueryAccountRequest queryAccountRequest) {
+    public Result<List<QueryActivityAwardResponse>> queryActivityAward(@RequestBody QueryActivityAwardRequest queryActivityAwardRequest) {
+        String userId = queryActivityAwardRequest.getUserId();
+        Long activityId = queryActivityAwardRequest.getActivityId();
 
-        String userId = queryAccountRequest.getUserId();
-        Long activityId = queryAccountRequest.getActivityId();
+        QueryActivityAwardContext queryActivityAwardContext = QueryActivityAwardContext.builder().userId(userId).activityId(activityId).build();
+        List<QueryActivityAwardResult> queryActivityAwardResultList = strategyQuery.queryActivityAward(queryActivityAwardContext);
+        List<QueryActivityAwardResponse> queryActivityAwardResponseList = queryActivityAwardResultList.stream()
+                .map(queryActivityAwardResult -> QueryActivityAwardResponse.builder()
+                        .awardId(queryActivityAwardResult.getAwardId())
+                        .awardName(queryActivityAwardResult.getAwardName())
+                        .awardRate(queryActivityAwardResult.getAwardRate())
+                        .awardIndex(queryActivityAwardResult.getAwardIndex())
+                        .needLotteryCount(queryActivityAwardResult.getNeedLotteryCount())
+                        .isLock(queryActivityAwardResult.getIsLock())
+                        .build())
+                .collect(Collectors.toList());
 
-        QueryAccountContext queryAccountContext = QueryAccountContext.builder().userId(userId).activityId(activityId).build();
-        QueryAccountResult queryAccountResult = activityQuery.queryActivityAccount(queryAccountContext);
-        QueryAccountResponse queryAccountResponse = QueryAccountResponse.builder()
-                .userPoint(queryAccountResult.getUserPoint())
-                .totalSurplus(queryAccountResult.getTotalSurplus())
-                .monthSurplus(queryAccountResult.getMonthSurplus())
-                .daySurplus(queryAccountResult.getDaySurplus())
-                .monthRecharge(queryAccountResult.getMonthRecharge())
-                .dayRecharge(queryAccountResult.getDayRecharge())
+
+        return Result.success(queryActivityAwardResponseList);
+    }
+
+    /**
+     * 查询用户在当前活动的获奖信息
+     * @param queryUserAwardRequest activityId, userId
+     * @return awardId, awardName, awardTime
+     */
+    @PostMapping("/query/user-award/raffle")
+    @Override
+    public Result<List<QueryUserAwardResponse>> queryUserAwardRaffle(@RequestBody QueryUserAwardRequest queryUserAwardRequest) {
+
+        Long activityId = queryUserAwardRequest.getActivityId();
+        String userId = queryUserAwardRequest.getUserId();
+
+        QueryUserAwardContext queryAccountContext = QueryUserAwardContext.builder().userId(userId).activityId(activityId).build();
+        List<QueryUserAwardResult> queryUserAwardResultList = awardQuery.queryUserAwardRaffleList(queryAccountContext);
+        List<QueryUserAwardResponse> queryUserAwardResponseList = queryUserAwardResultList.stream()
+                .map(queryUserAwardResult -> QueryUserAwardResponse.builder()
+                        .awardId(queryUserAwardResult.getAwardId())
+                        .awardName(queryUserAwardResult.getAwardName())
+                        .awardTime(queryUserAwardResult.getAwardTime())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Result.success(queryUserAwardResponseList);
+    }
+
+    /**
+     * 查询用户在当前活动的互动任务
+     * @param queryActivityBehaviorRequest activityId, userId
+     * @return behaviorName, behaviorType, isDone
+     */
+    @PostMapping("/query/behavior")
+    @Override
+    public Result<List<QueryActivityBehaviorResponse>> queryActivityBehavior(@RequestBody QueryActivityBehaviorRequest queryActivityBehaviorRequest) {
+
+        String userId = queryActivityBehaviorRequest.getUserId();
+        Long activityId = queryActivityBehaviorRequest.getActivityId();
+
+        QueryActivityBehaviorContext queryAccountContext = QueryActivityBehaviorContext.builder().userId(userId).activityId(activityId).build();
+        List<QueryActivityBehaviorResult> queryActivityBehaviorResultList = behaviorQuery.queryDistinctBehavior(queryAccountContext);
+        List<QueryActivityBehaviorResponse> queryUserAwardResponseList = queryActivityBehaviorResultList.stream()
+                .map(queryActivityBehaviorResult -> QueryActivityBehaviorResponse.builder()
+                        .behaviorName(queryActivityBehaviorResult.getBehaviorName())
+                        .behaviorType(queryActivityBehaviorResult.getBehaviorType())
+                        .isDone(queryActivityBehaviorResult.getIsDone())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Result.success(queryUserAwardResponseList);
+    }
+
+    @PostMapping("/query/luck")
+    @Override
+    public Result<QueryActivityLuckResponse> queryActivityLuck(@RequestBody QueryActivityLuckRequest queryActivityLuckRequest) {
+
+        String userId = queryActivityLuckRequest.getUserId();
+        Long activityId = queryActivityLuckRequest.getActivityId();
+
+        QueryActivityLuckContext queryActivityLuckContext = QueryActivityLuckContext.builder().userId(userId).activityId(activityId).build();
+        QueryActivityLuckResult queryActivityLuckResult = strategyQuery.queryActivityLuck(queryActivityLuckContext);
+
+        QueryActivityLuckResponse queryActivityLuckResponse = QueryActivityLuckResponse.builder()
+                .accountLuck(queryActivityLuckResult.getAccountLuck())
+                .prevLuck(queryActivityLuckResult.getPrevLuck())
+                .nextLuck(queryActivityLuckResult.getNextLuck())
+                .awardNameList(queryActivityLuckResult.getAwardNameList())
                 .build();
 
-        return Result.success(queryAccountResponse);
+        return Result.success(queryActivityLuckResponse);
     }
+
 
 
 
@@ -140,18 +244,18 @@ public class BigMarketController implements IBigMarketService {
         return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
     }
 
-    @PostMapping("/convert")
+    @PostMapping("/trade")
     @Override
-    public Result<ConvertResponse> convert(@RequestBody ConvertRequest convertRequest) {
+    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
 
-        String userId = convertRequest.getUserId();
-        Long tradeId = convertRequest.getTradeId();
-        Long activityId = convertRequest.getActivityId();
+        String userId = tradeRequest.getUserId();
+        Long tradeId = tradeRequest.getTradeId();
+        String businessNo = TimeUtil.thisDay(false);
 
-        ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).businessNo(TimeUtil.thisDay(false)).activityId(activityId).build();
+        ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).businessNo(businessNo).build();
         ConvertResult convertResult = pointTrade.doPointTrade(convertContext);
-        ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(convertResult.getTradeDesc()).build();
-        return Result.success(convertResponse);
+        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(convertResult.getTradeDesc()).build();
+        return Result.success(tradeResponse);
     }
 
     @PostMapping("/raffle")
@@ -227,61 +331,4 @@ public class BigMarketController implements IBigMarketService {
         return behaviorReward.doBehaviorReward(behaviorContext);
     }
 
-    @PostMapping("/isSign")
-    @Override
-    public Result<Boolean> querySign(@RequestBody QuerySign querySign) {
-        String userId = querySign.getUserId();
-        Long activityId = querySign.getActivityId();
-
-        log.info("=========================== 查询签到：userId={} ===========================", userId);
-        Boolean flag = behaviorQuery.querySign(userId, activityId);
-        return Result.success(flag);
-    }
-
-    @PostMapping("/award")
-    @Override
-    public Result<List<ActivityAwardResponse>> queryActivityAward(@RequestBody ActivityAwardRequest activityAwardRequest) {
-        String userId = activityAwardRequest.getUserId();
-        Long activityId = activityAwardRequest.getActivityId();
-
-        log.info("=========================== 查询奖品：userId={},activityId={} ===========================", userId, activityId);
-        List<ActivityAwardDetail> activityAwardDetailList = strategyQuery.queryActivityAward(userId, activityId);
-
-        List<ActivityAwardResponse> activityAwardResponseList = activityAwardDetailList.stream()
-                .map(activityAwardDetail -> ActivityAwardResponse.builder()
-                        .awardId(activityAwardDetail.getAwardId())
-                        .awardName(activityAwardDetail.getAwardName())
-                        .awardTitle(activityAwardDetail.getAwardTitle())
-                        .awardDesc(activityAwardDetail.getAwardDesc())
-                        .awardValue(activityAwardDetail.getAwardValue())
-                        .awardRate(activityAwardDetail.getAwardRate())
-                        .awardIndex(activityAwardDetail.getAwardIndex())
-                        .limitLotteryCount(activityAwardDetail.getLimitLotteryCount())
-                        .needLotteryCount(activityAwardDetail.getNeedLotteryCount())
-                        .isLock(activityAwardDetail.getIsLock())
-                        .build())
-                .collect(Collectors.toList());
-
-
-        return Result.success(activityAwardResponseList);
-    }
-
-    @PostMapping("/ruleWeight")
-    @Override
-    public Result<StrategyRuleWeightResponse> queryStrategyRuleWeight(@RequestBody StrategyRuleWeightRequest strategyRuleWeightRequest) {
-        String userId = strategyRuleWeightRequest.getUserId();
-        Long activityId = strategyRuleWeightRequest.getActivityId();
-
-        log.info("=========================== 查询权重：userId={},activityId={} ===========================", userId, activityId);
-        StrategyRuleWeightDetail strategyRuleWeightDetail = strategyQuery.queryStrategyRuleWeight(userId, activityId);
-
-        StrategyRuleWeightResponse strategyRuleWeightResponse = StrategyRuleWeightResponse.builder()
-                .userScore(strategyRuleWeightDetail.getUserScore())
-                .prevWeight(strategyRuleWeightDetail.getPrevWeight())
-                .nextWeight(strategyRuleWeightDetail.getNextWeight())
-                .awardNameList(strategyRuleWeightDetail.getAwardNameList())
-                .build();
-
-        return Result.success(strategyRuleWeightResponse);
-    }
 }

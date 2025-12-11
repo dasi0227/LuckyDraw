@@ -19,8 +19,11 @@ public class UserAward {
     /** 奖品ID */
     private Long awardId;
 
-    /** 奖品类型 */
-    private String awardType;
+    /** 活动ID */
+    private Long activityId;
+
+    /** 奖品来源 */
+    private String awardSource;
 
     /** 奖品名称 */
     private String awardName;

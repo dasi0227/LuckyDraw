@@ -68,12 +68,6 @@ public class StrategyRepository implements IStrategyRepository {
     private IActivityAccountDao activityAccountDao;
 
     @Resource
-    private IActivityAccountDayDao activityAccountDayDao;
-
-    @Resource
-    private IActivityAccountMonthDao activityAccountMonthDao;
-
-    @Resource
     private IRedisService redisService;
 
     @Resource
@@ -141,13 +135,13 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public int queryActivityAccountPoint(String userId, Long activityId) {
+    public int queryActivityAccountLuck(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
             ActivityAccount activityAccount = new ActivityAccount();
             activityAccount.setUserId(userId);
             activityAccount.setActivityId(activityId);
-            return activityAccountDao.queryActivityAccountPoint(activityAccount);
+            return activityAccountDao.queryActivityAccountLuck(activityAccount);
         } finally {
             dbRouterStrategy.clear();
         }

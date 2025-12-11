@@ -1,4 +1,4 @@
-package com.dasi.domain.strategy.model.io;
+package com.dasi.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,15 +9,15 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class StrategyRuleWeightDetail {
+@NoArgsConstructor
+public class QueryActivityLuckResponse {
 
-    private Integer userScore;
+    private Integer accountLuck;
 
-    private Integer prevWeight;
+    private Integer prevLuck;
 
-    private Integer nextWeight;
+    private Integer nextLuck;
 
     private List<String> awardNameList;
 

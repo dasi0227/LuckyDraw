@@ -21,7 +21,9 @@ public class DispatchHandleAggregate {
 
     private String orderId;
 
-    private Integer activityPoint;
+    private Long activityId;
+
+    private Integer accountPoint;
 
     private AwardEntity awardEntity;
 

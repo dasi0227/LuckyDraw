@@ -13,34 +13,34 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 
 @Slf4j
-@AwardTypeConfig(awardType = AwardType.PHYSICAL_PRIZE)
+@AwardTypeConfig(awardType = AwardType.FIXED_ACCOUNT_POINT)
 @Component
-public class PhysicalPrizeDispatchHandler implements IAwardDispatchHandler {
+public class FixedAccountPointDispatchHandler implements IAwardDispatchHandler {
 
     @Resource
     private IAwardRepository awardRepository;
-
 
     @Override
     public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
         String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
         if (!StringUtils.isNumeric(awardValue)) {
-            throw new AppException("到期时间配置错误：awardValue={}" + awardValue);
+            throw new AppException("固定积分配置错误：awardValue={}" + awardValue);
         }
-        long seconds = Long.parseLong(awardValue);
-        LocalDateTime awardDeadline = LocalDateTime.now().plusSeconds(seconds);
+        int fixedPoint = Integer.parseInt(awardValue);
+        dispatchHandleAggregate.setAccountPoint(fixedPoint);
+        awardRepository.increaseActivityAccountPoint(dispatchHandleAggregate);
+
         UserAwardEntity userAwardEntity = UserAwardEntity.builder()
                 .orderId(dispatchHandleAggregate.getOrderId())
                 .userId(dispatchHandleAggregate.getUserId())
-                .awardId(dispatchHandleAggregate.getAwardId())
                 .activityId(dispatchHandleAggregate.getActivityId())
+                .awardId(dispatchHandleAggregate.getAwardId())
                 .awardSource(AwardSource.RAFFLE)
                 .awardName(dispatchHandleAggregate.getAwardEntity().getAwardName())
                 .awardDesc(dispatchHandleAggregate.getAwardEntity().getAwardDesc())
-                .awardDeadline(awardDeadline)
+                .awardDeadline(null)
                 .awardTime(dispatchHandleAggregate.getActivityAwardEntity().getAwardTime())
                 .build();
         dispatchHandleAggregate.setUserAwardEntity(userAwardEntity);

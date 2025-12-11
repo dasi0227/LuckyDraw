@@ -18,7 +18,10 @@ public class ActivityAccountEntity {
     private Long activityId;
 
     /** 用户积分 */
-    private Integer activityPoint;
+    private Integer accountPoint;
+
+    /** 用户幸运值 */
+    private Integer accountLuck;
 
     /** 总分配 */
     private Integer totalAllocate;

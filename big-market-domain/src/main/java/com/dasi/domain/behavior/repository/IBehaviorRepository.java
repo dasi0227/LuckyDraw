@@ -13,7 +13,9 @@ public interface IBehaviorRepository {
 
     void updateRewardOrderState(RewardOrderEntity rewardOrderEntity);
 
-    List<BehaviorEntity> queryBehaviorList(Long activityId, BehaviorType behaviorType);
+    List<BehaviorEntity> queryBehaviorListByBehaviorType(Long activityId, BehaviorType behaviorType);
 
-    Boolean querySign(String userId, Long activityId);
+    List<BehaviorEntity> queryDistinctBehaviorListByActivityId(Long activityId);
+
+    Boolean queryExistBehaviorToday(RewardOrderEntity rewardOrderEntity);
 }

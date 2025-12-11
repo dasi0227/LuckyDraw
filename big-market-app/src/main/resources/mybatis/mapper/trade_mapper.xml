@@ -23,7 +23,7 @@
         WHERE trade_id = #{tradeId};
     </select>
 
-    <select id="queryConvertListByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+    <select id="queryActivityConvertList" parameterType="java.lang.Long" resultMap="dataMap">
         SELECT id, trade_id, activity_id, trade_type, trade_point, trade_value, trade_name, trade_desc, create_time, update_time
         FROM trade
         WHERE activity_id = #{activityId} and trade_type LIKE 'CONVERT_%';

@@ -3,6 +3,7 @@ package com.dasi.domain.award.service.dispatch.impl;
 import com.dasi.domain.award.annotation.AwardTypeConfig;
 import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
 import com.dasi.domain.award.model.entity.UserAwardEntity;
+import com.dasi.domain.award.model.type.AwardSource;
 import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.service.dispatch.IAwardDispatchHandler;
@@ -34,8 +35,9 @@ public class DiscountCouponDispatchHandler implements IAwardDispatchHandler {
         UserAwardEntity userAwardEntity = UserAwardEntity.builder()
                 .orderId(dispatchHandleAggregate.getOrderId())
                 .userId(dispatchHandleAggregate.getUserId())
+                .activityId(dispatchHandleAggregate.getActivityAwardEntity().getActivityId())
                 .awardId(dispatchHandleAggregate.getAwardId())
-                .awardType(AwardType.DISCOUNT_COUPON)
+                .awardSource(AwardSource.RAFFLE)
                 .awardName(dispatchHandleAggregate.getAwardEntity().getAwardName())
                 .awardDesc(dispatchHandleAggregate.getAwardEntity().getAwardDesc())
                 .awardDeadline(awardDeadline)

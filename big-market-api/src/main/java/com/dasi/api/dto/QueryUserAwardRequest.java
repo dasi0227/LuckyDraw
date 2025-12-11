@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConvertResponse {
+public class QueryUserAwardRequest {
 
-    private String tradeDesc;
+    private String userId;
+
+    private Long activityId;
 
 }

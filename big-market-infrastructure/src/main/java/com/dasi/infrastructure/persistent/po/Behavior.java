@@ -17,7 +17,7 @@ public class Behavior {
     private String behaviorType;
 
     /** 行为状态 */
-    private String behaviorState;
+    private String behaviorName;
 
     /** 行为奖励 */
     private String rewardType;

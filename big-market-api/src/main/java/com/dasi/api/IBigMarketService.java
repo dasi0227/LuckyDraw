@@ -8,7 +8,17 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface IBigMarketService {
 
-    Result<List<QueryConvertResponse>> queryConvert(QueryConvertRequest queryConvertRequest);
+    Result<QueryActivityAccountResponse> queryActivityAccount(QueryActivityAccountRequest queryActivityAccountRequest);
+
+    Result<List<QueryActivityConvertResponse>> queryActivityConvert(QueryActivityConvertRequest queryActivityConvertRequest);
+
+    Result<List<QueryUserAwardResponse>> queryUserAwardRaffle(QueryUserAwardRequest queryUserAwardRequest);
+
+    Result<List<QueryActivityAwardResponse>> queryActivityAward(QueryActivityAwardRequest queryActivityAwardRequest);
+
+    Result<List<QueryActivityBehaviorResponse>> queryActivityBehavior(QueryActivityBehaviorRequest queryActivityBehaviorRequest);
+
+    Result<QueryActivityLuckResponse> queryActivityLuck(QueryActivityLuckRequest queryActivityLuckRequest);
 
 
 
@@ -17,13 +27,6 @@ public interface IBigMarketService {
 
 
 
-
-
-
-
-    Result<QueryAccountResponse> queryActivityAccount(QueryAccountRequest queryAccountRequest);
-
-    Result<Boolean> querySign(QuerySign querySign);
 
     Result<Void> assemble(Long activityId);
 
@@ -38,10 +41,6 @@ public interface IBigMarketService {
     Result<BehaviorResponse> behaviorComment(BehaviorRequest behaviorRequest);
 
 
-    Result<List<ActivityAwardResponse>> queryActivityAward(ActivityAwardRequest activityAwardRequest);
-
-    Result<StrategyRuleWeightResponse> queryStrategyRuleWeight(StrategyRuleWeightRequest strategyRuleWeightRequest);
-
-    Result<ConvertResponse> convert(ConvertRequest convertRequest);
+    Result<TradeResponse> trade(TradeRequest tradeRequest);
 
 }

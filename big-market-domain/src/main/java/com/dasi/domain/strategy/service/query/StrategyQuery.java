@@ -2,8 +2,10 @@ package com.dasi.domain.strategy.service.query;
 
 import com.dasi.domain.strategy.model.entity.AwardEntity;
 import com.dasi.domain.strategy.model.entity.StrategyAwardEntity;
-import com.dasi.domain.strategy.model.io.ActivityAwardDetail;
-import com.dasi.domain.strategy.model.io.StrategyRuleWeightDetail;
+import com.dasi.domain.strategy.model.io.QueryActivityAwardContext;
+import com.dasi.domain.strategy.model.io.QueryActivityAwardResult;
+import com.dasi.domain.strategy.model.io.QueryActivityLuckContext;
+import com.dasi.domain.strategy.model.io.QueryActivityLuckResult;
 import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.repository.IStrategyRepository;
 import com.dasi.types.constant.Delimiter;
@@ -22,7 +24,10 @@ public class StrategyQuery implements IStrategyQuery {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public List<ActivityAwardDetail> queryActivityAward(String userId, Long activityId) {
+    public List<QueryActivityAwardResult> queryActivityAward(QueryActivityAwardContext queryActivityAwardContext) {
+
+        String userId = queryActivityAwardContext.getUserId();
+        Long activityId = queryActivityAwardContext.getActivityId();
 
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (activityId == null) throw new AppException("缺少参数 activityId");
@@ -45,15 +50,11 @@ public class StrategyQuery implements IStrategyQuery {
                 .map(strategyAwardEntity -> {
                     Long awardId = strategyAwardEntity.getAwardId();
                     String key = String.valueOf(awardId);
-                    return ActivityAwardDetail.builder()
+                    return QueryActivityAwardResult.builder()
                             .awardId(awardId)
-                            .awardTitle(strategyAwardEntity.getAwardTitle())
                             .awardRate(strategyAwardEntity.getAwardRate())
                             .awardIndex(strategyAwardEntity.getAwardIndex())
                             .awardName(awardEntityMap.get(key).getAwardName())
-                            .awardValue(awardEntityMap.get(key).getAwardValue())
-                            .awardDesc(awardEntityMap.get(key).getAwardDesc())
-                            .limitLotteryCount(limitLotteryCountMap.get(key))
                             .needLotteryCount(needLotteryCountMap.get(key))
                             .isLock(needLotteryCountMap.get(key) > 0)
                             .build();
@@ -62,71 +63,73 @@ public class StrategyQuery implements IStrategyQuery {
     }
 
     @Override
-    public StrategyRuleWeightDetail queryStrategyRuleWeight(String userId, Long activityId) {
+    public QueryActivityLuckResult queryActivityLuck(QueryActivityLuckContext queryActivityLuckContext) {
 
+        String userId = queryActivityLuckContext.getUserId();
+        Long activityId = queryActivityLuckContext.getActivityId();
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (activityId == null) throw new AppException("缺少参数 activityId");
 
         // 1. 基础信息
         Long strategyId = strategyRepository.queryStrategyIdByActivityId(activityId);
-        int userScore = strategyRepository.queryActivityAccountPoint(userId, activityId);
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_WEIGHT.name());
+        int accountLuck = strategyRepository.queryActivityAccountLuck(userId, activityId);
+        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_LUCK.name());
         List<StrategyAwardEntity> strategyAwardEntityList = strategyRepository.queryStrategyAwardListByActivityId(activityId);
         Map<String, AwardEntity> awardEntityMap = strategyRepository.queryAwardMapByActivityId(strategyAwardEntityList, activityId);
 
         List<String> awardNameList = new ArrayList<>();
 
-        // 2. 没配置权重规则：直接返回所有奖品
+        // 2. 没配置幸运值规则：直接返回所有奖品
         if (StringUtils.isBlank(ruleValue)) {
             for (AwardEntity awardEntity : awardEntityMap.values()) {
                 awardNameList.add(awardEntity.getAwardName());
             }
-            return StrategyRuleWeightDetail.builder()
-                    .userScore(userScore)
-                    .prevWeight(-1)
-                    .nextWeight(-1)
+            return QueryActivityLuckResult.builder()
+                    .accountLuck(accountLuck)
+                    .prevLuck(-1)
+                    .nextLuck(-1)
                     .awardNameList(awardNameList)
                     .build();
         }
 
         // 3. 解析得到积分阈值和对应的奖品列表
-        Map<Integer, String> weightMap = new TreeMap<>();
+        Map<Integer, String> LuckMap = new TreeMap<>();
         for (String group : ruleValue.split(Delimiter.SPACE)) {
             if (StringUtils.isBlank(group)) continue;
             String[] parts = group.split(Delimiter.COLON);
-            if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
-            weightMap.put(Integer.parseInt(parts[0]), parts[1]);
+            if (parts.length != 2) throw new IllegalArgumentException("幸运值规则格式非法：" + group);
+            LuckMap.put(Integer.parseInt(parts[0]), parts[1]);
         }
 
-        // 4. 根据用户积分找到 prevWeight（当前档）和 nextWeight（下一档）
-        int prevWeight = -1;
-        int nextWeight = -1;
+        // 4. 根据用户积分找到 prevLuck（当前档）和 nextLuck（下一档）
+        int prevLuck = -1;
+        int nextLuck = -1;
 
-        for (Map.Entry<Integer, String> entry : weightMap.entrySet()) {
+        for (Map.Entry<Integer, String> entry : LuckMap.entrySet()) {
             Integer threshold = entry.getKey();
-            if (userScore >= threshold) {
-                prevWeight = threshold;
+            if (accountLuck >= threshold) {
+                prevLuck = threshold;
             } else {
-                nextWeight = threshold;
+                nextLuck = threshold;
                 break;
             }
         }
 
         // 5. 选择本次应该展示的奖品列表
-        if (prevWeight == -1) {
+        if (prevLuck == -1) {
             for (AwardEntity awardEntity : awardEntityMap.values()) {
                 awardNameList.add(awardEntity.getAwardName());
             }
         } else {
-            for (String awardIdStr : weightMap.get(prevWeight).split(Delimiter.COMMA)) {
+            for (String awardIdStr : LuckMap.get(prevLuck).split(Delimiter.COMMA)) {
                 awardNameList.add(awardEntityMap.get(awardIdStr).getAwardName());
             }
         }
 
-        return StrategyRuleWeightDetail.builder()
-                .userScore(userScore)
-                .prevWeight(prevWeight)
-                .nextWeight(nextWeight)
+        return QueryActivityLuckResult.builder()
+                .accountLuck(accountLuck)
+                .prevLuck(prevLuck)
+                .nextLuck(nextLuck)
                 .awardNameList(awardNameList)
                 .build();
     }

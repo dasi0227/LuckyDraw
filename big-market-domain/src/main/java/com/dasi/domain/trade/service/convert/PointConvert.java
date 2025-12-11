@@ -24,17 +24,16 @@ public class PointConvert implements IPointConvert {
         String userId = convertContext.getUserId();
         String orderId = convertContext.getOrderId();
         Long tradeId = convertContext.getTradeId();
-        Long activityId = convertContext.getActivityId();
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (tradeId == null) throw new AppException("缺少参数 tradeId");
         if (orderId == null) throw new AppException("缺少参数 orderId");
-        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         TradeEntity tradeEntity = tradeRepository.queryTradeByTradeId(tradeId);
-        Integer userPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
+        Long activityId = tradeEntity.getActivityId();
+        Integer accountPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
         Integer tradePoint = tradeEntity.getTradePoint();
-        if (userPoint < tradePoint) {
-            log.info("【兑换】当前用户的积分不够：userId={}, userPoint={}, tradePoint={}", userId, userPoint, tradePoint);
+        if (accountPoint < tradePoint) {
+            log.info("【兑换】当前用户的积分不够：userId={}, accountPoint={}, tradePoint={}", userId, accountPoint, tradePoint);
             throw new AppException("兑换失败：tradeId=" + tradeId);
         }
 
@@ -47,17 +46,16 @@ public class PointConvert implements IPointConvert {
         String userId = convertContext.getUserId();
         String orderId = convertContext.getOrderId();
         Long tradeId = convertContext.getTradeId();
-        Long activityId = convertContext.getActivityId();
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (tradeId == null) throw new AppException("缺少参数 tradeId");
         if (orderId == null) throw new AppException("缺少参数 orderId");
-        if (activityId == null) throw new AppException("缺少参数 activityId");
 
         TradeEntity tradeEntity = tradeRepository.queryTradeByTradeId(tradeId);
-        Integer userPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
+        Long activityId = tradeEntity.getActivityId();
+        Integer accountPoint = tradeRepository.queryActivityAccountPoint(userId, activityId);
         Integer tradePoint = tradeEntity.getTradePoint();
-        if (userPoint < tradePoint) {
-            log.info("【兑换】当前用户的积分不够：userId={}, userPoint={}, tradePoint={}", userId, userPoint, tradePoint);
+        if (accountPoint < tradePoint) {
+            log.info("【兑换】当前用户的积分不够：userId={}, accountPoint={}, tradePoint={}", userId, accountPoint, tradePoint);
             throw new AppException("兑换失败：tradeId=" + tradeId);
         }
 

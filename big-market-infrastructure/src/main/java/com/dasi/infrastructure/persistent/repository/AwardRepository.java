@@ -3,7 +3,10 @@ package com.dasi.infrastructure.persistent.repository;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
 import com.dasi.domain.award.model.entity.*;
-import com.dasi.domain.award.model.type.*;
+import com.dasi.domain.award.model.type.AwardSource;
+import com.dasi.domain.award.model.type.AwardState;
+import com.dasi.domain.award.model.type.AwardType;
+import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -49,6 +54,35 @@ public class AwardRepository implements IAwardRepository {
     @Resource
     private EventPublisher eventPublisher;
 
+    @Override
+    public List<UserAwardEntity> queryUserAwardRaffleList(String userId, Long activityId) {
+        try {
+            dbRouterStrategy.doRouter(userId);
+
+            UserAward userAwardReq = new UserAward();
+            userAwardReq.setUserId(userId);
+            userAwardReq.setActivityId(activityId);
+            userAwardReq.setAwardSource(AwardSource.RAFFLE.name());
+
+            List<UserAward> userAwardList = userAwardDao.queryUserAwardList(userAwardReq);
+
+            return userAwardList.stream()
+                    .map(userAward -> UserAwardEntity.builder()
+                            .orderId(userAward.getOrderId())
+                            .userId(userAward.getUserId())
+                            .awardId(userAward.getAwardId())
+                            .activityId(userAward.getActivityId())
+                            .awardSource(AwardSource.valueOf(userAward.getAwardSource()))
+                            .awardName(userAward.getAwardName())
+                            .awardDesc(userAward.getAwardDesc())
+                            .awardDeadline(userAward.getAwardDeadline())
+                            .awardTime(userAward.getAwardTime())
+                            .build())
+                    .collect(Collectors.toList());
+        } finally {
+            dbRouterStrategy.clear();
+        }
+    }
 
     @Override
     public ActivityAccountEntity queryActivityAccount(String userId, Long activityId) {
@@ -63,6 +97,7 @@ public class AwardRepository implements IAwardRepository {
             return ActivityAccountEntity.builder()
                     .userId(activityAccount.getUserId())
                     .activityId(activityAccount.getActivityId())
+                    .accountPoint(activityAccount.getAccountPoint())
                     .totalAllocate(activityAccount.getTotalAllocate())
                     .totalSurplus(activityAccount.getTotalSurplus())
                     .dayLimit(activityAccount.getDayLimit())
@@ -206,7 +241,8 @@ public class AwardRepository implements IAwardRepository {
         userAward.setOrderId(userAwardEntity.getOrderId());
         userAward.setUserId(userAwardEntity.getUserId());
         userAward.setAwardId(userAwardEntity.getAwardId());
-        userAward.setAwardType(userAwardEntity.getAwardType().name());
+        userAward.setActivityId(userAwardEntity.getActivityId());
+        userAward.setAwardSource(userAwardEntity.getAwardSource().name());
         userAward.setAwardName(userAwardEntity.getAwardName());
         userAward.setAwardDesc(userAwardEntity.getAwardDesc());
         userAward.setAwardDeadline(userAwardEntity.getAwardDeadline());
@@ -254,7 +290,8 @@ public class AwardRepository implements IAwardRepository {
                 activityAccount = new ActivityAccount();
                 activityAccount.setUserId(userId);
                 activityAccount.setActivityId(activityId);
-                activityAccount.setActivityPoint(0);
+                activityAccount.setAccountPoint(0);
+                activityAccount.setAccountLuck(0);
                 activityAccount.setTotalAllocate(0);
                 activityAccount.setTotalSurplus(0);
                 activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
@@ -271,13 +308,13 @@ public class AwardRepository implements IAwardRepository {
 
         String orderId = dispatchHandleAggregate.getOrderId();
         String userId = dispatchHandleAggregate.getUserId();
-        Integer activityPoint = dispatchHandleAggregate.getActivityPoint();
+        Integer accountPoint = dispatchHandleAggregate.getAccountPoint();
 
         ActivityAccountEntity activityAccountEntity = dispatchHandleAggregate.getActivityAccountEntity();
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(activityAccountEntity.getUserId());
         activityAccount.setActivityId(activityAccountEntity.getActivityId());
-        activityAccount.setActivityPoint(activityPoint);
+        activityAccount.setAccountPoint(accountPoint);
 
         ActivityAwardEntity activityAwardEntity = dispatchHandleAggregate.getActivityAwardEntity();
         ActivityAward activityAward = new ActivityAward();
@@ -292,7 +329,7 @@ public class AwardRepository implements IAwardRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer before = activityAccountDao.queryActivityAccountLuck(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     activityAccountDao.increaseActivityAccountPoint(activityAccount);
@@ -303,7 +340,7 @@ public class AwardRepository implements IAwardRepository {
                     return false;
                 }
             });
-            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer after = activityAccountDao.queryActivityAccountLuck(activityAccount);
 
 
             if (Boolean.TRUE.equals(success)) {

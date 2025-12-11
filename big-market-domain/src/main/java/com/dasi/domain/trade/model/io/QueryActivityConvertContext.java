@@ -1,4 +1,4 @@
-package com.dasi.domain.activity.model.io;
+package com.dasi.domain.trade.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryAccountContext {
-
-    private String userId;
+public class QueryActivityConvertContext {
 
     private Long activityId;
 

@@ -8,7 +8,7 @@ public interface IActivityAccountDao {
 
     ActivityAccount queryActivityAccount(ActivityAccount activityAccount);
 
-    Integer queryActivityAccountPoint(ActivityAccount activityAccount);
+    Integer queryActivityAccountLuck(ActivityAccount activityAccount);
 
     void createActivityAccount(ActivityAccount activityAccount);
 

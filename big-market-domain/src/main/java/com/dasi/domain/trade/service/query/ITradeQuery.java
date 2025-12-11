@@ -1,13 +1,13 @@
 package com.dasi.domain.trade.service.query;
 
-import com.dasi.domain.trade.model.io.QueryConvertContext;
-import com.dasi.domain.trade.model.io.QueryConvertResult;
+import com.dasi.domain.trade.model.io.QueryActivityConvertContext;
+import com.dasi.domain.trade.model.io.QueryActivityConvertResult;
 
 import java.util.List;
 
 public interface ITradeQuery {
 
 
-    List<QueryConvertResult> queryConvertListByActivityId(QueryConvertContext queryConvertContext);
+    List<QueryActivityConvertResult> queryActivityConvertList(QueryActivityConvertContext queryActivityConvertContext);
 
 }

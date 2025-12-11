@@ -17,7 +17,10 @@ public class ActivityAccount {
     private Long activityId;
 
     /** 用户积分 */
-    private Integer activityPoint;
+    private Integer accountPoint;
+
+    /** 用户幸运值 */
+    private Integer accountLuck;
 
     /** 天上限 */
     private Integer dayLimit;

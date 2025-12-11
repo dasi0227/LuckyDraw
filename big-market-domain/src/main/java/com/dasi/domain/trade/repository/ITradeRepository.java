@@ -24,5 +24,5 @@ public interface ITradeRepository {
 
     Integer queryActivityAccountPoint(String userId, Long activityId);
 
-    List<TradeEntity> queryConvertListByActivityId(Long activityId);
+    List<TradeEntity> queryActivityConvertList(Long activityId);
 }
