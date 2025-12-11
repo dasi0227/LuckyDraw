@@ -48,8 +48,6 @@ public class DispatchTradeOutcomeEvent extends BaseEvent<DispatchTradeOutcomeEve
 
         private Long tradeId;
 
-        private Long activityId;
-
         private TradeType tradeType;
 
     }

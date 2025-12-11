@@ -153,6 +153,7 @@ public class ActivityRepository implements IActivityRepository {
             return ActivityAccountEntity.builder()
                     .userId(activityAccount.getUserId())
                     .activityId(activityAccount.getActivityId())
+                    .accountPoint(activityAccount.getAccountPoint())
                     .totalAllocate(activityAccount.getTotalAllocate())
                     .totalSurplus(activityAccount.getTotalSurplus())
                     .dayLimit(activityAccount.getDayLimit())
@@ -177,6 +178,7 @@ public class ActivityRepository implements IActivityRepository {
             return ActivityAccountMonthEntity.builder()
                     .activityId(activityAccountMonth.getActivityId())
                     .userId(activityAccountMonth.getUserId())
+                    .monthLimit(activityAccountMonth.getMonthLimit())
                     .monthKey(activityAccountMonth.getMonthKey())
                     .monthAllocate(activityAccountMonth.getMonthAllocate())
                     .monthSurplus(activityAccountMonth.getMonthSurplus())
@@ -200,6 +202,7 @@ public class ActivityRepository implements IActivityRepository {
             return ActivityAccountDayEntity.builder()
                     .activityId(activityAccountDay.getActivityId())
                     .userId(activityAccountDay.getUserId())
+                    .dayLimit(activityAccountDay.getDayLimit())
                     .dayKey(activityAccountDay.getDayKey())
                     .dayAllocate(activityAccountDay.getDayAllocate())
                     .daySurplus(activityAccountDay.getDaySurplus())
@@ -317,7 +320,8 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccount = new ActivityAccount();
                         activityAccount.setUserId(userId);
                         activityAccount.setActivityId(activityId);
-                        activityAccount.setActivityPoint(0);
+                        activityAccount.setAccountPoint(0);
+                        activityAccount.setAccountLuck(0);
                         activityAccount.setTotalAllocate(0);
                         activityAccount.setTotalSurplus(0);
                         activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
@@ -327,6 +331,7 @@ public class ActivityRepository implements IActivityRepository {
 
                     /* ========== 2. 查询/创建 日账户 ========== */
                     String dayKey = TimeUtil.thisDay(true);
+                    Integer dayLimit = activityAccount.getDayLimit();
                     ActivityAccountDay dayReq = new ActivityAccountDay();
                     dayReq.setUserId(userId);
                     dayReq.setActivityId(activityId);
@@ -337,14 +342,15 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccountDay.setActivityId(activityId);
                         activityAccountDay.setUserId(userId);
                         activityAccountDay.setDayKey(dayKey);
-                        activityAccountDay.setDayLimit(DefaultValue.DAY_LIMIT);
-                        activityAccountDay.setDayAllocate(Math.min(DefaultValue.DAY_LIMIT, activityAccount.getTotalSurplus()));
-                        activityAccountDay.setDaySurplus(Math.min(DefaultValue.DAY_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountDay.setDayLimit(dayLimit);
+                        activityAccountDay.setDayAllocate(Math.min(dayLimit, activityAccount.getTotalSurplus()));
+                        activityAccountDay.setDaySurplus(Math.min(dayLimit, activityAccount.getTotalSurplus()));
                         activityAccountDayDao.createActivityAccountDay(activityAccountDay);
                     }
 
                     /* ========== 3. 查询/创建 月账户 ========== */
                     String monthKey = TimeUtil.thisMonth(true);
+                    Integer monthLimit = activityAccount.getMonthLimit();
                     ActivityAccountMonth monthReq = new ActivityAccountMonth();
                     monthReq.setUserId(userId);
                     monthReq.setActivityId(activityId);
@@ -355,9 +361,9 @@ public class ActivityRepository implements IActivityRepository {
                         activityAccountMonth.setActivityId(activityId);
                         activityAccountMonth.setUserId(userId);
                         activityAccountMonth.setMonthKey(monthKey);
-                        activityAccountMonth.setMonthLimit(DefaultValue.MONTH_LIMIT);
-                        activityAccountMonth.setMonthAllocate(Math.min(DefaultValue.MONTH_LIMIT, activityAccount.getTotalSurplus()));
-                        activityAccountMonth.setMonthSurplus(Math.min(DefaultValue.MONTH_LIMIT, activityAccount.getTotalSurplus()));
+                        activityAccountMonth.setMonthLimit(monthLimit);
+                        activityAccountMonth.setMonthAllocate(Math.min(monthLimit, activityAccount.getTotalSurplus()));
+                        activityAccountMonth.setMonthSurplus(Math.min(monthLimit, activityAccount.getTotalSurplus()));
                         activityAccountMonthDao.createActivityAccountMonth(activityAccountMonth);
                     }
 

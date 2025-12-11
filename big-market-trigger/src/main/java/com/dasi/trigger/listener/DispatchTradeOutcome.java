@@ -37,14 +37,13 @@ public class DispatchTradeOutcome {
         String userId = dispatchTradeOutcomeMessage.getUserId();
         String orderId = dispatchTradeOutcomeMessage.getOrderId();
         Long tradeId = dispatchTradeOutcomeMessage.getTradeId();
-        Long activityId = dispatchTradeOutcomeMessage.getActivityId();
 
         TradeOrderEntity tradeOrderEntity = TradeOrderEntity.builder().userId(userId).orderId(orderId).tradeId(tradeId).build();
         TradeType tradeType = dispatchTradeOutcomeMessage.getTradeType();
 
         try {
             // 2. 处理兑换结果
-            ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).orderId(orderId).activityId(activityId).build();
+            ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).orderId(orderId).build();
             switch (tradeType) {
                 case CONVERT_AWARD:
                     pointConvert.doConvertAward(convertContext);

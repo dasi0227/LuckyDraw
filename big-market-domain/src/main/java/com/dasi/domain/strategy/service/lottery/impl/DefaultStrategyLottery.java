@@ -65,8 +65,8 @@ public class DefaultStrategyLottery extends AbstractStrategyLottery {
     }
 
     @Override
-    public Long getLotteryAward(Long strategyId, String ruleWeight) {
-        String key = String.valueOf(strategyId).concat(Delimiter.UNDERSCORE).concat(ruleWeight);
+    public Long getLotteryAward(Long strategyId, String luck) {
+        String key = String.valueOf(strategyId).concat(Delimiter.UNDERSCORE).concat(luck);
         return getLotteryAward(key);
     }
 

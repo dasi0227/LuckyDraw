@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.strategy.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class QueryAccountRequest {
+@AllArgsConstructor
+public class QueryActivityLuckContext {
 
     private Long activityId;
 

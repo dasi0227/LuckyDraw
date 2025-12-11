@@ -3,7 +3,7 @@ package com.dasi.test.domain;
 import com.dasi.domain.strategy.model.io.LotteryContext;
 import com.dasi.domain.strategy.model.io.LotteryResult;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
-import com.dasi.domain.strategy.service.chain.impl.RuleWeightChain;
+import com.dasi.domain.strategy.service.chain.impl.RuleLuckChain;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.tree.impl.RuleLockTree;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -28,7 +28,7 @@ public class StrategyTest {
     @Resource
     private IStrategyAssemble armory;
     @Resource
-    private RuleWeightChain ruleWeightChain;
+    private RuleLuckChain ruleLuckChain;
     @Resource
     private RuleLockTree ruleLockTree;
     @Resource
@@ -47,7 +47,7 @@ public class StrategyTest {
         armory.assembleStrategyByStrategyId(strategyId);
 
         // 抽奖
-        ReflectionTestUtils.setField(ruleWeightChain, "userScore", 5000L);
+        ReflectionTestUtils.setField(ruleLuckChain, "userScore", 5000L);
         LotteryContext lotteryContext = new LotteryContext();
         lotteryContext.setUserId("wyw");
         lotteryContext.setStrategyId(strategyId);

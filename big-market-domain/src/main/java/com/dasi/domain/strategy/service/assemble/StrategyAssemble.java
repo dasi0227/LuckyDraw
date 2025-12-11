@@ -41,11 +41,8 @@ public class StrategyAssemble implements IStrategyAssemble {
             // 2. 库存装配
             assembleStrategyAwardStockSurplus(strategyId, strategyAwardEntityList);
 
-            // 3. 完全装配
-            assembleStrategyAwardRate(strategyId, null, strategyAwardEntityList);
-
-            // 4. 权重装配
-            assembleStrategyByWeight(strategyId, strategyAwardEntityList);
+            // 3. 幸运值装配
+            assembleStrategyByLuck(strategyId, strategyAwardEntityList);
             return true;
         } catch (Exception e) {
             log.error("【装配】策略奖品：strategyId={}, error={}", strategyId, e.getMessage());
@@ -53,42 +50,40 @@ public class StrategyAssemble implements IStrategyAssemble {
         }
     }
 
-    private void assembleStrategyByWeight(Long strategyId, List<StrategyAwardEntity> strategyAwardEntityList) {
+    private void assembleStrategyByLuck(Long strategyId, List<StrategyAwardEntity> strategyAwardEntityList) {
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
 
-        // 1. 策略无权重规则 → 直接返回
-        if (!strategyEntity.hasRuleWeight()) return;
+        // 1. 策略无幸运值规则 → 直接返回
+        if (!strategyEntity.hasRuleLuck()) return;
 
-        // 2. 查询 RULE_WEIGHT 规则
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_WEIGHT.name());
-        if (strategyRuleEntity == null) throw new AppException("当前策略下没有配置权重规则：strategyId=" + strategyId);
+        // 2. 查询 RULE_LUCK 规则
+        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_LUCK.name());
+        if (strategyRuleEntity == null) throw new AppException("当前策略下没有配置幸运值规则：strategyId=" + strategyId);
 
-        // 3. 权重下概率装配
-        Map<String, List<Long>> ruleWeight = strategyRuleEntity.getRuleWeightValue();
-        for (Entry<String, List<Long>> entry : ruleWeight.entrySet()) {
+        // 3. 幸运值下概率装配
+        Map<String, List<Long>> ruleLuckMap = strategyRuleEntity.getRuleLuckValue();
+        for (Entry<String, List<Long>> entry : ruleLuckMap.entrySet()) {
             // 1. 获取数据
-            String weight = entry.getKey();
+            String luck = entry.getKey();
             List<Long> awardIdList = entry.getValue();
             // 2. 过滤掉不在列表里面的
-            List<StrategyAwardEntity> strategyAwardEntityListUnderWeight = strategyAwardEntityList.stream()
+            List<StrategyAwardEntity> strategyAwardEntityListUnderLuck = strategyAwardEntityList.stream()
                     .filter(strategyAwardEntity -> awardIdList.contains(strategyAwardEntity.getAwardId()))
                     .collect(Collectors.toList());
-            // 3. 概率装配
-            assembleStrategyAwardRate(strategyId, weight, strategyAwardEntityListUnderWeight);
+            // 3. 幸运值装配
+            assembleStrategyAwardRate(strategyId, luck, strategyAwardEntityListUnderLuck);
         }
     }
 
-    private void assembleStrategyAwardRate(Long strategyId, String weight, List<StrategyAwardEntity> strategyAwardEntityList) {
-        if (strategyAwardEntityList.isEmpty()) throw new AppException("当前权重下没有配置奖品：strategyId=" + strategyId + ", weight=" + weight);
+    private void assembleStrategyAwardRate(Long strategyId, String luck, List<StrategyAwardEntity> strategyAwardEntityList) {
+        if (strategyAwardEntityList.isEmpty()) throw new AppException("当前幸运值下没有配置奖品：strategyId=" + strategyId + ", luck=" + luck);
 
         String awardIds = strategyAwardEntityList.stream()
                 .map(entity -> String.valueOf(entity.getAwardId()))
                 .collect(Collectors.joining(","));
-        log.info("【装配】奖品概率：strategyId={}, weightKey={}, awardIds={}", strategyId, weight, awardIds);
+        log.info("【装配】奖品概率：strategyId={}, luck={}, awardIds={}", strategyId, luck, awardIds);
 
-        String cacheKey = weight == null
-                ? String.valueOf(strategyId)
-                : strategyId + Delimiter.UNDERSCORE + weight;
+        String cacheKey = strategyId + Delimiter.UNDERSCORE + luck;
 
         // 1. 获取最小概率
         BigDecimal minValue = strategyAwardEntityList.stream()

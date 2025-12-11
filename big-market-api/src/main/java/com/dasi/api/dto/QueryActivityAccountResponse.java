@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueryAccountResponse {
+public class QueryActivityAccountResponse {
 
-    private Integer userPoint;
+    private Integer accountPoint;
 
     private Integer totalSurplus;
 
@@ -19,8 +19,8 @@ public class QueryAccountResponse {
 
     private Integer daySurplus;
 
-    private Integer monthRecharge;
+    private Integer monthPending;
 
-    private Integer dayRecharge;
+    private Integer dayPending;
 
 }

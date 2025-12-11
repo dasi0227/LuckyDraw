@@ -6,7 +6,7 @@
         <id     property="id"             column="id"/>
         <result property="activityId"     column="activity_id"/>
         <result property="behaviorType"   column="behavior_type"/>
-        <result property="behaviorState"  column="behavior_state"/>
+        <result property="behaviorName"   column="behavior_name"/>
         <result property="rewardType"     column="reward_type"/>
         <result property="rewardValue"    column="reward_value"/>
         <result property="rewardDesc"     column="reward_desc"/>
@@ -14,10 +14,18 @@
         <result property="updateTime"     column="update_time"/>
     </resultMap>
 
-    <select id="queryBehaviorList" parameterType="com.dasi.infrastructure.persistent.po.Behavior" resultMap="dataMap">
-        SELECT activity_id, behavior_type, behavior_state, reward_type, reward_value, reward_desc
+    <select id="queryBehaviorListByBehaviorType" parameterType="com.dasi.infrastructure.persistent.po.Behavior" resultMap="dataMap">
+        SELECT activity_id, behavior_type, behavior_name, reward_type, reward_value, reward_desc
         FROM behavior
         WHERE behavior_type = #{behaviorType} AND activity_id = #{activityId}
     </select>
+
+    <select id="queryDistinctBehaviorByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT DISTINCT behavior_name, behavior_type
+        FROM behavior
+        WHERE activity_id = #{activityId}
+        ORDER BY behavior_name
+    </select>
+
 
 </mapper>

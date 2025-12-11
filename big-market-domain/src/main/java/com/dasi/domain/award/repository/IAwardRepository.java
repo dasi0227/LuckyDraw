@@ -3,6 +3,8 @@ package com.dasi.domain.award.repository;
 import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
 import com.dasi.domain.award.model.entity.*;
 
+import java.util.List;
+
 public interface IAwardRepository {
 
     void saveActivityAward(ActivityAwardEntity activityAwardEntity, TaskEntity taskEntity);
@@ -18,4 +20,6 @@ public interface IAwardRepository {
     ActivityAwardEntity queryActivityAwardByOrderId(String userId, String orderId);
 
     void saveUserAward(DispatchHandleAggregate dispatchHandleAggregate);
+
+    List<UserAwardEntity> queryUserAwardRaffleList(String userId, Long activityId);
 }

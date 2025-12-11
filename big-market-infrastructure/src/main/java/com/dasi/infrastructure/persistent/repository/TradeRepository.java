@@ -4,6 +4,7 @@ import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.trade.model.entity.TaskEntity;
 import com.dasi.domain.trade.model.entity.TradeEntity;
 import com.dasi.domain.trade.model.entity.TradeOrderEntity;
+import com.dasi.domain.trade.model.type.AwardSource;
 import com.dasi.domain.trade.model.type.TaskState;
 import com.dasi.domain.trade.model.type.TradeState;
 import com.dasi.domain.trade.model.type.TradeType;
@@ -18,6 +19,7 @@ import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -73,21 +75,21 @@ public class TradeRepository implements ITradeRepository {
             ActivityAccount activityAccount = new ActivityAccount();
             activityAccount.setUserId(userId);
             activityAccount.setActivityId(activityId);
-            return activityAccountDao.queryActivityAccountPoint(activityAccount);
+            return activityAccountDao.queryActivityAccountLuck(activityAccount);
         } finally {
             dbRouterStrategy.clear();
         }
     }
 
     @Override
-    public List<TradeEntity> queryConvertListByActivityId(Long activityId) {
+    public List<TradeEntity> queryActivityConvertList(Long activityId) {
         String cacheKey = RedisKey.TRADE_LIST_KEY + activityId;
         List<TradeEntity> tradeEntityList = redisService.getValue(cacheKey);
         if (tradeEntityList != null && !tradeEntityList.isEmpty()) {
             return tradeEntityList;
         }
 
-        List<Trade> tradeList = tradeDao.queryConvertListByActivityId(activityId);
+        List<Trade> tradeList = tradeDao.queryActivityConvertList(activityId);
         tradeEntityList = tradeList.stream()
                 .map(trade -> TradeEntity.builder()
                         .tradeId(trade.getTradeId())
@@ -137,7 +139,8 @@ public class TradeRepository implements ITradeRepository {
                 activityAccount = new ActivityAccount();
                 activityAccount.setUserId(userId);
                 activityAccount.setActivityId(activityId);
-                activityAccount.setActivityPoint(0);
+                activityAccount.setAccountPoint(0);
+                activityAccount.setAccountLuck(0);
                 activityAccount.setTotalAllocate(0);
                 activityAccount.setTotalSurplus(0);
                 activityAccount.setMonthLimit(DefaultValue.MONTH_LIMIT);
@@ -169,12 +172,12 @@ public class TradeRepository implements ITradeRepository {
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(userId);
         activityAccount.setActivityId(activityId);
-        activityAccount.setActivityPoint(Integer.valueOf(tradeEntity.getTradeValue()));
+        activityAccount.setAccountPoint(Integer.valueOf(tradeEntity.getTradeValue()));
 
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer before = activityAccountDao.queryActivityAccountLuck(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 执行交易
@@ -188,7 +191,7 @@ public class TradeRepository implements ITradeRepository {
                     return false;
                 }
             });
-            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer after = activityAccountDao.queryActivityAccountLuck(activityAccount);
 
             if (Boolean.TRUE.equals(success)) {
                 tradeOrder.setTradeState(TradeState.USED.name());
@@ -212,6 +215,7 @@ public class TradeRepository implements ITradeRepository {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
+        Long tradeId = tradeOrderEntity.getTradeId();
 
         TradeOrder tradeOrder = new TradeOrder();
         tradeOrder.setOrderId(tradeOrderEntity.getOrderId());
@@ -235,10 +239,12 @@ public class TradeRepository implements ITradeRepository {
 
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 写入记录
                     tradeOrderDao.saveTradeOrder(tradeOrder);
                     taskDao.saveTask(task);
                     return true;
+                } catch (DuplicateKeyException e) {
+                    status.setRollbackOnly();
+                    throw new AppException("已兑换过当前产品：tradeId=" + tradeId);
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     log.error("【兑换】保存兑换订单时发生错误：error={}", e.getMessage());
@@ -298,13 +304,14 @@ public class TradeRepository implements ITradeRepository {
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(userId);
         activityAccount.setActivityId(activityId);
-        activityAccount.setActivityPoint(tradePoint);
+        activityAccount.setAccountPoint(tradePoint);
 
         UserAward userAward = new UserAward();
         userAward.setOrderId(orderId);
         userAward.setUserId(userId);
-        userAward.setAwardId(award.getAwardId());
-        userAward.setAwardType(award.getAwardType());
+        userAward.setAwardId(awardId);
+        userAward.setActivityId(activityId);
+        userAward.setAwardSource(AwardSource.CONVERT.name());
         userAward.setAwardName(award.getAwardName());
         userAward.setAwardDesc(award.getAwardDesc());
         userAward.setAwardDeadline(awardDeadline);
@@ -313,7 +320,7 @@ public class TradeRepository implements ITradeRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer before = activityAccountDao.queryActivityAccountLuck(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     activityAccountDao.decreaseActivityAccountPoint(activityAccount);
@@ -325,7 +332,7 @@ public class TradeRepository implements ITradeRepository {
                     return false;
                 }
             });
-            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
+            Integer after = activityAccountDao.queryActivityAccountLuck(activityAccount);
 
             if (Boolean.TRUE.equals(success)) {
                 log.info("【兑换】兑换奖品成功：userId={}, tradeId={}, awardId={}, point={}->{}", userId, tradeId, awardId, before, after);
@@ -348,7 +355,7 @@ public class TradeRepository implements ITradeRepository {
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(userId);
         activityAccount.setActivityId(activityId);
-        activityAccount.setActivityPoint(tradePoint);
+        activityAccount.setAccountPoint(tradePoint);
         activityAccount.setTotalAllocate(count);
         activityAccount.setTotalSurplus(count);
 

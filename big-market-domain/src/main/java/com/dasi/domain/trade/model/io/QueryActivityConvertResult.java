@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryConvertResult {
+public class QueryActivityConvertResult {
 
     private Long tradeId;
 

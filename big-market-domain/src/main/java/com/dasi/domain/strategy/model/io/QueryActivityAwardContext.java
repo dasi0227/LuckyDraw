@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.strategy.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class QuerySign {
-
-    private Long activityId;
+@AllArgsConstructor
+public class QueryActivityAwardContext {
 
     private String userId;
+
+    private Long activityId;
 
 }

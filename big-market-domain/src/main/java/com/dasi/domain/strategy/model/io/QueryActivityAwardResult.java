@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.strategy.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ActivityAwardResponse {
+@AllArgsConstructor
+public class QueryActivityAwardResult {
 
     /** 奖品ID */
     private Long awardId;
@@ -19,23 +19,11 @@ public class ActivityAwardResponse {
     /** 奖品名称 */
     private String awardName;
 
-    /** 奖品标题 */
-    private String awardTitle;
-
-    /** 奖品描述 */
-    private String awardDesc;
-
-    /** 奖品配置 */
-    private String awardValue;
-
     /** 奖品中奖概率 */
     private BigDecimal awardRate;
 
     /** 奖品排列序号 */
     private Integer awardIndex;
-
-    /** 解锁次数 */
-    private Integer limitLotteryCount;
 
     /** 等待次数 */
     private Integer needLotteryCount;

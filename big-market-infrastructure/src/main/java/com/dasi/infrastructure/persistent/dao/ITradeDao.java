@@ -10,6 +10,6 @@ public interface ITradeDao {
 
     Trade queryTradeByTradeId(Long tradeId);
 
-    List<Trade> queryConvertListByActivityId(Long activityId);
+    List<Trade> queryActivityConvertList(Long activityId);
 
 }

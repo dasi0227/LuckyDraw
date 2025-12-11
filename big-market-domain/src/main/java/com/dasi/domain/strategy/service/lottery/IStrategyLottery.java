@@ -9,6 +9,6 @@ public interface IStrategyLottery {
 
     Long getLotteryAward(Long strategyId);
 
-    Long getLotteryAward(Long strategyId, String ruleWeight);
+    Long getLotteryAward(Long strategyId, String luck);
 
 }

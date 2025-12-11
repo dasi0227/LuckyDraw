@@ -1,4 +1,4 @@
-package com.dasi.api.dto;
+package com.dasi.domain.activity.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class QueryConvertRequest {
+@AllArgsConstructor
+public class QueryActivityAccountContext {
+
+    private String userId;
 
     private Long activityId;
 

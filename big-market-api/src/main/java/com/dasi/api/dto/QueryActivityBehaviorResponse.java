@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueryConvertResponse {
+public class QueryActivityBehaviorResponse {
 
-    private Long tradeId;
+    private String behaviorType;
 
-    private Integer tradePoint;
+    private String behaviorName;
 
-    private String tradeName;
+    private Boolean isDone;
 
 }

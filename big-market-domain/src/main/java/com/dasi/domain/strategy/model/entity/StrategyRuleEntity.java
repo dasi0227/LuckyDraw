@@ -32,31 +32,31 @@ public class StrategyRuleEntity {
     /** 规则描述 */
     private String ruleDesc;
 
-    public Map<String, List<Long>> getRuleWeightValue() {
-        if (!RuleModel.RULE_WEIGHT.name().equals(ruleModel)) return null;
+    public Map<String, List<Long>> getRuleLuckValue() {
+        if (!RuleModel.RULE_LUCK.name().equals(ruleModel)) return null;
         if (ruleValue == null || ruleValue.trim().isEmpty()) return null;
 
-        Map<String, List<Long>> ruleWeightValue = new HashMap<>();
+        Map<String, List<Long>> ruleLuckValue = new HashMap<>();
 
         // 分割空格：得到不同【积分-奖品】组
         String[] groups = ruleValue.trim().split(Delimiter.SPACE);
         for (String group : groups) {
             // 分割冒号：得到【左侧积分】和【右侧奖品列表】
             String[] parts = group.split(Delimiter.COLON);
-            if (parts.length != 2) throw new IllegalArgumentException("权重规则格式非法：" + group);
+            if (parts.length != 2) throw new IllegalArgumentException("幸运值规则格式非法：" + group);
 
             // 分割积分值和规则值
-            String weight = parts[0];
+            String luck = parts[0];
             List<Long> value = Arrays.stream(parts[1].trim().split(Delimiter.COMMA))
                     .map(String::trim)
                     .map(Long::valueOf)
                     .collect(Collectors.toList());
 
             // 放入 Map
-            ruleWeightValue.put(weight, value);
+            ruleLuckValue.put(luck, value);
         }
 
-        return ruleWeightValue;
+        return ruleLuckValue;
     }
 
 }

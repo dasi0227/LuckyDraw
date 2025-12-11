@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RuleModelConfig(ruleModel = RuleModel.RULE_LUCK)
-public class RuleLuckTree implements IStrategyTree {
+@RuleModelConfig(ruleModel = RuleModel.RULE_FALLBACK)
+public class RuleFallbackTree implements IStrategyTree {
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Long awardId, String ruleValue) {
         Long luckAwardId = Long.valueOf(ruleValue);
-        log.info("【抽奖】RULE_LUCK 拦截：awardId={}", luckAwardId);
+        log.info("【抽奖】RULE_FALLBACK 拦截：awardId={}", luckAwardId);
         return RuleCheckResult.builder()
                 .awardId(luckAwardId)
                 .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
-                .ruleModel(RuleModel.RULE_LUCK)
+                .ruleModel(RuleModel.RULE_FALLBACK)
                 .build();
     }
 

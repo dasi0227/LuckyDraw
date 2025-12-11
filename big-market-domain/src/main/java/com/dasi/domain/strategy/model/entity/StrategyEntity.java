@@ -31,13 +31,13 @@ public class StrategyEntity {
         }
     }
 
-    public boolean hasRuleWeight() {
+    public boolean hasRuleLuck() {
         String[] ruleModels = splitRuleModels();
         if (ruleModels == null) {
             return false;
         }
         for (String ruleModel : ruleModels) {
-            if (RuleModel.RULE_WEIGHT.name().equals(ruleModel)) {
+            if (RuleModel.RULE_LUCK.name().equals(ruleModel)) {
                 return true;
             }
         }

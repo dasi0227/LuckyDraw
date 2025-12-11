@@ -1,6 +1,6 @@
 package com.dasi.domain.award.model.entity;
 
-import com.dasi.domain.award.model.type.AwardType;
+import com.dasi.domain.award.model.type.AwardSource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +23,11 @@ public class UserAwardEntity {
     /** 奖品ID */
     private Long awardId;
 
-    /** 奖品类型 */
-    private AwardType awardType;
+    /** 活动ID */
+    private Long activityId;
+
+    /** 奖品来源 */
+    private AwardSource awardSource;
 
     /** 奖品名称 */
     private String awardName;

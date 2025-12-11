@@ -62,9 +62,10 @@ public class AwardDispatch implements IAwardDispatch {
             throw new AppException("当前奖品类型没有配置获奖逻辑：awardType={}" + awardType);
         } else {
             DispatchHandleAggregate dispatchHandleAggregate = DispatchHandleAggregate.builder()
-                        .userId(dispatchContext.getUserId())
-                        .awardId(dispatchContext.getAwardId())
-                        .orderId(dispatchContext.getOrderId())
+                        .userId(userId)
+                        .awardId(awardId)
+                        .orderId(orderId)
+                        .activityId(activityId)
                         .awardEntity(awardEntity)
                         .activityAwardEntity(activityAwardEntity)
                         .activityAccountEntity(activityAccountEntity)

@@ -1,4 +1,4 @@
-package com.dasi.domain.trade.model.io;
+package com.dasi.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,16 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ConvertContext {
+@NoArgsConstructor
+public class TradeRequest {
 
     private String userId;
 
-    private String orderId;
-
     private Long tradeId;
-
-    private String businessNo;
 
 }

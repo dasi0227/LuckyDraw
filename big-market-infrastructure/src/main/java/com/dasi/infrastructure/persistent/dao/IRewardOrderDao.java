@@ -12,6 +12,6 @@ public interface IRewardOrderDao {
 
     void updateRewardOrderState(RewardOrder rewardOrder);
 
-    RewardOrder querySign(RewardOrder rewardOrderReq);
+    int queryExistBehaviorToday(RewardOrder rewardOrder);
 
 }
