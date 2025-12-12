@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IBehaviorQuery {
 
-    List<QueryActivityBehaviorResult> queryDistinctBehavior(QueryActivityBehaviorContext queryAccountContext);
+    List<QueryActivityBehaviorResult> queryBehavior(QueryActivityBehaviorContext queryAccountContext);
 
 }

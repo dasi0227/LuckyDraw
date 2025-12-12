@@ -49,7 +49,7 @@ public class TimeUtil {
      *               false 返回 yyyyMMddHHmmss
      * @return 当前时间字符串
      */
-    public static String thisTime(boolean isDash) {
+    public static String thisMoment(boolean isDash) {
         return isDash
                 ? LocalDateTime.now().format(DASH_TIME_FORMAT)
                 : LocalDateTime.now().format(TIME_FORMAT);

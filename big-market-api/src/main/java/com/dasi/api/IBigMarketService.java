@@ -32,15 +32,10 @@ public interface IBigMarketService {
 
     Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
 
-    Result<BehaviorResponse> behaviorSign(BehaviorRequest behaviorRequest);
 
-    Result<BehaviorResponse> behaviorLike(BehaviorRequest behaviorRequest);
-
-    Result<BehaviorResponse> behaviorShare(BehaviorRequest behaviorRequest);
-
-    Result<BehaviorResponse> behaviorComment(BehaviorRequest behaviorRequest);
+    Result<BehaviorResponse> behavior(BehaviorRequest behaviorRequest);
 
 
-    Result<TradeResponse> trade(TradeRequest tradeRequest);
+    Result<ConvertResponse> convert(ConvertRequest convertRequest);
 
 }

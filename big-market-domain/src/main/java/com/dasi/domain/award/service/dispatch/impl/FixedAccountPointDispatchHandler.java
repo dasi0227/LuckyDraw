@@ -1,7 +1,8 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
-import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.aggregate.AwardDispatchAggregate;
+import com.dasi.domain.award.model.entity.ActivityAccountEntity;
 import com.dasi.domain.award.model.entity.UserAwardEntity;
 import com.dasi.domain.award.model.type.AwardSource;
 import com.dasi.domain.award.model.type.AwardType;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Slf4j
 @AwardTypeConfig(awardType = AwardType.FIXED_ACCOUNT_POINT)
@@ -23,28 +25,32 @@ public class FixedAccountPointDispatchHandler implements IAwardDispatchHandler {
     private IAwardRepository awardRepository;
 
     @Override
-    public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
-        String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
+    public void dispatchHandle(AwardDispatchAggregate awardDispatchAggregate) {
+
+        // 解析值
+        String awardValue = awardDispatchAggregate.getAwardEntity().getAwardValue();
         if (!StringUtils.isNumeric(awardValue)) {
             throw new AppException("固定积分配置错误：awardValue={}" + awardValue);
         }
         int fixedPoint = Integer.parseInt(awardValue);
-        dispatchHandleAggregate.setAccountPoint(fixedPoint);
-        awardRepository.increaseActivityAccountPoint(dispatchHandleAggregate);
 
+        // 构造对象
         UserAwardEntity userAwardEntity = UserAwardEntity.builder()
-                .orderId(dispatchHandleAggregate.getOrderId())
-                .userId(dispatchHandleAggregate.getUserId())
-                .activityId(dispatchHandleAggregate.getActivityId())
-                .awardId(dispatchHandleAggregate.getAwardId())
+                .orderId(awardDispatchAggregate.getOrderId())
+                .userId(awardDispatchAggregate.getUserId())
+                .activityId(awardDispatchAggregate.getActivityId())
+                .awardId(awardDispatchAggregate.getAwardId())
                 .awardSource(AwardSource.RAFFLE)
-                .awardName(dispatchHandleAggregate.getAwardEntity().getAwardName())
-                .awardDesc(dispatchHandleAggregate.getAwardEntity().getAwardDesc())
+                .awardName(awardDispatchAggregate.getAwardEntity().getAwardName())
+                .awardDesc(awardDispatchAggregate.getAwardEntity().getAwardDesc())
                 .awardDeadline(null)
-                .awardTime(dispatchHandleAggregate.getActivityAwardEntity().getAwardTime())
+                .awardTime(LocalDateTime.now())
                 .build();
-        dispatchHandleAggregate.setUserAwardEntity(userAwardEntity);
-        awardRepository.saveUserAward(dispatchHandleAggregate);
+
+        ActivityAccountEntity activityAccountEntity = awardDispatchAggregate.getActivityAccountEntity();
+        activityAccountEntity.setAccountPoint(fixedPoint);
+
+        awardRepository.saveUserAward(activityAccountEntity, awardDispatchAggregate.getActivityAwardEntity(), userAwardEntity);
     }
 
 }

@@ -22,16 +22,16 @@ import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
+import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.*;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
-import com.dasi.domain.trade.model.io.ConvertContext;
-import com.dasi.domain.trade.model.io.ConvertResult;
-import com.dasi.domain.trade.model.io.QueryActivityConvertContext;
-import com.dasi.domain.trade.model.io.QueryActivityConvertResult;
-import com.dasi.domain.trade.service.query.ITradeQuery;
-import com.dasi.domain.trade.service.trade.IPointTrade;
+import com.dasi.domain.point.model.io.TradeContext;
+import com.dasi.domain.point.model.io.TradeResult;
+import com.dasi.domain.point.model.io.QueryActivityConvertContext;
+import com.dasi.domain.point.model.io.QueryActivityConvertResult;
+import com.dasi.domain.point.service.query.IPointQuery;
 import com.dasi.types.model.Result;
 import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +71,7 @@ public class BigMarketController implements IBigMarketService {
     private IAwardQuery awardQuery;
 
     @Resource
-    private ITradeQuery tradeQuery;
+    private IPointQuery tradeQuery;
 
     @Resource
     private IPointTrade pointTrade;
@@ -132,7 +132,6 @@ public class BigMarketController implements IBigMarketService {
                 .collect(Collectors.toList());
 
         return Result.success(queryActivityConvertResponseList);
-
     }
 
     /**
@@ -143,6 +142,7 @@ public class BigMarketController implements IBigMarketService {
     @PostMapping("/query/award")
     @Override
     public Result<List<QueryActivityAwardResponse>> queryActivityAward(@RequestBody QueryActivityAwardRequest queryActivityAwardRequest) {
+
         String userId = queryActivityAwardRequest.getUserId();
         Long activityId = queryActivityAwardRequest.getActivityId();
 
@@ -201,11 +201,12 @@ public class BigMarketController implements IBigMarketService {
         Long activityId = queryActivityBehaviorRequest.getActivityId();
 
         QueryActivityBehaviorContext queryAccountContext = QueryActivityBehaviorContext.builder().userId(userId).activityId(activityId).build();
-        List<QueryActivityBehaviorResult> queryActivityBehaviorResultList = behaviorQuery.queryDistinctBehavior(queryAccountContext);
+        List<QueryActivityBehaviorResult> queryActivityBehaviorResultList = behaviorQuery.queryBehavior(queryAccountContext);
         List<QueryActivityBehaviorResponse> queryUserAwardResponseList = queryActivityBehaviorResultList.stream()
                 .map(queryActivityBehaviorResult -> QueryActivityBehaviorResponse.builder()
                         .behaviorName(queryActivityBehaviorResult.getBehaviorName())
                         .behaviorType(queryActivityBehaviorResult.getBehaviorType())
+                        .rewardDesc(queryActivityBehaviorResult.getRewardDesc())
                         .isDone(queryActivityBehaviorResult.getIsDone())
                         .build())
                 .collect(Collectors.toList());
@@ -213,6 +214,11 @@ public class BigMarketController implements IBigMarketService {
         return Result.success(queryUserAwardResponseList);
     }
 
+    /**
+     * 查询用户在当前活动的幸运值情况
+     * @param queryActivityLuckRequest activityId, userId
+     * @return accountLuck, luckThreshold
+     */
     @PostMapping("/query/luck")
     @Override
     public Result<QueryActivityLuckResponse> queryActivityLuck(@RequestBody QueryActivityLuckRequest queryActivityLuckRequest) {
@@ -222,42 +228,60 @@ public class BigMarketController implements IBigMarketService {
 
         QueryActivityLuckContext queryActivityLuckContext = QueryActivityLuckContext.builder().userId(userId).activityId(activityId).build();
         QueryActivityLuckResult queryActivityLuckResult = strategyQuery.queryActivityLuck(queryActivityLuckContext);
-
         QueryActivityLuckResponse queryActivityLuckResponse = QueryActivityLuckResponse.builder()
                 .accountLuck(queryActivityLuckResult.getAccountLuck())
-                .prevLuck(queryActivityLuckResult.getPrevLuck())
-                .nextLuck(queryActivityLuckResult.getNextLuck())
-                .awardNameList(queryActivityLuckResult.getAwardNameList())
+                .luckThreshold(queryActivityLuckResult.getLuckThreshold())
                 .build();
 
         return Result.success(queryActivityLuckResponse);
     }
 
-
-
-
-    @PostMapping("/assemble")
+    /**
+     * 执行用户在当前活动的互动行为
+     * @param behaviorRequest userId, activityId, behaviorType
+     * @return rewardDescList
+     */
+    @PostMapping("/behavior")
     @Override
-    public Result<Void> assemble(@RequestParam Long activityId) {
-        boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
-        boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
-        return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
-    }
+    public Result<BehaviorResponse> behavior(@RequestBody BehaviorRequest behaviorRequest) {
 
-    @PostMapping("/trade")
-    @Override
-    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
-
-        String userId = tradeRequest.getUserId();
-        Long tradeId = tradeRequest.getTradeId();
+        String userId = behaviorRequest.getUserId();
+        Long activityId = behaviorRequest.getActivityId();
+        String behaviorType = behaviorRequest.getBehaviorType();
         String businessNo = TimeUtil.thisDay(false);
 
-        ConvertContext convertContext = ConvertContext.builder().userId(userId).tradeId(tradeId).businessNo(businessNo).build();
-        ConvertResult convertResult = pointTrade.doPointTrade(convertContext);
-        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(convertResult.getTradeDesc()).build();
-        return Result.success(tradeResponse);
+        BehaviorContext behaviorContext = BehaviorContext.builder().userId(userId).activityId(activityId).behaviorType(BehaviorType.valueOf(behaviorType)).businessNo(businessNo).build();
+        BehaviorResult behaviorResult = behaviorReward.doBehaviorReward(behaviorContext);
+        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
+
+        return Result.success(behaviorResponse);
     }
 
+    /**
+     * 执行用户在当前活动的积分兑换
+     * @param convertRequest userId, activityId, tradeId
+     * @return tradeDesc
+     */
+    @PostMapping("/convert")
+    @Override
+    public Result<ConvertResponse> convert(@RequestBody ConvertRequest convertRequest) {
+
+        String userId = convertRequest.getUserId();
+        Long tradeId = convertRequest.getTradeId();
+        String businessNo = TimeUtil.thisDay(false);
+
+        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).businessNo(businessNo).build();
+        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
+        ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
+
+        return Result.success(convertResponse);
+    }
+
+    /**
+     * 用户在当前活动执行抽奖
+     * @param raffleRequest activityId, userId
+     * @return awardId, awardName
+     */
     @PostMapping("/raffle")
     @Override
     public Result<RaffleResponse> raffle(@RequestBody RaffleRequest raffleRequest) {
@@ -277,58 +301,17 @@ public class BigMarketController implements IBigMarketService {
         DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
-        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardType(distributeResult.getAwardType()).awardName(distributeResult.getAwardName()).build();
+        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).build();
         return Result.success(raffleResponse);
     }
 
-    @PostMapping("/behavior/sign")
+
+
+    @PostMapping("/assemble")
     @Override
-    public Result<BehaviorResponse> behaviorSign(@RequestBody BehaviorRequest behaviorRequest) {
-        String userId = behaviorRequest.getUserId();
-        Long activityId = behaviorRequest.getActivityId();
-        BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.SIGN);
-        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
-        return Result.success(behaviorResponse);
+    public Result<Void> assemble(@RequestParam Long activityId) {
+        boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
+        boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
+        return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
     }
-
-    @PostMapping("/behavior/like")
-    @Override
-    public Result<BehaviorResponse> behaviorLike(@RequestBody BehaviorRequest behaviorRequest) {
-        String userId = behaviorRequest.getUserId();
-        Long activityId = behaviorRequest.getActivityId();
-        BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.LIKE);
-        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
-        return Result.success(behaviorResponse);
-    }
-
-    @PostMapping("/behavior/share")
-    @Override
-    public Result<BehaviorResponse> behaviorShare(@RequestBody BehaviorRequest behaviorRequest) {
-        String userId = behaviorRequest.getUserId();
-        Long activityId = behaviorRequest.getActivityId();
-        BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.SHARE);
-        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
-        return Result.success(behaviorResponse);
-    }
-
-    @PostMapping("/behavior/comment")
-    @Override
-    public Result<BehaviorResponse> behaviorComment(@RequestBody BehaviorRequest behaviorRequest) {
-        String userId = behaviorRequest.getUserId();
-        Long activityId = behaviorRequest.getActivityId();
-        BehaviorResult behaviorResult = behavior(userId, activityId, BehaviorType.COMMENT);
-        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
-        return Result.success(behaviorResponse);
-    }
-
-    private BehaviorResult behavior(String userId, Long activityId, BehaviorType behaviorType) {
-        BehaviorContext behaviorContext = BehaviorContext.builder()
-                .userId(userId)
-                .activityId(activityId)
-                .behaviorType(behaviorType)
-                .businessNo(TimeUtil.thisDay(false))
-                .build();
-        return behaviorReward.doBehaviorReward(behaviorContext);
-    }
-
 }

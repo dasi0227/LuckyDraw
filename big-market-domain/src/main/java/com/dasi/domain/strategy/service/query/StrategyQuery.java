@@ -70,67 +70,27 @@ public class StrategyQuery implements IStrategyQuery {
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (activityId == null) throw new AppException("缺少参数 activityId");
 
-        // 1. 基础信息
         Long strategyId = strategyRepository.queryStrategyIdByActivityId(activityId);
         int accountLuck = strategyRepository.queryActivityAccountLuck(userId, activityId);
         String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, RuleModel.RULE_LUCK.name());
         List<StrategyAwardEntity> strategyAwardEntityList = strategyRepository.queryStrategyAwardListByActivityId(activityId);
         Map<String, AwardEntity> awardEntityMap = strategyRepository.queryAwardMapByActivityId(strategyAwardEntityList, activityId);
 
-        List<String> awardNameList = new ArrayList<>();
-
-        // 2. 没配置幸运值规则：直接返回所有奖品
-        if (StringUtils.isBlank(ruleValue)) {
-            for (AwardEntity awardEntity : awardEntityMap.values()) {
-                awardNameList.add(awardEntity.getAwardName());
-            }
-            return QueryActivityLuckResult.builder()
-                    .accountLuck(accountLuck)
-                    .prevLuck(-1)
-                    .nextLuck(-1)
-                    .awardNameList(awardNameList)
-                    .build();
-        }
-
-        // 3. 解析得到积分阈值和对应的奖品列表
-        Map<Integer, String> LuckMap = new TreeMap<>();
+        Map<String, List<String>> luckThreshold = new HashMap<>();
         for (String group : ruleValue.split(Delimiter.SPACE)) {
-            if (StringUtils.isBlank(group)) continue;
             String[] parts = group.split(Delimiter.COLON);
             if (parts.length != 2) throw new IllegalArgumentException("幸运值规则格式非法：" + group);
-            LuckMap.put(Integer.parseInt(parts[0]), parts[1]);
-        }
-
-        // 4. 根据用户积分找到 prevLuck（当前档）和 nextLuck（下一档）
-        int prevLuck = -1;
-        int nextLuck = -1;
-
-        for (Map.Entry<Integer, String> entry : LuckMap.entrySet()) {
-            Integer threshold = entry.getKey();
-            if (accountLuck >= threshold) {
-                prevLuck = threshold;
-            } else {
-                nextLuck = threshold;
-                break;
-            }
-        }
-
-        // 5. 选择本次应该展示的奖品列表
-        if (prevLuck == -1) {
-            for (AwardEntity awardEntity : awardEntityMap.values()) {
-                awardNameList.add(awardEntity.getAwardName());
-            }
-        } else {
-            for (String awardIdStr : LuckMap.get(prevLuck).split(Delimiter.COMMA)) {
-                awardNameList.add(awardEntityMap.get(awardIdStr).getAwardName());
-            }
+            String luck = parts[0];
+            String[] awardIds = parts[1].split(Delimiter.COMMA);
+            List<String> awardNames = Arrays.stream(awardIds)
+                    .map(awardId -> awardEntityMap.get(awardId).getAwardName())
+                    .collect(Collectors.toList());
+            luckThreshold.put(luck, awardNames);
         }
 
         return QueryActivityLuckResult.builder()
                 .accountLuck(accountLuck)
-                .prevLuck(prevLuck)
-                .nextLuck(nextLuck)
-                .awardNameList(awardNameList)
+                .luckThreshold(luckThreshold)
                 .build();
     }
 

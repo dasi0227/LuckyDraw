@@ -21,7 +21,7 @@ public class RechargeSkuStockEmptyEvent extends BaseEvent<Long> {
     public EventMessage<Long> buildEventMessage(Long data) {
         return EventMessage.<Long>builder()
                 .messageId(uniqueIdGenerator.nextMessageId())
-                .time(TimeUtil.thisTime(true))
+                .time(TimeUtil.thisMoment(true))
                 .data(data)
                 .build();
     }

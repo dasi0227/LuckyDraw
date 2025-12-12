@@ -10,9 +10,9 @@ import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
 import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.trade.model.io.PointRechargeContext;
-import com.dasi.domain.trade.model.io.PointRechargeResult;
-import com.dasi.domain.trade.service.recharge.IPointRecharge;
+import com.dasi.domain.point.model.io.TradeContext;
+import com.dasi.domain.point.model.io.TradeResult;
+import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class DispatchBehaviorReward {
     private ISkuRecharge skuRecharge;
 
     @Resource
-    private IPointRecharge pointRecharge;
+    private IPointTrade tradePoint;
 
     @Resource
     private IBehaviorReward behaviorReward;
@@ -44,39 +44,37 @@ public class DispatchBehaviorReward {
         String userId = dispatchBehaviorRewardMessage.getUserId();
         String bizId = dispatchBehaviorRewardMessage.getBizId();
         String orderId = dispatchBehaviorRewardMessage.getOrderId();
-        Long activityId = dispatchBehaviorRewardMessage.getActivityId();
 
         RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder().userId(userId).bizId(bizId).orderId(orderId).build();
         RewardType rewardType = dispatchBehaviorRewardMessage.getRewardType();
-        String rewardValue = dispatchBehaviorRewardMessage.getRewardValue();
+        Long rewardValue = Long.parseLong(dispatchBehaviorRewardMessage.getRewardValue());
 
         try {
-            // 2. 处理返利，TODO：通过websocket发送结果
+
+            // 2. 处理返利
             switch (rewardType) {
                 case SKU:
-                    Long skuId = Long.parseLong(rewardValue);
-                    SkuRechargeContext skuRechargeContext = SkuRechargeContext.builder().userId(userId).bizId(bizId).skuId(skuId).build();
+                    SkuRechargeContext skuRechargeContext = SkuRechargeContext.builder().userId(userId).bizId(bizId).skuId(rewardValue).build();
                     SkuRechargeResult skuRechargeResult = skuRecharge.doSkuRecharge(skuRechargeContext);
+                    log.debug("{}", skuRechargeResult);
                     break;
                 case POINT:
-                    Long tradeId = Long.parseLong(rewardValue);
-                    PointRechargeContext pointRechargeContext = PointRechargeContext.builder().userId(userId).bizId(bizId).tradeId(tradeId).activityId(activityId).build();
-                    PointRechargeResult pointRechargeResult = pointRecharge.doPointRecharge(pointRechargeContext);
+                    TradeContext tradeContext = TradeContext.builder().userId(userId).bizId(bizId).tradeId(rewardValue).build();
+                    TradeResult tradeResult = tradePoint.doPointTrade(tradeContext);
+                    log.debug("{}", tradeResult);
                     break;
                 default:
                     throw new AppException("奖励类型不存在：rewardType=" + rewardType);
             }
+
             // 3. 改变状态
             rewardOrderEntity.setRewardState(RewardState.USED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-        } catch (AppException e) {
-            rewardOrderEntity.setRewardState(RewardState.CANCELLED);
-            behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.error("【业务异常】", e);
+
         } catch (Exception e) {
             rewardOrderEntity.setRewardState(RewardState.CANCELLED);
             behaviorReward.updateRewardOrderState(rewardOrderEntity);
-            log.error("【系统异常】", e);
+            log.error("分发行为返利失败", e);
         }
     }
 

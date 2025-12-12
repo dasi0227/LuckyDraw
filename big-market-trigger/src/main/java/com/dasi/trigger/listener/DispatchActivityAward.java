@@ -7,7 +7,6 @@ import com.dasi.domain.award.model.io.DispatchContext;
 import com.dasi.domain.award.model.io.DispatchResult;
 import com.dasi.domain.award.service.dispatch.IAwardDispatch;
 import com.dasi.types.event.BaseEvent.EventMessage;
-import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -22,7 +21,7 @@ public class DispatchActivityAward {
     @Resource
     private IAwardDispatch awardDispatch;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "dispatch_raffle_award"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "dispatch_activity_award"))
     public void dispatchActivityAward(String message) {
         try {
             EventMessage<DispatchActivityAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DispatchActivityAwardMessage>>() {}.getType());
@@ -39,12 +38,10 @@ public class DispatchActivityAward {
                     .awardId(awardId)
                     .activityId(activityId)
                     .build();
-            // TODO：通过websocket发送结果
             DispatchResult dispatchResult = awardDispatch.doAwardDispatch(dispatchContext);
-        } catch (AppException e) {
-            log.error("【业务异常】", e);
+            log.debug("{}", dispatchResult);
         } catch (Exception e) {
-            log.error("【系统异常】", e);
+            log.error("分发抽奖奖品失败", e);
         }
     }
 

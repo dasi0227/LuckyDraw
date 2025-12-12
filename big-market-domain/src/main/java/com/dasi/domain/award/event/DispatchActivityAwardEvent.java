@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 @Component
 public class DispatchActivityAwardEvent extends BaseEvent<DispatchActivityAwardEvent.DispatchActivityAwardMessage> {
 
-    @Value("${spring.rabbitmq.topic.dispatch_raffle_award}")
+    @Value("${spring.rabbitmq.topic.dispatch_activity_award}")
     private String topic;
 
     @Override
@@ -30,7 +30,7 @@ public class DispatchActivityAwardEvent extends BaseEvent<DispatchActivityAwardE
     public EventMessage<DispatchActivityAwardMessage> buildEventMessage(DispatchActivityAwardMessage data) {
         return EventMessage.<DispatchActivityAwardMessage>builder()
                 .messageId(uniqueIdGenerator.nextMessageId())
-                .time(TimeUtil.thisTime(true))
+                .time(TimeUtil.thisMoment(true))
                 .data(data)
                 .build();
     }

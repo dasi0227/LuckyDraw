@@ -41,20 +41,13 @@ public abstract class AbstractBehaviorReward implements IBehaviorReward {
 
         // 3. 保存订单
         List<RewardOrderEntity> rewardOrderEntityList = saveRewardOrder(activityId, userId, businessNo, behaviorEntityList);
-        if (rewardOrderEntityList == null) {
-            throw new AppException("返利失败");
-        }
 
         // 4. 返回订单信息
         List<String> rewardDescList = rewardOrderEntityList.stream()
                 .map(RewardOrderEntity::getRewardDesc)
                 .collect(Collectors.toList());
-        List<String> orderIds = rewardOrderEntityList.stream()
-                .map(RewardOrderEntity::getOrderId)
-                .collect(Collectors.toList());
 
         return BehaviorResult.builder()
-                .orderIds(orderIds)
                 .rewardDescList(rewardDescList)
                 .build();
     }

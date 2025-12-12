@@ -15,7 +15,7 @@ public interface IBehaviorRepository {
 
     List<BehaviorEntity> queryBehaviorListByBehaviorType(Long activityId, BehaviorType behaviorType);
 
-    List<BehaviorEntity> queryDistinctBehaviorListByActivityId(Long activityId);
+    List<BehaviorEntity> queryBehaviorListByActivityId(Long activityId);
 
     Boolean queryExistBehaviorToday(RewardOrderEntity rewardOrderEntity);
 }

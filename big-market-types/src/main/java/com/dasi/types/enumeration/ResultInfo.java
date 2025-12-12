@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 public enum ResultInfo {
 
     SUCCESS("200", "成功"),
-    ERROR("500", "失败")
-
+    ERROR("500", "系统错误")
     ;
 
     private String code;

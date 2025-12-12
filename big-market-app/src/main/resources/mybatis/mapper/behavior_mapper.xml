@@ -20,8 +20,8 @@
         WHERE behavior_type = #{behaviorType} AND activity_id = #{activityId}
     </select>
 
-    <select id="queryDistinctBehaviorByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
-        SELECT DISTINCT behavior_name, behavior_type
+    <select id="queryBehaviorListByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT behavior_name, behavior_type, reward_desc
         FROM behavior
         WHERE activity_id = #{activityId}
         ORDER BY behavior_name

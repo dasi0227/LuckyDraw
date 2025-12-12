@@ -29,4 +29,10 @@
         WHERE order_id = #{orderId};
     </update>
 
+    <select id="queryTradeOrderByOrderId" parameterType="java.lang.String" resultMap="dataMap">
+        SELECT order_id, biz_id, user_id, trade_id, activity_id, trade_type, trade_state, trade_time
+        FROM trade_order
+        WHERE order_id = #{orderId}
+    </select>
+
 </mapper>

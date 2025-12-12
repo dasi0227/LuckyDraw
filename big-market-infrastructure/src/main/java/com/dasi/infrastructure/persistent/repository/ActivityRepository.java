@@ -370,6 +370,7 @@ public class ActivityRepository implements IActivityRepository {
                     return null;
                 } catch (Exception e) {
                     status.setRollbackOnly();
+                    log.error("创建账户时失败：error={}", e.getMessage());
                     throw new AppException("创建账户失败：userId=" + userId + ", activityId=" + activityId);
                 }
             });
@@ -440,6 +441,8 @@ public class ActivityRepository implements IActivityRepository {
 
                     // 写入订单
                     rechargeOrderDao.saveRechargeOrder(rechargeOrder);
+                    rechargeOrder.setRechargeState(RechargeState.USED.name());
+                    rechargeOrderDao.updateRechargeState(rechargeOrder);
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -450,9 +453,6 @@ public class ActivityRepository implements IActivityRepository {
             AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                rechargeOrder.setRechargeState(RechargeState.USED.name());
-                rechargeOrderDao.updateRechargeState(rechargeOrder);
-
                 log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),
@@ -515,6 +515,8 @@ public class ActivityRepository implements IActivityRepository {
 
                     // 保存抽奖订单
                     raffleOrderDao.saveRaffleOrder(raffleOrder);
+                    raffleOrder.setRaffleState(RaffleState.USED.name());
+                    raffleOrderDao.updateRaffleOrderState(raffleOrder);
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -525,8 +527,6 @@ public class ActivityRepository implements IActivityRepository {
             AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                raffleOrder.setRaffleState(RaffleState.USED.name());
-                raffleOrderDao.updateRaffleOrderState(raffleOrder);
                 log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
                         userId, activityId,
                         before.getTotalSurplus(),  after.getTotalSurplus(),

@@ -15,6 +15,8 @@ public class QueryActivityBehaviorResult {
 
     private String behaviorName;
 
+    private String rewardDesc;
+
     private Boolean isDone;
 
 }
