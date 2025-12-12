@@ -1,0 +1,1 @@
+export const namePool = Array.from({ length: 250 }, (_, idx) => `Guest${idx + 1}`);

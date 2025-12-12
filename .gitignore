@@ -1,41 +1,92 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ==================== OS / Editor ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+.idea/
+.vscode/
 *.iml
 *.ipr
+*.iws
+*.swp
+*.swo
+*~
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ==================== Logs / Runtime ====================
+log/
+logs/
+**/log/
+**/logs/
+*.log
+*.pid
+*.pid.lock
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# ==================== Java / Maven / Gradle ====================
+**/target/
+**/out/
+**/build/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+**/.classpath
+**/.project
+**/.settings/
+**/.factorypath
+**/.metadata/
+**/.recommenders/
+.nb-gradle/
+nbproject/
 
-### VS Code ###
-.vscode/
+# ==================== Spring Boot / Config ====================
+**/application-*.yml
+**/application-*.yaml
+**/application-*.properties
+!**/application.yml
+!**/application.yaml
+!**/application.properties
 
-### Mac OS ###
-.DS_Store
+**/*.jks
+**/*.p12
+**/*.pfx
+**/*.pem
+**/*.key
+**/*keystore*
+**/*secret*
 
-### 日志文件 ###
-.log
+**/.env
+**/.env.*
+!**/.env.example
+
+# ==================== Frontend (Node / Vite) ====================
+**/node_modules/
+**/dist/
+**/.vite/
+**/.cache/
+**/.turbo/
+**/.parcel-cache/
+**/.eslintcache
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==================== Test / Coverage ====================
+**/coverage/
+**/.nyc_output/
+
+# ==================== Docker / Local data ====================
+**/.docker/
+**/docker-data/
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# ==================== Misc ====================
+**/.history/
+**/.tmp/
+**/tmp/
+**/.DS_Store
