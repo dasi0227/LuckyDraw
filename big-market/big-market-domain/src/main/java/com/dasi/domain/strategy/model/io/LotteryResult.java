@@ -13,4 +13,8 @@ public class LotteryResult {
 
     private Long awardId;
 
+    private Boolean isLock;
+
+    private Boolean isEmpty;
+
 }

@@ -3,6 +3,7 @@ package com.dasi.domain.strategy.service.tree.impl;
 
 import com.dasi.domain.strategy.model.io.RuleCheckResult;
 import com.dasi.domain.strategy.model.type.RuleCheckOutcome;
+import com.dasi.domain.strategy.model.type.RuleModel;
 import com.dasi.domain.strategy.model.vo.RuleEdgeVO;
 import com.dasi.domain.strategy.model.vo.RuleNodeVO;
 import com.dasi.domain.strategy.model.vo.RuleTreeVO;
@@ -32,16 +33,29 @@ public class DefaultStrategyTreeEngine implements IStrategyTreeEngine {
         String treeRoot = this.ruleTreeVO.getTreeRoot();
         Map<String, RuleNodeVO> treeNodeMap = this.ruleTreeVO.getTreeNodeMap();
 
-        RuleCheckResult ruleCheckResult = null;
+        boolean isLock = false;
+        boolean isEmpty = false;
+
+        RuleCheckResult ruleCheckResult = new RuleCheckResult();
         RuleNodeVO curTreeNode = treeNodeMap.get(treeRoot);
         while (curTreeNode != null) {
+
             IStrategyTree ruleTree = ruleTreeMap.get(curTreeNode.getRuleModel());
             String ruleValue = curTreeNode.getRuleValue();
             ruleCheckResult = ruleTree.logic(userId, strategyId, awardId, ruleValue);
+
+            if (ruleCheckResult.getRuleCheckOutcome().equals(RuleCheckOutcome.CAPTURE)) {
+                RuleModel ruleModel = ruleCheckResult.getRuleModel();
+                isLock |= (ruleModel == RuleModel.RULE_LOCK);
+                isEmpty  |= (ruleModel == RuleModel.RULE_STOCK);
+            }
+
             String nextTreeNode = next(ruleCheckResult.getRuleCheckOutcome(), curTreeNode.getRuleEdgeList());
             curTreeNode = treeNodeMap.get(nextTreeNode);
         }
 
+        ruleCheckResult.setIsLock(isLock);
+        ruleCheckResult.setIsEmpty(isEmpty);
         return ruleCheckResult;
     }
 

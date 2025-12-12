@@ -50,7 +50,11 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
         ruleCheckResult = afterCheck(ruleCheckContext);
 
         // 5. 返回结果
-        return LotteryResult.builder().awardId(ruleCheckResult.getAwardId()).build();
+        return LotteryResult.builder()
+                .awardId(ruleCheckResult.getAwardId())
+                .isLock(ruleCheckResult.getIsLock())
+                .isEmpty(ruleCheckResult.getIsEmpty())
+                .build();
     }
 
     protected abstract RuleCheckResult beforeCheck(RuleCheckContext ruleCheckContext);

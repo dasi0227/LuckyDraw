@@ -15,4 +15,8 @@ public class RaffleResponse {
 
     private String awardName;
 
+    private Boolean isLock;
+
+    private Boolean isEmpty;
+
 }

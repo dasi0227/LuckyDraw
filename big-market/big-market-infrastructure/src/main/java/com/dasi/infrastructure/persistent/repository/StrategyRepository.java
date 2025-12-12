@@ -102,19 +102,19 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public int queryUserLotteryCountByActivityId(String userId, Long activityId) {
-        Long strategyId = queryStrategyIdByActivityId(activityId);
-        return queryUserLotteryCountByStrategyId(userId, strategyId);
+    public int queryUserLotteryCountByStrategyId(String userId, Long strategyId) {
+        Long activityId = queryActivityIdByStrategyId(strategyId);
+        return queryUserLotteryCountByActivityId(userId, activityId);
     }
 
     @Override
-    public int queryUserLotteryCountByStrategyId(String userId, Long strategyId) {
+    public int queryUserLotteryCountByActivityId(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
 
             ActivityAccount activityAccount = new ActivityAccount();
             activityAccount.setUserId(userId);
-            activityAccount.setActivityId(strategyId);
+            activityAccount.setActivityId(activityId);
             activityAccount = activityAccountDao.queryActivityAccount(activityAccount);
             if (activityAccount == null) return 0;
             return activityAccount.getTotalAllocate() - activityAccount.getTotalSurplus();
