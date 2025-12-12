@@ -10,6 +10,6 @@ public interface IBehaviorDao {
 
     List<Behavior> queryBehaviorListByBehaviorType(Behavior behavior);
 
-    List<Behavior> queryDistinctBehaviorByActivityId(Long activityId);
+    List<Behavior> queryBehaviorListByActivityId(Long activityId);
 
 }

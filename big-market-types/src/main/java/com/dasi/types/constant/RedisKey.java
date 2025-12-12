@@ -23,7 +23,6 @@ public class RedisKey {
     public static final String ACTIVITY_ID_KEY                      = "big_market:activity:entity:activity_id:";
     public static final String ACTIVITY_END_TIME_KEY                = "big_market:activity:entity:end_time:";
     public static final String BEHAVIOR_LIST                        = "big_market:behavior:entity:behavior_list:";
-    public static final String DISTINCT_BEHAVIOR_LIST = "big_market:behavior:entity:behavior_name_list:";
     public static final String PREFIX                               = "big_market:orderId:";
     public static final String RECHARGE_ORDER_ID_KEY                = "RECHARGE";
     public static final String RAFFLE_ORDER_ID_KEY                  = "RAFFLE";

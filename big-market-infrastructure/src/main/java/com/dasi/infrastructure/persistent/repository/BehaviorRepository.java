@@ -18,8 +18,10 @@ import com.dasi.infrastructure.persistent.po.RewardOrder;
 import com.dasi.infrastructure.persistent.po.Task;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.Delimiter;
+import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
+import com.dasi.types.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -87,19 +89,20 @@ public class BehaviorRepository implements IBehaviorRepository {
     }
 
     @Override
-    public List<BehaviorEntity> queryDistinctBehaviorListByActivityId(Long activityId) {
-        String cacheKey = RedisKey.DISTINCT_BEHAVIOR_LIST + activityId;
+    public List<BehaviorEntity> queryBehaviorListByActivityId(Long activityId) {
+        String cacheKey = RedisKey.BEHAVIOR_LIST + activityId;
         List<BehaviorEntity> behaviorEntityList = redisService.getValue(cacheKey);
         if (behaviorEntityList != null && !behaviorEntityList.isEmpty()) {
             return behaviorEntityList;
         }
 
-        List<Behavior> behaviorList = behaviorDao.queryDistinctBehaviorByActivityId(activityId);
+        List<Behavior> behaviorList = behaviorDao.queryBehaviorListByActivityId(activityId);
         if (behaviorList == null) throw new AppException("BehaviorList 不存在：activityId=" + activityId);
         behaviorEntityList = behaviorList.stream()
                 .map(behavior -> BehaviorEntity.builder()
                         .behaviorType(BehaviorType.valueOf(behavior.getBehaviorType()))
                         .behaviorName(behavior.getBehaviorName())
+                        .rewardDesc(behavior.getRewardDesc())
                         .build())
                 .collect(Collectors.toList());
 
@@ -129,9 +132,13 @@ public class BehaviorRepository implements IBehaviorRepository {
     public void saveRewardOrder(String userId, List<RewardOrderAggregate> rewardOrderAggregateList) {
         try {
             dbRouterStrategy.doRouter(userId);
-            Boolean success = transactionTemplate.execute(status -> {
+
+            transactionTemplate.executeWithoutResult(status -> {
                 for (RewardOrderAggregate rewardOrderAggregate : rewardOrderAggregateList) {
+
                     RewardOrderEntity rewardOrderEntity = rewardOrderAggregate.getRewardOrderEntity();
+                    String orderId = rewardOrderEntity.getOrderId();
+
                     RewardOrder rewardOrder = new RewardOrder();
                     rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
                     rewardOrder.setBizId(rewardOrderEntity.getBizId());
@@ -157,38 +164,41 @@ public class BehaviorRepository implements IBehaviorRepository {
                         taskDao.saveTask(task);
                     } catch (DuplicateKeyException e) {
                         status.setRollbackOnly();
-                        throw new AppException("用户已通过当前行为获取返利：behaviorType=" + rewardOrderEntity.getBehaviorType());
+                        log.error("【返利】当前行为今日已执行：userId={}, activityId={}, behaviorType={}", userId, rewardOrderEntity.getActivityId(), rewardOrderEntity.getBehaviorType());
+                        throw new BusinessException(ExceptionMessage.BEHAVIOR_ALREADY_JOINED_TODAY);
                     } catch (Exception e) {
                         status.setRollbackOnly();
-                        log.error("【返利】保存返利订单时发生错误：error={}", e.getMessage());
-                        return false;
+                        log.error("【返利】保存返利订单失败：orderId={}", orderId);
+                        throw e;
                     }
                 }
-                return true;
             });
 
-            if (Boolean.TRUE.equals(success)) {
-                for (RewardOrderAggregate rewardOrderAggregate : rewardOrderAggregateList) {
-                    log.info("【返利】保存返利订单成功：orderId={}", rewardOrderAggregate.getRewardOrderEntity().getOrderId());
-                    TaskEntity taskEntity = rewardOrderAggregate.getTaskEntity();
-                    Task task = new Task();
-                    task.setUserId(taskEntity.getUserId());
-                    task.setMessageId(taskEntity.getMessageId());
-                    try {
-                        eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
-                        task.setTaskState(TaskState.DISTRIBUTED.name());
-                        taskDao.updateTaskState(task);
-                        log.info("【返利】发送返利消息成功：messageId={}", taskEntity.getMessageId());
-                    } catch (Exception e) {
-                        task.setTaskState(TaskState.FAILED.name());
-                        taskDao.updateTaskState(task);
-                        log.info("【返利】发送返利消息失败：messageId={}", taskEntity.getMessageId());
-                    }
-                }
-            } else {
-                throw new AppException("保存返利订单失败");
-            }
+            for (RewardOrderAggregate rewardOrderAggregate : rewardOrderAggregateList) {
+                RewardOrderEntity rewardOrderEntity = rewardOrderAggregate.getRewardOrderEntity();
+                TaskEntity taskEntity = rewardOrderAggregate.getTaskEntity();
 
+                String orderId = rewardOrderEntity.getOrderId();
+                String messageId = taskEntity.getMessageId();
+
+                log.info("【返利】保存返利订单成功：orderId={}", orderId);
+
+                Task task = new Task();
+                task.setUserId(taskEntity.getUserId());
+                task.setMessageId(messageId);
+
+                try {
+                    eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
+                    task.setTaskState(TaskState.DISTRIBUTED.name());
+                    taskDao.updateTaskState(task);
+                    log.info("【返利】发送返利消息成功：messageId={}", messageId);
+                } catch (Exception e) {
+                    task.setTaskState(TaskState.FAILED.name());
+                    taskDao.updateTaskState(task);
+                    log.error("【返利】发送返利消息失败：messageId={}", messageId);
+                    throw e;
+                }
+            }
         } finally {
             dbRouterStrategy.clear();
         }

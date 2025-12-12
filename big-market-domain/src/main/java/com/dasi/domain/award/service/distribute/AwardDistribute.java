@@ -76,10 +76,8 @@ public class AwardDistribute implements IAwardDistribute {
         awardRepository.saveActivityAward(activityAwardEntity, taskEntity);
 
         return DistributeResult.builder()
-                .messageId(taskEntity.getMessageId())
                 .awardId(activityAwardEntity.getAwardId())
                 .awardName(awardEntity.getAwardName())
-                .awardType(awardEntity.getAwardType().name())
                 .build();
     }
 

@@ -10,6 +10,8 @@ public interface IActivityAccountDao {
 
     Integer queryActivityAccountLuck(ActivityAccount activityAccount);
 
+    Integer queryActivityAccountPoint(ActivityAccount activityAccount);
+
     void createActivityAccount(ActivityAccount activityAccount);
 
     void increaseActivityAccountRaffle(ActivityAccount activityAccount);

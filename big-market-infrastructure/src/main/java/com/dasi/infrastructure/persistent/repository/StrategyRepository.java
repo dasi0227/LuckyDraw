@@ -138,6 +138,7 @@ public class StrategyRepository implements IStrategyRepository {
     public int queryActivityAccountLuck(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);
+
             ActivityAccount activityAccount = new ActivityAccount();
             activityAccount.setUserId(userId);
             activityAccount.setActivityId(activityId);

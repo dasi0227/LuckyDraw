@@ -29,6 +29,12 @@
         WHERE user_id = #{userId} AND activity_id = #{activityId};
     </select>
 
+    <select id="queryActivityAccountPoint" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount" resultType="java.lang.Integer">
+        SELECT account_point
+        FROM activity_account
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </select>
+
     <insert id="createActivityAccount" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         INSERT INTO activity_account (user_id, activity_id, account_point, account_luck, total_allocate, total_surplus, month_limit, day_limit)
         VALUES (#{userId}, #{activityId}, #{accountPoint}, #{accountLuck}, #{totalAllocate}, #{totalSurplus}, #{monthLimit}, #{dayLimit});

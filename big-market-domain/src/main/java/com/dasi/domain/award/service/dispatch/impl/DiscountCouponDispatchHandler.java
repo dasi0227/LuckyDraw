@@ -1,7 +1,7 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
-import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.aggregate.AwardDispatchAggregate;
 import com.dasi.domain.award.model.entity.UserAwardEntity;
 import com.dasi.domain.award.model.type.AwardSource;
 import com.dasi.domain.award.model.type.AwardType;
@@ -23,28 +23,29 @@ public class DiscountCouponDispatchHandler implements IAwardDispatchHandler {
     @Resource
     private IAwardRepository awardRepository;
 
-
     @Override
-    public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
-        String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
+    public void dispatchHandle(AwardDispatchAggregate awardDispatchAggregate) {
+
+        String awardValue = awardDispatchAggregate.getAwardEntity().getAwardValue();
         if (!StringUtils.isNumeric(awardValue)) {
             throw new AppException("到期时间配置错误：awardValue={}" + awardValue);
         }
         long seconds = Long.parseLong(awardValue);
         LocalDateTime awardDeadline = LocalDateTime.now().plusSeconds(seconds);
+
         UserAwardEntity userAwardEntity = UserAwardEntity.builder()
-                .orderId(dispatchHandleAggregate.getOrderId())
-                .userId(dispatchHandleAggregate.getUserId())
-                .activityId(dispatchHandleAggregate.getActivityAwardEntity().getActivityId())
-                .awardId(dispatchHandleAggregate.getAwardId())
+                .orderId(awardDispatchAggregate.getOrderId())
+                .userId(awardDispatchAggregate.getUserId())
+                .activityId(awardDispatchAggregate.getActivityId())
+                .awardId(awardDispatchAggregate.getAwardId())
                 .awardSource(AwardSource.RAFFLE)
-                .awardName(dispatchHandleAggregate.getAwardEntity().getAwardName())
-                .awardDesc(dispatchHandleAggregate.getAwardEntity().getAwardDesc())
+                .awardName(awardDispatchAggregate.getAwardEntity().getAwardName())
+                .awardDesc(awardDispatchAggregate.getAwardEntity().getAwardDesc())
                 .awardDeadline(awardDeadline)
-                .awardTime(dispatchHandleAggregate.getActivityAwardEntity().getAwardTime())
+                .awardTime(LocalDateTime.now())
                 .build();
-        dispatchHandleAggregate.setUserAwardEntity(userAwardEntity);
-        awardRepository.saveUserAward(dispatchHandleAggregate);
+
+        awardRepository.saveUserAward(null, awardDispatchAggregate.getActivityAwardEntity(), userAwardEntity);
     }
 
 }

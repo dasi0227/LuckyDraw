@@ -31,7 +31,7 @@ public class DispatchBehaviorRewardEvent extends BaseEvent<DispatchBehaviorRewar
     public EventMessage<DispatchBehaviorRewardMessage> buildEventMessage(DispatchBehaviorRewardMessage data) {
         return EventMessage.<DispatchBehaviorRewardMessage>builder()
                 .messageId(uniqueIdGenerator.nextMessageId())
-                .time(TimeUtil.thisTime(true))
+                .time(TimeUtil.thisMoment(true))
                 .data(data)
                 .build();
     }
@@ -47,8 +47,6 @@ public class DispatchBehaviorRewardEvent extends BaseEvent<DispatchBehaviorRewar
         private String bizId;
 
         private String orderId;
-
-        private Long activityId;
 
         private RewardType rewardType;
 

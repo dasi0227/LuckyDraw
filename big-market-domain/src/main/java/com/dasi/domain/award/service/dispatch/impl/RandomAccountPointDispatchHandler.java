@@ -1,7 +1,8 @@
 package com.dasi.domain.award.service.dispatch.impl;
 
 import com.dasi.domain.award.annotation.AwardTypeConfig;
-import com.dasi.domain.award.model.aggregate.DispatchHandleAggregate;
+import com.dasi.domain.award.model.aggregate.AwardDispatchAggregate;
+import com.dasi.domain.award.model.entity.ActivityAccountEntity;
 import com.dasi.domain.award.model.entity.UserAwardEntity;
 import com.dasi.domain.award.model.type.AwardSource;
 import com.dasi.domain.award.model.type.AwardType;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
@@ -24,29 +26,33 @@ public class RandomAccountPointDispatchHandler implements IAwardDispatchHandler 
     private IAwardRepository awardRepository;
 
     @Override
-    public void dispatchHandle(DispatchHandleAggregate dispatchHandleAggregate) {
-        String awardValue = dispatchHandleAggregate.getAwardEntity().getAwardValue();
+    public void dispatchHandle(AwardDispatchAggregate awardDispatchAggregate) {
+
+        // 解析值
+        String awardValue = awardDispatchAggregate.getAwardEntity().getAwardValue();
         String[] pointRange = awardValue.split(Delimiter.COMMA);
         if (pointRange.length != 2) {
             throw new AppException("随机积分配置错误：awardValue={}" + awardValue);
         }
         int randomPoint = ThreadLocalRandom.current().nextInt(Integer.parseInt(pointRange[0]), Integer.parseInt(pointRange[1]) + 1);
-        dispatchHandleAggregate.setAccountPoint(randomPoint);
-        awardRepository.increaseActivityAccountPoint(dispatchHandleAggregate);
 
+        // 构造对象
         UserAwardEntity userAwardEntity = UserAwardEntity.builder()
-                .orderId(dispatchHandleAggregate.getOrderId())
-                .userId(dispatchHandleAggregate.getUserId())
-                .awardId(dispatchHandleAggregate.getAwardId())
-                .activityId(dispatchHandleAggregate.getActivityId())
+                .orderId(awardDispatchAggregate.getOrderId())
+                .userId(awardDispatchAggregate.getUserId())
+                .activityId(awardDispatchAggregate.getActivityId())
+                .awardId(awardDispatchAggregate.getAwardId())
                 .awardSource(AwardSource.RAFFLE)
-                .awardName(dispatchHandleAggregate.getAwardEntity().getAwardName())
-                .awardDesc(dispatchHandleAggregate.getAwardEntity().getAwardDesc())
+                .awardName(awardDispatchAggregate.getAwardEntity().getAwardName())
+                .awardDesc(awardDispatchAggregate.getAwardEntity().getAwardDesc())
                 .awardDeadline(null)
-                .awardTime(dispatchHandleAggregate.getActivityAwardEntity().getAwardTime())
+                .awardTime(LocalDateTime.now())
                 .build();
-        dispatchHandleAggregate.setUserAwardEntity(userAwardEntity);
-        awardRepository.saveUserAward(dispatchHandleAggregate);
+
+        ActivityAccountEntity activityAccountEntity = awardDispatchAggregate.getActivityAccountEntity();
+        activityAccountEntity.setAccountPoint(randomPoint);
+
+        awardRepository.saveUserAward(activityAccountEntity, awardDispatchAggregate.getActivityAwardEntity(), userAwardEntity);
     }
 
 }

@@ -11,11 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DistributeResult {
 
-    private String messageId;
-
     private Long awardId;
-
-    private String awardType;
 
     private String awardName;
 

@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 @DBRouterStrategy(splitTable = true)
 public interface ITradeOrderDao {
 
+    TradeOrder queryTradeOrderByOrderId(String orderId);
+
     void saveTradeOrder(TradeOrder tradeOrder);
 
     void updateTradeState(TradeOrder tradeOrder);

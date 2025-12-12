@@ -6,6 +6,7 @@ public enum BehaviorType {
     SURF,
     COMMENT,
     SHARE,
+    COLLECT,
     LIKE;
 
 }

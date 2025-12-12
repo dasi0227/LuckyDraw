@@ -13,8 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class BehaviorResult {
 
-    private List<String> orderIds;
-
     private List<String> rewardDescList;
 
 }

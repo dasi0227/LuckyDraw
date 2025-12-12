@@ -73,7 +73,6 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
                         .userId(rewardOrderEntity.getUserId())
                         .bizId(rewardOrderEntity.getBizId())
                         .orderId(rewardOrderEntity.getOrderId())
-                        .activityId(activityId)
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .build();
@@ -97,11 +96,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
             rewardOrderAggregateList.add(rewardOrderAggregate);
         }
 
-        if (rewardOrderAggregateList.isEmpty()) {
-            log.info("【返利】当前行为无法触发任何【返利】");
-        } else {
-            behaviorRepository.saveRewardOrder(userId, rewardOrderAggregateList);
-        }
+        behaviorRepository.saveRewardOrder(userId, rewardOrderAggregateList);
 
         return rewardOrderEntityList;
     }

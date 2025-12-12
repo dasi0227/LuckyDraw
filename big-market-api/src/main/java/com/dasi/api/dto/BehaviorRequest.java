@@ -15,4 +15,6 @@ public class BehaviorRequest {
 
     private Long activityId;
 
+    private String behaviorType;
+
 }
