@@ -13,13 +13,13 @@ VALUES (1001, '【测试策略1001】黑名单+幸运值', 'RULE_BLACKLIST,RULE_
 DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
 INSERT INTO award (award_id, award_type, award_name, award_value, award_desc)
-VALUES (2001, 'RANDOM_ACCOUNT_POINT', '随机积分 1-10', '1,10', '黑名单奖品，随机积分'),
-       (2002, 'RANDOM_ACCOUNT_POINT', '随机积分 1-50', '1,50', '兜底奖品，固定积分'),
+VALUES (2001, 'RANDOM_ACCOUNT_POINT', '随机积分 110', '1,10', '黑名单奖品，随机积分'),
+       (2002, 'RANDOM_ACCOUNT_POINT', '随机积分 1--50', '1,50', '兜底奖品，固定积分'),
        (2003, 'FIXED_ACCOUNT_POINT', '固定积分 66', '66', '兜底奖品，固定积分'),
        (2004, 'FIXED_ACCOUNT_POINT', '固定积分 88', '88', '兜底奖品，固定积分'),
 
-       (2011, 'RANDOM_ACCOUNT_POINT', '随机积分 10-50', '10,50', '积分奖品。随机'),
-       (2012, 'RANDOM_ACCOUNT_POINT', '随机积分 50-100', '50,100', '积分奖品，随机'),
+       (2011, 'RANDOM_ACCOUNT_POINT', '随机积分 10--50', '10,50', '积分奖品。随机'),
+       (2012, 'RANDOM_ACCOUNT_POINT', '随机积分 50--100', '50,100', '积分奖品，随机'),
        (2013, 'FIXED_ACCOUNT_POINT', '固定积分 30', '30', '积分奖品，固定'),
        (2014, 'FIXED_ACCOUNT_POINT', '固定积分 80', '80', '积分奖品，固定'),
 
@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS strategy_award;
 CREATE TABLE strategy_award LIKE big_market_table.strategy_award;
 INSERT INTO strategy_award (strategy_id, award_id, tree_id, award_title, award_allocate, award_surplus, award_rate,
                             award_index)
-VALUES (1001, 2011, 'TREE_STOCK', '【测试策略1001测试奖品2011】走TREE_STOCK', 100, 100, 0.3500, 1),
+VALUES (1001, 2011, 'TREE_STOCK', '【测试策略1001测试奖品2011】走TREE_STOCK', 100, 0, 0.3500, 1),
        (1001, 2012, 'TREE_STOCK', '【测试策略1001测试奖品2012】走TREE_STOCK', 80, 80, 0.2500, 5),
        (1001, 2013, 'TREE_STOCK', '【测试策略1001测试奖品2013】走TREE_STOCK', 60, 60, 0.1500, 2),
        (1001, 2014, 'TREE_STOCK', '【测试策略1001测试奖品2014】走TREE_STOCK', 40, 40, 0.1000, 7),

@@ -37,6 +37,7 @@ public class RuleStockTree implements IStrategyTree {
                     .awardId(awardId)
                     .strategyId(strategyId)
                     .build();
+
             // 扣减成功：放到延迟队列之中，异步操作数据库
             strategyRepository.sendStrategyAwardStockConsumeToMQ(stockUpdateRequest);
             return RuleCheckResult.builder()

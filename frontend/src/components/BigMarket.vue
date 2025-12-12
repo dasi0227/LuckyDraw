@@ -174,13 +174,13 @@
     <transition name="fade">
       <div v-if="rewardModal.visible" class="reward-modal-overlay" @click="closeRewardModal">
         <div class="reward-modal" @click.stop>
-          <h3>{{ rewardModal.title || '🎉 恭喜获得奖励 🎉' }}</h3>
+          <h3>{{ '🎉 恭喜获得奖励 🎉' }}</h3>
           <ul>
             <li v-for="(text, idx) in rewardModal.rewards" :key="idx">
               <span class="reward-pill">{{ text }}</span>
             </li>
           </ul>
-          <button class="modal-close" @click="closeRewardModal">好的</button>
+          <button class="modal-close" @click="closeRewardModal">OK</button>
         </div>
         <div class="confetti-layer">
           <span
@@ -207,7 +207,21 @@
           @animationend="errorModal.shake = false"
         >
           <p>{{ errorModal.message }}</p>
-          <button class="modal-close error-close" @click="closeErrorModal">我知道了</button>
+          <button class="modal-close error-close" @click="closeErrorModal">我已知晓</button>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-if="warnModal.visible" class="warn-modal-overlay" @click="closeWarnModal">
+        <div
+          class="warn-modal"
+          :class="{ shaking: warnModal.shake }"
+          @click.stop
+          @animationend="warnModal.shake = false"
+        >
+          <h3>{{ warnModal.title }}</h3>
+          <p v-for="(line, idx) in warnModal.lines" :key="idx">{{ line }}</p>
+          <button class="modal-close warn-close" @click="closeWarnModal">我已了解</button>
         </div>
       </div>
     </transition>
@@ -219,6 +233,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
+import { namePool } from '../utils/name.js';
 import api from '../request/api.js';
 
 const userStats = reactive({
@@ -239,6 +254,7 @@ const luckGoal = ref(150);
 const luckMarksData = ref([]);
 const rewardModal = ref({ visible: false, rewards: [], title: '' });
 const confettiPieces = ref([]);
+const warnModal = ref({ visible: false, title: '提示', lines: [], shake: false });
 const errorModal = ref({ visible: false, message: '', shake: false });
 const behaviors = ref([]);
 
@@ -254,6 +270,10 @@ const brushColors = [
 
 function randomBrush() {
   return brushColors[Math.floor(Math.random() * brushColors.length)];
+}
+
+function randomName() {
+  return namePool[Math.floor(Math.random() * namePool.length)];
 }
 
 const gridOrderTemplate = [0, 1, 2, 5, 8, 7, 6, 3];
@@ -320,6 +340,27 @@ const addPersonalRecord = (record) => {
   if (personalRecords.value.length > maxListLength) {
     personalRecords.value.pop();
   }
+};
+
+const seedHistoryRecords = (count = 10) => {
+  if (!wheelPrizes.value.length) return;
+
+  const now = Date.now();
+  const times = Array.from({ length: count })
+    .map(() => now - Math.floor(Math.random() * 60_000))
+    .sort((a, b) => b - a);
+
+  historyRecords.value = times.map((ts, idx) => {
+    const randomPrize = wheelPrizes.value[Math.floor(Math.random() * wheelPrizes.value.length)];
+    const d = new Date(ts);
+
+    return {
+      id: crypto.randomUUID ? crypto.randomUUID() : `${ts}-${idx}`,
+      user: randomName(),
+      prize: randomPrize.label,
+      time: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    };
+  });
 };
 
 const handleRedeemPoints = async (item) => {
@@ -434,6 +475,32 @@ const closeErrorModal = () => {
   errorModal.value = { visible: false, message: '', shake: false };
 };
 
+const showWarnModal = ({ isLock, isEmpty, awardName }) => {
+  const lines = [];
+  let title = '提示';
+
+  if (isLock) {
+    title = '奖品未解锁';
+    lines.push('当前抽奖次数不够，请多多参与抽奖！');
+    lines.push(`获取兜底奖品：${awardName}`);
+  } else if (isEmpty) {
+    title = '奖品已抽完';
+    lines.push('当前奖品库存不足，请尽早参与活动！');
+    lines.push(`获取兜底奖品：${awardName}`);
+  } else {
+    lines.push('提示');
+  }
+
+  warnModal.value = { visible: true, title, lines, shake: true };
+  setTimeout(() => {
+    warnModal.value = { ...warnModal.value, shake: false };
+  }, 400);
+};
+
+const closeWarnModal = () => {
+  warnModal.value = { visible: false, title: '提示', lines: [], shake: false };
+};
+
 const showLuckDetail = (mark) => {
   const detailText = mark?.detail || mark?.label || mark?.value || '暂无详情';
   window.alert(`阈值 ${mark?.value ?? ''}: ${detailText}`);
@@ -546,6 +613,9 @@ const fetchActivityAwardData = async (activityId, userId) => {
       needLotteryCount: award?.needLotteryCount ?? 0,
       bg: randomBrush()
     }));
+    if (!historyRecords.value.length) {
+      seedHistoryRecords(10);
+    }
   } catch (error) {
     console.error('获取活动奖品信息失败: ', error);
   }
@@ -580,6 +650,9 @@ watch(
     fetchUserAwardData(currentActivityId.value, currentUserId.value);
     fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    if (!historyRecords.value.length) {
+      seedHistoryRecords();
+    }
   },
   { immediate: true },
 );
@@ -589,21 +662,29 @@ const highlightIndex = ref(4);
 const isRolling = ref(false);
 let rollingTimer = null;
 let historyTimer = null;
+
 const startGridLottery = async () => {
   const prizeCount = Math.min(highlightSequence.length, wheelPrizes.value.length);
   if (isRolling.value || !prizeCount) return;
   isRolling.value = true;
 
   let resultOrderIndex = Math.floor(Math.random() * prizeCount);
+  let raffleFlags = { isLock: false, isEmpty: false, awardName: '' };
+
   try {
     const resp = await api.doRaffle({
       activityId: currentActivityId.value,
       userId: currentUserId.value,
     });
+
+    raffleFlags = {
+      isLock: !!resp?.isLock,
+      isEmpty: !!resp?.isEmpty,
+      awardName: resp?.awardName || '',
+    };
+
     const awardId = resp?.awardId;
-    const foundIndex = wheelPrizes.value.findIndex(
-      (p) => String(p.id) === String(awardId),
-    );
+    const foundIndex = wheelPrizes.value.findIndex((p) => String(p.id) === String(awardId));
     if (foundIndex >= 0) {
       resultOrderIndex = foundIndex % prizeCount;
     }
@@ -612,8 +693,10 @@ const startGridLottery = async () => {
     showErrorModal(error?.message || '抽奖失败');
     return;
   }
+
   let pointer = highlightSequence.indexOf(highlightIndex.value);
   if (pointer === -1) pointer = 0;
+
   const seqLength = highlightSequence.length;
   const extraSteps = (resultOrderIndex - pointer + seqLength) % seqLength;
   const totalSteps = seqLength * 3 + extraSteps + 1;
@@ -623,34 +706,54 @@ const startGridLottery = async () => {
     pointer = (pointer + 1) % seqLength;
     highlightIndex.value = highlightSequence[pointer];
     steps += 1;
+
     if (steps < totalSteps) {
       const delay = Math.min(80 + steps * 8, 260);
       rollingTimer = setTimeout(tick, delay);
+      return;
+    }
+
+    // ✅ 停止滚动
+    isRolling.value = false;
+
+    const prize = wheelPrizes.value[resultOrderIndex] || { label: '敬请期待', rate: 0 };
+    const finalName = raffleFlags.awardName || prize.label;
+
+    // ✅ 列表用后端返回的 awardName（兜底也能对上）
+    addHistoryRecord({
+      id: Date.now(),
+      user: '你',
+      prize: finalName,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    });
+
+    addPersonalRecord({
+      id: Date.now(),
+      prize: finalName,
+      time: formatDateTime(new Date()),
+    });
+
+    luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
+
+    if (raffleFlags.isLock || raffleFlags.isEmpty) {
+      showWarnModal({
+        isLock: raffleFlags.isLock,
+        isEmpty: raffleFlags.isEmpty,
+        awardName: finalName,
+      });
     } else {
-      isRolling.value = false;
-      const prize =
-        wheelPrizes.value[resultOrderIndex] || { label: '敬请期待', rate: 0 };
-      addHistoryRecord({
-        id: Date.now(),
-        user: '你',
-        prize: prize.label,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      });
-      addPersonalRecord({
-        id: Date.now(),
-        prize: prize.label,
-        time: formatDateTime(new Date()),
-      });
-      luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
       rewardModal.value = {
         visible: true,
         title: '🎉 抽奖成功，恭喜获得奖励 🎉',
-        rewards: [prize.label],
+        rewards: [finalName],
       };
       createConfetti();
-      highlightIndex.value = 4; // reset focus to start button
     }
+
+    highlightIndex.value = 4;
+    fetchActivityAwardData(currentActivityId.value, currentUserId.value);
   };
+
   rollingTimer = setTimeout(tick, 80);
 };
 
@@ -663,8 +766,27 @@ onBeforeUnmount(() => {
   }
 });
 
+const scheduleNextHistory = () => {
+  const delay = 1000 + Math.random() * 9000; // 1s ~ 10s
+
+  historyTimer = setTimeout(() => {
+    if (wheelPrizes.value.length) {
+      const randomPrize = wheelPrizes.value[Math.floor(Math.random() * wheelPrizes.value.length)];
+      addHistoryRecord({
+        id: Date.now(),
+        user: randomName(),
+        prize: randomPrize.label,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      });
+    }
+
+    scheduleNextHistory(); // 继续下一次
+  }, delay);
+};
+
 onMounted(() => {
   luckValue.value = 48;
+  scheduleNextHistory();
 });
 </script>
 
@@ -924,6 +1046,22 @@ onMounted(() => {
 
 .history-list.personal ul {
   text-align: left;
+}
+
+.history-list.personal li {
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-list.personal li strong {
+  flex: 1;
+}
+
+.history-list.personal li span {
+  min-width: 180px;
+  text-align: right;
+  font-family: monospace;
 }
 
 .lottery-wrapper {
@@ -1523,5 +1661,112 @@ onMounted(() => {
 .error-close:active {
   transform: translateY(0);
   box-shadow: 0 10px 20px rgba(239, 68, 68, 0.30);
+}
+
+/* ============ warn 弹窗（黄色系） ============ */
+.warn-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, rgba(251, 191, 36, 0.18), rgba(0, 0, 0, 0.62) 62%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1001;
+}
+
+.warn-modal {
+  position: relative;
+  overflow: hidden;
+
+  width: min(420px, calc(100vw - 36px));
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+  border-radius: 20px;
+  padding: 1.2rem 1.4rem;
+  min-width: 240px;
+
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+
+  text-align: center;
+  font-weight: 800;
+  color: #92400e;
+
+  transform: translateY(4px);
+}
+
+.warn-modal h3 {
+  margin: 0 0 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #7c2d12;
+}
+
+.warn-modal p {
+  margin: 0.35rem 0;
+  font-weight: 800;
+}
+
+.warn-modal::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 22px;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.55),
+    rgba(245, 158, 11, 0.22),
+    rgba(255, 237, 185, 0.18)
+  );
+  opacity: 0.34;
+  filter: blur(18px);
+  z-index: -1;
+}
+
+/* 不要顶部球体 */
+.warn-modal::after {
+  content: none !important;
+}
+
+.warn-modal.shaking {
+  animation: warn-shake 0.4s ease-in-out 0s 1;
+}
+
+@keyframes warn-shake {
+  0%, 100% { transform: translateX(0) translateY(4px); }
+  20% { transform: translateX(-12px) translateY(4px); }
+  40% { transform: translateX(12px) translateY(4px); }
+  60% { transform: translateX(-8px) translateY(4px); }
+  80% { transform: translateX(8px) translateY(4px); }
+}
+
+.warn-close {
+  margin-top: 0.8rem;
+  border: none;
+  width: 100%;
+  padding: 0.75rem 1.1rem;
+  border-radius: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 14px 26px rgba(245, 158, 11, 0.35);
+
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.warn-close:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(245, 158, 11, 0.45);
+  filter: saturate(1.05);
+}
+
+.warn-close:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.30);
 }
 </style>

@@ -22,4 +22,10 @@ public class RuleCheckResult {
     /** 最后应用的检查结果 */
     private RuleCheckOutcome ruleCheckOutcome;
 
+    /** 是否上锁了 */
+    private Boolean isLock;
+
+    /** 是否没库存了 */
+    private Boolean isEmpty;
+
 }

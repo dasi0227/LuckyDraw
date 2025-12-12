@@ -22,19 +22,9 @@ public interface IBigMarketService {
 
 
 
-
-
-
-
-
-
-    Result<Void> assemble(Long activityId);
-
     Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
 
-
     Result<BehaviorResponse> behavior(BehaviorRequest behaviorRequest);
-
 
     Result<ConvertResponse> convert(ConvertRequest convertRequest);
 

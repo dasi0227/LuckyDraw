@@ -6,7 +6,6 @@ import com.dasi.domain.activity.model.io.QueryActivityAccountContext;
 import com.dasi.domain.activity.model.io.QueryActivityAccountResult;
 import com.dasi.domain.activity.model.io.RaffleContext;
 import com.dasi.domain.activity.model.io.RaffleResult;
-import com.dasi.domain.activity.service.assemble.IActivityAssemble;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.award.model.io.DistributeContext;
@@ -22,20 +21,22 @@ import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.point.service.trade.IPointTrade;
-import com.dasi.domain.strategy.model.io.*;
-import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
-import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
-import com.dasi.domain.strategy.service.query.IStrategyQuery;
-import com.dasi.domain.point.model.io.TradeContext;
-import com.dasi.domain.point.model.io.TradeResult;
 import com.dasi.domain.point.model.io.QueryActivityConvertContext;
 import com.dasi.domain.point.model.io.QueryActivityConvertResult;
+import com.dasi.domain.point.model.io.TradeContext;
+import com.dasi.domain.point.model.io.TradeResult;
 import com.dasi.domain.point.service.query.IPointQuery;
+import com.dasi.domain.point.service.trade.IPointTrade;
+import com.dasi.domain.strategy.model.io.*;
+import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
+import com.dasi.domain.strategy.service.query.IStrategyQuery;
 import com.dasi.types.model.Result;
 import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -76,11 +77,6 @@ public class BigMarketController implements IBigMarketService {
     @Resource
     private IPointTrade pointTrade;
 
-    @Resource
-    private IActivityAssemble activityAssemble;
-
-    @Resource
-    private IStrategyAssemble strategyAssemble;
 
     /**
      * 查询用户在当前活动的基本信息
@@ -158,7 +154,6 @@ public class BigMarketController implements IBigMarketService {
                         .isLock(queryActivityAwardResult.getIsLock())
                         .build())
                 .collect(Collectors.toList());
-
 
         return Result.success(queryActivityAwardResponseList);
     }
@@ -280,7 +275,7 @@ public class BigMarketController implements IBigMarketService {
     /**
      * 用户在当前活动执行抽奖
      * @param raffleRequest activityId, userId
-     * @return awardId, awardName
+     * @return awardId, awardName, isLock, isEmpty
      */
     @PostMapping("/raffle")
     @Override
@@ -301,17 +296,8 @@ public class BigMarketController implements IBigMarketService {
         DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
-        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).build();
+        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).isLock(lotteryResult.getIsLock()).isEmpty(lotteryResult.getIsEmpty()).build();
         return Result.success(raffleResponse);
     }
 
-
-
-    @PostMapping("/assemble")
-    @Override
-    public Result<Void> assemble(@RequestParam Long activityId) {
-        boolean flag1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
-        boolean flag2 = strategyAssemble.assembleStrategyByActivityId(activityId);
-        return flag1 && flag2 ? Result.success("装配活动成功") : Result.error("装配活动失败");
-    }
 }

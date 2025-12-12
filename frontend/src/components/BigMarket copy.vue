@@ -219,6 +219,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
+import { namePool } from '../utils/name.js';
 import api from '../request/api.js';
 
 const userStats = reactive({
@@ -254,6 +255,10 @@ const brushColors = [
 
 function randomBrush() {
   return brushColors[Math.floor(Math.random() * brushColors.length)];
+}
+
+function randomName() {
+  return namePool[Math.floor(Math.random() * namePool.length)];
 }
 
 const gridOrderTemplate = [0, 1, 2, 5, 8, 7, 6, 3];
@@ -320,6 +325,27 @@ const addPersonalRecord = (record) => {
   if (personalRecords.value.length > maxListLength) {
     personalRecords.value.pop();
   }
+};
+
+const seedHistoryRecords = (count = 10) => {
+  if (!wheelPrizes.value.length) return;
+
+  const now = Date.now();
+  const times = Array.from({ length: count })
+    .map(() => now - Math.floor(Math.random() * 60_000))
+    .sort((a, b) => b - a);
+
+  historyRecords.value = times.map((ts, idx) => {
+    const randomPrize = wheelPrizes.value[Math.floor(Math.random() * wheelPrizes.value.length)];
+    const d = new Date(ts);
+
+    return {
+      id: crypto.randomUUID ? crypto.randomUUID() : `${ts}-${idx}`,
+      user: randomName(),
+      prize: randomPrize.label,
+      time: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    };
+  });
 };
 
 const handleRedeemPoints = async (item) => {
@@ -547,7 +573,7 @@ const fetchActivityAwardData = async (activityId, userId) => {
       bg: randomBrush()
     }));
     if (!historyRecords.value.length) {
-      seedHistoryRecords();
+      seedHistoryRecords(10);
     }
   } catch (error) {
     console.error('获取活动奖品信息失败: ', error);
@@ -573,23 +599,6 @@ const fetchUserAwardData = async (activityId, userId) => {
   }
 };
 
-const seedHistoryRecords = () => {
-  const fakeNames = ['Mark', 'Jenny', 'Daren', 'Suki', 'Eric', 'Mia', 'Leo', 'Anna'];
-  const prizes = wheelPrizes.value.length ? wheelPrizes.value : [{ label: '敬请期待' }];
-  const count = Math.min(maxListLength, 6 + Math.floor(Math.random() * 3));
-  historyRecords.value = Array.from({ length: count }).map(() => {
-    const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
-    const randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    return {
-      id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + Math.random(),
-      user: randomName,
-      prize: randomPrize.label,
-      time: timestamp,
-    };
-  });
-};
-
 watch(
   () => route.params.activityId,
   async (newActivityId) => {
@@ -600,6 +609,9 @@ watch(
     fetchUserAwardData(currentActivityId.value, currentUserId.value);
     fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    if (!historyRecords.value.length) {
+      seedHistoryRecords();
+    }
   },
   { immediate: true },
 );
@@ -668,7 +680,8 @@ const startGridLottery = async () => {
         rewards: [prize.label],
       };
       createConfetti();
-      highlightIndex.value = 4; // reset focus to start button
+      highlightIndex.value = 4;
+      fetchActivityAwardData(currentActivityId.value, currentUserId.value);
     }
   };
   rollingTimer = setTimeout(tick, 80);
@@ -683,22 +696,27 @@ onBeforeUnmount(() => {
   }
 });
 
-onMounted(() => {
-  const fakeNames = ['Mark', 'Jenny', 'Daren', 'Suki', 'Eric', 'Mia'];
-  historyTimer = setInterval(() => {
-    if (!wheelPrizes.value.length) return;
-    const randomPrize = wheelPrizes.value[Math.floor(Math.random() * wheelPrizes.value.length)];
-    const randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    addHistoryRecord({
-      id: Date.now(),
-      user: randomName,
-      prize: randomPrize.label,
-      time: timestamp,
-    });
-  }, 8000);
+const scheduleNextHistory = () => {
+  const delay = 1000 + Math.random() * 9000; // 1s ~ 10s
 
+  historyTimer = setTimeout(() => {
+    if (wheelPrizes.value.length) {
+      const randomPrize = wheelPrizes.value[Math.floor(Math.random() * wheelPrizes.value.length)];
+      addHistoryRecord({
+        id: Date.now(),
+        user: randomName(),
+        prize: randomPrize.label,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      });
+    }
+
+    scheduleNextHistory(); // 继续下一次
+  }, delay);
+};
+
+onMounted(() => {
   luckValue.value = 48;
+  scheduleNextHistory();
 });
 </script>
 
@@ -958,6 +976,22 @@ onMounted(() => {
 
 .history-list.personal ul {
   text-align: left;
+}
+
+.history-list.personal li {
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-list.personal li strong {
+  flex: 1;
+}
+
+.history-list.personal li span {
+  min-width: 180px;
+  text-align: right;
+  font-family: monospace;
 }
 
 .lottery-wrapper {
