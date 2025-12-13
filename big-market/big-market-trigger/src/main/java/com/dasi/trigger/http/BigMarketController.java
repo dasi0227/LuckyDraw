@@ -2,10 +2,7 @@ package com.dasi.trigger.http;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
-import com.dasi.domain.activity.model.io.QueryActivityAccountContext;
-import com.dasi.domain.activity.model.io.QueryActivityAccountResult;
-import com.dasi.domain.activity.model.io.RaffleContext;
-import com.dasi.domain.activity.model.io.RaffleResult;
+import com.dasi.domain.activity.model.io.*;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.award.model.io.DistributeContext;
@@ -230,6 +227,33 @@ public class BigMarketController implements IBigMarketService {
 
         return Result.success(queryActivityLuckResponse);
     }
+
+    /**
+     * 查询活动信息
+     * @param activityInfoRequest activityId
+     * @return 活动的基本信息和参与情况
+     */
+    @PostMapping("/query/info")
+    @Override
+    public Result<QueryActivityInfoResponse> queryActivityInfo(@RequestBody QueryActivityInfoRequest activityInfoRequest) {
+
+        Long activityId = activityInfoRequest.getActivityId();
+
+        QueryActivityInfoContext queryActivityInfoContext = QueryActivityInfoContext.builder().activityId(activityId).build();
+        QueryActivityInfoResult activityInfoResult = activityQuery.queryActivityInfo(queryActivityInfoContext);
+        QueryActivityInfoResponse queryActivityInfoResponse = QueryActivityInfoResponse.builder()
+                .activityName(activityInfoResult.getActivityName())
+                .activityDesc(activityInfoResult.getActivityDesc())
+                .activityBeginTime(activityInfoResult.getActivityBeginTime())
+                .activityEndTime(activityInfoResult.getActivityEndTime())
+                .activityAccountCount(activityInfoResult.getActivityAccountCount())
+                .activityAwardCount(activityInfoResult.getActivityAwardCount())
+                .activityRaffleCount(activityInfoResult.getActivityRaffleCount())
+                .build();
+
+        return Result.success(queryActivityInfoResponse);
+    }
+
 
     /**
      * 执行用户在当前活动的互动行为

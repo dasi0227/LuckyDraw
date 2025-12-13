@@ -20,7 +20,7 @@ public interface IBigMarketService {
 
     Result<QueryActivityLuckResponse> queryActivityLuck(QueryActivityLuckRequest queryActivityLuckRequest);
 
-
+    Result<QueryActivityInfoResponse> queryActivityInfo(QueryActivityInfoRequest activityInfoRequest);
 
     Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
 

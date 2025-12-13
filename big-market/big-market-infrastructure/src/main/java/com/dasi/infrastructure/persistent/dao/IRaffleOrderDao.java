@@ -14,4 +14,5 @@ public interface IRaffleOrderDao {
 
     void updateRaffleOrderState(RaffleOrder raffleOrder);
 
+    int countByActivityId(Long activityId);
 }

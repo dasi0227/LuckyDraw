@@ -14,6 +14,8 @@ public class AccountSnapshot {
     // 来自总账户
     Integer totalSurplus;
     Integer totalAllocate;
+    Integer accountPoint;
+    Integer accountLuck;
     // 来自月账户
     Integer monthLimit;
     Integer monthSurplus;

@@ -1,5 +1,11 @@
 <template>
   <div class="bigmarket-page">
+    <div v-if="activityBannerText" class="activity-banner">
+      <div class="banner-track">
+        <span class="banner-text">{{ activityBannerText }}</span>
+      </div>
+    </div>
+
     <!-- Header -->
     <header class="page-header">
       <h1>Dasi 抽奖系统</h1>
@@ -256,6 +262,7 @@ const rewardModal = ref({ visible: false, rewards: [], title: '' });
 const confettiPieces = ref([]);
 const warnModal = ref({ visible: false, title: '提示', lines: [], shake: false });
 const errorModal = ref({ visible: false, message: '', shake: false });
+const activityInfo = ref(null);
 const behaviors = ref([]);
 
 const brushColors = [
@@ -293,6 +300,20 @@ const luckPercent = computed(() => {
     return 0;
   }
   return Math.min(100, Math.round((luckValue.value / luckGoal.value) * 100));
+});
+
+const formatActivityTime = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : formatDateTime(date);
+};
+
+const activityBannerText = computed(() => {
+  if (!activityInfo.value) return '';
+  const info = activityInfo.value;xia
+  const begin = formatActivityTime(info.activityBeginTime);
+  const end = formatActivityTime(info.activityEndTime);
+  return `📢 📢 活动【${info.activityName}】火热开启：${info.activityDesc}，活动时间从 ${begin} 到 ${end}。截至目前，已有 ${info.activityAccountCount ?? 0} 人参与，累计抽奖 ${info.activityRaffleCount ?? 0} 次，已送出 ${info.activityAwardCount ?? 0} 份中奖奖品 —— 还在等什么？现在就来试试手气，下一位欧皇可能就是你 🎊🎊`;
 });
 
 const luckMarks = computed(() => {
@@ -621,6 +642,16 @@ const fetchActivityAwardData = async (activityId, userId) => {
   }
 };
 
+const fetchActivityInfo = async (activityId) => {
+  if (!activityId) return;
+  try {
+    const info = await api.queryActivityInfo({ activityId });
+    activityInfo.value = info || null;
+  } catch (error) {
+    console.error('获取活动信息失败: ', error);
+  }
+};
+
 const fetchUserAwardData = async (activityId, userId) => {
   if (!activityId || !userId) return;
   try {
@@ -650,8 +681,9 @@ watch(
     fetchUserAwardData(currentActivityId.value, currentUserId.value);
     fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    fetchActivityInfo(currentActivityId.value);
     if (!historyRecords.value.length) {
-      seedHistoryRecords();
+      seedHistoryRecords(10);
     }
   },
   { immediate: true },
@@ -691,6 +723,18 @@ const startGridLottery = async () => {
   } catch (error) {
     isRolling.value = false;
     showErrorModal(error?.message || '抽奖失败');
+    return;
+  }
+
+  if (raffleFlags.isLock) {
+    isRolling.value = false;
+    showErrorModal(`当前奖品没有解锁，请多多参与抽奖！\n获取兜底奖品：${raffleFlags.awardName || '--'}`);
+    return;
+  }
+
+  if (raffleFlags.isEmpty) {
+    isRolling.value = false;
+    showErrorModal(`当前奖品已被抽完，请尽早参与活动！\n获取兜底奖品：${raffleFlags.awardName || '---'}`);
     return;
   }
 
@@ -808,11 +852,43 @@ onMounted(() => {
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 2.5rem 3rem;
+  padding: 0rem 2.5rem 3rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   color: #1f2a44;
+}
+
+.activity-banner{
+  position:relative;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  overflow:hidden;
+  padding:0.55rem 0;
+  background: rgba(124, 2, 185, 0.069);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.banner-track{
+  display:flex;
+  width:max-content;
+  white-space:nowrap;
+  will-change:transform;
+  animation:banner-marquee 24s linear infinite;
+}
+
+.banner-text{
+  flex:0 0 auto;
+  font-weight:800;
+  color:#8a5a00;
+  letter-spacing:0.02em;
+  padding-right:3rem;
+}
+
+@keyframes banner-marquee{
+  0%{transform:translateX(100%);}
+  100%{transform:translateX(-100%);}
 }
 
 .page-header {

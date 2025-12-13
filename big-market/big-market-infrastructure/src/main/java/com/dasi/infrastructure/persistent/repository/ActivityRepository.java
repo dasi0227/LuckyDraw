@@ -8,6 +8,7 @@ import com.dasi.domain.activity.model.type.ActivityState;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.model.type.RechargeState;
 import com.dasi.domain.activity.model.vo.AccountSnapshot;
+import com.dasi.domain.activity.model.vo.ActivitySnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.infrastructure.event.EventPublisher;
 import com.dasi.infrastructure.persistent.dao.*;
@@ -56,6 +57,9 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IActivityAccountDayDao activityAccountDayDao;
+
+    @Resource
+    private IActivityAwardDao activityAwardDao;
 
     @Resource
     private IRaffleOrderDao raffleOrderDao;
@@ -421,7 +425,7 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = getAccountSnapshot(userId, activityId);
+            AccountSnapshot before = queryAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 执行总账户的充值
@@ -450,7 +454,7 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = getAccountSnapshot(userId, activityId);
+            AccountSnapshot after = queryAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
                 log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
@@ -505,7 +509,7 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = getAccountSnapshot(userId, activityId);
+            AccountSnapshot before = queryAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 更新账户抽奖次数
@@ -524,7 +528,7 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = getAccountSnapshot(userId, activityId);
+            AccountSnapshot after = queryAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
                 log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
@@ -545,12 +549,13 @@ public class ActivityRepository implements IActivityRepository {
         }
     }
 
-    private AccountSnapshot getAccountSnapshot(String userId, Long activityId) {
+    @Override
+    public AccountSnapshot queryAccountSnapshot(String userId, Long activityId) {
         // ===== 1. 总账户 =====
         ActivityAccount accountReq = new ActivityAccount();
         accountReq.setUserId(userId);
         accountReq.setActivityId(activityId);
-        ActivityAccount account = activityAccountDao.queryActivityAccount(accountReq);
+        ActivityAccount activityAccount = activityAccountDao.queryActivityAccount(accountReq);
 
         // ===== 2. 月账户 =====
         String monthKey = TimeUtil.thisMonth(true);
@@ -558,7 +563,7 @@ public class ActivityRepository implements IActivityRepository {
         monthReq.setUserId(userId);
         monthReq.setActivityId(activityId);
         monthReq.setMonthKey(monthKey);
-        ActivityAccountMonth monthAccount = activityAccountMonthDao.queryActivityAccountMonth(monthReq);
+        ActivityAccountMonth activityAccountMonth = activityAccountMonthDao.queryActivityAccountMonth(monthReq);
 
         // ===== 3. 日账户 =====
         String dayKey = TimeUtil.thisDay(true);
@@ -566,19 +571,64 @@ public class ActivityRepository implements IActivityRepository {
         dayReq.setUserId(userId);
         dayReq.setActivityId(activityId);
         dayReq.setDayKey(dayKey);
-        ActivityAccountDay dayAccount = activityAccountDayDao.queryActivityAccountDay(dayReq);
+        ActivityAccountDay activityAccountDay = activityAccountDayDao.queryActivityAccountDay(dayReq);
 
         // ===== 4. 组装快照 =====
         return AccountSnapshot.builder()
-                .totalAllocate(account == null ? 0 : account.getTotalAllocate())
-                .totalSurplus(account == null ? 0 : account.getTotalSurplus())
-                .monthLimit(monthAccount == null ? 0 : monthAccount.getMonthLimit())
-                .monthAllocate(monthAccount == null ? 0 : monthAccount.getMonthAllocate())
-                .monthSurplus(monthAccount == null ? 0 : monthAccount.getMonthSurplus())
-                .dayLimit(dayAccount == null ? 0 : dayAccount.getDayLimit())
-                .dayAllocate(dayAccount == null ? 0 : dayAccount.getDayAllocate())
-                .daySurplus(dayAccount == null ? 0 : dayAccount.getDaySurplus())
+                .accountLuck(activityAccount == null ? 0 : activityAccount.getAccountLuck())
+                .accountPoint(activityAccount == null ? 0 : activityAccount.getAccountPoint())
+                .totalAllocate(activityAccount == null ? 0 : activityAccount.getTotalAllocate())
+                .totalSurplus(activityAccount == null ? 0 : activityAccount.getTotalSurplus())
+                .monthLimit(activityAccountMonth == null ? 0 : activityAccountMonth.getMonthLimit())
+                .monthAllocate(activityAccountMonth == null ? 0 : activityAccountMonth.getMonthAllocate())
+                .monthSurplus(activityAccountMonth == null ? 0 : activityAccountMonth.getMonthSurplus())
+                .dayLimit(activityAccountDay == null ? 0 : activityAccountDay.getDayLimit())
+                .dayAllocate(activityAccountDay == null ? 0 : activityAccountDay.getDayAllocate())
+                .daySurplus(activityAccountDay == null ? 0 : activityAccountDay.getDaySurplus())
                 .build();
+    }
+
+    @Override
+    public ActivitySnapshot queryActivitySnapshot(Long activityId) {
+
+        int activityRaffleCount = 0;
+        int activityAccountCount = 0;
+        int activityAwardCount = 0;
+
+        // 参与信息
+        try {
+            int dbCount = dbRouterStrategy.dbCount();
+            int tbCount = dbRouterStrategy.tbCount();
+
+            for (int dbIdx = 1; dbIdx <= dbCount; dbIdx++) {
+
+                dbRouterStrategy.setDBKey(dbIdx);
+                dbRouterStrategy.setTBKey(0);
+                activityAccountCount += activityAccountDao.countByActivityId(activityId);
+
+                for (int tbIdx = 0; tbIdx < tbCount; tbIdx++) {
+                    dbRouterStrategy.setTBKey(tbIdx);
+                    activityRaffleCount += raffleOrderDao.countByActivityId(activityId);
+                    activityAwardCount += activityAwardDao.countByActivityId(activityId);
+                }
+            }
+
+        } finally {
+            dbRouterStrategy.clear();
+        }
+
+        Activity activity = activityDao.queryActivityByActivityId(activityId);
+
+        return ActivitySnapshot.builder()
+                .activityName(activity.getActivityName())
+                .activityDesc(activity.getActivityDesc())
+                .activityBeginTime(activity.getActivityBeginTime())
+                .activityEndTime(activity.getActivityEndTime())
+                .activityRaffleCount(activityRaffleCount)
+                .activityAccountCount(activityAccountCount)
+                .activityAwardCount(activityAwardCount)
+                .build();
+
     }
 
 }

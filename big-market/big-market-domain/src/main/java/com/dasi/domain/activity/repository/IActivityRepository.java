@@ -2,6 +2,8 @@ package com.dasi.domain.activity.repository;
 
 import com.dasi.domain.activity.model.entity.*;
 import com.dasi.domain.activity.model.io.ActivitySkuStock;
+import com.dasi.domain.activity.model.vo.AccountSnapshot;
+import com.dasi.domain.activity.model.vo.ActivitySnapshot;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +19,10 @@ public interface IActivityRepository {
     ActivityAccountMonthEntity queryActivityAccountMonth(String userId, Long activityId, String month);
 
     ActivityAccountDayEntity queryActivityAccountDay(String userId, Long activityId, String day);
+
+    AccountSnapshot queryAccountSnapshot(String userId, Long activityId);
+
+    ActivitySnapshot queryActivitySnapshot(Long activityId);
 
     RaffleOrderEntity queryUnusedRaffleOrder(String userId, Long activityId);
 
