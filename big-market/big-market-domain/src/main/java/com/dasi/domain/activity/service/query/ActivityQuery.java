@@ -1,13 +1,13 @@
 package com.dasi.domain.activity.service.query;
 
-import com.dasi.domain.activity.model.entity.ActivityAccountDayEntity;
-import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
-import com.dasi.domain.activity.model.entity.ActivityAccountMonthEntity;
 import com.dasi.domain.activity.model.io.QueryActivityAccountContext;
 import com.dasi.domain.activity.model.io.QueryActivityAccountResult;
+import com.dasi.domain.activity.model.io.QueryActivityInfoContext;
+import com.dasi.domain.activity.model.io.QueryActivityInfoResult;
+import com.dasi.domain.activity.model.vo.AccountSnapshot;
+import com.dasi.domain.activity.model.vo.ActivitySnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.types.exception.AppException;
-import com.dasi.types.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +32,35 @@ public class ActivityQuery implements IActivityQuery {
         activityRepository.createActivityAccountIfAbsent(userId, activityId);
 
         // 3. 查询账户信息
-        String monthKey = TimeUtil.thisMonth(true);
-        String dayKey = TimeUtil.thisDay(true);
-        ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccount(userId, activityId);
-        ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonth(userId, activityId, monthKey);
-        ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDay(userId, activityId, dayKey);
+        AccountSnapshot accountSnapshot = activityRepository.queryAccountSnapshot(userId, activityId);
 
         // 4. 构建
         return QueryActivityAccountResult.builder()
-                .accountPoint(activityAccountEntity.getAccountPoint())
-                .totalSurplus(activityAccountEntity.getTotalSurplus())
-                .monthSurplus(activityAccountMonthEntity.getMonthSurplus())
-                .daySurplus(activityAccountDayEntity.getDaySurplus())
-                .monthPending(activityAccountMonthEntity.getMonthLimit() - activityAccountMonthEntity.getMonthAllocate())
-                .dayPending(activityAccountDayEntity.getDayLimit() - activityAccountDayEntity.getDayAllocate())
+                .accountPoint(accountSnapshot.getAccountPoint())
+                .totalSurplus(accountSnapshot.getTotalSurplus())
+                .monthSurplus(accountSnapshot.getMonthSurplus())
+                .daySurplus(accountSnapshot.getDaySurplus())
+                .monthPending(accountSnapshot.getMonthLimit() - accountSnapshot.getMonthAllocate())
+                .dayPending(accountSnapshot.getDayLimit() - accountSnapshot.getDayAllocate())
+                .build();
+    }
+
+    @Override
+    public QueryActivityInfoResult queryActivityInfo(QueryActivityInfoContext queryActivityInfoContext) {
+
+        Long activityId = queryActivityInfoContext.getActivityId();
+        if (activityId == null) throw new AppException("缺少参数 activityId");
+
+        ActivitySnapshot activitySnapshot = activityRepository.queryActivitySnapshot(activityId);
+
+        return QueryActivityInfoResult.builder()
+                .activityName(activitySnapshot.getActivityName())
+                .activityDesc(activitySnapshot.getActivityDesc())
+                .activityBeginTime(activitySnapshot.getActivityBeginTime())
+                .activityEndTime(activitySnapshot.getActivityEndTime())
+                .activityAccountCount(activitySnapshot.getActivityAccountCount())
+                .activityAwardCount(activitySnapshot.getActivityAwardCount())
+                .activityRaffleCount(activitySnapshot.getActivityRaffleCount())
                 .build();
     }
 

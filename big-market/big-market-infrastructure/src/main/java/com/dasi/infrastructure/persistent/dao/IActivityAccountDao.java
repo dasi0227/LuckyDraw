@@ -22,4 +22,6 @@ public interface IActivityAccountDao {
 
     void decreaseActivityAccountPoint(ActivityAccount activityAccount);
 
+    int countByActivityId(Long activityId);
+
 }

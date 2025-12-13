@@ -34,4 +34,10 @@
         LIMIT 10
     </select>
 
+    <select id="countByActivityId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM raffle_order
+        WHERE activity_id = #{activityId}
+    </select>
+
 </mapper>

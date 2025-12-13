@@ -13,4 +13,6 @@ public interface IActivityAwardDao {
     void updateActivityAwardState(ActivityAward activityAward);
 
     ActivityAward queryActivityAwardByOrderId(String orderId);
+
+    int countByActivityId(Long activityId);
 }

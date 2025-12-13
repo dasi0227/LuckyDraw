@@ -33,4 +33,10 @@
         WHERE order_id = #{orderId}
     </select>
 
+    <select id="countByActivityId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM activity_award
+        WHERE activity_id = #{activityId}
+    </select>
+
 </mapper>

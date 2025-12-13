@@ -19,6 +19,11 @@ export default {
     return request.post(`${prefix}/query/award`, data);
   },
 
+  // 查询活动基本信息
+  queryActivityInfo(data) {
+    return request.post(`${prefix}/query/info`, data);
+  },
+
   // 查询用户在当前活动的幸运值
   queryActivityLuck(data) {
     return request.post(`${prefix}/query/luck`, data);
