@@ -17,6 +17,8 @@ public class TradeContext {
 
     private Long tradeId;
 
+    private Long activityId;
+
     private String businessNo;
 
 }

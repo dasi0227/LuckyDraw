@@ -30,4 +30,5 @@ public class RedisKey {
     public static final String TRADE_ORDER_ID_KEY                   = "TRADE";
     public static final String TRADE_KEY                            = "big_market:trade:entity:trade:";
     public static final String TRADE_LIST_KEY                       = "big_market:trade:entity:trade_list:";
+    public static final String LOCK_POINT_KEY                       = "big_market:lock:point:";
 }

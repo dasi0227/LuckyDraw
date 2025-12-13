@@ -56,7 +56,7 @@
     <update id="decreaseActivityAccountRaffle" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET total_surplus = total_surplus - 1
-        WHERE user_id = #{userId} AND activity_id = #{activityId};
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND total_surplus >= 1;
     </update>
 
     <update id="increaseActivityAccountPoint" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
@@ -68,7 +68,7 @@
     <update id="decreaseActivityAccountPoint" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET account_point = account_point - #{accountPoint}
-        WHERE user_id = #{userId} AND activity_id = #{activityId};
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND account_point >= #{accountPoint};
     </update>
 
 </mapper>

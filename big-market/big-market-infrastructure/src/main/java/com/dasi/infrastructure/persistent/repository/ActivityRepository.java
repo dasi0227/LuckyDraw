@@ -425,7 +425,7 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = queryAccountSnapshot(userId, activityId);
+            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 执行总账户的充值
@@ -454,7 +454,7 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = queryAccountSnapshot(userId, activityId);
+            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
                 log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
@@ -509,7 +509,7 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = queryAccountSnapshot(userId, activityId);
+            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
                     // 更新账户抽奖次数
@@ -528,7 +528,7 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = queryAccountSnapshot(userId, activityId);
+            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
                 log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
@@ -551,6 +551,17 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public AccountSnapshot queryAccountSnapshot(String userId, Long activityId) {
+        try {
+            dbRouterStrategy.doRouter(userId);
+            return getAccountSnapshot(userId, activityId);
+        } finally {
+            dbRouterStrategy.clear();
+        }
+    }
+
+
+    public AccountSnapshot getAccountSnapshot(String userId, Long activityId) {
+
         // ===== 1. 总账户 =====
         ActivityAccount accountReq = new ActivityAccount();
         accountReq.setUserId(userId);

@@ -68,19 +68,6 @@ public class PointRepository implements IPointRepository {
     private EventPublisher eventPublisher;
 
     @Override
-    public Integer queryActivityAccountPoint(String userId, Long activityId) {
-        try {
-            dbRouterStrategy.doRouter(userId);
-            ActivityAccount activityAccount = new ActivityAccount();
-            activityAccount.setUserId(userId);
-            activityAccount.setActivityId(activityId);
-            return activityAccountDao.queryActivityAccountPoint(activityAccount);
-        } finally {
-            dbRouterStrategy.clear();
-        }
-    }
-
-    @Override
     public List<TradeEntity> queryActivityConvertList(Long activityId) {
         String cacheKey = RedisKey.TRADE_LIST_KEY + activityId;
         List<TradeEntity> tradeEntityList = redisService.getValue(cacheKey);
@@ -171,10 +158,15 @@ public class PointRepository implements IPointRepository {
     }
 
     @Override
-    public void savePointTradeOrder(TaskEntity taskEntity, TradeOrderEntity tradeOrderEntity) {
+    public void savePointTradeOrder(ActivityAccountEntity activityAccountEntity, TaskEntity taskEntity, TradeOrderEntity tradeOrderEntity) {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
+
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(activityAccountEntity.getUserId());
+        activityAccount.setActivityId(activityAccountEntity.getActivityId());
+        activityAccount.setAccountPoint(activityAccountEntity.getAccountPoint());
 
         TradeOrder tradeOrder = new TradeOrder();
         tradeOrder.setOrderId(tradeOrderEntity.getOrderId());
@@ -196,8 +188,10 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
+            int before = activityAccountDao.queryActivityAccountPoint(activityAccount);
             transactionTemplate.executeWithoutResult(status -> {
                 try {
+                    activityAccountDao.decreaseActivityAccountPoint(activityAccount);
                     tradeOrderDao.saveTradeOrder(tradeOrder);
                     taskDao.saveTask(task);
                 } catch (Exception e) {
@@ -206,8 +200,9 @@ public class PointRepository implements IPointRepository {
                     throw e;
                 }
             });
+            int after = activityAccountDao.queryActivityAccountPoint(activityAccount);
 
-            log.info("【交易】保存交易订单成功：orderId={}", orderId);
+            log.info("【交易】保存交易订单成功：orderId={}, point={}->{}", orderId, before, after);
 
             try {
                 eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
@@ -229,6 +224,7 @@ public class PointRepository implements IPointRepository {
 
     @Override
     public void saveConvertAward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
+
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
         Long activityId = tradeOrderEntity.getActivityId();
@@ -236,18 +232,6 @@ public class PointRepository implements IPointRepository {
 
         Long awardId = Long.parseLong(tradeEntity.getTradeValue());
         Award award = awardDao.queryAwardByAwardId(awardId);
-        if (award == null) {
-            throw new AppException("Award 不存在：awardId=" + awardId);
-        }
-
-        long seconds = Long.parseLong(award.getAwardValue());
-        LocalDateTime deadline = LocalDateTime.now().plusSeconds(seconds);
-
-        int tradePoint = tradeEntity.getTradePoint();
-        ActivityAccount activityAccount = new ActivityAccount();
-        activityAccount.setUserId(activityAccountEntity.getUserId());
-        activityAccount.setActivityId(activityAccountEntity.getActivityId());
-        activityAccount.setAccountPoint(tradePoint);
 
         UserAward userAward = new UserAward();
         userAward.setOrderId(orderId);
@@ -257,7 +241,7 @@ public class PointRepository implements IPointRepository {
         userAward.setAwardSource(AwardSource.CONVERT.name());
         userAward.setAwardName(award.getAwardName());
         userAward.setAwardDesc(award.getAwardDesc());
-        userAward.setAwardDeadline(deadline);
+        userAward.setAwardDeadline(null);
         userAward.setAwardTime(LocalDateTime.now());
 
         TradeOrder tradeOrder = new TradeOrder();
@@ -273,10 +257,8 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    activityAccountDao.decreaseActivityAccountPoint(activityAccount);
                     userAwardDao.saveUserAward(userAward);
                     tradeOrder.setTradeState(TradeState.USED.name());
                     tradeOrderDao.updateTradeState(tradeOrder);
@@ -287,14 +269,13 @@ public class PointRepository implements IPointRepository {
                     return false;
                 }
             });
-            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
 
             if (Boolean.TRUE.equals(success)) {
-                log.info("【兑换】兑换奖品成功：orderId={}, userId={}, tradeId={}, awardId={}, point:{}->{}", orderId, userId, tradeId, awardId, before, after);
+                log.info("【兑换】兑换奖品成功：orderId={}, userId={}, tradeId={}, awardId={}", orderId, userId, tradeId, awardId);
             } else {
                 tradeOrder.setTradeState(TradeState.CANCELLED.name());
                 tradeOrderDao.updateTradeState(tradeOrder);
-                log.info("【兑换】兑换奖品失败：orderId={}, userId={}, tradeId={}, awardId={}, point:{}->{}", orderId, userId, tradeId, awardId, before, after);
+                log.info("【兑换】兑换奖品失败：orderId={}, userId={}, tradeId={}, awardId={}", orderId, userId, tradeId, awardId);
             }
 
         } finally {
@@ -349,7 +330,6 @@ public class PointRepository implements IPointRepository {
             AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    activityAccountDao.decreaseActivityAccountPoint(activityAccount);
                     activityAccountDao.increaseActivityAccountRaffle(activityAccount);
 
                     int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());

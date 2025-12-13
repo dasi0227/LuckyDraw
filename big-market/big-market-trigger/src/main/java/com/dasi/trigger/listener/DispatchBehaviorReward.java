@@ -44,6 +44,7 @@ public class DispatchBehaviorReward {
         String userId = dispatchBehaviorRewardMessage.getUserId();
         String bizId = dispatchBehaviorRewardMessage.getBizId();
         String orderId = dispatchBehaviorRewardMessage.getOrderId();
+        Long activityId = dispatchBehaviorRewardMessage.getActivityId();
 
         RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder().userId(userId).bizId(bizId).orderId(orderId).build();
         RewardType rewardType = dispatchBehaviorRewardMessage.getRewardType();
@@ -59,7 +60,7 @@ public class DispatchBehaviorReward {
                     log.debug("{}", skuRechargeResult);
                     break;
                 case POINT:
-                    TradeContext tradeContext = TradeContext.builder().userId(userId).bizId(bizId).tradeId(rewardValue).build();
+                    TradeContext tradeContext = TradeContext.builder().userId(userId).bizId(bizId).tradeId(rewardValue).activityId(activityId).build();
                     TradeResult tradeResult = tradePoint.doPointTrade(tradeContext);
                     log.debug("{}", tradeResult);
                     break;
