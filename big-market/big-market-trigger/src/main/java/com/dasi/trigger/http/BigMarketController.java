@@ -287,9 +287,10 @@ public class BigMarketController implements IBigMarketService {
 
         String userId = convertRequest.getUserId();
         Long tradeId = convertRequest.getTradeId();
+        Long activityId = convertRequest.getActivityId();
         String businessNo = TimeUtil.thisDay(false);
 
-        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).businessNo(businessNo).build();
+        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).activityId(activityId).businessNo(businessNo).build();
         TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
         ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
 

@@ -310,7 +310,7 @@ const formatActivityTime = (value) => {
 
 const activityBannerText = computed(() => {
   if (!activityInfo.value) return '';
-  const info = activityInfo.value;xia
+  const info = activityInfo.value;
   const begin = formatActivityTime(info.activityBeginTime);
   const end = formatActivityTime(info.activityEndTime);
   return `📢 📢 活动【${info.activityName}】火热开启：${info.activityDesc}，活动时间从 ${begin} 到 ${end}。截至目前，已有 ${info.activityAccountCount ?? 0} 人参与，累计抽奖 ${info.activityRaffleCount ?? 0} 次，已送出 ${info.activityAwardCount ?? 0} 份中奖奖品 —— 还在等什么？现在就来试试手气，下一位欧皇可能就是你 🎊🎊`;

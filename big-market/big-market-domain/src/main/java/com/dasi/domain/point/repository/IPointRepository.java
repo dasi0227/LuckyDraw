@@ -15,11 +15,9 @@ public interface IPointRepository {
 
     ActivityAccountEntity queryActivityAccount(String userId, Long activityId);
 
-    Integer queryActivityAccountPoint(String userId, Long activityId);
-
     List<TradeEntity> queryActivityConvertList(Long activityId);
 
-    void savePointTradeOrder(TaskEntity taskEntity, TradeOrderEntity tradeOrderEntity);
+    void savePointTradeOrder(ActivityAccountEntity activityAccountEntity, TaskEntity taskEntity, TradeOrderEntity tradeOrderEntity);
 
     void saveConvertAward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
 

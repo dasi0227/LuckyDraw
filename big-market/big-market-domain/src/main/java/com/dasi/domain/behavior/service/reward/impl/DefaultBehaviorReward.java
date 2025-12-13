@@ -73,6 +73,7 @@ public class DefaultBehaviorReward extends AbstractBehaviorReward {
                         .userId(rewardOrderEntity.getUserId())
                         .bizId(rewardOrderEntity.getBizId())
                         .orderId(rewardOrderEntity.getOrderId())
+                        .activityId(activityId)
                         .rewardType(behaviorEntity.getRewardType())
                         .rewardValue(behaviorEntity.getRewardValue())
                         .build();

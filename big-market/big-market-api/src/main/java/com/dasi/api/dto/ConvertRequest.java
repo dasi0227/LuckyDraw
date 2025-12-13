@@ -15,4 +15,6 @@ public class ConvertRequest {
 
     private Long tradeId;
 
+    private Long activityId;
+
 }
