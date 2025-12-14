@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 @DBRouterStrategy(splitTable = true)
 public interface IActivityAwardDao {
 
-    void saveActivityAward(ActivityAward activityAward);
+    int saveActivityAward(ActivityAward activityAward);
 
-    void updateActivityAwardState(ActivityAward activityAward);
+    int updateActivityAwardState(ActivityAward activityAward);
 
     ActivityAward queryActivityAwardByOrderId(String orderId);
 

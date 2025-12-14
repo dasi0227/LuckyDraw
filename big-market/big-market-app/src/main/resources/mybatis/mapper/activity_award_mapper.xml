@@ -24,7 +24,7 @@
     <update id="updateActivityAwardState" parameterType="com.dasi.infrastructure.persistent.po.ActivityAward">
         UPDATE activity_award
         SET award_state = #{awardState}
-        WHERE order_id = #{orderId} AND user_id = #{userId} AND award_id = #{awardId}
+        WHERE order_id = #{orderId} AND award_state = 'CREATED'
     </update>
 
     <select id="queryActivityAwardByOrderId" parameterType="java.lang.String" resultMap="dataMap">

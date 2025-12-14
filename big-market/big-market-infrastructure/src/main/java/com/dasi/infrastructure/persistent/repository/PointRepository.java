@@ -5,10 +5,7 @@ import com.dasi.domain.point.model.entity.ActivityAccountEntity;
 import com.dasi.domain.point.model.entity.TaskEntity;
 import com.dasi.domain.point.model.entity.TradeEntity;
 import com.dasi.domain.point.model.entity.TradeOrderEntity;
-import com.dasi.domain.point.model.type.AwardSource;
-import com.dasi.domain.point.model.type.TaskState;
-import com.dasi.domain.point.model.type.TradeState;
-import com.dasi.domain.point.model.type.TradeType;
+import com.dasi.domain.point.model.type.*;
 import com.dasi.domain.point.model.vo.AccountSnapshot;
 import com.dasi.domain.point.repository.IPointRepository;
 import com.dasi.infrastructure.event.EventPublisher;
@@ -54,6 +51,9 @@ public class PointRepository implements IPointRepository {
 
     @Resource
     private IActivityAccountMonthDao activityAccountMonthDao;
+
+    @Resource
+    private IRewardOrderDao rewardOrderDao;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -162,6 +162,7 @@ public class PointRepository implements IPointRepository {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
+        Integer tradePoint = activityAccountEntity.getAccountPoint();
 
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(activityAccountEntity.getUserId());
@@ -188,21 +189,21 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            int before = activityAccountDao.queryActivityAccountPoint(activityAccount);
             transactionTemplate.executeWithoutResult(status -> {
                 try {
-                    activityAccountDao.decreaseActivityAccountPoint(activityAccount);
-                    tradeOrderDao.saveTradeOrder(tradeOrder);
-                    taskDao.saveTask(task);
+                    int rows = tradeOrderDao.saveTradeOrder(tradeOrder);
+                    if (rows == 1) {
+                        taskDao.saveTask(task);
+                        activityAccountDao.decreaseActivityAccountPoint(activityAccount);
+                    }
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     log.error("【交易】保存交易订单失败：orderId={}", orderId);
                     throw e;
                 }
             });
-            int after = activityAccountDao.queryActivityAccountPoint(activityAccount);
 
-            log.info("【交易】保存交易订单成功：orderId={}, point={}->{}", orderId, before, after);
+            log.info("【交易】保存交易订单成功：orderId={}, point={}", orderId, tradePoint);
 
             try {
                 eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
@@ -259,9 +260,11 @@ public class PointRepository implements IPointRepository {
 
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    userAwardDao.saveUserAward(userAward);
                     tradeOrder.setTradeState(TradeState.USED.name());
-                    tradeOrderDao.updateTradeState(tradeOrder);
+                    int rows = tradeOrderDao.updateTradeState(tradeOrder);
+                    if (rows == 1) {
+                        userAwardDao.saveUserAward(userAward);
+                    }
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -327,23 +330,26 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    activityAccountDao.increaseActivityAccountRaffle(activityAccount);
-
-                    int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());
-                    activityAccountMonth.setMonthAllocate(monthDelta);
-                    activityAccountMonth.setMonthSurplus(monthDelta);
-                    activityAccountMonthDao.increaseActivityAccountMonthRaffle(activityAccountMonth);
-
-                    int dayDelta = Math.min(count, before.getDayLimit() - before.getDayAllocate());
-                    activityAccountDay.setDayAllocate(dayDelta);
-                    activityAccountDay.setDaySurplus(dayDelta);
-                    activityAccountDayDao.increaseActivityAccountDay(activityAccountDay);
-
                     tradeOrder.setTradeState(TradeState.USED.name());
-                    tradeOrderDao.updateTradeState(tradeOrder);
+                    int rows = tradeOrderDao.updateTradeState(tradeOrder);
+
+                    if (rows == 1) {
+                        AccountSnapshot accountSnapshot = getAccountSnapshot(userId, activityId);
+
+                        activityAccountDao.increaseActivityAccountRaffle(activityAccount);
+
+                        int monthDelta = Math.min(count, accountSnapshot.getMonthLimit() - accountSnapshot.getMonthAllocate());
+                        activityAccountMonth.setMonthAllocate(monthDelta);
+                        activityAccountMonth.setMonthSurplus(monthDelta);
+                        activityAccountMonthDao.increaseActivityAccountMonthRaffle(activityAccountMonth);
+
+                        int dayDelta = Math.min(count, accountSnapshot.getDayLimit() - accountSnapshot.getDayAllocate());
+                        activityAccountDay.setDayAllocate(dayDelta);
+                        activityAccountDay.setDaySurplus(dayDelta);
+                        activityAccountDayDao.increaseActivityAccountDay(activityAccountDay);
+                    }
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -351,24 +357,13 @@ public class PointRepository implements IPointRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                log.info("【兑换】兑换抽奖次数成功：orderId={}, userId={}, tradeId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
-                        orderId, userId, tradeId,
-                        before.getTotalSurplus(), after.getTotalSurplus(),
-                        monthKey, before.getMonthSurplus(), after.getMonthSurplus(),
-                        dayKey, before.getDaySurplus(), after.getDaySurplus()
-                );
+                log.info("【兑换】兑换抽奖次数成功：orderId={}, userId={}, tradeId={}, count={}", orderId, userId, tradeId, count);
             } else {
                 tradeOrder.setTradeState(TradeState.CANCELLED.name());
                 tradeOrderDao.updateTradeState(tradeOrder);
-                log.info("【兑换】兑换抽奖次数失败：orderId={}, userId={}, tradeId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
-                        orderId, userId, tradeId,
-                        before.getTotalSurplus(), after.getTotalSurplus(),
-                        monthKey, before.getMonthSurplus(), after.getMonthSurplus(),
-                        dayKey, before.getDaySurplus(), after.getDaySurplus()
-                );
+                log.info("【兑换】兑换抽奖次数失败：orderId={}, userId={}, tradeId={}, count={}", orderId, userId, tradeId, count);
             }
 
         } finally {
@@ -377,13 +372,16 @@ public class PointRepository implements IPointRepository {
     }
 
     @Override
-    public void savePointRecharge(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
+    public void savePointReward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
         Long tradeId = tradeEntity.getTradeId();
-
+        String bizId = tradeOrderEntity.getBizId();
         int rechargePoint = Integer.parseInt(tradeEntity.getTradeValue());
+
+        RewardOrder rewardOrder = new RewardOrder();
+        rewardOrder.setBizId(bizId);
 
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(activityAccountEntity.getUserId());
@@ -403,12 +401,18 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            Integer before = activityAccountDao.queryActivityAccountPoint(activityAccount);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    activityAccountDao.increaseActivityAccountPoint(activityAccount);
-                    tradeOrder.setTradeState(TradeState.USED.name());
-                    tradeOrderDao.updateTradeState(tradeOrder);
+                    rewardOrder.setRewardState(RewardState.USED.name());
+                    int rewardRows = rewardOrderDao.updateRewardOrderStateByBizId(rewardOrder);
+                    if (rewardRows == 1){
+                        tradeOrder.setTradeState(TradeState.USED.name());
+                        int tradeRows = tradeOrderDao.updateTradeState(tradeOrder);
+                        if (tradeRows == 1) {
+                            activityAccountDao.increaseActivityAccountPoint(activityAccount);
+                        }
+                    }
+
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -416,16 +420,16 @@ public class PointRepository implements IPointRepository {
                     return false;
                 }
             });
-            Integer after = activityAccountDao.queryActivityAccountPoint(activityAccount);
 
             if (Boolean.TRUE.equals(success)) {
-                log.info("【充值】充值积分成功：orderId={}, userId={}, tradeId={}, point:{}->{}", orderId, userId, tradeId, before, after);
+                log.info("【充值】充值积分成功：orderId={}, userId={}, tradeId={}, point={}", orderId, userId, tradeId, rechargePoint);
             } else {
+                rewardOrder.setRewardState(RewardState.CANCELLED.name());
+                rewardOrderDao.updateRewardOrderStateByBizId(rewardOrder);
                 tradeOrder.setTradeState(TradeState.CANCELLED.name());
                 tradeOrderDao.updateTradeState(tradeOrder);
-                log.info("【充值】充值积分失败：orderId={}, userId={}, tradeId={}, point:{}->{}", orderId, userId, tradeId, before, after);
+                log.info("【充值】充值积分失败：orderId={}, userId={}, tradeId={}, point={}", orderId, userId, tradeId, rechargePoint);
             }
-
         } finally {
             dbRouterStrategy.clear();
         }

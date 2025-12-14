@@ -52,9 +52,11 @@ public class TaskRepository implements ITaskRepository {
         try {
             dbRouterStrategy.doRouter(taskEntity.getUserId());
 
-            eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
             task.setTaskState(TaskState.DISTRIBUTED.name());
-            taskDao.updateTaskState(task);
+            int rows = taskDao.updateTaskState(task);
+            if (rows == 1) {
+                eventPublisher.publish(task.getTopic(), task.getMessage());
+            }
         } catch (Exception e) {
             task.setTaskState(TaskState.FAILED.name());
             taskDao.updateTaskState(task);

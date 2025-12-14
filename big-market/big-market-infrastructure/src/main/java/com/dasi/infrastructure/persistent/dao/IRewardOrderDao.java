@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 @DBRouterStrategy(splitTable = true)
 public interface IRewardOrderDao {
 
-    void saveRewardOrder(RewardOrder rewardOrder);
+    int saveRewardOrder(RewardOrder rewardOrder);
 
-    void updateRewardOrderState(RewardOrder rewardOrder);
+    int updateRewardOrderStateByBizId(RewardOrder rewardOrder);
 
     int queryExistBehaviorToday(RewardOrder rewardOrder);
 

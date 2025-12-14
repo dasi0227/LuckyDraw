@@ -23,10 +23,10 @@
         VALUES (#{orderId}, #{bizId}, #{userId}, #{activityId}, #{behaviorType}, #{rewardType}, #{rewardValue}, #{rewardState}, #{rewardDesc}, #{rewardTime})
     </insert>
 
-    <update id="updateRewardOrderState" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
+    <update id="updateRewardOrderStateByBizId" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
         UPDATE reward_order
         SET reward_state = #{rewardState}
-        WHERE user_id = #{userId} AND biz_id = #{bizId} AND order_id = #{orderId};
+        WHERE biz_id = #{bizId} AND reward_state = 'CREATED'
     </update>
 
     <select id="queryExistBehaviorToday" resultType="java.lang.Integer">
