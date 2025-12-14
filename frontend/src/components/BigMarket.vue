@@ -188,33 +188,6 @@
           </ul>
           <button class="modal-close" @click="closeRewardModal">OK</button>
         </div>
-        <div class="confetti-layer">
-          <span
-            v-for="piece in confettiPieces"
-            :key="piece.id"
-            class="confetti-piece"
-            :style="{
-              left: piece.left,
-              animationDelay: piece.delay,
-              animationDuration: piece.duration,
-              background: piece.color,
-              transform: `rotate(${piece.rotate})`
-            }"
-          ></span>
-        </div>
-      </div>
-    </transition>
-    <transition name="fade">
-      <div v-if="errorModal.visible" class="error-modal-overlay" @click="closeErrorModal">
-        <div
-          class="error-modal"
-          :class="{ shaking: errorModal.shake }"
-          @click.stop
-          @animationend="errorModal.shake = false"
-        >
-          <p>{{ errorModal.message }}</p>
-          <button class="modal-close error-close" @click="closeErrorModal">我已知晓</button>
-        </div>
       </div>
     </transition>
     <transition name="fade">
@@ -231,6 +204,20 @@
         </div>
       </div>
     </transition>
+    <transition name="fade">
+      <div v-if="errorModal.visible" class="error-modal-overlay" @click="closeErrorModal">
+        <div
+          class="error-modal"
+          :class="{ shaking: errorModal.shake }"
+          @click.stop
+          @animationend="errorModal.shake = false"
+        >
+          <p>{{ errorModal.message }}</p>
+          <button class="modal-close error-close" @click="closeErrorModal">我已知晓</button>
+        </div>
+      </div>
+    </transition>
+    <canvas ref="confettiCanvas" class="confetti-canvas"></canvas>
 
   </div>
 </template>
@@ -240,6 +227,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
 import { namePool } from '../utils/name.js';
+import { burstConfetti } from '../utils/confetti.js';
 import api from '../request/api.js';
 
 const userStats = reactive({
@@ -259,11 +247,11 @@ const luckValue = ref(0);
 const luckGoal = ref(150);
 const luckMarksData = ref([]);
 const rewardModal = ref({ visible: false, rewards: [], title: '' });
-const confettiPieces = ref([]);
 const warnModal = ref({ visible: false, title: '提示', lines: [], shake: false });
 const errorModal = ref({ visible: false, message: '', shake: false });
 const activityInfo = ref(null);
 const behaviors = ref([]);
+const confettiCanvas = ref(null);
 
 const brushColors = [
   "linear-gradient(160deg, rgba(255,255,255,0.92), rgba(210,220,255,0.78))",
@@ -407,47 +395,8 @@ const handleRedeemPoints = async (item) => {
   }
 };
 
-const createConfetti = () => {
-  const colors = ['#ff6b6b', '#feca57', '#1dd1a1', '#54a0ff', '#5f27cd'];
-  const TOTAL = 30;
-  const BATCH = 15;
-  const MIN_DUR = 1.6;
-  const DUR_RANGE = 1.2;
-  const LIFETIME = 3500;
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
-  }
-
-  const base = Date.now();
-  let created = 0;
-
-  const pushBatch = () => {
-    const n = Math.min(BATCH, TOTAL - created);
-    const batch = Array.from({ length: n }).map((_, idx) => ({
-      id: `c-${base}-${created + idx}`,
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 0.25}s`,
-      duration: `${MIN_DUR + Math.random() * DUR_RANGE}s`,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rotate: `${Math.random() * 360}deg`,
-    }));
-
-    confettiPieces.value = confettiPieces.value.concat(batch);
-    created += n;
-
-    if (created < TOTAL) {
-      requestAnimationFrame(pushBatch);
-    } else {
-      window.clearTimeout(createConfetti._t);
-      createConfetti._t = window.setTimeout(() => {
-        confettiPieces.value = [];
-      }, LIFETIME);
-    }
-  };
-
-  confettiPieces.value = [];
-  requestAnimationFrame(pushBatch);
+const createConfetti = async () => {
+  await burstConfetti(confettiCanvas.value, { x: 0.5, y: 0.35 });
 };
 
 const runBehavior = async (action) => {
@@ -476,7 +425,9 @@ const runBehavior = async (action) => {
 
 const closeRewardModal = () => {
   rewardModal.value = { visible: false, rewards: [] };
-  confettiPieces.value = [];
+  if (confettiInstance) {
+    // keep background fall running; no need to clear
+  }
 };
 
 const showErrorModal = (message) => {
@@ -688,6 +639,7 @@ const highlightIndex = ref(4);
 const isRolling = ref(false);
 let rollingTimer = null;
 let historyTimer = null;
+let pauseTimer = null;
 
 const startGridLottery = async () => {
   const prizeCount = Math.min(highlightSequence.length, wheelPrizes.value.length);
@@ -796,6 +748,9 @@ onBeforeUnmount(() => {
   if (historyTimer) {
     clearInterval(historyTimer);
   }
+  if (pauseTimer) {
+    clearTimeout(pauseTimer);
+  }
 });
 
 const scheduleNextHistory = () => {
@@ -882,6 +837,15 @@ onMounted(() => {
 .page-header {
   text-align: center;
   color: #111b2b;
+}
+
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1200;
 }
 
 .page-header h1 {
