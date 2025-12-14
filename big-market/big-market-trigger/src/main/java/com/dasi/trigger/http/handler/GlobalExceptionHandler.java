@@ -1,4 +1,4 @@
-package com.dasi.trigger.http;
+package com.dasi.trigger.http.handler;
 
 import com.dasi.types.exception.AppException;
 import com.dasi.types.exception.BusinessException;

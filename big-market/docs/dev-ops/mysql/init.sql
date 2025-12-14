@@ -5,6 +5,11 @@ DROP DATABASE IF EXISTS big_market;
 CREATE DATABASE IF NOT EXISTS big_market DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE big_market;
 
+DROP TABLE IF EXISTS user;
+CREATE TABLE user LIKE big_market_table.user;
+INSERT INTO user (user_id, password)
+VALUES ('wyw', MD5(123456));
+
 DROP TABLE IF EXISTS strategy;
 CREATE TABLE strategy LIKE big_market_table.strategy;
 INSERT INTO strategy (strategy_id, strategy_desc, rule_models)
@@ -13,7 +18,7 @@ VALUES (1001, '【测试策略1001】黑名单+幸运值', 'RULE_BLACKLIST,RULE_
 DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
 INSERT INTO award (award_id, award_type, award_name, award_value, award_desc)
-VALUES (2001, 'RANDOM_ACCOUNT_POINT', '随机积分 110', '1,10', '黑名单奖品，随机积分'),
+VALUES (2001, 'RANDOM_ACCOUNT_POINT', '随机积分 1-10', '1,10', '黑名单奖品，随机积分'),
        (2002, 'RANDOM_ACCOUNT_POINT', '随机积分 1-50', '1,50', '兜底奖品，固定积分'),
        (2003, 'FIXED_ACCOUNT_POINT', '固定积分 66', '66', '兜底奖品，固定积分'),
        (2004, 'FIXED_ACCOUNT_POINT', '固定积分 88', '88', '兜底奖品，固定积分'),

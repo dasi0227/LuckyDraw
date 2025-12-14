@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RaffleRequest {
 
-    private String userId;
-
     private Long activityId;
 
 }

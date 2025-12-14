@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BehaviorRequest {
 
-    private String userId;
-
     private Long activityId;
 
     private String behaviorType;

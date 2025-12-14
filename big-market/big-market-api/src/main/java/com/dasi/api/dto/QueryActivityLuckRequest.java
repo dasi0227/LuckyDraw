@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QueryActivityLuckRequest {
 
-    private String userId;
-
     private Long activityId;
 
 }

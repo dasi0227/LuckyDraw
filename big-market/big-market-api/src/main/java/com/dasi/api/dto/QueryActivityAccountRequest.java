@@ -13,6 +13,4 @@ public class QueryActivityAccountRequest {
 
     private Long activityId;
 
-    private String userId;
-
 }
