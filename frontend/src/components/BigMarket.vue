@@ -198,7 +198,7 @@
     <transition name="fade">
       <div v-if="rewardModal.visible" class="reward-modal-overlay" @click="closeRewardModal">
         <div class="reward-modal" @click.stop>
-          <h3>{{ '🎉 充值成功 🎉' }}</h3>
+          <h3>{{ '🎉 获取成功 🎉' }}</h3>
           <ul>
             <li v-for="(text, idx) in rewardModal.rewards" :key="idx">
               <span class="reward-pill">{{ text }}</span>
@@ -259,7 +259,7 @@
       <div v-if="rechargeModal.visible" class="recharge-modal-overlay" @click="closeRechargeModal">
         <div class="recharge-modal" @click.stop>
           <h3>积分充值</h3>
-          <p class="recharge-sub">选择充值档位，确认后发起支付</p>
+          <p class="recharge-sub">选择充值档位和支付方式，确认后发起支付</p>
           <div class="recharge-list">
             <button
               v-for="item in rechargeModal.items"
@@ -286,8 +286,8 @@
             </button>
           </div>
           <div class="pay-submit-row">
-            <button class="pill-btn ghost danger" @click="closeRechargeModal">关闭</button>
             <button class="pill-btn" @click="askRecharge(selectedRecharge, paySelection)">发起支付</button>
+            <button class="pill-btn ghost danger" @click="closeRechargeModal">关闭</button>
           </div>
         </div>
       </div>
@@ -2296,7 +2296,7 @@ const closeRechargeConfirm = () => {
   display:flex;
   justify-content:center;
   gap: 0.75rem;
-  margin: 1rem 0 1rem;
+  margin: 2.0rem 0 1rem;
 }
 
 .recharge-modal .modal-close{
