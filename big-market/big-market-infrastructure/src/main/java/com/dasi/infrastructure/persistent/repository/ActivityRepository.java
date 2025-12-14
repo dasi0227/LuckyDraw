@@ -313,6 +313,25 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
+    public Integer increaseActivityAccountLuck(ActivityAccountEntity activityAccountEntity) {
+
+        String userId = activityAccountEntity.getUserId();
+
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(activityAccountEntity.getUserId());
+        activityAccount.setActivityId(activityAccountEntity.getActivityId());
+        activityAccount.setAccountLuck(activityAccountEntity.getAccountLuck());
+
+        try {
+            dbRouterStrategy.doRouter(userId);
+            activityAccountDao.increaseActivityAccountLuck(activityAccount);
+            return activityAccountDao.queryActivityAccountLuck(activityAccount);
+        } finally {
+            dbRouterStrategy.clear();
+        }
+    }
+
+    @Override
     public void createActivityAccountIfAbsent(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);

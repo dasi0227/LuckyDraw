@@ -86,3 +86,9 @@ export const burstConfetti = async (canvasEl, origin = { x: 0.5, y: 0.35 }) => {
     shapes: ['circle'],
   });
 };
+
+export const resetConfetti = () => {
+  if (instance && typeof instance.reset === 'function') {
+    instance.reset();
+  }
+};

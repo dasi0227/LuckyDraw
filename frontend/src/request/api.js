@@ -3,6 +3,15 @@ import request from './request.js';
 const prefix = '/api/v1/big-market';
 
 export default {
+  // 登录
+  login(data) {
+    return request.post('/login', data);
+  },
+
+  // 注册
+  register(data) {
+    return request.post('/register', data);
+  },
 
   // 查询当前活动的积分兑换信息
   queryActivityConvert(data) {
@@ -37,6 +46,11 @@ export default {
   // 执行互动行为
   doBehavior(data) {
     return request.post(`${prefix}/behavior`, data);
+  },
+
+  // 增加幸运值
+  addFortune(data) {
+    return request.post(`${prefix}/fortune`, data);
   },
 
   // 执行积分兑换

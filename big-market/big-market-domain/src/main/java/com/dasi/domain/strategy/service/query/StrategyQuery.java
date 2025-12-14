@@ -83,6 +83,7 @@ public class StrategyQuery implements IStrategyQuery {
             String luck = parts[0];
             String[] awardIds = parts[1].split(Delimiter.COMMA);
             List<String> awardNames = Arrays.stream(awardIds)
+                    .skip(Math.max(0, awardIds.length - 2L))
                     .map(awardId -> awardEntityMap.get(awardId).getAwardName())
                     .collect(Collectors.toList());
             luckThreshold.put(luck, awardNames);

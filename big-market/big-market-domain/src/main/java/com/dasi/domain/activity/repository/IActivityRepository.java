@@ -48,4 +48,6 @@ public interface IActivityRepository {
 
     void createActivityAccountIfAbsent(String userId, Long activityId);
 
+    Integer increaseActivityAccountLuck(ActivityAccountEntity activityAccountEntity);
+
 }

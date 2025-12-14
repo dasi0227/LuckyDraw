@@ -18,6 +18,8 @@ public interface IActivityAccountDao {
 
     int decreaseActivityAccountRaffle(ActivityAccount activityAccount);
 
+    void increaseActivityAccountLuck(ActivityAccount activityAccount);
+
     void increaseActivityAccountPoint(ActivityAccount activityAccount);
 
     void decreaseActivityAccountPoint(ActivityAccount activityAccount);
