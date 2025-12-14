@@ -2,9 +2,22 @@ import axios from 'axios';
 
 // HTTP 客户端
 const request = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: '/',
   timeout: 15000,
 });
+
+// 请求拦截器，统一附带 token
+request.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('bigmarket_token');
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 
 // 响应拦截器

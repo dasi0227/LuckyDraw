@@ -48,6 +48,10 @@
             <groupId>com.dasi</groupId>
             <artifactId>big-market-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dasi</groupId>
+            <artifactId>big-market-infrastructure</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

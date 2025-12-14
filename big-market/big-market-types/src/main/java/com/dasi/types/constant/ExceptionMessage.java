@@ -24,4 +24,10 @@ public class ExceptionMessage {
     public static final String ACTIVITY_ALREADY_SHUTDOWN = "活动暂时不可参与，请关注后续消息";
     public static final String ACTIVITY_NOT_ACTIVATED = "活动暂时不可参与，请关注后续消息";
 
+    // 令牌
+    public static final String TOKEN_ERROR = "令牌校验失败";
+    public static final String USERID_ALREADY_EXISTS = "用户 ID 已存在";
+    public static final String USER_NOT_EXISTS = "用户不存在";
+    public static final String USER_PASSWORD_ERROR = "用户密码错误";
+
 }

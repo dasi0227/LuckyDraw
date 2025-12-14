@@ -13,6 +13,4 @@ public class QueryActivityAwardRequest {
 
     private Long activityId;
 
-    private String userId;
-
 }

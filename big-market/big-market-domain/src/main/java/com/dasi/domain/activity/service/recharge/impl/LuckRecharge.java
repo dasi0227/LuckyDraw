@@ -18,9 +18,8 @@ public class LuckRecharge implements ILuckRecharge {
     private IActivityRepository activityRepository;
 
     @Override
-    public FortuneResult doFortune(FortuneContext fortuneContext) {
+    public FortuneResult addFortune(FortuneContext fortuneContext) {
 
-        // 1. 参数校验
         String userId = fortuneContext.getUserId();
         Long activityId = fortuneContext.getActivityId();
         Integer luck = fortuneContext.getLuck();

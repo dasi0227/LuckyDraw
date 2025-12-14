@@ -1,4 +1,4 @@
-package com.dasi.trigger.http;
+package com.dasi.trigger.http.controller;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
@@ -28,6 +28,7 @@ import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.*;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
+import com.dasi.types.context.UserIdContext;
 import com.dasi.types.model.Result;
 import com.dasi.types.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +90,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<QueryActivityAccountResponse> queryActivityAccount(@RequestBody QueryActivityAccountRequest queryActivityAccountRequest) {
 
-        String userId = queryActivityAccountRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = queryActivityAccountRequest.getActivityId();
 
         QueryActivityAccountContext queryActivityAccountContext = QueryActivityAccountContext.builder().userId(userId).activityId(activityId).build();
@@ -140,7 +141,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<List<QueryActivityAwardResponse>> queryActivityAward(@RequestBody QueryActivityAwardRequest queryActivityAwardRequest) {
 
-        String userId = queryActivityAwardRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = queryActivityAwardRequest.getActivityId();
 
         QueryActivityAwardContext queryActivityAwardContext = QueryActivityAwardContext.builder().userId(userId).activityId(activityId).build();
@@ -169,7 +170,7 @@ public class BigMarketController implements IBigMarketService {
     public Result<List<QueryUserAwardResponse>> queryUserAwardRaffle(@RequestBody QueryUserAwardRequest queryUserAwardRequest) {
 
         Long activityId = queryUserAwardRequest.getActivityId();
-        String userId = queryUserAwardRequest.getUserId();
+        String userId = UserIdContext.getUserId();
 
         QueryUserAwardContext queryAccountContext = QueryUserAwardContext.builder().userId(userId).activityId(activityId).build();
         List<QueryUserAwardResult> queryUserAwardResultList = awardQuery.queryUserAwardRaffleList(queryAccountContext);
@@ -193,7 +194,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<List<QueryActivityBehaviorResponse>> queryActivityBehavior(@RequestBody QueryActivityBehaviorRequest queryActivityBehaviorRequest) {
 
-        String userId = queryActivityBehaviorRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = queryActivityBehaviorRequest.getActivityId();
 
         QueryActivityBehaviorContext queryAccountContext = QueryActivityBehaviorContext.builder().userId(userId).activityId(activityId).build();
@@ -219,7 +220,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<QueryActivityLuckResponse> queryActivityLuck(@RequestBody QueryActivityLuckRequest queryActivityLuckRequest) {
 
-        String userId = queryActivityLuckRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = queryActivityLuckRequest.getActivityId();
 
         QueryActivityLuckContext queryActivityLuckContext = QueryActivityLuckContext.builder().userId(userId).activityId(activityId).build();
@@ -268,7 +269,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<BehaviorResponse> behavior(@RequestBody BehaviorRequest behaviorRequest) {
 
-        String userId = behaviorRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = behaviorRequest.getActivityId();
         String behaviorType = behaviorRequest.getBehaviorType();
         String businessNo = TimeUtil.thisDay(false);
@@ -289,7 +290,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<ConvertResponse> convert(@RequestBody ConvertRequest convertRequest) {
 
-        String userId = convertRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long tradeId = convertRequest.getTradeId();
         Long activityId = convertRequest.getActivityId();
         String businessNo = TimeUtil.thisDay(false);
@@ -310,12 +311,12 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<FortuneResponse> fortune(@RequestBody FortuneRequest fortuneRequest) {
 
-        String userId = fortuneRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = fortuneRequest.getActivityId();
         Integer luck = fortuneRequest.getLuck();
 
         FortuneContext fortuneContext = FortuneContext.builder().userId(userId).activityId(activityId).luck(luck).build();
-        FortuneResult fortuneResult = luckRecharge.doFortune(fortuneContext);
+        FortuneResult fortuneResult = luckRecharge.addFortune(fortuneContext);
         FortuneResponse fortuneResponse = FortuneResponse.builder().accountLuck(fortuneResult.getAccountLuck()).build();
 
         return Result.success(fortuneResponse);
@@ -330,7 +331,7 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<RaffleResponse> raffle(@RequestBody RaffleRequest raffleRequest) {
 
-        String userId = raffleRequest.getUserId();
+        String userId = UserIdContext.getUserId();
         Long activityId = raffleRequest.getActivityId();
 
         // 1. 参与活动

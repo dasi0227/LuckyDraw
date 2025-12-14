@@ -13,6 +13,4 @@ public class QueryActivityBehaviorRequest {
 
     private Long activityId;
 
-    private String userId;
-
 }

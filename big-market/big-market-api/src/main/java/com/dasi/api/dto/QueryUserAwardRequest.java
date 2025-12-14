@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QueryUserAwardRequest {
 
-    private String userId;
-
     private Long activityId;
 
 }

@@ -5,12 +5,12 @@ const prefix = '/api/v1/big-market';
 export default {
   // 登录
   login(data) {
-    return request.post('/login', data);
+    return request.post(`${prefix}/user/login`, data);
   },
 
   // 注册
   register(data) {
-    return request.post('/register', data);
+    return request.post(`${prefix}/user/register`, data);
   },
 
   // 查询当前活动的积分兑换信息

@@ -41,7 +41,12 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
 
         // 3. 判断是否需要继续
         if (ruleCheckResult.getRuleModel() == RuleModel.RULE_BLACKLIST) {
-            return LotteryResult.builder().originalAwardId(originalAwardId).build();
+            return LotteryResult.builder()
+                    .originalAwardId(originalAwardId)
+                    .finalAwardId(originalAwardId)
+                    .isLock(ruleCheckResult.getIsLock())
+                    .isEmpty(ruleCheckResult.getIsEmpty())
+                    .build();
         } else {
             ruleCheckContext.setAwardId(ruleCheckResult.getAwardId());
         }

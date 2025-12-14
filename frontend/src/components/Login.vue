@@ -71,14 +71,19 @@ const handleSubmit = async () => {
   submitting.value = true;
   try {
     if (mode.value === 'register') {
-      await api.register({ userId: form.userId, password: form.password });
+      const reg = await api.register({ userId: form.userId, password: form.password });
+      if (reg?.token) {
+        localStorage.setItem('bigmarket_token', reg.token);
+      }
     }
-    await api.login({ userId: form.userId, password: form.password });
+    const loginRes = await api.login({ userId: form.userId, password: form.password });
 
     localStorage.setItem('bigmarket_user', form.userId);
+    if (loginRes?.token) {
+      localStorage.setItem('bigmarket_token', loginRes.token);
+    }
     router.push({
       path: '/bigmarket/10001',
-      query: { userId: form.userId },
     });
   } catch (error) {
     window.alert(error?.message || '操作失败，请稍后再试');

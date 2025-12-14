@@ -1,10 +1,24 @@
 <template>
   <div class="bigmarket-page">
+    
+  <div class="top-area">
     <div v-if="activityBannerText" class="activity-banner">
       <div class="banner-track">
         <span class="banner-text">{{ activityBannerText }}</span>
       </div>
     </div>
+
+    <div class="top-bar">
+    <div class="page-brand">Dasi 抽奖系统</div>
+
+        <div class="page-actions">
+            <button class="action-btn" type="button">积分充值</button>
+            <button class="action-btn" type="button">切换活动</button>
+            <button class="action-btn" type="button" @click="handleLogout">退出登录</button>
+        </div>
+    </div>
+  </div>
+
 
     <!-- Header -->
     <header class="page-header">
@@ -228,7 +242,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
 import { namePool } from '../utils/name.js';
 import { burstConfetti, resetConfetti } from '../utils/confetti.js';
@@ -377,11 +391,10 @@ const seedHistoryRecords = (count = 10) => {
 };
 
 const handleRedeemPoints = async (item) => {
-  if (!currentActivityId.value || !currentUserId.value) return;
+  if (!currentActivityId.value) return;
   try {
     const resp = await api.doConvert({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
       tradeId: item.id,
     });
     const desc = resp?.tradeDesc || '兑换成功';
@@ -406,11 +419,10 @@ const createConfetti = async () => {
 };
 
 const runBehavior = async (action) => {
-  if (!currentActivityId.value || !currentUserId.value) return;
+  if (!currentActivityId.value) return;
   try {
     const resp = await api.doBehavior({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
       behaviorType: action.type || action.behaviorType,
     });
     const rewards = Array.isArray(resp?.rewardDescList) ? resp.rewardDescList : [];
@@ -474,8 +486,9 @@ const closeWarnModal = () => {
 };
 
 const route = useRoute();
+const router = useRouter();
 const currentActivityId = ref(route.params.activityId || 'default');
-const currentUserId = ref(route.query.userId || localStorage.getItem('bigmarket_user') || 'wyw');
+const currentUserId = ref(localStorage.getItem('bigmarket_user') || 'wyw');
 
 const fetchActivityConvertData = async (activityId) => {
   if (!activityId) return;
@@ -492,13 +505,13 @@ const fetchActivityConvertData = async (activityId) => {
   }
 };
 
-const fetchActivityAccountData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityAccountData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const account = await api.queryActivityAccount({ activityId, userId });
+    const account = await api.queryActivityAccount({ activityId });
 
     Object.assign(userStats, {
-      name: userId,
+      name: currentUserId.value,
       points: account?.accountPoint ?? 0,
       totalChance: account?.totalSurplus ?? 0,
       monthChance: account?.monthSurplus ?? 0,
@@ -511,10 +524,10 @@ const fetchActivityAccountData = async (activityId, userId) => {
   }
 };
 
-const fetchActivityLuckData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityLuckData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const resp = await api.queryActivityLuck({ activityId, userId });
+    const resp = await api.queryActivityLuck({ activityId });
     luckValue.value = resp?.accountLuck ?? 0;
 
     const thresholdEntries =
@@ -546,12 +559,11 @@ const fetchActivityLuckData = async (activityId, userId) => {
 };
 
 const addFortuneLuck = async (luckBonus) => {
-  if (!currentActivityId.value || !currentUserId.value) return;
+  if (!currentActivityId.value) return;
   const luck = Math.max(1, Math.min(10, Number(luckBonus) || 1));
   try {
     const resp = await api.addFortune({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
       luck,
     });
     if (resp?.accountLuck !== undefined && resp?.accountLuck !== null) {
@@ -564,10 +576,10 @@ const addFortuneLuck = async (luckBonus) => {
   }
 };
 
-const fetchActivityBehaviorData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityBehaviorData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const resp = await api.queryActivityBehavior({ activityId, userId });
+    const resp = await api.queryActivityBehavior({ activityId });
     const list = Array.isArray(resp) ? resp : [];
     if (list.length) {
       behaviors.value = list.map((item, idx) => ({
@@ -583,10 +595,10 @@ const fetchActivityBehaviorData = async (activityId, userId) => {
   }
 };
 
-const fetchActivityAwardData = async (activityId, userId) => {
+const fetchActivityAwardData = async (activityId) => {
   if (!activityId) return;
   try {
-    const awards = await api.queryActivityAward({ activityId, userId });
+    const awards = await api.queryActivityAward({ activityId });
     const normalized = Array.isArray(awards) ? awards : [];
     const sorted = normalized
       .slice()
@@ -617,10 +629,10 @@ const fetchActivityInfo = async (activityId) => {
   }
 };
 
-const fetchUserAwardData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchUserAwardData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const awards = await api.queryUserAward({ activityId, userId });
+    const awards = await api.queryUserAward({ activityId });
     const normalized = Array.isArray(awards) ? awards : [];
     const formatAwardTime = (time) => {
       const date = new Date(time);
@@ -637,16 +649,16 @@ const fetchUserAwardData = async (activityId, userId) => {
 };
 
 watch(
-  () => [route.params.activityId, route.query.userId],
-  async ([newActivityId, newUserId]) => {
+  () => route.params.activityId,
+  async (newActivityId) => {
     currentActivityId.value = newActivityId;
-    currentUserId.value = newUserId || localStorage.getItem('bigmarket_user') || 'wyw';
+    currentUserId.value = localStorage.getItem('bigmarket_user') || 'wyw';
     fetchActivityConvertData(currentActivityId.value);
-    await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
-    await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
-    fetchUserAwardData(currentActivityId.value, currentUserId.value);
-    fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
-    fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    await fetchActivityAccountData(currentActivityId.value);
+    await fetchActivityLuckData(currentActivityId.value);
+    fetchUserAwardData(currentActivityId.value);
+    fetchActivityBehaviorData(currentActivityId.value);
+    fetchActivityAwardData(currentActivityId.value);
     fetchActivityInfo(currentActivityId.value);
     if (!historyRecords.value.length) {
       seedHistoryRecords(10);
@@ -673,7 +685,6 @@ const startGridLottery = async () => {
   try {
     const resp = await api.doRaffle({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
     });
 
     raffleFlags = {
@@ -752,10 +763,10 @@ const startGridLottery = async () => {
       await addFortuneLuck(luckBonus);
 
       highlightIndex.value = 4;
-      await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
-      await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
-      await fetchUserAwardData(currentActivityId.value, currentUserId.value);
-      await fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+      await fetchActivityAccountData(currentActivityId.value);
+      await fetchActivityLuckData(currentActivityId.value);
+      await fetchUserAwardData(currentActivityId.value);
+      await fetchActivityAwardData(currentActivityId.value);
 
       isRolling.value = false;
     }, 500);
@@ -799,6 +810,12 @@ onMounted(() => {
   luckValue.value = 48;
   scheduleNextHistory();
 });
+
+const handleLogout = () => {
+  localStorage.removeItem('bigmarket_user');
+  localStorage.removeItem('bigmarket_token');
+  router.push('/login');
+};
 </script>
 
 <style scoped>
@@ -823,6 +840,7 @@ onMounted(() => {
 }
 
 .bigmarket-page {
+  position: relative;
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
@@ -868,6 +886,68 @@ onMounted(() => {
 .page-header {
   text-align: center;
   color: #111b2b;
+}
+
+.top-area{
+  position:relative;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+}
+
+.top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0.6rem 0 0.2rem;
+}
+
+.page-brand{
+  font-size:2.6rem;
+  font-weight:1000;
+  margin-left: 1.0rem;
+  letter-spacing:0.04em;
+  line-height:1.05;
+  user-select:none;
+  background:linear-gradient(135deg, #0f172a 0%, #2b3a67 45%, #4f6bff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 14px 26px rgba(79, 107, 255, 0.16);
+}
+
+.page-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-left:auto;
+  margin-right: 1.0rem;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, #f66b6b, #f88b4f);
+  color: #fff;
+  font-weight: 750;
+  box-shadow: 0 10px 18px rgba(248, 107, 107, 0.25);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.action-btn:hover{
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff7a7a, #ff9a5f);
+  box-shadow: 0 14px 26px rgba(248, 107, 107, 0.38);
+  filter: saturate(1.06);
+}
+
+.action-btn:active{
+  transform: translateY(0);
+  background: linear-gradient(135deg, #f45f5f, #f58449);
+  box-shadow: 0 8px 16px rgba(248, 107, 107, 0.24);
+  filter: saturate(1.02);
 }
 
 .confetti-canvas {

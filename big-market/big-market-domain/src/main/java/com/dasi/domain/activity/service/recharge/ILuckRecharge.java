@@ -5,6 +5,6 @@ import com.dasi.domain.activity.model.io.FortuneResult;
 
 public interface ILuckRecharge {
 
-    FortuneResult doFortune(FortuneContext fortuneContext);
+    FortuneResult addFortune(FortuneContext fortuneContext);
 
 }

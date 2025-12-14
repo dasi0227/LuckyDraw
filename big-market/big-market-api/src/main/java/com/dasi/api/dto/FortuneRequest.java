@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FortuneRequest {
 
-    private String userId;
-
     private Long activityId;
 
     private Integer luck;
