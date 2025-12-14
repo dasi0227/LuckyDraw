@@ -29,6 +29,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -160,11 +161,12 @@ public class BehaviorRepository implements IBehaviorRepository {
                 task.setMessage(taskEntity.getMessage());
                 task.setTaskState(taskEntity.getTaskState().name());
 
-                // 事务：落库订单+任务（命中唯一约束则视为幂等）
+                AtomicInteger atomicRows = new AtomicInteger(0);
                 transactionTemplate.executeWithoutResult(status -> {
                     try {
                         int rows = rewardOrderDao.saveRewardOrder(rewardOrder);
                         if (rows == 1) {
+                            atomicRows.set(1);
                             taskDao.saveTask(task);
                         }
                     } catch (DuplicateKeyException e) {
@@ -178,22 +180,21 @@ public class BehaviorRepository implements IBehaviorRepository {
                     }
                 });
 
-                // 发布消息并更新任务状态
-                log.info("【返利】保存返利订单成功：orderId={}", orderId);
-                Task updateTask = new Task();
-                updateTask.setUserId(taskEntity.getUserId());
-                updateTask.setMessageId(messageId);
+                if (atomicRows.get() == 0) {
+                    return;
+                }
 
                 try {
-                    updateTask.setTaskState(TaskState.DISTRIBUTED.name());
-                    int rows = taskDao.updateTaskState(updateTask);
+                    task.setTaskState(TaskState.DISTRIBUTED.name());
+                    int rows = taskDao.updateTaskState(task);
                     if (rows == 1) {
                         eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                     }
+                    log.info("【返利】保存返利订单成功：orderId={}", orderId);
                     log.info("【返利】发送返利消息成功：messageId={}", messageId);
                 } catch (Exception e) {
-                    updateTask.setTaskState(TaskState.FAILED.name());
-                    taskDao.updateTaskState(updateTask);
+                    task.setTaskState(TaskState.FAILED.name());
+                    taskDao.updateTaskState(task);
                     log.error("【返利】发送返利消息失败：messageId={}", messageId);
                     throw e;
                 }

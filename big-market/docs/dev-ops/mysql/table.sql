@@ -8,14 +8,14 @@ USE big_market_table;
 DROP TABLE IF EXISTS task;
 CREATE TABLE task
 (
-    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    user_id     VARCHAR(32)     NOT NULL COMMENT '用户id',
-    message_id  VARCHAR(64)     NOT NULL COMMENT '消息id',
-    topic       VARCHAR(32)     NOT NULL COMMENT '消息主题',
-    message     VARCHAR(512)    NOT NULL COMMENT '消息主体',
-    task_state  VARCHAR(32)     NOT NULL COMMENT '任务状态',
-    create_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    id          BIGINT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    message_id  VARCHAR(64) UNIQUE NOT NULL COMMENT '消息id',
+    user_id     VARCHAR(32)        NOT NULL COMMENT '用户id',
+    topic       VARCHAR(32)        NOT NULL COMMENT '消息主题',
+    message     VARCHAR(512)       NOT NULL COMMENT '消息主体',
+    task_state  VARCHAR(32)        NOT NULL COMMENT '任务状态',
+    create_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='任务表';
@@ -26,16 +26,16 @@ CREATE TABLE task
 DROP TABLE IF EXISTS trade;
 CREATE TABLE IF NOT EXISTS trade
 (
-    id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    trade_id     BIGINT UNIQUE NOT NULL COMMENT '交易id',
-    activity_id  BIGINT        NOT NULL COMMENT '活动id',
-    trade_type   VARCHAR(32)   NOT NULL COMMENT '交易类型',
-    trade_point  VARCHAR(32)   NOT NULL COMMENT '交易积分',
-    trade_value  VARCHAR(32)   NOT NULL COMMENT '交易结果',
-    trade_name   VARCHAR(32)   NOT NULL COMMENT '交易名称',
-    trade_desc   VARCHAR(256)  NOT NULL COMMENT '交易描述',
-    create_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    trade_id    BIGINT UNIQUE NOT NULL COMMENT '交易id',
+    activity_id BIGINT        NOT NULL COMMENT '活动id',
+    trade_type  VARCHAR(32)   NOT NULL COMMENT '交易类型',
+    trade_point VARCHAR(32)   NOT NULL COMMENT '交易积分',
+    trade_value VARCHAR(32)   NOT NULL COMMENT '交易结果',
+    trade_name  VARCHAR(32)   NOT NULL COMMENT '交易名称',
+    trade_desc  VARCHAR(256)  NOT NULL COMMENT '交易描述',
+    create_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY uq_trade_id_activity_id (trade_id, activity_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -47,15 +47,15 @@ CREATE TABLE IF NOT EXISTS trade
 DROP TABLE IF EXISTS behavior;
 CREATE TABLE IF NOT EXISTS behavior
 (
-    id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    activity_id    BIGINT        NOT NULL COMMENT '活动id',
-    behavior_type  VARCHAR(32)   NOT NULL COMMENT '行为类型',
-    behavior_name  VARCHAR(32)   NOT NULL COMMENT '行为名称',
-    reward_type    VARCHAR(32)   NOT NULL COMMENT '奖励类型',
-    reward_value   VARCHAR(32)   NOT NULL COMMENT '奖励值',
-    reward_desc    VARCHAR(256)  NOT NULL COMMENT '奖励描述',
-    create_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    activity_id   BIGINT       NOT NULL COMMENT '活动id',
+    behavior_type VARCHAR(32)  NOT NULL COMMENT '行为类型',
+    behavior_name VARCHAR(32)  NOT NULL COMMENT '行为名称',
+    reward_type   VARCHAR(32)  NOT NULL COMMENT '奖励类型',
+    reward_value  VARCHAR(32)  NOT NULL COMMENT '奖励值',
+    reward_desc   VARCHAR(256) NOT NULL COMMENT '奖励描述',
+    create_time   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='行为表';
@@ -66,14 +66,14 @@ CREATE TABLE IF NOT EXISTS behavior
 DROP TABLE IF EXISTS award;
 CREATE TABLE award
 (
-    id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    award_id     BIGINT UNIQUE NOT NULL COMMENT '奖品id',
-    award_type   VARCHAR(32)   NOT NULL COMMENT '奖品类型',
-    award_value  VARCHAR(32)   NOT NULL COMMENT '奖品配置',
-    award_name   VARCHAR(32)   NOT NULL COMMENT '奖品名称',
-    award_desc   VARCHAR(256)  NOT NULL COMMENT '奖品描述',
-    create_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    award_id    BIGINT UNIQUE NOT NULL COMMENT '奖品id',
+    award_type  VARCHAR(32)   NOT NULL COMMENT '奖品类型',
+    award_value VARCHAR(32)   NOT NULL COMMENT '奖品配置',
+    award_name  VARCHAR(32)   NOT NULL COMMENT '奖品名称',
+    award_desc  VARCHAR(256)  NOT NULL COMMENT '奖品描述',
+    create_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='奖品表';
@@ -378,19 +378,19 @@ CREATE TABLE raffle_order
 DROP TABLE IF EXISTS reward_order;
 CREATE TABLE IF NOT EXISTS reward_order
 (
-    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    order_id        VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
-    biz_id          VARCHAR(64) UNIQUE NOT NULL COMMENT '业务id',
-    user_id         VARCHAR(32)        NOT NULL COMMENT '用户id',
-    activity_id     BIGINT             NOT NULL COMMENT '活动id',
-    behavior_type   VARCHAR(32)        NOT NULL COMMENT '行为类型',
-    reward_type     VARCHAR(32)        NOT NULL COMMENT '奖励类型',
-    reward_value    VARCHAR(32)        NOT NULL COMMENT '奖励值',
-    reward_state    VARCHAR(32)        NOT NULL COMMENT '奖励状态',
-    reward_desc     VARCHAR(256)       NOT NULL COMMENT '奖励描述',
-    reward_time     DATETIME           NOT NULL COMMENT '奖励时间',
-    create_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    order_id      VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
+    biz_id        VARCHAR(64) UNIQUE NOT NULL COMMENT '业务id',
+    user_id       VARCHAR(32)        NOT NULL COMMENT '用户id',
+    activity_id   BIGINT             NOT NULL COMMENT '活动id',
+    behavior_type VARCHAR(32)        NOT NULL COMMENT '行为类型',
+    reward_type   VARCHAR(32)        NOT NULL COMMENT '奖励类型',
+    reward_value  VARCHAR(32)        NOT NULL COMMENT '奖励值',
+    reward_state  VARCHAR(32)        NOT NULL COMMENT '奖励状态',
+    reward_desc   VARCHAR(256)       NOT NULL COMMENT '奖励描述',
+    reward_time   DATETIME           NOT NULL COMMENT '奖励时间',
+    create_time   DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time   DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='奖励订单表';
@@ -401,17 +401,17 @@ CREATE TABLE IF NOT EXISTS reward_order
 DROP TABLE IF EXISTS trade_order;
 CREATE TABLE IF NOT EXISTS trade_order
 (
-    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
-    order_id        VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
-    biz_id          VARCHAR(64) UNIQUE NOT NULL COMMENT '业务id',
-    user_id         VARCHAR(32)        NOT NULL COMMENT '用户id',
-    trade_id        BIGINT             NOT NULL COMMENT '交易id',
-    activity_id     BIGINT             NOT NULL COMMENT '活动id',
-    trade_type      VARCHAR(32)        NOT NULL COMMENT '交易类型',
-    trade_state     VARCHAR(32)        NOT NULL COMMENT '交易状态',
-    trade_time      DATETIME           NOT NULL COMMENT '交易时间',
-    create_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time     DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '自增id',
+    order_id    VARCHAR(64) UNIQUE NOT NULL COMMENT '订单id',
+    biz_id      VARCHAR(64) UNIQUE NOT NULL COMMENT '业务id',
+    user_id     VARCHAR(32)        NOT NULL COMMENT '用户id',
+    trade_id    BIGINT             NOT NULL COMMENT '交易id',
+    activity_id BIGINT             NOT NULL COMMENT '活动id',
+    trade_type  VARCHAR(32)        NOT NULL COMMENT '交易类型',
+    trade_state VARCHAR(32)        NOT NULL COMMENT '交易状态',
+    trade_time  DATETIME           NOT NULL COMMENT '交易时间',
+    create_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='交易订单表';

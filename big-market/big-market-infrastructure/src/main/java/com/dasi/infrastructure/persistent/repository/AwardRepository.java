@@ -20,6 +20,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Repository
@@ -178,20 +179,24 @@ public class AwardRepository implements IAwardRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
+            AtomicInteger atomicRows = new AtomicInteger(0);
             transactionTemplate.executeWithoutResult(status -> {
                 try {
                     int rows = activityAwardDao.saveActivityAward(activityAward);
                     if (rows == 1) {
+                        atomicRows.set(1);
                         taskDao.saveTask(task);
                     }
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    log.error("【中奖】保存中奖记录时发生错误：error={}", e.getMessage());
+                    log.info("【中奖】保存中奖记录失败：userId={}, activityId={}, awardId={}", userId, activityId, awardId);
                     throw e;
                 }
             });
 
-            log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", userId, activityId, awardId);
+            if (atomicRows.get() == 0) {
+                return;
+            }
 
             try {
                 task.setTaskState(TaskState.DISTRIBUTED.name());
@@ -199,6 +204,7 @@ public class AwardRepository implements IAwardRepository {
                 if (rows == 1) {
                     eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                 }
+                log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", userId, activityId, awardId);
                 log.info("【中奖】发送中奖消息成功：messageId={}", taskEntity.getMessageId());
             } catch (Exception e) {
                 task.setTaskState(TaskState.FAILED.name());
