@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Repository
@@ -189,10 +190,12 @@ public class PointRepository implements IPointRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
+            AtomicInteger atomicRows = new AtomicInteger(0);
             transactionTemplate.executeWithoutResult(status -> {
                 try {
                     int rows = tradeOrderDao.saveTradeOrder(tradeOrder);
                     if (rows == 1) {
+                        atomicRows.set(1);
                         taskDao.saveTask(task);
                         activityAccountDao.decreaseActivityAccountPoint(activityAccount);
                     }
@@ -203,12 +206,15 @@ public class PointRepository implements IPointRepository {
                 }
             });
 
-            log.info("【交易】保存交易订单成功：orderId={}, point={}", orderId, tradePoint);
+            if (atomicRows.get() == 0) {
+                return;
+            }
 
             try {
                 eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                 task.setTaskState(TaskState.DISTRIBUTED.name());
                 taskDao.updateTaskState(task);
+                log.info("【交易】保存交易订单成功：orderId={}", orderId);
                 log.info("【交易】发送交易消息成功：messageId={}", taskEntity.getMessageId());
             } catch (Exception e) {
                 task.setTaskState(TaskState.FAILED.name());

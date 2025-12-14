@@ -26,11 +26,6 @@ request.interceptors.response.use(
     return data !== undefined ? data : payload;
   },
   (error) => {
-    const message =
-      error?.response?.data?.info ||
-      error?.message ||
-      '网络异常，请稍后重试';
-    window.alert(message);
     return Promise.reject(error);
   },
 );
