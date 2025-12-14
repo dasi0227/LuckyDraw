@@ -21,6 +21,11 @@
         WHERE activity_id = #{activityId}
     </select>
 
+    <select id="queryActivityList" resultMap="dataMap">
+        SELECT activity_id, activity_name, activity_desc, activity_begin_time, activity_end_time, strategy_id, activity_state
+        FROM activity
+    </select>
+
     <select id="queryStrategyIdByActivityId" parameterType="java.lang.Long" resultType="java.lang.Long">
         SELECT strategy_id
         FROM activity

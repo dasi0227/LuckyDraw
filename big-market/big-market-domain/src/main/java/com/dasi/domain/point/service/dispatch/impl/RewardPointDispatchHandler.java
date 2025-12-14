@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@TradeTypeConfig(tradeType = TradeType.POINT_REWARD)
+@TradeTypeConfig(tradeType = TradeType.REWARD_POINT)
 @Component
-public class PointRewardDispatchHandler implements IPointDispatchHandler {
+public class RewardPointDispatchHandler implements IPointDispatchHandler {
 
     @Resource
     private IPointRepository pointRepository;
@@ -19,7 +19,7 @@ public class PointRewardDispatchHandler implements IPointDispatchHandler {
     @Override
     public void dispatchHandle(PointDispatchAggregate pointDispatchAggregate) {
 
-        pointRepository.savePointReward(pointDispatchAggregate.getActivityAccountEntity(), pointDispatchAggregate.getTradeEntity(), pointDispatchAggregate.getTradeOrderEntity());
+        pointRepository.saveRewardPoint(pointDispatchAggregate.getActivityAccountEntity(), pointDispatchAggregate.getTradeEntity(), pointDispatchAggregate.getTradeOrderEntity());
 
     }
 }

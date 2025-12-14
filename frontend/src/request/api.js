@@ -18,6 +18,11 @@ export default {
     return request.post(`${prefix}/query/convert`, data);
   },
 
+  // 查询当前活动的充值列表
+  queryActivityRecharge(data) {
+    return request.post(`${prefix}/query/recharge`, data);
+  },
+
   // 查询用户在当前活动的基本信息
   queryActivityAccount(data) {
     return request.post(`${prefix}/query/account`, data);
@@ -31,6 +36,11 @@ export default {
   // 查询活动基本信息
   queryActivityInfo(data) {
     return request.post(`${prefix}/query/info`, data);
+  },
+
+  // 查询活动列表
+  queryActivityList() {
+    return request.post(`${prefix}/query/activities`);
   },
 
   // 查询用户在当前活动的幸运值
@@ -55,7 +65,12 @@ export default {
 
   // 执行积分兑换
   doConvert(data) {
-    return request.post(`${prefix}/convert`, data);
+    return request.post(`${prefix}/trade`, data);
+  },
+
+  // 执行积分兑换
+  doRecharge(data) {
+    return request.post(`${prefix}/trade`, data);
   },
 
   // 执行抽奖

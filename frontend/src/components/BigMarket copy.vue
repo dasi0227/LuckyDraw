@@ -1,14 +1,28 @@
 <template>
   <div class="bigmarket-page">
+    
+  <div class="top-area">
     <div v-if="activityBannerText" class="activity-banner">
       <div class="banner-track">
         <span class="banner-text">{{ activityBannerText }}</span>
       </div>
     </div>
 
+    <div class="top-bar">
+        <div class="page-brand">Dasi 抽奖系统</div>
+
+        <div class="page-actions">
+            <button class="action-btn" type="button" @click="openRechargeModal">积分充值</button>
+            <button class="action-btn" type="button" @click="openActivityModal">切换活动</button>
+            <button class="action-btn" type="button" @click="handleLogout">退出登录</button>
+        </div>
+    </div>
+  </div>
+
+
     <!-- Header -->
     <header class="page-header">
-      <h1>Dasi 抽奖系统</h1>
+      <h1>{{ activityInfo?.activityName || '抽奖活动' }}</h1>
     </header>
 
     <div class="content-grid">
@@ -164,9 +178,13 @@
             :key="mark.key"
             class="progress-mark"
             :style="{ left: `${mark.percent}%` }"
-            @click="showLuckDetail(mark)"
           >
-            <span class="mark-label">{{ mark.label ?? mark.value }}</span>
+            <span
+              class="mark-label"
+              :data-tip="`${mark.detail || mark.label || mark.value || ''} 中奖概率大幅度提升`"
+            >
+              {{ mark.label ?? mark.value }}
+            </span>
             <span
               v-if="mark.percent > 0 && mark.percent < 100"
               class="mark-line"
@@ -180,7 +198,7 @@
     <transition name="fade">
       <div v-if="rewardModal.visible" class="reward-modal-overlay" @click="closeRewardModal">
         <div class="reward-modal" @click.stop>
-          <h3>{{ '🎉 恭喜获得奖励 🎉' }}</h3>
+          <h3>{{ '🎉 充值成功 🎉' }}</h3>
           <ul>
             <li v-for="(text, idx) in rewardModal.rewards" :key="idx">
               <span class="reward-pill">{{ text }}</span>
@@ -217,6 +235,79 @@
         </div>
       </div>
     </transition>
+    <transition name="fade">
+      <div v-if="activityModal.visible" class="activity-modal-overlay" @click="closeActivityModal">
+        <div class="activity-modal" @click.stop>
+          <h3>切换活动</h3>
+          <p class="activity-sub">选择一个活动进入抽奖</p>
+          <div class="activity-list">
+            <button
+              v-for="item in activityModal.items"
+              :key="item.activityId"
+              class="activity-item"
+              @click="jumpActivity(item.activityId)"
+            >
+              <div class="activity-item__name">{{ item.activityName }}</div>
+              <div class="activity-item__desc">{{ item.activityDesc }}</div>
+            </button>
+          </div>
+          <button class="modal-close" @click="closeActivityModal">关闭</button>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-if="rechargeModal.visible" class="recharge-modal-overlay" @click="closeRechargeModal">
+        <div class="recharge-modal" @click.stop>
+          <h3>积分充值</h3>
+          <p class="recharge-sub">选择充值档位，确认后发起支付</p>
+          <div class="recharge-list">
+            <button
+              v-for="item in rechargeModal.items"
+              :key="item.tradeId"
+              class="recharge-card"
+              :class="{ active: selectedRecharge?.tradeId === item.tradeId }"
+              @click="selectedRecharge = item"
+            >
+              <div class="recharge-value">
+                <div class="recharge-money-plain">{{ item.tradeMoney }} 元</div>
+                <div class="recharge-point-plain">{{ item.tradeValue }} 积分</div>
+              </div>
+            </button>
+          </div>
+          <div class="pay-row">
+            <button class="pay-btn" :class="{ active: paySelection === '微信支付' }" @click="paySelection = '微信支付'" aria-label="微信支付">
+              <img :src="payIcons.wechat" alt="微信支付" />
+            </button>
+            <button class="pay-btn" :class="{ active: paySelection === '支付宝' }" @click="paySelection = '支付宝'" aria-label="支付宝">
+              <img :src="payIcons.alipay" alt="支付宝" />
+            </button>
+            <button class="pay-btn" :class="{ active: paySelection === '银联支付' }" @click="paySelection = '银联支付'" aria-label="银联支付">
+              <img :src="payIcons.unionpay" alt="银联支付" />
+            </button>
+          </div>
+          <div class="pay-submit-row">
+            <button class="pill-btn ghost danger" @click="closeRechargeModal">关闭</button>
+            <button class="pill-btn" @click="askRecharge(selectedRecharge, paySelection)">发起支付</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-if="rechargeConfirm.visible" class="recharge-confirm-overlay" @click="closeRechargeConfirm">
+        <div class="recharge-confirm" @click.stop>
+          <h3>确认支付</h3>
+          <p>
+            使用 {{ rechargeConfirm.channel }} 支付
+            <strong>{{ rechargeConfirm.item?.tradeMoney }}</strong>
+            获取 <strong>{{ rechargeConfirm.item?.tradeValue }}</strong> 积分
+          </p>
+          <div class="confirm-actions">
+            <button class="pill-btn" @click="submitRecharge">确认</button>
+            <button class="pill-btn ghost danger" @click="closeRechargeConfirm">取消</button>
+          </div>
+        </div>
+      </div>
+    </transition>
     <canvas ref="confettiCanvas" class="confetti-canvas"></canvas>
 
   </div>
@@ -224,11 +315,14 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
 import { namePool } from '../utils/name.js';
 import { burstConfetti, resetConfetti } from '../utils/confetti.js';
 import api from '../request/api.js';
+import wechatIcon from '../assets/wechatpay.svg';
+import alipayIcon from '../assets/alipay.svg';
+import unionpayIcon from '../assets/unionpay.svg';
 
 const userStats = reactive({
   points: 0,
@@ -252,6 +346,12 @@ const errorModal = ref({ visible: false, message: '', shake: false });
 const activityInfo = ref(null);
 const behaviors = ref([]);
 const confettiCanvas = ref(null);
+const activityModal = reactive({ visible: false, items: [] });
+const rechargeModal = reactive({ visible: false, items: [] });
+const rechargeConfirm = reactive({ visible: false, item: null, channel: '' });
+const selectedRecharge = ref(null);
+const paySelection = ref('微信支付');
+const payIcons = { wechat: wechatIcon, alipay: alipayIcon, unionpay: unionpayIcon };
 
 const brushColors = [
   "linear-gradient(160deg, rgba(255,255,255,0.92), rgba(210,220,255,0.78))",
@@ -373,11 +473,10 @@ const seedHistoryRecords = (count = 10) => {
 };
 
 const handleRedeemPoints = async (item) => {
-  if (!currentActivityId.value || !currentUserId.value) return;
+  if (!currentActivityId.value) return;
   try {
     const resp = await api.doConvert({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
       tradeId: item.id,
     });
     const desc = resp?.tradeDesc || '兑换成功';
@@ -386,6 +485,8 @@ const handleRedeemPoints = async (item) => {
       title: '🎉 兑换成功，恭喜获得奖励 🎉',
       rewards: [desc],
     };
+    const luckBonus = Math.floor(Math.random() * 10) + 1;
+    await addFortuneLuck(luckBonus);
     createConfetti();
     setTimeout(() => {
       fetchActivityAccountData(currentActivityId.value, currentUserId.value);
@@ -400,11 +501,10 @@ const createConfetti = async () => {
 };
 
 const runBehavior = async (action) => {
-  if (!currentActivityId.value || !currentUserId.value) return;
+  if (!currentActivityId.value) return;
   try {
     const resp = await api.doBehavior({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
       behaviorType: action.type || action.behaviorType,
     });
     const rewards = Array.isArray(resp?.rewardDescList) ? resp.rewardDescList : [];
@@ -413,6 +513,8 @@ const runBehavior = async (action) => {
       title: '🎉 互动成功，恭喜获得奖励 🎉',
       rewards: rewards.length ? rewards : ['感谢参与'],
     };
+    const luckBonus = Math.floor(Math.random() * 10) + 1;
+    await addFortuneLuck(luckBonus);
     createConfetti();
     await fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     setTimeout(() => {
@@ -465,14 +567,10 @@ const closeWarnModal = () => {
   warnModal.value = { visible: false, title: '提示', lines: [], shake: false };
 };
 
-const showLuckDetail = (mark) => {
-  const detailText = mark?.detail || mark?.label || mark?.value || '暂无详情';
-  window.alert(`阈值 ${mark?.value ?? ''}: ${detailText}`);
-};
-
 const route = useRoute();
+const router = useRouter();
 const currentActivityId = ref(route.params.activityId || 'default');
-const currentUserId = ref(route.query.userId || localStorage.getItem('bigmarket_user') || 'wyw');
+const currentUserId = ref(localStorage.getItem('bigmarket_user') || 'wyw');
 
 const fetchActivityConvertData = async (activityId) => {
   if (!activityId) return;
@@ -489,13 +587,13 @@ const fetchActivityConvertData = async (activityId) => {
   }
 };
 
-const fetchActivityAccountData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityAccountData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const account = await api.queryActivityAccount({ activityId, userId });
+    const account = await api.queryActivityAccount({ activityId });
 
     Object.assign(userStats, {
-      name: userId,
+      name: currentUserId.value,
       points: account?.accountPoint ?? 0,
       totalChance: account?.totalSurplus ?? 0,
       monthChance: account?.monthSurplus ?? 0,
@@ -508,10 +606,10 @@ const fetchActivityAccountData = async (activityId, userId) => {
   }
 };
 
-const fetchActivityLuckData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityLuckData = async (activityId) => {
+  if (!activityId) return;
   try {
-    const resp = await api.queryActivityLuck({ activityId, userId });
+    const resp = await api.queryActivityLuck({ activityId });
     luckValue.value = resp?.accountLuck ?? 0;
 
     const thresholdEntries =
@@ -542,10 +640,28 @@ const fetchActivityLuckData = async (activityId, userId) => {
   }
 };
 
-const fetchActivityBehaviorData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const addFortuneLuck = async (luckBonus) => {
+  if (!currentActivityId.value) return;
+  const luck = Math.max(1, Math.min(10, Number(luckBonus) || 1));
   try {
-    const resp = await api.queryActivityBehavior({ activityId, userId });
+    const resp = await api.addFortune({
+      activityId: currentActivityId.value,
+      luck,
+    });
+    if (resp?.accountLuck !== undefined && resp?.accountLuck !== null) {
+      luckValue.value = resp.accountLuck;
+    } else {
+      luckValue.value = (luckValue.value || 0) + luck;
+    }
+  } catch (error) {
+    console.error('增加幸运值失败: ', error);
+  }
+};
+
+const fetchActivityBehaviorData = async (activityId) => {
+  if (!activityId) return;
+  try {
+    const resp = await api.queryActivityBehavior({ activityId });
     const list = Array.isArray(resp) ? resp : [];
     if (list.length) {
       behaviors.value = list.map((item, idx) => ({
@@ -561,10 +677,10 @@ const fetchActivityBehaviorData = async (activityId, userId) => {
   }
 };
 
-const fetchActivityAwardData = async (activityId, userId) => {
+const fetchActivityAwardData = async (activityId) => {
   if (!activityId) return;
   try {
-    const awards = await api.queryActivityAward({ activityId, userId });
+    const awards = await api.queryActivityAward({ activityId });
     const normalized = Array.isArray(awards) ? awards : [];
     const sorted = normalized
       .slice()
@@ -595,10 +711,29 @@ const fetchActivityInfo = async (activityId) => {
   }
 };
 
-const fetchUserAwardData = async (activityId, userId) => {
-  if (!activityId || !userId) return;
+const fetchActivityList = async () => {
   try {
-    const awards = await api.queryUserAward({ activityId, userId });
+    const list = await api.queryActivityList();
+    activityModal.items = Array.isArray(list) ? list : [];
+  } catch (error) {
+    console.error('获取活动列表失败: ', error);
+  }
+};
+
+const fetchRechargeList = async (activityId) => {
+  if (!activityId) return;
+  try {
+    const list = await api.queryActivityRecharge({ activityId });
+    rechargeModal.items = Array.isArray(list) ? list : [];
+  } catch (error) {
+    console.error('获取充值列表失败: ', error);
+  }
+};
+
+const fetchUserAwardData = async (activityId) => {
+  if (!activityId) return;
+  try {
+    const awards = await api.queryUserAward({ activityId });
     const normalized = Array.isArray(awards) ? awards : [];
     const formatAwardTime = (time) => {
       const date = new Date(time);
@@ -615,16 +750,16 @@ const fetchUserAwardData = async (activityId, userId) => {
 };
 
 watch(
-  () => [route.params.activityId, route.query.userId],
-  async ([newActivityId, newUserId]) => {
+  () => route.params.activityId,
+  async (newActivityId) => {
     currentActivityId.value = newActivityId;
-    currentUserId.value = newUserId || localStorage.getItem('bigmarket_user') || 'wyw';
+    currentUserId.value = localStorage.getItem('bigmarket_user') || 'wyw';
     fetchActivityConvertData(currentActivityId.value);
-    await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
-    await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
-    fetchUserAwardData(currentActivityId.value, currentUserId.value);
-    fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
-    fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    await fetchActivityAccountData(currentActivityId.value);
+    await fetchActivityLuckData(currentActivityId.value);
+    fetchUserAwardData(currentActivityId.value);
+    fetchActivityBehaviorData(currentActivityId.value);
+    fetchActivityAwardData(currentActivityId.value);
     fetchActivityInfo(currentActivityId.value);
     if (!historyRecords.value.length) {
       seedHistoryRecords(10);
@@ -651,7 +786,6 @@ const startGridLottery = async () => {
   try {
     const resp = await api.doRaffle({
       activityId: currentActivityId.value,
-      userId: currentUserId.value,
     });
 
     raffleFlags = {
@@ -708,7 +842,7 @@ const startGridLottery = async () => {
       time: formatDateTime(new Date()),
     });
 
-    luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
+      luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
 
     pauseTimer = setTimeout(async () => {
       if (raffleFlags.isLock || raffleFlags.isEmpty) {
@@ -726,11 +860,14 @@ const startGridLottery = async () => {
         createConfetti();
       }
 
+      const luckBonus = Math.floor(Math.random() * 10) + 1;
+      await addFortuneLuck(luckBonus);
+
       highlightIndex.value = 4;
-      await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
-      await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
-      await fetchUserAwardData(currentActivityId.value, currentUserId.value);
-      await fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+      await fetchActivityAccountData(currentActivityId.value);
+      await fetchActivityLuckData(currentActivityId.value);
+      await fetchUserAwardData(currentActivityId.value);
+      await fetchActivityAwardData(currentActivityId.value);
 
       isRolling.value = false;
     }, 500);
@@ -774,6 +911,75 @@ onMounted(() => {
   luckValue.value = 48;
   scheduleNextHistory();
 });
+
+const handleLogout = () => {
+  localStorage.removeItem('bigmarket_user');
+  localStorage.removeItem('bigmarket_token');
+  router.push('/login');
+};
+
+const openActivityModal = async () => {
+  if (!activityModal.items.length) {
+    await fetchActivityList();
+  }
+  activityModal.visible = true;
+};
+
+const closeActivityModal = () => {
+  activityModal.visible = false;
+};
+
+const jumpActivity = (activityId) => {
+  if (!activityId) return;
+  activityModal.visible = false;
+  router.push(`/bigmarket/${activityId}`);
+};
+
+const openRechargeModal = async () => {
+  await fetchRechargeList(currentActivityId.value);
+  selectedRecharge.value = rechargeModal.items?.[0] || null;
+  paySelection.value = '微信支付';
+  rechargeModal.visible = true;
+};
+
+const closeRechargeModal = () => {
+  rechargeModal.visible = false;
+};
+
+const askRecharge = (item, channel) => {
+  if (!item) return;
+  rechargeConfirm.item = item;
+  rechargeConfirm.channel = channel;
+  rechargeConfirm.visible = true;
+};
+
+const submitRecharge = async () => {
+  if (!rechargeConfirm.item?.tradeId) return;
+  try {
+    await api.doRecharge({
+      activityId: currentActivityId.value,
+      tradeId: rechargeConfirm.item.tradeId,
+    });
+    rewardModal.value = {
+      visible: true,
+      title: '🎉 充值发起成功 🎉',
+      rewards: [
+        `通过 ${rechargeConfirm.channel} 充值了：${rechargeConfirm.item.tradeName || rechargeConfirm.item.tradeValue || ''}`,
+      ],
+    };
+    createConfetti();
+    rechargeConfirm.visible = false;
+    rechargeModal.visible = false;
+  } catch (error) {
+    showErrorModal(error?.message || '充值失败');
+  }
+};
+
+const closeRechargeConfirm = () => {
+  rechargeConfirm.visible = false;
+  rechargeConfirm.item = null;
+  rechargeConfirm.channel = '';
+};
 </script>
 
 <style scoped>
@@ -798,6 +1004,7 @@ onMounted(() => {
 }
 
 .bigmarket-page {
+  position: relative;
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
@@ -843,6 +1050,68 @@ onMounted(() => {
 .page-header {
   text-align: center;
   color: #111b2b;
+}
+
+.top-area{
+  position:relative;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+}
+
+.top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0.6rem 0 0.2rem;
+}
+
+.page-brand{
+  font-size:2.6rem;
+  font-weight:1000;
+  margin-left: 1.0rem;
+  letter-spacing:0.04em;
+  line-height:1.05;
+  user-select:none;
+  background:linear-gradient(135deg, #0f172a 0%, #2b3a67 45%, #4f6bff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 14px 26px rgba(79, 107, 255, 0.16);
+}
+
+.page-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-left:auto;
+  margin-right: 1.0rem;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, #f66b6b, #f88b4f);
+  color: #fff;
+  font-weight: 750;
+  box-shadow: 0 10px 18px rgba(248, 107, 107, 0.25);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.action-btn:hover{
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff7a7a, #ff9a5f);
+  box-shadow: 0 14px 26px rgba(248, 107, 107, 0.38);
+  filter: saturate(1.06);
+}
+
+.action-btn:active{
+  transform: translateY(0);
+  background: linear-gradient(135deg, #f45f5f, #f58449);
+  box-shadow: 0 8px 16px rgba(248, 107, 107, 0.24);
+  filter: saturate(1.02);
 }
 
 .confetti-canvas {
@@ -1329,11 +1598,52 @@ onMounted(() => {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .progress-mark:hover .mark-label {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.progress-mark .mark-label::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  background: rgba(31, 42, 68, 0.92);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.progress-mark .mark-label::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(31, 42, 68, 0.92);
+  transform-origin: center;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.progress-mark:hover .mark-label::after,
+.progress-mark:hover .mark-label::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .progress-mark .mark-line {
@@ -1802,5 +2112,317 @@ onMounted(() => {
 .warn-close:active {
   transform: translateY(0);
   box-shadow: 0 10px 20px rgba(245, 158, 11, 0.30);
+}
+
+/* 充值弹窗 */
+.recharge-modal-overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at 50% 40%, rgba(46,179,128,0.16), rgba(0,0,0,0.62) 62%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1001;
+}
+
+.recharge-modal{
+  width:min(1080px, calc(100vw - 40px));
+  max-height: 78vh;
+  overflow:hidden;
+  background: linear-gradient(155deg, rgba(255,255,255,0.98), rgba(242,246,255,0.94));
+  border-radius: 20px;
+  padding: 1.4rem 1.8rem 1.4rem;
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+  text-align:center;
+  color:#0f172a;
+}
+
+.recharge-modal h3{
+  margin: 0 0 0.35rem;
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.recharge-sub{
+  margin: 0 0 0.8rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.recharge-list{
+  display:flex;
+  gap:0.8rem;
+  padding:0.6rem 1.2rem;
+  max-height: 34vh;
+  overflow-x:auto;
+  overflow-y:hidden;
+  justify-content:space-between;
+}
+
+.recharge-card{
+  min-width: 240px;
+  background: rgba(255,255,255,0.96);
+  border-radius: 16px;
+  padding: 1.1rem 0.9rem;
+  box-shadow: none;
+  border: 1px solid rgba(0,0,0,0.05);
+  display:flex;
+  flex-direction:column;
+  gap:0.8rem;
+  align-items:center;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.recharge-value{
+  display:flex;
+  flex-direction:column;
+  gap:0.4rem;
+  width:100%;
+  align-items:center;
+}
+
+.recharge-money-plain{
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #1f2a44;
+}
+
+.recharge-point-plain{
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1f2a44;
+}
+
+.recharge-actions{
+  display:none;
+}
+
+.pill-btn{
+  border:none;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  background: linear-gradient(135deg, #30c97c, #2aa56b);
+  box-shadow: 0 14px 26px rgba(46, 179, 128, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.pill-btn.ghost.danger{
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 14px 26px rgba(239, 68, 68, 0.35);
+  color:#fff;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.pill-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(46, 179, 128, 0.45);
+  filter: saturate(1.05);
+}
+
+.pill-btn:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 20px rgba(46, 179, 128, 0.30);
+  filter: saturate(1.02);
+}
+
+.pill-btn.ghost.danger:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(239, 68, 68, 0.45);
+  filter: saturate(1.05);
+}
+
+.pill-btn.ghost.danger:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.30);
+  filter: saturate(1.02);
+}
+
+.recharge-card.active{
+  border-color: rgba(79,107,255,0.85);
+  box-shadow: 0 16px 28px rgba(79,107,255,0.25);
+  border-width: 2px;
+  transform: translateY(-2px);
+}
+
+.pay-row{
+  display:flex;
+  gap:0.8rem;
+  justify-content:center;
+  align-items:center;
+  margin: 0.8rem 0 0.4rem;
+  width:100%;
+}
+
+.pay-btn{
+  border:none;
+  background: rgba(255,255,255,0.92);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+  cursor:pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  border: 2px solid transparent;
+}
+
+.pay-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(0,0,0,0.16);
+}
+
+.pay-btn img{
+  width: 96px;
+  height: 40px;
+  object-fit: contain;
+  display:block;
+}
+
+.pay-btn.active{
+  border-color: rgba(79,107,255,0.9);
+  box-shadow: 0 14px 26px rgba(79,107,255,0.25);
+}
+
+.pay-submit-row{
+  display:flex;
+  justify-content:center;
+  gap: 0.75rem;
+  margin: 1rem 0 1rem;
+}
+
+.recharge-modal .modal-close{
+  width: auto;
+  min-width: 140px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f66b6b, #f88b4f);
+}
+
+.pill-btn.ghost{
+  background: rgba(255,255,255,0.75);
+  color: #1f2a44;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.recharge-confirm-overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.45);
+  z-index: 1200;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.recharge-confirm{
+  width: min(380px, 90vw);
+  background: linear-gradient(165deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+  border-radius: 18px;
+  padding: 1.1rem 1rem 1rem;
+  text-align:center;
+  box-shadow: 0 18px 32px rgba(0,0,0,0.22);
+}
+
+.recharge-confirm h3{
+  margin:0 0 0.4rem;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.recharge-confirm p{
+  margin:0 0 0.9rem;
+  color:#1f2a44;
+  font-weight: 700;
+  line-height:1.5;
+}
+
+.confirm-actions{
+  display:flex;
+  gap:0.6rem;
+  justify-content:center;
+}
+/* 活动列表弹窗 */
+.activity-modal-overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at 50% 40%, rgba(79,107,255,0.14), rgba(0,0,0,0.62) 62%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1001;
+}
+
+.activity-modal{
+  width:min(520px, calc(100vw - 40px));
+  max-height: 70vh;
+  overflow:hidden;
+  background: linear-gradient(165deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+  border-radius: 20px;
+  padding: 1.4rem 1.2rem 1.2rem;
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+  text-align:center;
+  color:#0f172a;
+}
+
+.activity-modal h3{
+  margin: 0 0 0.35rem;
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.activity-sub{
+  margin: 0 0 0.8rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.activity-list{
+  display:flex;
+  flex-direction:column;
+  gap:0.6rem;
+  padding:0.4rem;
+  max-height: 46vh;
+  overflow-y:auto;
+}
+
+.activity-item{
+  width:100%;
+  text-align:left;
+  border:none;
+  border-radius: 14px;
+  padding: 0.75rem 0.85rem;
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  cursor:pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.activity-item:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(79,107,255,0.25);
+  filter: saturate(1.05);
+}
+
+.activity-item__name{
+  font-weight: 800;
+  font-size: 1rem;
+  color: #1f2a44;
+  margin-bottom: 0.25rem;
+}
+
+.activity-item__desc{
+  color: #4b5563;
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 </style>

@@ -12,4 +12,6 @@ public interface ITradeDao {
 
     List<Trade> queryActivityConvertList(Long activityId);
 
+    List<Trade> queryActivityRecharegeList(Long activityId);
+
 }

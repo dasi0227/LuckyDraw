@@ -1,4 +1,4 @@
-package com.dasi.domain.point.model.entity;
+package com.dasi.domain.point.model.io;
 
 import com.dasi.domain.point.model.type.TradeType;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeEntity {
+public class QueryActivityRechargeResult {
 
     private Long tradeId;
-
-    private Long activityId;
 
     private TradeType tradeType;
 
