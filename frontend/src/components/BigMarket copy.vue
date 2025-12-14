@@ -1,5 +1,11 @@
 <template>
   <div class="bigmarket-page">
+    <div v-if="activityBannerText" class="activity-banner">
+      <div class="banner-track">
+        <span class="banner-text">{{ activityBannerText }}</span>
+      </div>
+    </div>
+
     <!-- Header -->
     <header class="page-header">
       <h1>Dasi 抽奖系统</h1>
@@ -174,13 +180,13 @@
     <transition name="fade">
       <div v-if="rewardModal.visible" class="reward-modal-overlay" @click="closeRewardModal">
         <div class="reward-modal" @click.stop>
-          <h3>{{ rewardModal.title || '🎉 恭喜获得奖励 🎉' }}</h3>
+          <h3>{{ '🎉 恭喜获得奖励 🎉' }}</h3>
           <ul>
             <li v-for="(text, idx) in rewardModal.rewards" :key="idx">
               <span class="reward-pill">{{ text }}</span>
             </li>
           </ul>
-          <button class="modal-close" @click="closeRewardModal">好的</button>
+          <button class="modal-close" @click="closeRewardModal">OK</button>
         </div>
         <div class="confetti-layer">
           <span
@@ -207,7 +213,21 @@
           @animationend="errorModal.shake = false"
         >
           <p>{{ errorModal.message }}</p>
-          <button class="modal-close error-close" @click="closeErrorModal">我知道了</button>
+          <button class="modal-close error-close" @click="closeErrorModal">我已知晓</button>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-if="warnModal.visible" class="warn-modal-overlay" @click="closeWarnModal">
+        <div
+          class="warn-modal"
+          :class="{ shaking: warnModal.shake }"
+          @click.stop
+          @animationend="warnModal.shake = false"
+        >
+          <h3>{{ warnModal.title }}</h3>
+          <p v-for="(line, idx) in warnModal.lines" :key="idx">{{ line }}</p>
+          <button class="modal-close warn-close" @click="closeWarnModal">我已了解</button>
         </div>
       </div>
     </transition>
@@ -240,7 +260,9 @@ const luckGoal = ref(150);
 const luckMarksData = ref([]);
 const rewardModal = ref({ visible: false, rewards: [], title: '' });
 const confettiPieces = ref([]);
+const warnModal = ref({ visible: false, title: '提示', lines: [], shake: false });
 const errorModal = ref({ visible: false, message: '', shake: false });
+const activityInfo = ref(null);
 const behaviors = ref([]);
 
 const brushColors = [
@@ -278,6 +300,20 @@ const luckPercent = computed(() => {
     return 0;
   }
   return Math.min(100, Math.round((luckValue.value / luckGoal.value) * 100));
+});
+
+const formatActivityTime = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : formatDateTime(date);
+};
+
+const activityBannerText = computed(() => {
+  if (!activityInfo.value) return '';
+  const info = activityInfo.value;
+  const begin = formatActivityTime(info.activityBeginTime);
+  const end = formatActivityTime(info.activityEndTime);
+  return `📢 📢 活动【${info.activityName}】火热开启：${info.activityDesc}，活动时间从 ${begin} 到 ${end}。截至目前，已有 ${info.activityAccountCount ?? 0} 人参与，累计抽奖 ${info.activityRaffleCount ?? 0} 次，已送出 ${info.activityAwardCount ?? 0} 份中奖奖品 —— 还在等什么？现在就来试试手气，下一位欧皇可能就是你 🎊🎊`;
 });
 
 const luckMarks = computed(() => {
@@ -372,18 +408,12 @@ const handleRedeemPoints = async (item) => {
 };
 
 const createConfetti = () => {
-  // 颜色
   const colors = ['#ff6b6b', '#feca57', '#1dd1a1', '#54a0ff', '#5f27cd'];
-  // 总数量
-  const TOTAL = 120;
-  // 批次
-  const BATCH = 40;
-  // 最短掉落时长
-  const MIN_DUR = 2.0;
-  // 随机时长
-  const DUR_RANGE = 2.0;
-  // 清空时间
-  const LIFETIME = 9000;
+  const TOTAL = 30;
+  const BATCH = 15;
+  const MIN_DUR = 1.6;
+  const DUR_RANGE = 1.2;
+  const LIFETIME = 3500;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
@@ -458,6 +488,32 @@ const showErrorModal = (message) => {
 
 const closeErrorModal = () => {
   errorModal.value = { visible: false, message: '', shake: false };
+};
+
+const showWarnModal = ({ isLock, isEmpty, awardName }) => {
+  const lines = [];
+  let title = '提示';
+
+  if (isLock) {
+    title = '奖品未解锁';
+    lines.push('当前抽奖次数不够，请多多参与抽奖！');
+    lines.push(`获取兜底奖品：${awardName}`);
+  } else if (isEmpty) {
+    title = '奖品已抽完';
+    lines.push('当前奖品库存不足，请尽早参与活动！');
+    lines.push(`获取兜底奖品：${awardName}`);
+  } else {
+    lines.push('提示');
+  }
+
+  warnModal.value = { visible: true, title, lines, shake: true };
+  setTimeout(() => {
+    warnModal.value = { ...warnModal.value, shake: false };
+  }, 400);
+};
+
+const closeWarnModal = () => {
+  warnModal.value = { visible: false, title: '提示', lines: [], shake: false };
 };
 
 const showLuckDetail = (mark) => {
@@ -580,6 +636,16 @@ const fetchActivityAwardData = async (activityId, userId) => {
   }
 };
 
+const fetchActivityInfo = async (activityId) => {
+  if (!activityId) return;
+  try {
+    const info = await api.queryActivityInfo({ activityId });
+    activityInfo.value = info || null;
+  } catch (error) {
+    console.error('获取活动信息失败: ', error);
+  }
+};
+
 const fetchUserAwardData = async (activityId, userId) => {
   if (!activityId || !userId) return;
   try {
@@ -609,8 +675,9 @@ watch(
     fetchUserAwardData(currentActivityId.value, currentUserId.value);
     fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+    fetchActivityInfo(currentActivityId.value);
     if (!historyRecords.value.length) {
-      seedHistoryRecords();
+      seedHistoryRecords(10);
     }
   },
   { immediate: true },
@@ -621,21 +688,29 @@ const highlightIndex = ref(4);
 const isRolling = ref(false);
 let rollingTimer = null;
 let historyTimer = null;
+
 const startGridLottery = async () => {
   const prizeCount = Math.min(highlightSequence.length, wheelPrizes.value.length);
   if (isRolling.value || !prizeCount) return;
   isRolling.value = true;
 
   let resultOrderIndex = Math.floor(Math.random() * prizeCount);
+  let raffleFlags = { isLock: false, isEmpty: false, awardName: '' };
+
   try {
     const resp = await api.doRaffle({
       activityId: currentActivityId.value,
       userId: currentUserId.value,
     });
+
+    raffleFlags = {
+      isLock: !!resp?.isLock,
+      isEmpty: !!resp?.isEmpty,
+      awardName: resp?.awardName || '',
+    };
+
     const awardId = resp?.awardId;
-    const foundIndex = wheelPrizes.value.findIndex(
-      (p) => String(p.id) === String(awardId),
-    );
+    const foundIndex = wheelPrizes.value.findIndex((p) => String(p.id) === String(awardId));
     if (foundIndex >= 0) {
       resultOrderIndex = foundIndex % prizeCount;
     }
@@ -644,46 +719,73 @@ const startGridLottery = async () => {
     showErrorModal(error?.message || '抽奖失败');
     return;
   }
+
   let pointer = highlightSequence.indexOf(highlightIndex.value);
   if (pointer === -1) pointer = 0;
+
   const seqLength = highlightSequence.length;
   const extraSteps = (resultOrderIndex - pointer + seqLength) % seqLength;
-  const totalSteps = seqLength * 3 + extraSteps + 1;
+  const totalSteps = seqLength * 3 + extraSteps;
   let steps = 0;
 
   const tick = () => {
     pointer = (pointer + 1) % seqLength;
     highlightIndex.value = highlightSequence[pointer];
     steps += 1;
+
     if (steps < totalSteps) {
       const delay = Math.min(80 + steps * 8, 260);
       rollingTimer = setTimeout(tick, delay);
-    } else {
-      isRolling.value = false;
-      const prize =
-        wheelPrizes.value[resultOrderIndex] || { label: '敬请期待', rate: 0 };
-      addHistoryRecord({
-        id: Date.now(),
-        user: '你',
-        prize: prize.label,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      });
-      addPersonalRecord({
-        id: Date.now(),
-        prize: prize.label,
-        time: formatDateTime(new Date()),
-      });
-      luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
-      rewardModal.value = {
-        visible: true,
-        title: '🎉 抽奖成功，恭喜获得奖励 🎉',
-        rewards: [prize.label],
-      };
-      createConfetti();
-      highlightIndex.value = 4;
-      fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+      return;
     }
+
+    isRolling.value = false;
+
+    const prize = wheelPrizes.value[resultOrderIndex] || { label: '敬请期待', rate: 0 };
+    const finalName = raffleFlags.awardName || prize.label;
+
+    addHistoryRecord({
+      id: Date.now(),
+      user: '你',
+      prize: finalName,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    });
+
+    addPersonalRecord({
+      id: Date.now(),
+      prize: finalName,
+      time: formatDateTime(new Date()),
+    });
+
+    luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
+
+    pauseTimer = setTimeout(async () => {
+      if (raffleFlags.isLock || raffleFlags.isEmpty) {
+        showWarnModal({
+          isLock: raffleFlags.isLock,
+          isEmpty: raffleFlags.isEmpty,
+          awardName: finalName,
+        });
+      } else {
+        rewardModal.value = {
+          visible: true,
+          title: '🎉 抽奖成功，恭喜获得奖励 🎉',
+          rewards: [finalName],
+        };
+        createConfetti();
+      }
+
+      highlightIndex.value = 4;
+      await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
+      await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
+      await fetchUserAwardData(currentActivityId.value, currentUserId.value);
+      await fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+
+      isRolling.value = false;
+    }, 500);
+
   };
+
   rollingTimer = setTimeout(tick, 80);
 };
 
@@ -697,7 +799,7 @@ onBeforeUnmount(() => {
 });
 
 const scheduleNextHistory = () => {
-  const delay = 1000 + Math.random() * 9000; // 1s ~ 10s
+  const delay = 1000 + Math.random() * 9000;
 
   historyTimer = setTimeout(() => {
     if (wheelPrizes.value.length) {
@@ -710,7 +812,7 @@ const scheduleNextHistory = () => {
       });
     }
 
-    scheduleNextHistory(); // 继续下一次
+    scheduleNextHistory();
   }, delay);
 };
 
@@ -738,11 +840,43 @@ onMounted(() => {
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 2.5rem 3rem;
+  padding: 0rem 2.5rem 3rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   color: #1f2a44;
+}
+
+.activity-banner{
+  position:relative;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  overflow:hidden;
+  padding:0.55rem 0;
+  background: rgba(124, 2, 185, 0.069);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.banner-track{
+  display:flex;
+  width:max-content;
+  white-space:nowrap;
+  will-change:transform;
+  animation:banner-marquee 24s linear infinite;
+}
+
+.banner-text{
+  flex:0 0 auto;
+  font-weight:800;
+  color:#8a5a00;
+  letter-spacing:0.02em;
+  padding-right:3rem;
+}
+
+@keyframes banner-marquee{
+  0%{transform:translateX(100%);}
+  100%{transform:translateX(-100%);}
 }
 
 .page-header {
@@ -845,8 +979,8 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.convert-card .convert-name,
-.behavior-name {
+.convert-card .convert-name, .behavior-name {
+  text-align: center;
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -1395,6 +1529,7 @@ onMounted(() => {
 }
 
 .confetti-layer {
+  contain: layout paint;
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -1411,7 +1546,6 @@ onMounted(() => {
   border-radius: 4px;
   animation: confetti-fall linear forwards;
   opacity: 0.95;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.18);
   will-change: transform, opacity;
   transform: translate3d(0, 0, 0) rotate(0deg);
   backface-visibility: hidden;
@@ -1591,5 +1725,112 @@ onMounted(() => {
 .error-close:active {
   transform: translateY(0);
   box-shadow: 0 10px 20px rgba(239, 68, 68, 0.30);
+}
+
+/* ============ warn 弹窗（黄色系） ============ */
+.warn-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, rgba(251, 191, 36, 0.18), rgba(0, 0, 0, 0.62) 62%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1001;
+}
+
+.warn-modal {
+  position: relative;
+  overflow: hidden;
+
+  width: min(420px, calc(100vw - 36px));
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+  border-radius: 20px;
+  padding: 1.2rem 1.4rem;
+  min-width: 240px;
+
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+
+  text-align: center;
+  font-weight: 800;
+  color: #92400e;
+
+  transform: translateY(4px);
+}
+
+.warn-modal h3 {
+  margin: 0 0 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #7c2d12;
+}
+
+.warn-modal p {
+  margin: 0.35rem 0;
+  font-weight: 800;
+}
+
+.warn-modal::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 22px;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.55),
+    rgba(245, 158, 11, 0.22),
+    rgba(255, 237, 185, 0.18)
+  );
+  opacity: 0.34;
+  filter: blur(18px);
+  z-index: -1;
+}
+
+/* 不要顶部球体 */
+.warn-modal::after {
+  content: none !important;
+}
+
+.warn-modal.shaking {
+  animation: warn-shake 0.4s ease-in-out 0s 1;
+}
+
+@keyframes warn-shake {
+  0%, 100% { transform: translateX(0) translateY(4px); }
+  20% { transform: translateX(-12px) translateY(4px); }
+  40% { transform: translateX(12px) translateY(4px); }
+  60% { transform: translateX(-8px) translateY(4px); }
+  80% { transform: translateX(8px) translateY(4px); }
+}
+
+.warn-close {
+  margin-top: 0.8rem;
+  border: none;
+  width: 100%;
+  padding: 0.75rem 1.1rem;
+  border-radius: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 14px 26px rgba(245, 158, 11, 0.35);
+
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.warn-close:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(245, 158, 11, 0.45);
+  filter: saturate(1.05);
+}
+
+.warn-close:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.30);
 }
 </style>

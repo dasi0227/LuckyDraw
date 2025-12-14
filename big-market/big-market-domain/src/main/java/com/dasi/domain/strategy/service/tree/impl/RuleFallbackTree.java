@@ -15,10 +15,10 @@ public class RuleFallbackTree implements IStrategyTree {
 
     @Override
     public RuleCheckResult logic(String userId, Long strategyId, Long awardId, String ruleValue) {
-        Long luckAwardId = Long.valueOf(ruleValue);
-        log.info("【抽奖】RULE_FALLBACK 拦截：awardId={}", luckAwardId);
+        Long fallbackAwardId = Long.valueOf(ruleValue);
+        log.info("【抽奖】RULE_FALLBACK 拦截：awardId={}", fallbackAwardId);
         return RuleCheckResult.builder()
-                .awardId(luckAwardId)
+                .awardId(fallbackAwardId)
                 .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
                 .ruleModel(RuleModel.RULE_FALLBACK)
                 .build();

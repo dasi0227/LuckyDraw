@@ -300,7 +300,7 @@ public class BigMarketController implements IBigMarketService {
     /**
      * 用户在当前活动执行抽奖
      * @param raffleRequest activityId, userId
-     * @return awardId, awardName, isLock, isEmpty
+     * @return awardId, isLock, isEmpty
      */
     @PostMapping("/raffle")
     @Override
@@ -318,10 +318,14 @@ public class BigMarketController implements IBigMarketService {
         LotteryResult lotteryResult = strategyLottery.doStrategyLottery(lotteryContext);
 
         // 3. 记录中奖
-        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getAwardId()).orderId(raffleResult.getOrderId()).build();
+        DistributeContext distributeContext = DistributeContext.builder().userId(userId).activityId(activityId).awardId(lotteryResult.getFinalAwardId()).orderId(raffleResult.getOrderId()).build();
         DistributeResult distributeResult = awardDistribute.doAwardDistribute(distributeContext);
 
-        RaffleResponse raffleResponse = RaffleResponse.builder().awardId(distributeResult.getAwardId()).awardName(distributeResult.getAwardName()).isLock(lotteryResult.getIsLock()).isEmpty(lotteryResult.getIsEmpty()).build();
+        RaffleResponse raffleResponse = RaffleResponse.builder()
+                .awardId(lotteryResult.getOriginalAwardId())
+                .awardName(distributeResult.getAwardName())
+                .isLock(lotteryResult.getIsLock())
+                .isEmpty(lotteryResult.getIsEmpty()).build();
         return Result.success(raffleResponse);
     }
 

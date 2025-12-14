@@ -34,7 +34,7 @@ public class RuleLockTree implements IStrategyTree {
         } else {
             log.info("【抽奖】RULE_LOCK 拦截：userLotteryCount={}, limitLotteryCount={}", userLotteryCount, limitLotteryCount);
             return RuleCheckResult.builder()
-                    .awardId(null)
+                    .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
                     .ruleModel(RuleModel.RULE_LOCK)
                     .build();

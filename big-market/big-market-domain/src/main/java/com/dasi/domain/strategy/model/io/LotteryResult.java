@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LotteryResult {
 
-    private Long awardId;
+    private Long originalAwardId;
+
+    private Long finalAwardId;
 
     private Boolean isLock;
 
