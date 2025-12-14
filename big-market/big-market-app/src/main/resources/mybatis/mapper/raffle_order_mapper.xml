@@ -23,7 +23,7 @@
     <update id="updateRaffleOrderState" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder">
         UPDATE raffle_order
         SET raffle_state = #{raffleState}
-        WHERE order_id = #{orderId}
+        WHERE order_id = #{orderId} AND raffle_state = 'CREATED'
     </update>
 
     <select id="queryUnusedRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder" resultMap="dataMap">

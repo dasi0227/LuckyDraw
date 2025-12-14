@@ -9,7 +9,7 @@ import java.util.List;
 public interface ITaskDao {
     void saveTask(Task task);
 
-    void updateTaskState(Task task);
+    int updateTaskState(Task task);
 
     List<Task> queryUnsolvedTask();
 

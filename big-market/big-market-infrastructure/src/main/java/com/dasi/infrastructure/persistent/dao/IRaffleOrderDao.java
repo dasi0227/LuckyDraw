@@ -10,7 +10,7 @@ public interface IRaffleOrderDao {
 
     RaffleOrder queryUnusedRaffleOrder(RaffleOrder raffleOrder);
 
-    void saveRaffleOrder(RaffleOrder raffleOrder);
+    int saveRaffleOrder(RaffleOrder raffleOrder);
 
     void updateRaffleOrderState(RaffleOrder raffleOrder);
 

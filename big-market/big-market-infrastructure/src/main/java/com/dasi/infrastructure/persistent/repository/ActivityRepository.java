@@ -7,6 +7,7 @@ import com.dasi.domain.activity.model.io.ActivitySkuStock;
 import com.dasi.domain.activity.model.type.ActivityState;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.model.type.RechargeState;
+import com.dasi.domain.activity.model.type.RewardState;
 import com.dasi.domain.activity.model.vo.AccountSnapshot;
 import com.dasi.domain.activity.model.vo.ActivitySnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
@@ -63,6 +64,9 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IRaffleOrderDao raffleOrderDao;
+
+    @Resource
+    private IRewardOrderDao rewardOrderDao;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -386,6 +390,10 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public void saveRechargeOrder(RechargeOrderEntity rechargeOrderEntity) {
 
+        // 奖励对象
+        RewardOrder rewardOrder = new RewardOrder();
+        rewardOrder.setBizId(rechargeOrderEntity.getBizId());
+
         // 订单对象
         RechargeOrder rechargeOrder = new RechargeOrder();
         rechargeOrder.setOrderId(rechargeOrderEntity.getOrderId());
@@ -425,28 +433,31 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 执行总账户的充值
-                    activityAccountDao.increaseActivityAccountRaffle(activityAccount);
+                    rewardOrder.setRewardState(RewardState.USED.name());
+                    int rewardRows = rewardOrderDao.updateRewardOrderStateByBizId(rewardOrder);
+                    if (rewardRows == 1) {
+                        int rechargeRows = rechargeOrderDao.saveRechargeOrder(rechargeOrder);
+                        if (rechargeRows == 1) {
+                            AccountSnapshot before = getAccountSnapshot(userId, activityId);
 
-                    // 执行月账户的充值
-                    int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());
-                    activityAccountMonth.setMonthAllocate(monthDelta);
-                    activityAccountMonth.setMonthSurplus(monthDelta);
-                    activityAccountMonthDao.increaseActivityAccountMonthRaffle(activityAccountMonth);
+                            activityAccountDao.increaseActivityAccountRaffle(activityAccount);
 
-                    // 执行日账户的充值
-                    int dayDelta   = Math.min(count, before.getDayLimit() - before.getDayAllocate());
-                    activityAccountDay.setDayAllocate(dayDelta);
-                    activityAccountDay.setDaySurplus(dayDelta);
-                    activityAccountDayDao.increaseActivityAccountDay(activityAccountDay);
+                            int monthDelta = Math.min(count, before.getMonthLimit() - before.getMonthAllocate());
+                            activityAccountMonth.setMonthAllocate(monthDelta);
+                            activityAccountMonth.setMonthSurplus(monthDelta);
+                            activityAccountMonthDao.increaseActivityAccountMonthRaffle(activityAccountMonth);
 
-                    // 写入订单
-                    rechargeOrderDao.saveRechargeOrder(rechargeOrder);
-                    rechargeOrder.setRechargeState(RechargeState.USED.name());
-                    rechargeOrderDao.updateRechargeState(rechargeOrder);
+                            int dayDelta = Math.min(count, before.getDayLimit() - before.getDayAllocate());
+                            activityAccountDay.setDayAllocate(dayDelta);
+                            activityAccountDay.setDaySurplus(dayDelta);
+                            activityAccountDayDao.increaseActivityAccountDay(activityAccountDay);
+
+                            rechargeOrder.setRechargeState(RechargeState.USED.name());
+                            rechargeOrderDao.updateRechargeState(rechargeOrder);
+                        }
+                    }
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -454,19 +465,15 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day({}):{}->{}",
-                        userId, activityId,
-                        before.getTotalSurplus(),  after.getTotalSurplus(),
-                        monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
-                        dayKey,     before.getDaySurplus(),    after.getDaySurplus()
-                );
+                log.info("【充值】增加账户抽奖次数成功：userId={}, activityId={}, count={}", userId, activityId, count);
                 log.info("【充值】保存充值订单成功：orderId={}", orderId);
             } else {
                 rechargeOrder.setRechargeState(RechargeState.CANCELLED.name());
                 rechargeOrderDao.updateRechargeState(rechargeOrder);
+                rewardOrder.setRewardState(RewardState.CANCELLED.name());
+                rewardOrderDao.updateRewardOrderStateByBizId(rewardOrder);
                 throw new AppException("保存充值订单失败：orderId=" + orderId);
             }
 
@@ -509,18 +516,17 @@ public class ActivityRepository implements IActivityRepository {
         try {
             dbRouterStrategy.doRouter(userId);
 
-            AccountSnapshot before = getAccountSnapshot(userId, activityId);
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 更新账户抽奖次数
-                    activityAccountDao.decreaseActivityAccountRaffle(activityAccount);
-                    activityAccountMonthDao.decreaseActivityAccountMonthRaffle(activityAccountMonth);
-                    activityAccountDayDao.decreaseActivityAccountDay(activityAccountDay);
+                    int rows = raffleOrderDao.saveRaffleOrder(raffleOrder);
+                    if (rows == 1) {
+                        activityAccountDao.decreaseActivityAccountRaffle(activityAccount);
+                        activityAccountMonthDao.decreaseActivityAccountMonthRaffle(activityAccountMonth);
+                        activityAccountDayDao.decreaseActivityAccountDay(activityAccountDay);
 
-                    // 保存抽奖订单
-                    raffleOrderDao.saveRaffleOrder(raffleOrder);
-                    raffleOrder.setRaffleState(RaffleState.USED.name());
-                    raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                        raffleOrder.setRaffleState(RaffleState.USED.name());
+                        raffleOrderDao.updateRaffleOrderState(raffleOrder);
+                    }
                     return true;
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -528,15 +534,9 @@ public class ActivityRepository implements IActivityRepository {
                     return false;
                 }
             });
-            AccountSnapshot after = getAccountSnapshot(userId, activityId);
 
             if (Boolean.TRUE.equals(success)) {
-                log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, total:{}->{}, month({}):{}->{}, day:({}){}->{}",
-                        userId, activityId,
-                        before.getTotalSurplus(),  after.getTotalSurplus(),
-                        monthKey,   before.getMonthSurplus(),  after.getMonthSurplus(),
-                        dayKey,     before.getDaySurplus(),    after.getDaySurplus()
-                );
+                log.info("【活动】消耗账户抽奖次数成功：userId={}, activityId={}, count={}", userId, activityId, 1);
                 log.info("【活动】保存抽奖订单成功：orderId={}", orderId);
             } else {
                 raffleOrder.setRaffleState(RaffleState.CANCELLED.name());

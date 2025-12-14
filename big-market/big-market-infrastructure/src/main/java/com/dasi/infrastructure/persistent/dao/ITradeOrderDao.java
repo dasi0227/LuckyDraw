@@ -10,8 +10,8 @@ public interface ITradeOrderDao {
 
     TradeOrder queryTradeOrderByOrderId(String orderId);
 
-    void saveTradeOrder(TradeOrder tradeOrder);
+    int saveTradeOrder(TradeOrder tradeOrder);
 
-    void updateTradeState(TradeOrder tradeOrder);
+    int updateTradeState(TradeOrder tradeOrder);
 
 }

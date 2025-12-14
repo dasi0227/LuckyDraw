@@ -180,8 +180,10 @@ public class AwardRepository implements IAwardRepository {
 
             transactionTemplate.executeWithoutResult(status -> {
                 try {
-                    activityAwardDao.saveActivityAward(activityAward);
-                    taskDao.saveTask(task);
+                    int rows = activityAwardDao.saveActivityAward(activityAward);
+                    if (rows == 1) {
+                        taskDao.saveTask(task);
+                    }
                 } catch (Exception e) {
                     status.setRollbackOnly();
                     log.error("【中奖】保存中奖记录时发生错误：error={}", e.getMessage());
@@ -192,9 +194,11 @@ public class AwardRepository implements IAwardRepository {
             log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", userId, activityId, awardId);
 
             try {
-                eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
                 task.setTaskState(TaskState.DISTRIBUTED.name());
-                taskDao.updateTaskState(task);
+                int rows = taskDao.updateTaskState(task);
+                if (rows == 1) {
+                    eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
+                }
                 log.info("【中奖】发送中奖消息成功：messageId={}", taskEntity.getMessageId());
             } catch (Exception e) {
                 task.setTaskState(TaskState.FAILED.name());
@@ -236,25 +240,32 @@ public class AwardRepository implements IAwardRepository {
         userAward.setAwardDeadline(userAwardEntity.getAwardDeadline());
         userAward.setAwardTime(userAwardEntity.getAwardTime());
 
+        ActivityAccount activityAccount;
+        if (activityAccountEntity != null) {
+            activityAccount = new ActivityAccount();
+            activityAccount.setUserId(activityAccountEntity.getUserId());
+            activityAccount.setActivityId(activityAccountEntity.getActivityId());
+            activityAccount.setAccountPoint(activityAccountEntity.getAccountPoint());
+        } else {
+            activityAccount = null;
+        }
+
         try {
             dbRouterStrategy.doRouter(userId);
 
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    // 充值
-                    if (activityAccountEntity != null) {
-                        ActivityAccount activityAccount;
-                        activityAccount = new ActivityAccount();
-                        activityAccount.setUserId(activityAccountEntity.getUserId());
-                        activityAccount.setActivityId(activityAccountEntity.getActivityId());
-                        activityAccount.setAccountPoint(activityAccountEntity.getAccountPoint());
-                        activityAccountDao.increaseActivityAccountPoint(activityAccount);
-                    }
-
-                    // 记录
-                    userAwardDao.saveUserAward(userAward);
                     activityAward.setAwardState(AwardState.COMPLETED.name());
-                    activityAwardDao.updateActivityAwardState(activityAward);
+                    int rows = activityAwardDao.updateActivityAwardState(activityAward);
+
+                    if (rows == 1) {
+                        // 充值
+                        if (activityAccount != null) {
+                            activityAccountDao.increaseActivityAccountPoint(activityAccount);
+                        }
+                        // 记录
+                        userAwardDao.saveUserAward(userAward);
+                    }
                     log.info("【获奖】账户获奖到个人仓库成功：userId={}, awardId={}", userId, awardId);
                     return true;
                 } catch (Exception e) {

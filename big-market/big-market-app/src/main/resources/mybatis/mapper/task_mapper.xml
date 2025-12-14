@@ -22,7 +22,7 @@
     <update id="updateTaskState" parameterType="com.dasi.infrastructure.persistent.po.Task">
         UPDATE task
         SET task_state = #{taskState}
-        WHERE user_id = #{userId} AND message_id = #{messageId}
+        WHERE message_id = #{messageId} AND task_state = 'CREATED'
     </update>
 
     <select id="queryUnsolvedTask" resultMap="dataMap">

@@ -81,7 +81,7 @@ public class PointTrade implements IPointTrade {
             String bizId = tradeContext.getBizId();
             String businessNo = tradeContext.getBusinessNo();
             if (StringUtils.isBlank(bizId) && StringUtils.isNotBlank(businessNo)) {
-                bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + tradeEntity.getTradeType() + Delimiter.UNDERSCORE + tradeEntity.getTradeValue() + Delimiter.UNDERSCORE + TimeUtil.thisMoment(true);
+                bizId = businessNo + Delimiter.UNDERSCORE + userId + Delimiter.UNDERSCORE + tradeEntity.getTradeType() + Delimiter.UNDERSCORE + tradeEntity.getTradeId() + Delimiter.UNDERSCORE + TimeUtil.thisMoment(false);
             }
 
             // 构建订单对象

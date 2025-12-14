@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @DBRouterStrategy(splitTable = true)
 public interface IRechargeOrderDao {
 
-    void saveRechargeOrder(RechargeOrder rechargeOrder);
+    int saveRechargeOrder(RechargeOrder rechargeOrder);
 
     void updateRechargeState(RechargeOrder rechargeOrder);
 

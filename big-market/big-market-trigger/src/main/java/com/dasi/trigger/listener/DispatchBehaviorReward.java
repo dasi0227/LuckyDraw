@@ -6,10 +6,7 @@ import com.dasi.domain.activity.model.io.SkuRechargeContext;
 import com.dasi.domain.activity.model.io.SkuRechargeResult;
 import com.dasi.domain.activity.service.recharge.ISkuRecharge;
 import com.dasi.domain.behavior.event.DispatchBehaviorRewardEvent.DispatchBehaviorRewardMessage;
-import com.dasi.domain.behavior.model.entity.RewardOrderEntity;
-import com.dasi.domain.behavior.model.type.RewardState;
 import com.dasi.domain.behavior.model.type.RewardType;
-import com.dasi.domain.behavior.service.reward.IBehaviorReward;
 import com.dasi.domain.point.model.io.TradeContext;
 import com.dasi.domain.point.model.io.TradeResult;
 import com.dasi.domain.point.service.trade.IPointTrade;
@@ -32,9 +29,6 @@ public class DispatchBehaviorReward {
     @Resource
     private IPointTrade tradePoint;
 
-    @Resource
-    private IBehaviorReward behaviorReward;
-
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch_behavior_reward}"))
     public void dispatchBehaviorReward(String message) {
 
@@ -43,16 +37,12 @@ public class DispatchBehaviorReward {
         DispatchBehaviorRewardMessage dispatchBehaviorRewardMessage = eventMessage.getData();
         String userId = dispatchBehaviorRewardMessage.getUserId();
         String bizId = dispatchBehaviorRewardMessage.getBizId();
-        String orderId = dispatchBehaviorRewardMessage.getOrderId();
         Long activityId = dispatchBehaviorRewardMessage.getActivityId();
 
-        RewardOrderEntity rewardOrderEntity = RewardOrderEntity.builder().userId(userId).bizId(bizId).orderId(orderId).build();
         RewardType rewardType = dispatchBehaviorRewardMessage.getRewardType();
         Long rewardValue = Long.parseLong(dispatchBehaviorRewardMessage.getRewardValue());
 
         try {
-
-            // 2. 处理返利
             switch (rewardType) {
                 case SKU:
                     SkuRechargeContext skuRechargeContext = SkuRechargeContext.builder().userId(userId).bizId(bizId).skuId(rewardValue).build();
@@ -67,14 +57,7 @@ public class DispatchBehaviorReward {
                 default:
                     throw new AppException("奖励类型不存在：rewardType=" + rewardType);
             }
-
-            // 3. 改变状态
-            rewardOrderEntity.setRewardState(RewardState.USED);
-            behaviorReward.updateRewardOrderState(rewardOrderEntity);
-
         } catch (Exception e) {
-            rewardOrderEntity.setRewardState(RewardState.CANCELLED);
-            behaviorReward.updateRewardOrderState(rewardOrderEntity);
             log.error("分发行为返利失败", e);
         }
     }

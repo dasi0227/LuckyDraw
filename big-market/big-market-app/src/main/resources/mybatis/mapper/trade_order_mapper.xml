@@ -26,7 +26,7 @@
     <update id="updateTradeState" parameterType="com.dasi.infrastructure.persistent.po.TradeOrder">
         UPDATE trade_order
         SET trade_state = #{tradeState}
-        WHERE order_id = #{orderId};
+        WHERE order_id = #{orderId} AND trade_state = 'CREATED';
     </update>
 
     <select id="queryTradeOrderByOrderId" parameterType="java.lang.String" resultMap="dataMap">

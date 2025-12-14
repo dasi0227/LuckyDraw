@@ -23,5 +23,5 @@ public interface IPointRepository {
 
     void saveConvertRaffle(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
 
-    void savePointRecharge(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
+    void savePointReward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
 }
