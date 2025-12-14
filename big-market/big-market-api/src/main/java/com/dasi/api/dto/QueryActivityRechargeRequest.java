@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConvertRequest {
-
-    private Long tradeId;
+public class QueryActivityRechargeRequest {
 
     private Long activityId;
 

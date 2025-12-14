@@ -50,4 +50,6 @@ public interface IActivityRepository {
 
     Integer increaseActivityAccountLuck(ActivityAccountEntity activityAccountEntity);
 
+    List<ActivityEntity> queryActivityList();
+
 }

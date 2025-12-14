@@ -14,6 +14,8 @@ DROP TABLE IF EXISTS strategy;
 CREATE TABLE strategy LIKE big_market_table.strategy;
 INSERT INTO strategy (strategy_id, strategy_desc, rule_models)
 VALUES (1001, '【测试策略1001】黑名单+幸运值', 'RULE_BLACKLIST,RULE_LUCK');
+INSERT INTO strategy (strategy_id, strategy_desc, rule_models)
+VALUES (1002, '【测试策略1002】黑名单+幸运值', 'RULE_BLACKLIST,RULE_LUCK');
 
 DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
@@ -38,6 +40,9 @@ CREATE TABLE strategy_rule LIKE big_market_table.strategy_rule;
 INSERT INTO strategy_rule (strategy_id, rule_model, rule_value, rule_desc)
 VALUES (1001, 'RULE_BLACKLIST', '2001:dasi', '黑名单：dasi'),
        (1001, 'RULE_LUCK', '0:2011,2012,2013,2014,2015 100:2011,2012,2013,2014,2015,2016 200:2011,2012,2013,2014,2015,2016,2017 300:2011,2012,2013,2014,2015,2016,2017,2018', '幸运区间：0,100,200,300');
+INSERT INTO strategy_rule (strategy_id, rule_model, rule_value, rule_desc)
+VALUES (1002, 'RULE_BLACKLIST', '2001:dasi', '黑名单：dasi'),
+       (1002, 'RULE_LUCK', '0:2011,2012,2013,2014,2015 100:2011,2012,2013,2014,2015,2016 200:2011,2012,2013,2014,2015,2016,2017 300:2011,2012,2013,2014,2015,2016,2017,2018', '幸运区间：0,100,200,300');
 
 DROP TABLE IF EXISTS strategy_award;
 CREATE TABLE strategy_award LIKE big_market_table.strategy_award;
@@ -50,7 +55,15 @@ VALUES (1001, 2011, 'TREE_STOCK', '【测试策略1001测试奖品2011】走TREE
        (1001, 2015, 'TREE_LOCK_1', '【测试策略1001测试奖品2015】走TREE_LOCK_1', 20, 20, 0.0700, 3),
        (1001, 2016, 'TREE_LOCK_1', '【测试策略1001测试奖品2016】走TREE_LOCK_1', 10, 10, 0.0500, 6),
        (1001, 2017, 'TREE_LOCK_2', '【测试策略1001测试奖品2017】走TREE_LOCK_2', 3, 3, 0.0200, 4),
-       (1001, 2018, 'TREE_LOCK_2', '【测试策略1001测试奖品2018】走TREE_LOCK_2', 1, 1, 0.0100, 8);
+       (1001, 2018, 'TREE_LOCK_2', '【测试策略1001测试奖品2018】走TREE_LOCK_2', 1, 1, 0.0100, 8),
+       (1002, 2011, 'TREE_STOCK', '【测试策略1002测试奖品2011】走TREE_STOCK', 100, 0, 0.3500, 1),
+       (1002, 2012, 'TREE_STOCK', '【测试策略1002测试奖品2012】走TREE_STOCK', 80, 80, 0.2500, 5),
+       (1002, 2013, 'TREE_STOCK', '【测试策略1002测试奖品2013】走TREE_STOCK', 60, 60, 0.1500, 2),
+       (1002, 2014, 'TREE_STOCK', '【测试策略1002测试奖品2014】走TREE_STOCK', 40, 40, 0.1000, 7),
+       (1002, 2015, 'TREE_LOCK_1', '【测试策略1002测试奖品2015】走TREE_LOCK_1', 20, 20, 0.0700, 3),
+       (1002, 2016, 'TREE_LOCK_1', '【测试策略1002测试奖品2016】走TREE_LOCK_1', 10, 10, 0.0500, 6),
+       (1002, 2017, 'TREE_LOCK_2', '【测试策略1002测试奖品2017】走TREE_LOCK_2', 3, 3, 0.0200, 4),
+       (1002, 2018, 'TREE_LOCK_2', '【测试策略1002测试奖品2018】走TREE_LOCK_2', 1, 1, 0.0100, 8);
 
 DROP TABLE IF EXISTS rule_tree;
 CREATE TABLE rule_tree LIKE big_market_table.rule_tree;
@@ -84,9 +97,9 @@ VALUES ('TREE_LOCK_1', 'RULE_LOCK', 'RULE_STOCK', 'EQUAL', 'PERMIT'),
 
 DROP TABLE IF EXISTS activity;
 CREATE TABLE activity LIKE big_market_table.activity;
-INSERT INTO activity (activity_id, strategy_id, activity_name, activity_desc, activity_state, activity_begin_time,
-                      activity_end_time)
-VALUES (10001, 1001, '测试活动', '测试活动描述', 'UNDERWAY', '2025-11-25 00:00:00', '2025-12-25 00:00:00');
+INSERT INTO activity (activity_id, strategy_id, activity_name, activity_desc, activity_state, activity_begin_time, activity_end_time)
+VALUES (10001, 1001, '圣诞节抽奖活动', '圣诞惊喜抽奖，参与赢取节日礼包', 'UNDERWAY', '2025-11-25 00:00:00', '2025-12-25 00:00:00'),
+       (10002, 1002, '元旦抽奖活动', '迎新年抽奖，爆竹声中换新礼', 'UNDERWAY', '2025-11-25 00:00:00', '2025-12-25 00:00:00');
 
 DROP TABLE IF EXISTS activity_sku;
 CREATE TABLE activity_sku LIKE big_market_table.activity_sku;
@@ -95,21 +108,45 @@ VALUES (20001, 10001, 3, 100, 100),
        (20002, 10001, 50, 100, 100),
        (20003, 10001, 10, 100, 100),
        (20004, 10001, 1, 100, 100),
-       (20005, 10001, 5, 100, 100);
+       (20005, 10001, 5, 100, 100),
+       (21001, 10002, 3, 100, 100),
+       (21002, 10002, 50, 100, 100),
+       (21003, 10002, 10, 100, 100),
+       (21004, 10002, 1, 100, 100),
+       (21005, 10002, 5, 100, 100);
 
 DROP TABLE IF EXISTS trade;
 CREATE TABLE trade LIKE big_market_table.trade;
-INSERT INTO trade (trade_id, activity_id, trade_type, trade_point, trade_value, trade_name, trade_desc)
-VALUES (30001, 10001, 'CONVERT_RAFFLE', '100', '1', '1 次抽奖机会', '1 次抽奖'),
-       (30002, 10001, 'CONVERT_RAFFLE', '150', '2', '2 次抽奖机会', '2 次抽奖'),
-       (30003, 10001, 'CONVERT_RAFFLE', '250', '4', '4 次抽奖机会', '4 次抽奖'),
-       (30004, 10001, 'CONVERT_AWARD', '1000', '2013', '5 元优惠券', '5 元优惠券'),
-       (30006, 10001, 'CONVERT_AWARD', '10000', '2015', '海贼王手办', '海贼王手办'),
-       (30005, 10001, 'CONVERT_AWARD', '100000', '2014', 'iPhone17', 'iPhone17'),
-       (30007, 10001, 'POINT_REWARD', '0', '10', '10 积分', '10 积分'),
-       (30008, 10001, 'POINT_REWARD', '0', '20', '20 积分', '20 积分'),
-       (30009, 10001, 'POINT_REWARD', '0', '50', '50 积分', '50 积分'),
-       (30010, 10001, 'POINT_REWARD', '0', '100000000', '100000000 积分', '100000000 积分');
+INSERT INTO trade (trade_id, activity_id, trade_type, trade_point, trade_money, trade_value, trade_name, trade_desc)
+VALUES (30001, 10001, 'CONVERT_RAFFLE', '100', '0', '1', '1 次抽奖机会', '1 次抽奖'),
+       (30002, 10001, 'CONVERT_RAFFLE', '150', '0', '2', '2 次抽奖机会', '2 次抽奖'),
+       (30003, 10001, 'CONVERT_RAFFLE', '250', '0', '4', '4 次抽奖机会', '4 次抽奖'),
+       (30004, 10001, 'CONVERT_AWARD', '1000', '0', '2013', '5 元优惠券', '5 元优惠券'),
+       (30006, 10001, 'CONVERT_AWARD', '10000', '0', '2015', '海贼王手办', '海贼王手办'),
+       (30005, 10001, 'CONVERT_AWARD', '100000', '0', '2014', 'iPhone17', 'iPhone17'),
+       (30007, 10001, 'REWARD_POINT', '0', '0', '10', '10 积分', '10 积分'),
+       (30008, 10001, 'REWARD_POINT', '0', '0', '20', '20 积分', '20 积分'),
+       (30009, 10001, 'REWARD_POINT', '0', '0', '50', '50 积分', '50 积分'),
+       (30010, 10001, 'REWARD_POINT', '0', '0', '100000000', '100000000 积分', '100000000 积分'),
+       (30011, 10001, 'RECHARGE_POINT', '0', '64', '640', '640 积分', '640 积分'),
+       (30012, 10001, 'RECHARGE_POINT', '0', '128', '1280', '1280 积分', '1280 积分'),
+       (30013, 10001, 'RECHARGE_POINT', '0', '256', '2560', '2560 积分', '2560 积分'),
+       (30014, 10001, 'RECHARGE_POINT', '0', '648', '6480', '6480 积分', '6480 积分'),
+
+       (31001, 10002, 'CONVERT_RAFFLE', '100',  '0', '1',        '1 次抽奖机会', '1 次抽奖'),
+       (31002, 10002, 'CONVERT_RAFFLE', '150',  '0', '2',        '2 次抽奖机会', '2 次抽奖'),
+       (31003, 10002, 'CONVERT_RAFFLE', '250',  '0', '4',        '4 次抽奖机会', '4 次抽奖'),
+       (31004, 10002, 'CONVERT_AWARD',  '1000', '0', '2013',     '5 元优惠券',   '5 元优惠券'),
+       (31006, 10002, 'CONVERT_AWARD',  '10000','0', '2015',     '海贼王手办',   '海贼王手办'),
+       (31005, 10002, 'CONVERT_AWARD',  '100000','0','2014',     'iPhone17',     'iPhone17'),
+       (31007, 10002, 'REWARD_POINT',   '0',    '0', '10',       '10 积分',      '10 积分'),
+       (31008, 10002, 'REWARD_POINT',   '0',    '0', '20',       '20 积分',      '20 积分'),
+       (31009, 10002, 'REWARD_POINT',   '0',    '0', '50',       '50 积分',      '50 积分'),
+       (31010, 10002, 'REWARD_POINT',   '0',    '0', '100000000','100000000 积分','100000000 积分'),
+       (31011, 10002, 'RECHARGE_POINT', '0',    '64', '640',     '640 积分',     '640 积分'),
+       (31012, 10002, 'RECHARGE_POINT', '0',    '128','1280',    '1280 积分',    '1280 积分'),
+       (31013, 10002, 'RECHARGE_POINT', '0',    '256','2560',    '2560 积分',    '2560 积分'),
+       (31014, 10002, 'RECHARGE_POINT', '0',    '648','6480',    '6480 积分',    '6480 积分');
 
 DROP TABLE IF EXISTS behavior;
 CREATE TABLE behavior LIKE big_market_table.behavior;
@@ -122,7 +159,16 @@ VALUES (10001, 'SIGN', '签到', 'SKU', '20001', '3 次抽奖'),
        (10001, 'SURF', '看广告', 'POINT', '30009', '50 积分'),
        (10001, 'COMMENT', '评论', 'SKU', '20004', '1 次抽奖'),
        (10001, 'LIKE', '点赞', 'POINT', '30010', '100000000 积分'),
-       (10001, 'COLLECT', '收藏', 'SKU', '20005', '5 次抽奖');
+       (10001, 'COLLECT', '收藏', 'SKU', '20005', '5 次抽奖'),
+       (10002, 'SIGN', '签到', 'SKU', '21001', '3 次抽奖'),
+       (10002, 'SIGN', '签到', 'POINT', '31007', '10 积分'),
+       (10002, 'SHARE', '转发', 'SKU', '21002', '50 次抽奖'),
+       (10002, 'SHARE', '转发', 'POINT', '31008', '20 积分'),
+       (10002, 'SURF', '看广告', 'SKU', '21003', '10 次抽奖'),
+       (10002, 'SURF', '看广告', 'POINT', '31009', '50 积分'),
+       (10002, 'COMMENT', '评论', 'SKU', '21004', '1 次抽奖'),
+       (10002, 'LIKE', '点赞', 'POINT', '31010', '100000000 积分'),
+       (10002, 'COLLECT', '收藏', 'SKU', '21005', '5 次抽奖');
 
 
 /* =============

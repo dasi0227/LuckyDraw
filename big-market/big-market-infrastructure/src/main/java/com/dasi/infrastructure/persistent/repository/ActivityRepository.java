@@ -332,6 +332,30 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
+    public List<ActivityEntity> queryActivityList() {
+        String cacheKey = RedisKey.ACTIVITY_LIST_KEY;
+        List<ActivityEntity> activityEntityList = redisService.getValue(cacheKey);
+        if (activityEntityList != null && !activityEntityList.isEmpty()) {
+            return activityEntityList;
+        }
+
+        List<Activity> activityList = activityDao.queryActivityList();
+        if (activityList == null || activityList.isEmpty()) {
+            throw new AppException("ActivityList 不存在");
+        }
+        activityEntityList = activityList.stream()
+                .map(activity -> ActivityEntity.builder()
+                        .activityId(activity.getActivityId())
+                        .activityName(activity.getActivityName())
+                        .activityDesc(activity.getActivityDesc())
+                        .build())
+                .collect(Collectors.toList());
+
+        redisService.setValue(cacheKey, activityEntityList);
+        return activityEntityList;
+    }
+
+    @Override
     public void createActivityAccountIfAbsent(String userId, Long activityId) {
         try {
             dbRouterStrategy.doRouter(userId);

@@ -83,6 +83,7 @@ public class PointRepository implements IPointRepository {
                         .activityId(trade.getActivityId())
                         .tradeType(TradeType.valueOf(trade.getTradeType()))
                         .tradePoint(trade.getTradePoint())
+                        .tradeMoney(trade.getTradeMoney())
                         .tradeValue(trade.getTradeValue())
                         .tradeName(trade.getTradeName())
                         .tradeDesc(trade.getTradeDesc())
@@ -109,9 +110,28 @@ public class PointRepository implements IPointRepository {
                 .activityId(trade.getActivityId())
                 .tradeType(TradeType.valueOf(trade.getTradeType()))
                 .tradePoint(trade.getTradePoint())
+                .tradeMoney(trade.getTradeMoney())
                 .tradeValue(trade.getTradeValue())
+                .tradeName(trade.getTradeName())
                 .tradeDesc(trade.getTradeDesc())
                 .build();
+    }
+
+    @Override
+    public List<TradeEntity> queryActivityRechargeList(Long activityId) {
+        List<Trade> tradeList = tradeDao.queryActivityRecharegeList(activityId);
+        return tradeList.stream()
+                .map(trade -> TradeEntity.builder()
+                        .tradeId(trade.getTradeId())
+                        .activityId(trade.getActivityId())
+                        .tradeType(TradeType.valueOf(trade.getTradeType()))
+                        .tradePoint(trade.getTradePoint())
+                        .tradeMoney(trade.getTradeMoney())
+                        .tradeValue(trade.getTradeValue())
+                        .tradeName(trade.getTradeName())
+                        .tradeDesc(trade.getTradeDesc())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -129,6 +149,59 @@ public class PointRepository implements IPointRepository {
                         .tradeState(TradeState.valueOf(tradeOrder.getTradeState()))
                         .tradeTime(tradeOrder.getTradeTime())
                         .build();
+        } finally {
+            dbRouterStrategy.clear();
+        }
+    }
+
+    @Override
+    public void saveRechargePoint(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
+
+        String userId = tradeOrderEntity.getUserId();
+        String orderId = tradeOrderEntity.getOrderId();
+        Long tradeId = tradeEntity.getTradeId();
+        int rechargePoint = Integer.parseInt(tradeEntity.getTradeValue());
+
+        ActivityAccount activityAccount = new ActivityAccount();
+        activityAccount.setUserId(activityAccountEntity.getUserId());
+        activityAccount.setActivityId(activityAccountEntity.getActivityId());
+        activityAccount.setAccountPoint(rechargePoint);
+
+        TradeOrder tradeOrder = new TradeOrder();
+        tradeOrder.setOrderId(tradeOrderEntity.getOrderId());
+        tradeOrder.setBizId(tradeOrderEntity.getBizId());
+        tradeOrder.setUserId(tradeOrderEntity.getUserId());
+        tradeOrder.setTradeId(tradeOrderEntity.getTradeId());
+        tradeOrder.setActivityId(tradeOrderEntity.getActivityId());
+        tradeOrder.setTradeType(tradeOrderEntity.getTradeType().name());
+        tradeOrder.setTradeState(tradeOrderEntity.getTradeState().name());
+        tradeOrder.setTradeTime(tradeOrderEntity.getTradeTime());
+
+        try {
+            dbRouterStrategy.doRouter(userId);
+
+            Boolean success = transactionTemplate.execute(status -> {
+                try {
+                    tradeOrder.setTradeState(TradeState.USED.name());
+                    int rows = tradeOrderDao.updateTradeState(tradeOrder);
+                    if (rows == 1) {
+                        activityAccountDao.increaseActivityAccountPoint(activityAccount);
+                    }
+                    return true;
+                } catch (Exception e) {
+                    status.setRollbackOnly();
+                    log.error("【充值】交易充值积分时发生错误：error={}", e.getMessage());
+                    return false;
+                }
+            });
+
+            if (Boolean.TRUE.equals(success)) {
+                log.info("【充值】交易充值积分成功：orderId={}, userId={}, tradeId={}, point={}", orderId, userId, tradeId, rechargePoint);
+            } else {
+                tradeOrder.setTradeState(TradeState.CANCELLED.name());
+                tradeOrderDao.updateTradeState(tradeOrder);
+                log.info("【充值】交易充值积分失败：orderId={}, userId={}, tradeId={}, point={}", orderId, userId, tradeId, rechargePoint);
+            }
         } finally {
             dbRouterStrategy.clear();
         }
@@ -163,7 +236,6 @@ public class PointRepository implements IPointRepository {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();
-        Integer tradePoint = activityAccountEntity.getAccountPoint();
 
         ActivityAccount activityAccount = new ActivityAccount();
         activityAccount.setUserId(activityAccountEntity.getUserId());
@@ -378,7 +450,7 @@ public class PointRepository implements IPointRepository {
     }
 
     @Override
-    public void savePointReward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
+    public void saveRewardPoint(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity) {
 
         String userId = tradeOrderEntity.getUserId();
         String orderId = tradeOrderEntity.getOrderId();

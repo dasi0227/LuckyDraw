@@ -17,11 +17,16 @@ public interface IPointRepository {
 
     List<TradeEntity> queryActivityConvertList(Long activityId);
 
+    List<TradeEntity> queryActivityRechargeList(Long activityId);
+
     void savePointTradeOrder(ActivityAccountEntity activityAccountEntity, TaskEntity taskEntity, TradeOrderEntity tradeOrderEntity);
 
     void saveConvertAward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
 
     void saveConvertRaffle(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
 
-    void savePointReward(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
+    void saveRewardPoint(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
+
+    void saveRechargePoint(ActivityAccountEntity activityAccountEntity, TradeEntity tradeEntity, TradeOrderEntity tradeOrderEntity);
+
 }

@@ -4,6 +4,7 @@ public enum TradeType {
 
     CONVERT_RAFFLE,
     CONVERT_AWARD,
-    POINT_REWARD;
+    RECHARGE_POINT,
+    REWARD_POINT;
 
 }

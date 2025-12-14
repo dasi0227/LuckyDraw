@@ -16,6 +16,8 @@ public class Trade {
 
     private Integer tradePoint;
 
+    private String tradeMoney;
+
     private String tradeValue;
 
     private String tradeName;

@@ -30,10 +30,11 @@ public class Application {
 
     @PostConstruct
     public void startUp() {
-        Long activityId = 10001L;
         redisService.deleteByPattern("*");
-        activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
-        strategyAssemble.assembleStrategyByActivityId(activityId);
+        activityAssemble.assembleRechargeSkuStockByActivityId(10001L);
+        activityAssemble.assembleRechargeSkuStockByActivityId(10002L);
+        strategyAssemble.assembleStrategyByActivityId(10001L);
+        strategyAssemble.assembleStrategyByActivityId(10002L);
     }
 
     public static void main(String[] args){

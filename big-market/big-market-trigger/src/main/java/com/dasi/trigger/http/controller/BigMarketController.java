@@ -21,6 +21,8 @@ import com.dasi.domain.behavior.service.reward.IBehaviorReward;
 import com.dasi.domain.activity.service.recharge.ILuckRecharge;
 import com.dasi.domain.point.model.io.QueryActivityConvertContext;
 import com.dasi.domain.point.model.io.QueryActivityConvertResult;
+import com.dasi.domain.point.model.io.QueryActivityRechargeContext;
+import com.dasi.domain.point.model.io.QueryActivityRechargeResult;
 import com.dasi.domain.point.model.io.TradeContext;
 import com.dasi.domain.point.model.io.TradeResult;
 import com.dasi.domain.point.service.query.IPointQuery;
@@ -78,6 +80,49 @@ public class BigMarketController implements IBigMarketService {
 
     @Resource
     private ILuckRecharge luckRecharge;
+
+    /**
+     * 查询活动列表
+     * @return activityId, activityName, activityDesc
+     */
+    @PostMapping("/query/activities")
+    @Override
+    public Result<List<QueryActivityResponse>> queryActivityList() {
+        List<QueryActivityListResult> queryActivityListResultList = activityQuery.queryActivityList();
+        List<QueryActivityResponse> queryActivityResponseList = queryActivityListResultList.stream()
+                .map(result -> QueryActivityResponse.builder()
+                        .activityId(result.getActivityId())
+                        .activityName(result.getActivityName())
+                        .activityDesc(result.getActivityDesc())
+                        .build())
+                .collect(Collectors.toList());
+        return Result.success(queryActivityResponseList);
+    }
+
+    /**
+     * 查询当前活动的充值列表
+     * @param queryActivityRechargeRequest activityId
+     * @return tradeId, tradeMoney, tradeValue, tradeName
+     */
+    @PostMapping("/query/recharge")
+    @Override
+    public Result<List<QueryActivityRechargeResponse>> queryActivityRecharge(@RequestBody QueryActivityRechargeRequest queryActivityRechargeRequest) {
+
+        Long activityId = queryActivityRechargeRequest.getActivityId();
+
+        QueryActivityRechargeContext queryActivityRechargeContext = QueryActivityRechargeContext.builder().activityId(activityId).build();
+        List<QueryActivityRechargeResult> queryActivityRechargeResultList = tradeQuery.queryActivityRechargeList(queryActivityRechargeContext);
+        List<QueryActivityRechargeResponse> queryActivityRechargeResponseList = queryActivityRechargeResultList.stream()
+                .map(result -> QueryActivityRechargeResponse.builder()
+                        .tradeId(result.getTradeId())
+                        .tradeMoney(result.getTradeMoney())
+                        .tradeValue(result.getTradeValue())
+                        .tradeName(result.getTradeName())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Result.success(queryActivityRechargeResponseList);
+    }
 
 
     /**
@@ -283,23 +328,23 @@ public class BigMarketController implements IBigMarketService {
 
     /**
      * 执行用户在当前活动的积分兑换
-     * @param convertRequest userId, activityId, tradeId
+     * @param tradeRequest userId, activityId, tradeId
      * @return tradeDesc
      */
-    @PostMapping("/convert")
+    @PostMapping("/trade")
     @Override
-    public Result<ConvertResponse> convert(@RequestBody ConvertRequest convertRequest) {
+    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
 
         String userId = UserIdContext.getUserId();
-        Long tradeId = convertRequest.getTradeId();
-        Long activityId = convertRequest.getActivityId();
+        Long tradeId = tradeRequest.getTradeId();
+        Long activityId = tradeRequest.getActivityId();
         String businessNo = TimeUtil.thisDay(false);
 
         TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).activityId(activityId).businessNo(businessNo).build();
         TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
-        ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
+        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
 
-        return Result.success(convertResponse);
+        return Result.success(tradeResponse);
     }
 
     /**

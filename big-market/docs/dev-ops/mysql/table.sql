@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS trade
     activity_id BIGINT        NOT NULL COMMENT '活动id',
     trade_type  VARCHAR(32)   NOT NULL COMMENT '交易类型',
     trade_point VARCHAR(32)   NOT NULL COMMENT '交易积分',
+    trade_money VARCHAR(32)   NOT NULL COMMENT '交易金钱',
     trade_value VARCHAR(32)   NOT NULL COMMENT '交易结果',
     trade_name  VARCHAR(32)   NOT NULL COMMENT '交易名称',
     trade_desc  VARCHAR(256)  NOT NULL COMMENT '交易描述',

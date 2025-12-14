@@ -26,8 +26,12 @@ public interface IBigMarketService {
 
     Result<BehaviorResponse> behavior(BehaviorRequest behaviorRequest);
 
-    Result<ConvertResponse> convert(ConvertRequest convertRequest);
+    Result<TradeResponse> trade(TradeRequest tradeRequest);
 
     Result<FortuneResponse> fortune(FortuneRequest fortuneRequest);
+
+    Result<List<QueryActivityResponse>> queryActivityList();
+
+    Result<List<QueryActivityRechargeResponse>> queryActivityRecharge(QueryActivityRechargeRequest queryActivityRechargeRequest);
 
 }
