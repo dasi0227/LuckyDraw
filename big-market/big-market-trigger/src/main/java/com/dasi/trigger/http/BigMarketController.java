@@ -18,6 +18,7 @@ import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
+import com.dasi.domain.activity.service.recharge.ILuckRecharge;
 import com.dasi.domain.point.model.io.QueryActivityConvertContext;
 import com.dasi.domain.point.model.io.QueryActivityConvertResult;
 import com.dasi.domain.point.model.io.TradeContext;
@@ -73,6 +74,9 @@ public class BigMarketController implements IBigMarketService {
 
     @Resource
     private IPointTrade pointTrade;
+
+    @Resource
+    private ILuckRecharge luckRecharge;
 
 
     /**
@@ -295,6 +299,26 @@ public class BigMarketController implements IBigMarketService {
         ConvertResponse convertResponse = ConvertResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
 
         return Result.success(convertResponse);
+    }
+
+    /**
+     * 增加用户在当前活动的幸运值
+     * @param fortuneRequest userId, activityId, luck
+     * @return accountLuck
+     */
+    @PostMapping("/fortune")
+    @Override
+    public Result<FortuneResponse> fortune(@RequestBody FortuneRequest fortuneRequest) {
+
+        String userId = fortuneRequest.getUserId();
+        Long activityId = fortuneRequest.getActivityId();
+        Integer luck = fortuneRequest.getLuck();
+
+        FortuneContext fortuneContext = FortuneContext.builder().userId(userId).activityId(activityId).luck(luck).build();
+        FortuneResult fortuneResult = luckRecharge.doFortune(fortuneContext);
+        FortuneResponse fortuneResponse = FortuneResponse.builder().accountLuck(fortuneResult.getAccountLuck()).build();
+
+        return Result.success(fortuneResponse);
     }
 
     /**

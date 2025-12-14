@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -59,7 +60,27 @@ public class RuleLuckChain extends AbstractStrategyChain {
 
         // 5. 如果匹配上幸运值阈值，则在当前幸运值阈值下抽奖
         if (matchedThreshold != null) {
+
+            // 5.1 查看是第几个档位
+            thresholds.sort(Comparator.naturalOrder());
+            int retryCount = thresholds.indexOf(matchedThreshold);
+
+            // 5.2 解析奖品列表，拿到前两个奖品
+            String awardIdsStr = luckMap.get(matchedThreshold);
+            Set<Long> firstTwo = Arrays.stream(awardIdsStr.split(Delimiter.COMMA))
+                    .filter(StringUtils::isNotBlank)
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .limit(2)
+                    .collect(Collectors.toSet());
+
+            // 5.3 根据幸运值抽若干次
             Long awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
+            for (int used = 0; used < retryCount && firstTwo.contains(awardId); used++) {
+                awardId = strategyLottery.getLotteryAward(strategyId, String.valueOf(matchedThreshold));
+            }
+
+            // 5.4 返回结果
             log.info("【抽奖】RULE_LUCK 拦截：accountLuck={}, luckThreshold={}，awardId={}", accountLuck, matchedThreshold, awardId);
             return RuleCheckResult.builder()
                     .awardId(awardId)

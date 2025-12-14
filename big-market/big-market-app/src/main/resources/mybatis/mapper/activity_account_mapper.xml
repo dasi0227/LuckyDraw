@@ -59,6 +59,12 @@
         WHERE user_id = #{userId} AND activity_id = #{activityId} AND total_surplus >= 1;
     </update>
 
+    <update id="increaseActivityAccountLuck" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
+        UPDATE activity_account
+        SET account_luck = account_luck + #{accountLuck}
+        WHERE user_id = #{userId} AND activity_id = #{activityId};
+    </update>
+
     <update id="increaseActivityAccountPoint" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccount">
         UPDATE activity_account
         SET account_point = account_point + #{accountPoint}

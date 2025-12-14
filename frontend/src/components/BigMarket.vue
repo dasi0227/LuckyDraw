@@ -164,9 +164,13 @@
             :key="mark.key"
             class="progress-mark"
             :style="{ left: `${mark.percent}%` }"
-            @click="showLuckDetail(mark)"
           >
-            <span class="mark-label">{{ mark.label ?? mark.value }}</span>
+            <span
+              class="mark-label"
+              :data-tip="`${mark.detail || mark.label || mark.value || ''} 中奖概率大幅度提升`"
+            >
+              {{ mark.label ?? mark.value }}
+            </span>
             <span
               v-if="mark.percent > 0 && mark.percent < 100"
               class="mark-line"
@@ -227,7 +231,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { formatDateTime } from "../utils/utils.js";
 import { namePool } from '../utils/name.js';
-import { burstConfetti } from '../utils/confetti.js';
+import { burstConfetti, resetConfetti } from '../utils/confetti.js';
 import api from '../request/api.js';
 
 const userStats = reactive({
@@ -386,6 +390,8 @@ const handleRedeemPoints = async (item) => {
       title: '🎉 兑换成功，恭喜获得奖励 🎉',
       rewards: [desc],
     };
+    const luckBonus = Math.floor(Math.random() * 10) + 1;
+    await addFortuneLuck(luckBonus);
     createConfetti();
     setTimeout(() => {
       fetchActivityAccountData(currentActivityId.value, currentUserId.value);
@@ -413,6 +419,8 @@ const runBehavior = async (action) => {
       title: '🎉 互动成功，恭喜获得奖励 🎉',
       rewards: rewards.length ? rewards : ['感谢参与'],
     };
+    const luckBonus = Math.floor(Math.random() * 10) + 1;
+    await addFortuneLuck(luckBonus);
     createConfetti();
     await fetchActivityBehaviorData(currentActivityId.value, currentUserId.value);
     setTimeout(() => {
@@ -425,9 +433,7 @@ const runBehavior = async (action) => {
 
 const closeRewardModal = () => {
   rewardModal.value = { visible: false, rewards: [] };
-  if (confettiInstance) {
-    // keep background fall running; no need to clear
-  }
+  resetConfetti();
 };
 
 const showErrorModal = (message) => {
@@ -467,14 +473,9 @@ const closeWarnModal = () => {
   warnModal.value = { visible: false, title: '提示', lines: [], shake: false };
 };
 
-const showLuckDetail = (mark) => {
-  const detailText = mark?.detail || mark?.label || mark?.value || '暂无详情';
-  window.alert(`阈值 ${mark?.value ?? ''}: ${detailText}`);
-};
-
 const route = useRoute();
 const currentActivityId = ref(route.params.activityId || 'default');
-const currentUserId = ref('wyw');
+const currentUserId = ref(route.query.userId || localStorage.getItem('bigmarket_user') || 'wyw');
 
 const fetchActivityConvertData = async (activityId) => {
   if (!activityId) return;
@@ -497,7 +498,7 @@ const fetchActivityAccountData = async (activityId, userId) => {
     const account = await api.queryActivityAccount({ activityId, userId });
 
     Object.assign(userStats, {
-      name: 'wyw',
+      name: userId,
       points: account?.accountPoint ?? 0,
       totalChance: account?.totalSurplus ?? 0,
       monthChance: account?.monthSurplus ?? 0,
@@ -541,6 +542,25 @@ const fetchActivityLuckData = async (activityId, userId) => {
     luckMarksData.value = marks;
   } catch (error) {
     console.error('获取幸运值信息失败: ', error);
+  }
+};
+
+const addFortuneLuck = async (luckBonus) => {
+  if (!currentActivityId.value || !currentUserId.value) return;
+  const luck = Math.max(1, Math.min(10, Number(luckBonus) || 1));
+  try {
+    const resp = await api.addFortune({
+      activityId: currentActivityId.value,
+      userId: currentUserId.value,
+      luck,
+    });
+    if (resp?.accountLuck !== undefined && resp?.accountLuck !== null) {
+      luckValue.value = resp.accountLuck;
+    } else {
+      luckValue.value = (luckValue.value || 0) + luck;
+    }
+  } catch (error) {
+    console.error('增加幸运值失败: ', error);
   }
 };
 
@@ -617,9 +637,10 @@ const fetchUserAwardData = async (activityId, userId) => {
 };
 
 watch(
-  () => route.params.activityId,
-  async (newActivityId) => {
+  () => [route.params.activityId, route.query.userId],
+  async ([newActivityId, newUserId]) => {
     currentActivityId.value = newActivityId;
+    currentUserId.value = newUserId || localStorage.getItem('bigmarket_user') || 'wyw';
     fetchActivityConvertData(currentActivityId.value);
     await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
     await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
@@ -709,7 +730,7 @@ const startGridLottery = async () => {
       time: formatDateTime(new Date()),
     });
 
-    luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
+      luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
 
     pauseTimer = setTimeout(async () => {
       if (raffleFlags.isLock || raffleFlags.isEmpty) {
@@ -726,6 +747,9 @@ const startGridLottery = async () => {
         };
         createConfetti();
       }
+
+      const luckBonus = Math.floor(Math.random() * 10) + 1;
+      await addFortuneLuck(luckBonus);
 
       highlightIndex.value = 4;
       await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
@@ -784,6 +808,13 @@ onMounted(() => {
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.65), rgba(210, 220, 255, 0.4) 40%, rgba(185, 200, 255, 0.25) 70%, rgba(150, 170, 240, 0.18)),
     linear-gradient(135deg, #eef2ff 0%, #dee6ff 50%, #ccd6ff 100%);
   font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+
+:global(html) {
+  overflow-y: auto !important;
+  overflow-x: hidden;
 }
 
 .bigmarket-page button:focus,
@@ -1323,11 +1354,52 @@ onMounted(() => {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .progress-mark:hover .mark-label {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.progress-mark .mark-label::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  background: rgba(31, 42, 68, 0.92);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.progress-mark .mark-label::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(31, 42, 68, 0.92);
+  transform-origin: center;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.progress-mark:hover .mark-label::after,
+.progress-mark:hover .mark-label::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .progress-mark .mark-line {

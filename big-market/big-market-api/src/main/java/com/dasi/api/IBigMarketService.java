@@ -28,4 +28,6 @@ public interface IBigMarketService {
 
     Result<ConvertResponse> convert(ConvertRequest convertRequest);
 
+    Result<FortuneResponse> fortune(FortuneRequest fortuneRequest);
+
 }
