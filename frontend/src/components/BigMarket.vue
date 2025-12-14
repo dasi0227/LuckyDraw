@@ -408,18 +408,12 @@ const handleRedeemPoints = async (item) => {
 };
 
 const createConfetti = () => {
-  // 颜色
   const colors = ['#ff6b6b', '#feca57', '#1dd1a1', '#54a0ff', '#5f27cd'];
-  // 总数量
-  const TOTAL = 120;
-  // 批次
-  const BATCH = 40;
-  // 最短掉落时长
-  const MIN_DUR = 2.0;
-  // 随机时长
-  const DUR_RANGE = 2.0;
-  // 清空时间
-  const LIFETIME = 9000;
+  const TOTAL = 30;
+  const BATCH = 15;
+  const MIN_DUR = 1.6;
+  const DUR_RANGE = 1.2;
+  const LIFETIME = 3500;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
@@ -726,24 +720,12 @@ const startGridLottery = async () => {
     return;
   }
 
-  if (raffleFlags.isLock) {
-    isRolling.value = false;
-    showErrorModal(`当前奖品没有解锁，请多多参与抽奖！\n获取兜底奖品：${raffleFlags.awardName || '--'}`);
-    return;
-  }
-
-  if (raffleFlags.isEmpty) {
-    isRolling.value = false;
-    showErrorModal(`当前奖品已被抽完，请尽早参与活动！\n获取兜底奖品：${raffleFlags.awardName || '---'}`);
-    return;
-  }
-
   let pointer = highlightSequence.indexOf(highlightIndex.value);
   if (pointer === -1) pointer = 0;
 
   const seqLength = highlightSequence.length;
   const extraSteps = (resultOrderIndex - pointer + seqLength) % seqLength;
-  const totalSteps = seqLength * 3 + extraSteps + 1;
+  const totalSteps = seqLength * 3 + extraSteps;
   let steps = 0;
 
   const tick = () => {
@@ -757,13 +739,11 @@ const startGridLottery = async () => {
       return;
     }
 
-    // ✅ 停止滚动
     isRolling.value = false;
 
     const prize = wheelPrizes.value[resultOrderIndex] || { label: '敬请期待', rate: 0 };
     const finalName = raffleFlags.awardName || prize.label;
 
-    // ✅ 列表用后端返回的 awardName（兜底也能对上）
     addHistoryRecord({
       id: Date.now(),
       user: '你',
@@ -779,23 +759,31 @@ const startGridLottery = async () => {
 
     luckValue.value = Math.min(luckGoal.value || 0, luckValue.value + 12);
 
-    if (raffleFlags.isLock || raffleFlags.isEmpty) {
-      showWarnModal({
-        isLock: raffleFlags.isLock,
-        isEmpty: raffleFlags.isEmpty,
-        awardName: finalName,
-      });
-    } else {
-      rewardModal.value = {
-        visible: true,
-        title: '🎉 抽奖成功，恭喜获得奖励 🎉',
-        rewards: [finalName],
-      };
-      createConfetti();
-    }
+    pauseTimer = setTimeout(async () => {
+      if (raffleFlags.isLock || raffleFlags.isEmpty) {
+        showWarnModal({
+          isLock: raffleFlags.isLock,
+          isEmpty: raffleFlags.isEmpty,
+          awardName: finalName,
+        });
+      } else {
+        rewardModal.value = {
+          visible: true,
+          title: '🎉 抽奖成功，恭喜获得奖励 🎉',
+          rewards: [finalName],
+        };
+        createConfetti();
+      }
 
-    highlightIndex.value = 4;
-    fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+      highlightIndex.value = 4;
+      await fetchActivityAccountData(currentActivityId.value, currentUserId.value);
+      await fetchActivityLuckData(currentActivityId.value, currentUserId.value);
+      await fetchUserAwardData(currentActivityId.value, currentUserId.value);
+      await fetchActivityAwardData(currentActivityId.value, currentUserId.value);
+
+      isRolling.value = false;
+    }, 500);
+
   };
 
   rollingTimer = setTimeout(tick, 80);
@@ -811,7 +799,7 @@ onBeforeUnmount(() => {
 });
 
 const scheduleNextHistory = () => {
-  const delay = 1000 + Math.random() * 9000; // 1s ~ 10s
+  const delay = 1000 + Math.random() * 9000;
 
   historyTimer = setTimeout(() => {
     if (wheelPrizes.value.length) {
@@ -824,7 +812,7 @@ const scheduleNextHistory = () => {
       });
     }
 
-    scheduleNextHistory(); // 继续下一次
+    scheduleNextHistory();
   }, delay);
 };
 
@@ -991,8 +979,8 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.convert-card .convert-name,
-.behavior-name {
+.convert-card .convert-name, .behavior-name {
+  text-align: center;
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -1541,6 +1529,7 @@ onMounted(() => {
 }
 
 .confetti-layer {
+  contain: layout paint;
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -1557,7 +1546,6 @@ onMounted(() => {
   border-radius: 4px;
   animation: confetti-fall linear forwards;
   opacity: 0.95;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.18);
   will-change: transform, opacity;
   transform: translate3d(0, 0, 0) rotate(0deg);
   backface-visibility: hidden;

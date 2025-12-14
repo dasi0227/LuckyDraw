@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RuleCheckResult {
 
-    /** 奖品 ID */
+    /** 最初确定的奖品 ID */
     private Long awardId;
 
     /** 最后应用的规则模型 */

@@ -29,19 +29,18 @@ public class DefaultStrategyTreeEngine implements IStrategyTreeEngine {
     @Override
     public RuleCheckResult process(String userId, Long strategyId, Long awardId) {
 
-        // 获取基础信息
         String treeRoot = this.ruleTreeVO.getTreeRoot();
         Map<String, RuleNodeVO> treeNodeMap = this.ruleTreeVO.getTreeNodeMap();
 
         boolean isLock = false;
         boolean isEmpty = false;
-
         RuleCheckResult ruleCheckResult = new RuleCheckResult();
+
         RuleNodeVO curTreeNode = treeNodeMap.get(treeRoot);
         while (curTreeNode != null) {
-
             IStrategyTree ruleTree = ruleTreeMap.get(curTreeNode.getRuleModel());
             String ruleValue = curTreeNode.getRuleValue();
+
             ruleCheckResult = ruleTree.logic(userId, strategyId, awardId, ruleValue);
 
             if (ruleCheckResult.getRuleCheckOutcome().equals(RuleCheckOutcome.CAPTURE)) {

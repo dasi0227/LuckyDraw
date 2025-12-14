@@ -48,7 +48,7 @@ public class RuleStockTree implements IStrategyTree {
         } else {
             log.info("【抽奖】RULE_STOCK 拦截：surplus={}", surplus);
             return RuleCheckResult.builder()
-                    .awardId(null)
+                    .awardId(awardId)
                     .ruleCheckOutcome(RuleCheckOutcome.CAPTURE)
                     .ruleModel(RuleModel.RULE_STOCK)
                     .build();

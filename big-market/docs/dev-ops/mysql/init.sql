@@ -14,12 +14,12 @@ DROP TABLE IF EXISTS award;
 CREATE TABLE award LIKE big_market_table.award;
 INSERT INTO award (award_id, award_type, award_name, award_value, award_desc)
 VALUES (2001, 'RANDOM_ACCOUNT_POINT', '随机积分 110', '1,10', '黑名单奖品，随机积分'),
-       (2002, 'RANDOM_ACCOUNT_POINT', '随机积分 1--50', '1,50', '兜底奖品，固定积分'),
+       (2002, 'RANDOM_ACCOUNT_POINT', '随机积分 1-50', '1,50', '兜底奖品，固定积分'),
        (2003, 'FIXED_ACCOUNT_POINT', '固定积分 66', '66', '兜底奖品，固定积分'),
        (2004, 'FIXED_ACCOUNT_POINT', '固定积分 88', '88', '兜底奖品，固定积分'),
 
-       (2011, 'RANDOM_ACCOUNT_POINT', '随机积分 10--50', '10,50', '积分奖品。随机'),
-       (2012, 'RANDOM_ACCOUNT_POINT', '随机积分 50--100', '50,100', '积分奖品，随机'),
+       (2011, 'RANDOM_ACCOUNT_POINT', '随机积分 10-50', '10,50', '积分奖品。随机'),
+       (2012, 'RANDOM_ACCOUNT_POINT', '随机积分 50-100', '50,100', '积分奖品，随机'),
        (2013, 'FIXED_ACCOUNT_POINT', '固定积分 30', '30', '积分奖品，固定'),
        (2014, 'FIXED_ACCOUNT_POINT', '固定积分 80', '80', '积分奖品，固定'),
 
