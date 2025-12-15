@@ -1,7 +1,7 @@
 package com.dasi.config;
 
+import com.dasi.properties.AppConfigProperties;
 import com.dasi.trigger.http.Interceptor.AuthInterceptor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,8 +12,8 @@ import javax.annotation.Resource;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${app.config.cross-origin}")
-    private String crossOrigin;
+    @Resource
+    private AppConfigProperties appConfigProperties;
 
     @Resource
     private AuthInterceptor authInterceptor;
@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(crossOrigin)
+                .allowedOrigins(appConfigProperties.getCrossOrigin())
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(false);
