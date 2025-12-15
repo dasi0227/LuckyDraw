@@ -1,9 +1,9 @@
 package com.dasi.domain.activity.event;
 
+import com.dasi.properties.TopicProperties;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.util.TimeUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -11,11 +11,14 @@ import javax.annotation.Resource;
 @Component
 public class RechargeSkuStockEmptyEvent extends BaseEvent<Long> {
 
-    @Value("${spring.rabbitmq.topic.recharge_sku_stock_empty}")
-    private String topic;
+    private final String topic;
 
     @Resource
     private IUniqueIdGenerator uniqueIdGenerator;
+
+    public RechargeSkuStockEmptyEvent(TopicProperties topicProperties) {
+        this.topic = topicProperties.getRechargeSkuStockEmpty();
+    }
 
     @Override
     public EventMessage<Long> buildEventMessage(Long data) {

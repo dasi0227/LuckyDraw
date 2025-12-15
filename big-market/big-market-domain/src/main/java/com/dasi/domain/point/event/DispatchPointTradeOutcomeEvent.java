@@ -1,5 +1,6 @@
 package com.dasi.domain.point.event;
 
+import com.dasi.properties.TopicProperties;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.event.BaseEvent;
 import com.dasi.types.util.TimeUtil;
@@ -7,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,8 +15,7 @@ import javax.annotation.Resource;
 @Component
 public class DispatchPointTradeOutcomeEvent extends BaseEvent<DispatchPointTradeOutcomeEvent.DispatchTradeOutcomeMessage> {
 
-    @Value("${spring.rabbitmq.topic.dispatch_trade_outcome}")
-    private String topic;
+    private final String topic;
 
     @Override
     public String getTopic() {
@@ -25,6 +24,10 @@ public class DispatchPointTradeOutcomeEvent extends BaseEvent<DispatchPointTrade
 
     @Resource
     private IUniqueIdGenerator uniqueIdGenerator;
+
+    public DispatchPointTradeOutcomeEvent(TopicProperties topicProperties) {
+        this.topic = topicProperties.getDispatchTradeOutcome();
+    }
 
     @Override
     public EventMessage<DispatchTradeOutcomeMessage> buildEventMessage(DispatchTradeOutcomeMessage data) {
