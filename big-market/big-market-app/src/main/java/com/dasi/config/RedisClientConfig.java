@@ -3,19 +3,18 @@ package com.dasi.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.dasi.properties.RedisClientConfigProperties;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(RedisClientConfigProperties.class)
 public class RedisClientConfig {
 
-    @Bean("redissonClient")
+    @Bean
     public RedissonClient redissonClient(RedisClientConfigProperties properties) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -42,4 +41,3 @@ public class RedisClientConfig {
     }
 
 }
-

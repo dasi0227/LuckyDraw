@@ -11,7 +11,7 @@ import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
 import com.dasi.domain.award.model.entity.AwardEntity;
-import com.dasi.types.event.BaseEvent;
+import com.dasi.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

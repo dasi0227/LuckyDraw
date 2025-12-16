@@ -22,7 +22,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/**/big-market/user/register", "/api/**/big-market/user/login");
+                .excludePathPatterns(
+                        "/api/**/big-market/dcc/**",
+                        "/api/**/big-market/auth/**"
+                );
     }
 
     @Override

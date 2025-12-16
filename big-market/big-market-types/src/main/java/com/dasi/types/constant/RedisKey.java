@@ -33,4 +33,7 @@ public class RedisKey {
     public static final String TRADE_LIST_KEY                       = "big_market:trade:entity:trade_list:";
     public static final String LOCK_POINT_KEY                       = "big_market:lock:point:";
     public static final String LOCK_RAFFLE_KEY                      = "big_market:lock:raffle:";
+    public static final String RATE_LIMIT_KEY                       = "big_market:rate_limit:";
+    public static final String CIRCUIT_BREAKER_OPEN_KEY             = "big_market:circuit_breaker:open:";
+    public static final String CIRCUIT_BREAKER_FAIL_KEY             = "big_market:circuit_breaker:fail:";
 }

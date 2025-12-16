@@ -6,7 +6,7 @@ import com.dasi.domain.award.event.DispatchActivityAwardEvent.DispatchActivityAw
 import com.dasi.domain.award.model.io.DispatchContext;
 import com.dasi.domain.award.model.io.DispatchResult;
 import com.dasi.domain.award.service.dispatch.IAwardDispatch;
-import com.dasi.types.event.BaseEvent.EventMessage;
+import com.dasi.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,7 +21,7 @@ public class DispatchActivityAward {
     @Resource
     private IAwardDispatch awardDispatch;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "dispatch_activity_award"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "dispatch-activity-award"))
     public void dispatchActivityAward(String message) {
         try {
             EventMessage<DispatchActivityAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<DispatchActivityAwardMessage>>() {}.getType());

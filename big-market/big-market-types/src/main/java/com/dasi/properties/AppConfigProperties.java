@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "app.config")
+@ConfigurationProperties(prefix = "app.config", ignoreInvalidFields = true)
 public class AppConfigProperties {
 
     private String crossOrigin;

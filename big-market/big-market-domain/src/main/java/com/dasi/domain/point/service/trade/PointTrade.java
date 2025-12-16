@@ -17,10 +17,10 @@ import com.dasi.domain.point.repository.IPointRepository;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.constant.RedisKey;
-import com.dasi.types.event.BaseEvent;
+import com.dasi.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import com.dasi.types.exception.BusinessException;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,7 @@ public class PointTrade implements IPointTrade {
             // 上锁
             isLock = redisLock.tryLock(lockKey);
             if (!isLock) {
-                throw new BusinessException("当前系统繁忙，请稍后再试");
+                throw new BusinessException(ExceptionMessage.LOCK_ERROR);
             }
 
             // 检查积分

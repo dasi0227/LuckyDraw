@@ -7,6 +7,7 @@ import com.dasi.domain.point.model.type.TradeType;
 import com.dasi.domain.point.repository.IPointRepository;
 import com.dasi.domain.point.service.dispatch.IPointDispatchHandler;
 import com.dasi.types.constant.Delimiter;
+import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.BusinessException;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class ConvertRaffleDispatchHandler implements IPointDispatchHandler {
         try {
             isLock = redisLock.tryLock(lockKey);
             if (!isLock) {
-                throw new BusinessException("当前系统繁忙，请稍后再试");
+                throw new BusinessException(ExceptionMessage.LOCK_ERROR);
             }
             pointRepository.saveConvertRaffle(pointDispatchAggregate.getActivityAccountEntity(), pointDispatchAggregate.getTradeEntity(), pointDispatchAggregate.getTradeOrderEntity());
         } finally {

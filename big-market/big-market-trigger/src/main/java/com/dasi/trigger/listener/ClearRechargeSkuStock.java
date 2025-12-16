@@ -3,7 +3,7 @@ package com.dasi.trigger.listener;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.dasi.domain.activity.service.stock.IActivityStock;
-import com.dasi.types.event.BaseEvent.EventMessage;
+import com.dasi.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,7 +18,7 @@ public class ClearRechargeSkuStock {
     @Resource
     private IActivityStock activityStock;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_empty"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "activity-sku-stock-empty"))
     public void clearRechargeSkuStock(String message) {
         try {
             EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<EventMessage<Long>>() {}.getType());

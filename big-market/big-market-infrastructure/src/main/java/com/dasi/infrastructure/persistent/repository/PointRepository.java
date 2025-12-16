@@ -14,7 +14,7 @@ import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;

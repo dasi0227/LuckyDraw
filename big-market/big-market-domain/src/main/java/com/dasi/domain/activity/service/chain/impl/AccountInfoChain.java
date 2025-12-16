@@ -9,7 +9,7 @@ import com.dasi.domain.activity.model.type.ActionModel;
 import com.dasi.domain.activity.repository.IActivityRepository;
 import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.exception.BusinessException;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

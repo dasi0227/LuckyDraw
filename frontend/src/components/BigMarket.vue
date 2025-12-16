@@ -570,7 +570,7 @@ const closeWarnModal = () => {
 const route = useRoute();
 const router = useRouter();
 const currentActivityId = ref(route.params.activityId || 'default');
-const currentUserId = ref(localStorage.getItem('bigmarket_user') || 'wyw');
+const currentUserId = ref(localStorage.getItem('bigmarket_user') || '');
 
 const fetchActivityConvertData = async (activityId) => {
   if (!activityId) return;
@@ -749,11 +749,33 @@ const fetchUserAwardData = async (activityId) => {
   }
 };
 
+const refreshAllData = async () => {
+  if (!currentActivityId.value) return;
+  try {
+    await Promise.all([
+      fetchActivityConvertData(currentActivityId.value),
+      fetchActivityAccountData(currentActivityId.value),
+      fetchActivityLuckData(currentActivityId.value),
+      fetchUserAwardData(currentActivityId.value),
+      fetchActivityBehaviorData(currentActivityId.value),
+      fetchActivityAwardData(currentActivityId.value),
+      fetchActivityInfo(currentActivityId.value),
+      fetchRechargeList(currentActivityId.value),
+    ]);
+  } catch (error) {
+    console.error('定时刷新数据失败: ', error);
+  }
+};
+
 watch(
   () => route.params.activityId,
   async (newActivityId) => {
     currentActivityId.value = newActivityId;
-    currentUserId.value = localStorage.getItem('bigmarket_user') || 'wyw';
+    currentUserId.value = localStorage.getItem('bigmarket_user') || '';
+    if (!currentUserId.value) {
+      router.push('/login');
+      return;
+    }
     fetchActivityConvertData(currentActivityId.value);
     await fetchActivityAccountData(currentActivityId.value);
     await fetchActivityLuckData(currentActivityId.value);
@@ -774,6 +796,7 @@ const isRolling = ref(false);
 let rollingTimer = null;
 let historyTimer = null;
 let pauseTimer = null;
+let autoRefreshTimer = null;
 
 const startGridLottery = async () => {
   const prizeCount = Math.min(highlightSequence.length, wheelPrizes.value.length);
@@ -887,6 +910,9 @@ onBeforeUnmount(() => {
   if (pauseTimer) {
     clearTimeout(pauseTimer);
   }
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+  }
 });
 
 const scheduleNextHistory = () => {
@@ -908,8 +934,13 @@ const scheduleNextHistory = () => {
 };
 
 onMounted(() => {
+  if (!currentUserId.value) {
+    router.push('/login');
+    return;
+  }
   luckValue.value = 48;
   scheduleNextHistory();
+  autoRefreshTimer = setInterval(refreshAllData, 10000);
 });
 
 const handleLogout = () => {
