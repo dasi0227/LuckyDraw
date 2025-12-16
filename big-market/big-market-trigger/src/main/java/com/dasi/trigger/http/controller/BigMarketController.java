@@ -389,8 +389,6 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<RaffleResponse> raffle(@RequestBody RaffleRequest raffleRequest) {
 
-        int i = 1 / 0;
-
         if (degradeRaffle.equals(DefaultValue.TOGGLE_ON)) {
             throw new BusinessException(ExceptionMessage.DEGRADE_ERROR);
         }
