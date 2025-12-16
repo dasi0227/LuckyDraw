@@ -85,6 +85,9 @@ public interface IRedisService {
     /** 闭锁 */
     RCountDownLatch getCountDownLatch(String key);
 
+    /** 限流器 */
+    RRateLimiter getRateLimiter(String key);
+
     /** 布隆过滤器 */
     <T> RBloomFilter<T> getBloomFilter(String key);
 
@@ -93,6 +96,9 @@ public interface IRedisService {
 
     /** 放入原子 Long 类型数据 */
     void setAtomicLong(String key, Long num);
+
+    /** 设置过期时间（毫秒） */
+    void expire(String key, long expired);
 
     /** 设置值如果不存在 */
     Boolean setNx(String key);

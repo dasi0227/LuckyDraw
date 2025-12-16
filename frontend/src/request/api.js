@@ -1,16 +1,16 @@
 import request from './request.js';
 
-const prefix = '/api/v1/big-market';
+const prefix = '/system';
 
 export default {
   // 登录
   login(data) {
-    return request.post(`${prefix}/user/login`, data);
+    return request.post(`${prefix}/auth/login`, data);
   },
 
   // 注册
   register(data) {
-    return request.post(`${prefix}/user/register`, data);
+    return request.post(`${prefix}/auth/register`, data);
   },
 
   // 查询当前活动的积分兑换信息

@@ -4,7 +4,7 @@ import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.constant.Delimiter;
 import com.dasi.types.constant.RedisKey;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.util.TimeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 

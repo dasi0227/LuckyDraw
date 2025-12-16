@@ -10,6 +10,7 @@ import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.common.IRedisLock;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.constant.Delimiter;
+import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import com.dasi.types.exception.BusinessException;
@@ -49,7 +50,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
         try {
             isLock = redisLock.tryLock(lockKey);
             if (!isLock) {
-                throw new BusinessException("当前系统繁忙，请稍后再试");
+                throw new BusinessException(ExceptionMessage.LOCK_ERROR);
             }
 
             // 活动与用户校验
@@ -94,5 +95,6 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
     protected abstract void saveRaffleOrder(RaffleOrderEntity raffleOrderEntity);
 
     protected abstract Boolean checkRaffleAvailable(String userId, ActivityEntity activityEntity);
+
 
 }

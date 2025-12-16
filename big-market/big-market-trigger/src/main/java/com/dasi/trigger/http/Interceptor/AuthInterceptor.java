@@ -3,7 +3,7 @@ package com.dasi.trigger.http.Interceptor;
 import com.dasi.properties.JwtProperties;
 import com.dasi.infrastructure.common.JwtService;
 import com.dasi.types.constant.ExceptionMessage;
-import com.dasi.types.context.UserIdContext;
+import com.dasi.context.UserIdContext;
 import com.dasi.types.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        // Allow CORS preflight requests to pass without token
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         String token = request.getHeader(jwtProperties.getHeader());
         if (StringUtils.isBlank(token)) {
             throw new BusinessException(ExceptionMessage.TOKEN_ERROR);

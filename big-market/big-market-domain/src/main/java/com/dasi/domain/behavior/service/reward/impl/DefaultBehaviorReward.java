@@ -13,7 +13,7 @@ import com.dasi.domain.behavior.model.type.TaskState;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.constant.Delimiter;
-import com.dasi.types.event.BaseEvent.EventMessage;
+import com.dasi.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

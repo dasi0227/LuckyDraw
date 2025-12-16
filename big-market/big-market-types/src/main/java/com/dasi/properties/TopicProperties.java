@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "spring.rabbitmq.topic")
+@ConfigurationProperties(prefix = "spring.rabbitmq.topic", ignoreInvalidFields = true)
 public class TopicProperties {
 
     private String rechargeSkuStockEmpty;

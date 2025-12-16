@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/${app.config.api-version}/big-market")
+@RequestMapping("/api/${app.config.api-version}/big-market/auth")
 public class UserController implements IUserService {
 
     @Resource
@@ -33,7 +33,7 @@ public class UserController implements IUserService {
      * @param registerRequest userId, password
      * @return userId, token
      */
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     @Override
     public Result<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
 
@@ -49,7 +49,7 @@ public class UserController implements IUserService {
      * @param loginRequest userId, password
      * @return userId, token
      */
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     @Override
     public Result<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
 

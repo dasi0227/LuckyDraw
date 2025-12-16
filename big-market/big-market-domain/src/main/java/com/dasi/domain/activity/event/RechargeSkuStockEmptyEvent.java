@@ -2,8 +2,8 @@ package com.dasi.domain.activity.event;
 
 import com.dasi.properties.TopicProperties;
 import com.dasi.domain.common.IUniqueIdGenerator;
-import com.dasi.types.event.BaseEvent;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.event.BaseEvent;
+import com.dasi.util.TimeUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

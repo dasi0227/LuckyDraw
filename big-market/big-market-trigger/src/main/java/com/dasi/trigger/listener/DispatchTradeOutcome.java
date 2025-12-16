@@ -6,7 +6,7 @@ import com.dasi.domain.point.event.DispatchPointTradeOutcomeEvent.DispatchTradeO
 import com.dasi.domain.point.model.io.DispatchContext;
 import com.dasi.domain.point.model.io.DispatchResult;
 import com.dasi.domain.point.service.dispatch.IPointDispatch;
-import com.dasi.types.event.BaseEvent;
+import com.dasi.event.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,7 +21,7 @@ public class DispatchTradeOutcome {
     @Resource
     private IPointDispatch pointDispatch;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch_trade_outcome}"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch-trade-outcome}"))
     public void dispatchTradeOutcome(String message) {
         try {
             BaseEvent.EventMessage<DispatchTradeOutcomeMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<DispatchTradeOutcomeMessage>>() {}.getType());

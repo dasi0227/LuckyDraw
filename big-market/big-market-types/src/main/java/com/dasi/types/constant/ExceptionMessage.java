@@ -30,4 +30,11 @@ public class ExceptionMessage {
     public static final String USER_NOT_EXISTS = "用户不存在";
     public static final String USER_PASSWORD_ERROR = "用户密码错误";
 
+    // 配置
+    public static final String CONFIG_KEY_NOT_EXISTS = "配置 key 不存在";
+    public static final String DEGRADE_ERROR = "当前接口正在维护中，请稍后重试";
+    public static final String LOCK_ERROR = "当前操作未成功，请稍后重试";
+    public static final String RATE_LIMIT_ERROR = "当前操作过于频繁，请稍后重试";
+    public static final String CIRCUIT_BREAKER_ERROR = "当前接口异常，请稍后重试";
+
 }

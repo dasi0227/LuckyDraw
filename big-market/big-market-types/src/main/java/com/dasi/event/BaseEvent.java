@@ -1,4 +1,4 @@
-package com.dasi.types.event;
+package com.dasi.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

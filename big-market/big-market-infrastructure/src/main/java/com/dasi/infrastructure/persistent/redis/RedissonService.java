@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Service("redissonService")
 public class RedissonService implements IRedisService {
@@ -143,6 +144,11 @@ public class RedissonService implements IRedisService {
     }
 
     @Override
+    public RRateLimiter getRateLimiter(String key) {
+        return redissonClient.getRateLimiter(key);
+    }
+
+    @Override
     public <T> RBloomFilter<T> getBloomFilter(String key) {
         return redissonClient.getBloomFilter(key);
     }
@@ -155,6 +161,11 @@ public class RedissonService implements IRedisService {
     @Override
     public void setAtomicLong(String key, Long num) {
         redissonClient.getAtomicLong(key).set(num);
+    }
+
+    @Override
+    public void expire(String key, long expired) {
+        redissonClient.getKeys().expire(key, expired, TimeUnit.MILLISECONDS);
     }
 
     @Override

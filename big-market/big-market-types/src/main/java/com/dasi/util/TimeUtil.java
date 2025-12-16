@@ -1,4 +1,4 @@
-package com.dasi.types.util;
+package com.dasi.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

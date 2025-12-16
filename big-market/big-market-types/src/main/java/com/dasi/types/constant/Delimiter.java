@@ -6,5 +6,5 @@ public class Delimiter {
     public static final String SPACE = "\\s+";
     public static final String COLON = ":";
     public static final String UNDERSCORE = "_";
-
+    public static final String SLASH = "/";
 }

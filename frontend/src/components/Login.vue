@@ -44,6 +44,15 @@
         </button>
       </form>
     </div>
+    <transition name="fade">
+      <div v-if="errorModal.visible" class="error-modal-overlay" @click="closeError">
+        <div class="error-modal" @click.stop>
+          <h3>出错了</h3>
+          <p>{{ errorModal.message }}</p>
+          <button class="auth-submit danger" type="button" @click="closeError">我知道了</button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -63,6 +72,17 @@ const errors = reactive({
   userId: '',
   password: '',
 });
+const errorModal = reactive({ visible: false, message: '' });
+
+const showError = (msg) => {
+  errorModal.visible = true;
+  errorModal.message = msg || '操作失败，请稍后再试';
+};
+
+const closeError = () => {
+  errorModal.visible = false;
+  errorModal.message = '';
+};
 
 const handleSubmit = async () => {
   errors.userId = form.userId ? '' : '请输入用户ID';
@@ -86,7 +106,7 @@ const handleSubmit = async () => {
       path: '/bigmarket/10001',
     });
   } catch (error) {
-    window.alert(error?.message || '操作失败，请稍后再试');
+    showError(error?.message || '操作失败，请稍后再试');
   } finally {
     submitting.value = false;
   }
@@ -222,6 +242,11 @@ const handleSubmit = async () => {
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
+.auth-submit.danger{
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 14px 26px rgba(239, 68, 68, 0.35);
+}
+
 .auth-submit:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 18px 34px rgba(46, 179, 128, 0.45);
@@ -233,5 +258,53 @@ const handleSubmit = async () => {
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+.error-modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(248, 113, 113, 0.16), rgba(0,0,0,0.55) 65%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  backdrop-filter: blur(6px);
+}
+
+.error-modal{
+  width: min(360px, 90vw);
+  background: linear-gradient(165deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+  border-radius: 18px;
+  padding: 1.1rem 1rem 1rem;
+  text-align: center;
+  box-shadow: 0 18px 32px rgba(0,0,0,0.22);
+  color: #b91c1c;
+}
+
+.error-modal h3{
+  margin: 0 0 0.6rem;
+  font-weight: 900;
+}
+
+.error-modal p{
+  margin: 0 0 0.8rem;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.fade-enter-active {
+  animation: fade-in 0.2s ease-out both;
+}
+.fade-leave-active {
+  animation: fade-out 0.15s ease-in both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.98); }
 }
 </style>

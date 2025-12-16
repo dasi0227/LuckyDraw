@@ -1,7 +1,7 @@
 package com.dasi.infrastructure.event;
 
 import com.alibaba.fastjson.JSON;
-import com.dasi.types.event.BaseEvent.EventMessage;
+import com.dasi.event.BaseEvent.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;

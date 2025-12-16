@@ -10,7 +10,7 @@ import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.point.model.io.TradeContext;
 import com.dasi.domain.point.model.io.TradeResult;
 import com.dasi.domain.point.service.trade.IPointTrade;
-import com.dasi.types.event.BaseEvent;
+import com.dasi.event.BaseEvent;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -29,7 +29,7 @@ public class DispatchBehaviorReward {
     @Resource
     private IPointTrade tradePoint;
 
-    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch_behavior_reward}"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.dispatch-behavior-reward}"))
     public void dispatchBehaviorReward(String message) {
 
         // 1. 解析消息

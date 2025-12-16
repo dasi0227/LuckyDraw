@@ -2,9 +2,11 @@ package com.dasi.trigger.http.controller;
 
 import com.dasi.api.IBigMarketService;
 import com.dasi.api.dto.*;
+import com.dasi.context.UserIdContext;
 import com.dasi.domain.activity.model.io.*;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
+import com.dasi.domain.activity.service.recharge.ILuckRecharge;
 import com.dasi.domain.award.model.io.DistributeContext;
 import com.dasi.domain.award.model.io.DistributeResult;
 import com.dasi.domain.award.model.io.QueryUserAwardContext;
@@ -18,21 +20,20 @@ import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
-import com.dasi.domain.activity.service.recharge.ILuckRecharge;
-import com.dasi.domain.point.model.io.QueryActivityConvertContext;
-import com.dasi.domain.point.model.io.QueryActivityConvertResult;
-import com.dasi.domain.point.model.io.QueryActivityRechargeContext;
-import com.dasi.domain.point.model.io.QueryActivityRechargeResult;
-import com.dasi.domain.point.model.io.TradeContext;
-import com.dasi.domain.point.model.io.TradeResult;
+import com.dasi.domain.point.model.io.*;
 import com.dasi.domain.point.service.query.IPointQuery;
 import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.*;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
-import com.dasi.types.context.UserIdContext;
+import com.dasi.types.annotation.CircuitBreaker;
+import com.dasi.types.annotation.DCCValue;
+import com.dasi.types.annotation.RateLimit;
+import com.dasi.types.constant.DefaultValue;
+import com.dasi.types.constant.ExceptionMessage;
+import com.dasi.types.exception.BusinessException;
 import com.dasi.types.model.Result;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,6 +81,12 @@ public class BigMarketController implements IBigMarketService {
 
     @Resource
     private ILuckRecharge luckRecharge;
+
+    @DCCValue("degradeRaffle:off")
+    private String degradeRaffle;
+
+    @DCCValue("degradeTrade:off")
+    private String degradeTrade;
 
     /**
      * 查询活动列表
@@ -335,6 +342,10 @@ public class BigMarketController implements IBigMarketService {
     @Override
     public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
 
+        if (degradeTrade.equals(DefaultValue.TOGGLE_ON)) {
+            throw new BusinessException(ExceptionMessage.DEGRADE_ERROR);
+        }
+
         String userId = UserIdContext.getUserId();
         Long tradeId = tradeRequest.getTradeId();
         Long activityId = tradeRequest.getActivityId();
@@ -373,8 +384,16 @@ public class BigMarketController implements IBigMarketService {
      * @return awardId, isLock, isEmpty
      */
     @PostMapping("/raffle")
+    @RateLimit(fallbackMethod = "raffleRateLimitFallBack")
+    @CircuitBreaker(fallbackMethod = "raffleCircuitBreakerFallBack")
     @Override
     public Result<RaffleResponse> raffle(@RequestBody RaffleRequest raffleRequest) {
+
+        int i = 1 / 0;
+
+        if (degradeRaffle.equals(DefaultValue.TOGGLE_ON)) {
+            throw new BusinessException(ExceptionMessage.DEGRADE_ERROR);
+        }
 
         String userId = UserIdContext.getUserId();
         Long activityId = raffleRequest.getActivityId();
@@ -397,6 +416,14 @@ public class BigMarketController implements IBigMarketService {
                 .isLock(lotteryResult.getIsLock())
                 .isEmpty(lotteryResult.getIsEmpty()).build();
         return Result.success(raffleResponse);
+    }
+
+    public Result<RaffleResponse> raffleRateLimitFallBack(RaffleRequest raffleRequest) {
+        return Result.error(ExceptionMessage.RATE_LIMIT_ERROR);
+    }
+
+    public Result<RaffleResponse> raffleCircuitBreakerFallBack(RaffleRequest raffleRequest) {
+        return Result.error(ExceptionMessage.CIRCUIT_BREAKER_ERROR);
     }
 
 }

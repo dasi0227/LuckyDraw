@@ -2,8 +2,8 @@ package com.dasi.domain.point.event;
 
 import com.dasi.properties.TopicProperties;
 import com.dasi.domain.common.IUniqueIdGenerator;
-import com.dasi.types.event.BaseEvent;
-import com.dasi.types.util.TimeUtil;
+import com.dasi.event.BaseEvent;
+import com.dasi.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

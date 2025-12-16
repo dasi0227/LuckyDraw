@@ -1,4 +1,4 @@
-package com.dasi.types.context;
+package com.dasi.context;
 
 public class UserIdContext {
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // HTTP 客户端
 const request = axios.create({
-  baseURL: '/',
+  baseURL: 'http://localhost',
   timeout: 15000,
 });
 
