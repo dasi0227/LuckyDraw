@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.ITaskDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Task">
+        <id     property="id"          column="id"/>
+        <result property="userId"      column="user_id"/>
+        <result property="messageId"   column="message_id"/>
+        <result property="topic"       column="topic"/>
+        <result property="message"     column="message"/>
+        <result property="taskState"   column="task_state"/>
+        <result property="createTime"  column="create_time"/>
+        <result property="updateTime"  column="update_time"/>
+    </resultMap>
+
+    <insert id="saveTask" parameterType="com.dasi.infrastructure.persistent.po.Task">
+        INSERT INTO task (user_id, message_id, topic, message, task_state)
+        VALUES (#{userId}, #{messageId}, #{topic}, #{message}, #{taskState})
+    </insert>
+
+    <update id="updateTaskState" parameterType="com.dasi.infrastructure.persistent.po.Task">
+        UPDATE task
+        SET task_state = #{taskState}
+        WHERE message_id = #{messageId} AND task_state = 'CREATED'
+    </update>
+
+    <select id="queryUnsolvedTask" resultMap="dataMap">
+        SELECT user_id, message_id, topic, message, task_state
+        FROM task
+        WHERE task_state = 'FAILED'
+           OR (task_state = 'CREATED' AND (NOW() - update_time) > 100000)
+        LIMIT 10
+    </select>
+
+</mapper>

@@ -1,0 +1,57 @@
+package com.dasi.domain.point.event;
+
+import com.dasi.properties.TopicProperties;
+import com.dasi.domain.common.IUniqueIdGenerator;
+import com.dasi.event.BaseEvent;
+import com.dasi.util.TimeUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
+@Component
+public class DispatchPointTradeOutcomeEvent extends BaseEvent<DispatchPointTradeOutcomeEvent.DispatchTradeOutcomeMessage> {
+
+    private final String topic;
+
+    @Override
+    public String getTopic() {
+        return topic;
+    }
+
+    @Resource
+    private IUniqueIdGenerator uniqueIdGenerator;
+
+    public DispatchPointTradeOutcomeEvent(TopicProperties topicProperties) {
+        this.topic = topicProperties.getDispatchTradeOutcome();
+    }
+
+    @Override
+    public EventMessage<DispatchTradeOutcomeMessage> buildEventMessage(DispatchTradeOutcomeMessage data) {
+        return EventMessage.<DispatchTradeOutcomeMessage>builder()
+                .messageId(uniqueIdGenerator.nextMessageId())
+                .time(TimeUtil.thisMoment(true))
+                .data(data)
+                .build();
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DispatchTradeOutcomeMessage {
+
+        private String userId;
+
+        private String orderId;
+
+        private Long tradeId;
+
+        private Long activityId;
+
+    }
+
+}

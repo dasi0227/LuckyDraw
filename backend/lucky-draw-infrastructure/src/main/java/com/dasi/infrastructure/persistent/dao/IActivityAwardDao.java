@@ -1,0 +1,18 @@
+package com.dasi.infrastructure.persistent.dao;
+
+import cn.bugstack.middleware.db.router.annotation.DBRouterStrategy;
+import com.dasi.infrastructure.persistent.po.ActivityAward;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+@DBRouterStrategy(splitTable = true)
+public interface IActivityAwardDao {
+
+    int saveActivityAward(ActivityAward activityAward);
+
+    int updateActivityAwardState(ActivityAward activityAward);
+
+    ActivityAward queryActivityAwardByOrderId(String orderId);
+
+    int countByActivityId(Long activityId);
+}

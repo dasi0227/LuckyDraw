@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.ITradeDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Trade">
+        <id     property="id"         column="id"/>
+        <result property="tradeId"    column="trade_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="tradeType"  column="trade_type"/>
+        <result property="tradePoint" column="trade_point"/>
+        <result property="tradeMoney" column="trade_money"/>
+        <result property="tradeValue" column="trade_value"/>
+        <result property="tradeName"  column="trade_name"/>
+        <result property="tradeDesc"  column="trade_desc"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="queryTradeByTradeId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT id, trade_id, activity_id, trade_type, trade_point, trade_money, trade_value, trade_name, trade_desc, create_time, update_time
+        FROM trade
+        WHERE trade_id = #{tradeId};
+    </select>
+
+    <select id="queryActivityConvertList" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT id, trade_id, activity_id, trade_type, trade_point, trade_money, trade_value, trade_name, trade_desc, create_time, update_time
+        FROM trade
+        WHERE activity_id = #{activityId} and trade_type LIKE 'CONVERT_%';
+    </select>
+
+    <select id="queryActivityRecharegeList" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT id, trade_id, activity_id, trade_type, trade_point, trade_money, trade_value, trade_name, trade_desc, create_time, update_time
+        FROM trade
+        WHERE activity_id = #{activityId} and trade_type LIKE 'RECHARGE%';
+    </select>
+
+</mapper>

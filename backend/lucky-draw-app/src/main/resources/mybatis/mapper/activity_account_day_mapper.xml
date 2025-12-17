@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityAccountDayDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        <id     property="id"          column="id"/>
+        <result property="activityId"  column="activity_id"/>
+        <result property="userId"      column="user_id"/>
+        <result property="dayKey"      column="day_key"/>
+        <result property="dayLimit"    column="day_limit"/>
+        <result property="dayAllocate" column="day_allocate"/>
+        <result property="daySurplus"  column="day_surplus"/>
+        <result property="createTime"  column="create_time"/>
+        <result property="updateTime"  column="update_time"/>
+    </resultMap>
+
+    <insert id="createActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        INSERT INTO activity_account_day (activity_id, user_id, day_key, day_limit, day_allocate, day_surplus)
+        VALUES (#{activityId}, #{userId}, #{dayKey}, #{dayLimit}, #{dayAllocate}, #{daySurplus})
+    </insert>
+
+    <update id="decreaseActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        UPDATE activity_account_day
+        SET day_surplus = day_surplus - 1
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND day_key = #{dayKey}
+    </update>
+
+    <update id="increaseActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay">
+        UPDATE activity_account_day
+        SET day_allocate = day_allocate + #{dayAllocate},
+            day_surplus = day_surplus + #{daySurplus}
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND day_key = #{dayKey}
+    </update>
+
+    <select id="queryActivityAccountDay" parameterType="com.dasi.infrastructure.persistent.po.ActivityAccountDay" resultMap="dataMap">
+        SELECT activity_id, user_id, day_key, day_limit, day_allocate, day_surplus
+        FROM activity_account_day
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND day_key = #{dayKey}
+    </select>
+
+</mapper>

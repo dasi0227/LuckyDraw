@@ -1,0 +1,80 @@
+networks:
+  lucky-draw:
+    driver: bridge
+
+services:
+
+  nginx:
+    image: nginx:1.25
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./docs/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ${HOME}/docker/nginx/logs:/var/log/nginx
+    networks:
+      - lucky-draw
+
+  mysql:
+    image: mysql:8.0.40
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "jason2004"
+    volumes:
+      - ${HOME}/docker/mysql/data:/var/lib/mysql
+      - ${HOME}/docker/mysql/conf:/etc/mysql/conf.d:ro
+      - ${HOME}/docker/mysql/logs:/logs
+    networks:
+      - lucky-draw
+
+  redis:
+    image: redis:8.0.1
+    container_name: redis
+    restart: always
+    command: [
+      "redis-server",
+      "--appendonly", "yes",
+      "--requirepass", "jason2004"
+    ]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${HOME}/docker/redis/data:/data
+    networks:
+      - lucky-draw
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: dasi
+      RABBITMQ_DEFAULT_PASS: "jason2004"
+    volumes:
+      - ${HOME}/docker/rabbitmq/data:/var/lib/rabbitmq
+      - ${HOME}/docker/rabbitmq/log:/var/log/rabbitmq
+      - ${HOME}/docker/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.13.0.ez:/opt/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.13.0.ez
+    networks:
+      - lucky-draw
+    command: >
+      bash -c "
+      rabbitmq-plugins enable rabbitmq_delayed_message_exchange &&
+      rabbitmq-server
+      "
+
+  zookeeper:
+    image: zookeeper:3.9.0
+    container_name: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+    networks:
+      - lucky-draw
