@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRaffleOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RaffleOrder">
+        <id     property="id"                   column="id"/>
+        <result property="orderId"              column="order_id"/>
+        <result property="userId"               column="user_id"/>
+        <result property="activityId"           column="activity_id"/>
+        <result property="strategyId"           column="strategy_id"/>
+        <result property="raffleTime"           column="raffle_time"/>
+        <result property="raffleState"          column="raffle_state"/>
+        <result property="createTime"           column="create_time"/>
+        <result property="updateTime"           column="update_time"/>
+    </resultMap>
+
+    <insert id="saveRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder">
+        INSERT INTO raffle_order (order_id, user_id, activity_id, strategy_id, raffle_time, raffle_state)
+        VALUES (#{orderId}, #{userId}, #{activityId}, #{strategyId}, #{raffleTime}, #{raffleState})
+    </insert>
+
+    <update id="updateRaffleOrderState" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder">
+        UPDATE raffle_order
+        SET raffle_state = #{raffleState}
+        WHERE order_id = #{orderId} AND raffle_state = 'CREATED'
+    </update>
+
+    <select id="queryUnusedRaffleOrder" parameterType="com.dasi.infrastructure.persistent.po.RaffleOrder" resultMap="dataMap">
+        SELECT order_id, user_id, activity_id, strategy_id, raffle_time, raffle_state
+        FROM raffle_order
+        WHERE raffle_state = 'created' AND user_id = #{userId} AND activity_id = #{activityId}
+        ORDER BY raffle_time DESC
+        LIMIT 10
+    </select>
+
+    <select id="countByActivityId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM raffle_order
+        WHERE activity_id = #{activityId}
+    </select>
+
+</mapper>

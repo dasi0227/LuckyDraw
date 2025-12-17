@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IActivityDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.Activity">
+        <id     property="id"                   column="id"/>
+        <result property="activityId"           column="activity_id"/>
+        <result property="strategyId"           column="strategy_id"/>
+        <result property="activityName"         column="activity_name"/>
+        <result property="activityDesc"         column="activity_desc"/>
+        <result property="activityState"        column="activity_state"/>
+        <result property="activityBeginTime"    column="activity_begin_time"/>
+        <result property="activityEndTime"      column="activity_end_time"/>
+        <result property="createTime"           column="create_time"/>
+        <result property="updateTime"           column="update_time"/>
+    </resultMap>
+
+    <select id="queryActivityByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        SELECT activity_id, activity_name, activity_desc, activity_begin_time, activity_end_time, strategy_id, activity_state
+        FROM activity
+        WHERE activity_id = #{activityId}
+    </select>
+
+    <select id="queryActivityList" resultMap="dataMap">
+        SELECT activity_id, activity_name, activity_desc, activity_begin_time, activity_end_time, strategy_id, activity_state
+        FROM activity
+    </select>
+
+    <select id="queryStrategyIdByActivityId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT strategy_id
+        FROM activity
+        WHERE activity_id = #{activityId}
+    </select>
+
+    <select id="queryActivityIdByStrategyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT activity_id
+        FROM activity
+        WHERE strategy_id = #{strategyId}
+    </select>
+
+</mapper>

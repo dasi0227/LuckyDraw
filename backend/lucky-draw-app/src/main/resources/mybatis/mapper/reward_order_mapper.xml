@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dasi.infrastructure.persistent.dao.IRewardOrderDao">
+
+    <resultMap id="dataMap" type="com.dasi.infrastructure.persistent.po.RewardOrder">
+        <id     property="id"              column="id"/>
+        <result property="orderId"         column="order_id"/>
+        <result property="bizId"           column="biz_id"/>
+        <result property="userId"          column="user_id"/>
+        <result property="activityId"      column="activity_id"/>
+        <result property="behaviorType"    column="behavior_type"/>
+        <result property="rewardType"      column="reward_type"/>
+        <result property="rewardValue"     column="reward_value"/>
+        <result property="rewardState"     column="reward_state"/>
+        <result property="rewardDesc"      column="reward_desc"/>
+        <result property="rewardTime"      column="reward_time"/>
+        <result property="createTime"      column="create_time"/>
+        <result property="updateTime"      column="update_time"/>
+    </resultMap>
+
+    <insert id="saveRewardOrder" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
+        INSERT INTO reward_order (order_id, biz_id, user_id, activity_id, behavior_type, reward_type, reward_value, reward_state, reward_desc, reward_time)
+        VALUES (#{orderId}, #{bizId}, #{userId}, #{activityId}, #{behaviorType}, #{rewardType}, #{rewardValue}, #{rewardState}, #{rewardDesc}, #{rewardTime})
+    </insert>
+
+    <update id="updateRewardOrderStateByBizId" parameterType="com.dasi.infrastructure.persistent.po.RewardOrder">
+        UPDATE reward_order
+        SET reward_state = #{rewardState}
+        WHERE biz_id = #{bizId} AND reward_state = 'CREATED'
+    </update>
+
+    <select id="queryExistBehaviorToday" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM reward_order
+        WHERE user_id = #{userId} AND activity_id = #{activityId} AND behavior_type = #{behaviorType} AND DATE(reward_time) = CURDATE()
+    </select>
+
+
+</mapper>

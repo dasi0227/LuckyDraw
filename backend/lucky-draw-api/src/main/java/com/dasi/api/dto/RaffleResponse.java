@@ -1,0 +1,22 @@
+package com.dasi.api.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RaffleResponse {
+
+    private Long awardId;
+
+    private String awardName;
+
+    private Boolean isLock;
+
+    private Boolean isEmpty;
+
+}
