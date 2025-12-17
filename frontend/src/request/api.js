@@ -3,6 +3,20 @@ import request from './request.js';
 const prefix = '/system';
 
 export default {
+  // DCC 配置
+  dccGetAll() {
+    return request.post(`${prefix}/dcc/getAll`);
+  },
+  dccGet(params) {
+    return request.post(`${prefix}/dcc/get`, null, { params });
+  },
+  dccSet(params) {
+    return request.post(`${prefix}/dcc/set`, null, { params });
+  },
+  dccToggle(params) {
+    return request.post(`${prefix}/dcc/toggle`, null, { params });
+  },
+
   // 登录
   login(data) {
     return request.post(`${prefix}/auth/login`, data);
@@ -65,12 +79,12 @@ export default {
 
   // 执行积分兑换
   doConvert(data) {
-    return request.post(`${prefix}/trade`, data);
+    return request.post(`${prefix}/convert`, data);
   },
 
-  // 执行积分兑换
+  // 执行积分充值
   doRecharge(data) {
-    return request.post(`${prefix}/trade`, data);
+    return request.post(`${prefix}/recharge`, data);
   },
 
   // 执行抽奖
