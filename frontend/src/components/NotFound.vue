@@ -6,7 +6,7 @@
       <p>没找到你要的页面 😭 回去抽个奖试试手气吧 🥳</p>
       <div class="actions">
         <router-link class="btn primary" to="/login">返回登录</router-link>
-        <router-link class="btn ghost" to="/bigmarket/10001">前往抽奖</router-link>
+        <router-link class="btn ghost" to="/luckydraw/10001">前往抽奖</router-link>
       </div>
     </div>
   </div>

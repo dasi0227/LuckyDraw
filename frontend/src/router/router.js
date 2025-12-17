@@ -1,40 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import BigMarket from '../components/BigMarket.vue';
-import Login from '../components/Login.vue';
+import LuckyDraw from '../components/LuckyDraw.vue';
+import Auth from '../components/Auth.vue';
+import Config from '../components/Config.vue';
 import NotFound from '../components/NotFound.vue';
 
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/auth',
+  },
+  {
+    path: '/index',
+    redirect: '/auth',
+  },
+  {
+    path: '/register',
+    redirect: '/auth',
   },
   {
     path: '/login',
-    name: 'Login',
-    component: Login,
+    redirect: '/auth',
+  },
+  {
+    path: '/auth',
+    name: 'Auth',
+    component: Auth,
     meta: {
-      title: '登录 - Dasi 抽奖',
+      title: '登陆 - Dasi 抽奖',
     },
   },
   {
-    path: '/bigmarket/:activityId',
-    name: 'BigMarket',
-    component: BigMarket,
+    path: '/luckydraw/:activityId',
+    name: 'LuckyDraw',
+    component: LuckyDraw,
     meta: {
       title: 'Dasi 抽奖',
     },
   },
   {
-    path: '/index',
-    redirect: '/login',
-  },
-  {
-    path: '/big-market',
-    redirect: '/login',
-  },
-  {
-    path: '/register',
-    redirect: '/login',
+    path: '/config',
+    name: 'Config',
+    component: Config,
+    meta: {
+      title: 'DCC 配置',
+    },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -52,7 +61,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   if (to.meta?.title) {
-    document.title = `${to.meta.title} - BigMarket`;
+    document.title = `${to.meta.title} - LuckyDraw`;
   }
 });
 
