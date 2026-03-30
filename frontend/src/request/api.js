@@ -77,14 +77,24 @@ export default {
     return request.post(`${prefix}/fortune`, data);
   },
 
+  // 执行交易
+  trade(data) {
+    return request.post(`${prefix}/trade`, data);
+  },
+
   // 执行积分兑换
   doConvert(data) {
-    return request.post(`${prefix}/convert`, data);
+    return request.post(`${prefix}/trade`, data);
   },
 
   // 执行积分充值
   doRecharge(data) {
-    return request.post(`${prefix}/recharge`, data);
+    return request.post(`${prefix}/trade`, data);
+  },
+
+  // 活动装配
+  armory(params) {
+    return request.post(`${prefix}/armory`, null, { params });
   },
 
   // 执行抽奖
@@ -94,7 +104,7 @@ export default {
 
   // 查询用户在当前活动的获奖信息
   queryUserAward(data) {
-    return request.post(`${prefix}/query/user-award/raffle`, data);
+    return request.post(`${prefix}/query/history`, data);
   },
 
 };

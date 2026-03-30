@@ -475,7 +475,7 @@ const seedHistoryRecords = (count = 10) => {
 const handleRedeemPoints = async (item) => {
   if (!currentActivityId.value) return;
   try {
-    const resp = await api.doConvert({
+    const resp = await api.trade({
       activityId: currentActivityId.value,
       tradeId: item.id,
     });
@@ -767,6 +767,15 @@ const refreshAllData = async () => {
   }
 };
 
+const armoryActivity = async (activityId) => {
+  if (!activityId) return;
+  try {
+    await api.armory({ activityId });
+  } catch (error) {
+    console.error('活动装配失败: ', error);
+  }
+};
+
 watch(
   () => route.params.activityId,
   async (newActivityId) => {
@@ -776,6 +785,7 @@ watch(
       router.push('/login');
       return;
     }
+    await armoryActivity(currentActivityId.value);
     fetchActivityConvertData(currentActivityId.value);
     await fetchActivityAccountData(currentActivityId.value);
     await fetchActivityLuckData(currentActivityId.value);
@@ -987,7 +997,7 @@ const askRecharge = (item, channel) => {
 const submitRecharge = async () => {
   if (!rechargeConfirm.item?.tradeId) return;
   try {
-    await api.doRecharge({
+    await api.trade({
       activityId: currentActivityId.value,
       tradeId: rechargeConfirm.item.tradeId,
     });
