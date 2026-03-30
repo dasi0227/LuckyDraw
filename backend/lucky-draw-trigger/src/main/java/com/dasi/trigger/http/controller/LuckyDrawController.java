@@ -4,6 +4,7 @@ import com.dasi.api.ILuckyDrawService;
 import com.dasi.api.dto.*;
 import com.dasi.context.UserIdContext;
 import com.dasi.domain.activity.model.io.*;
+import com.dasi.domain.activity.service.assemble.IActivityAssemble;
 import com.dasi.domain.activity.service.query.IActivityQuery;
 import com.dasi.domain.activity.service.raffle.IActivityRaffle;
 import com.dasi.domain.activity.service.recharge.ILuckRecharge;
@@ -20,10 +21,12 @@ import com.dasi.domain.behavior.model.io.QueryActivityBehaviorResult;
 import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.service.query.IBehaviorQuery;
 import com.dasi.domain.behavior.service.reward.IBehaviorReward;
+import com.dasi.domain.common.IRedisLock;
 import com.dasi.domain.point.model.io.*;
 import com.dasi.domain.point.service.query.IPointQuery;
 import com.dasi.domain.point.service.trade.IPointTrade;
 import com.dasi.domain.strategy.model.io.*;
+import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
 import com.dasi.types.annotation.CircuitBreaker;
@@ -31,18 +34,17 @@ import com.dasi.types.annotation.DCCValue;
 import com.dasi.types.annotation.RateLimit;
 import com.dasi.types.constant.DefaultValue;
 import com.dasi.types.constant.ExceptionMessage;
+import com.dasi.types.constant.RedisKey;
 import com.dasi.types.model.Result;
 import com.dasi.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 @Slf4j
 @RestController
 @RequestMapping("/api/${app.config.api-version}/lucky-draw")
@@ -81,6 +83,18 @@ public class LuckyDrawController implements ILuckyDrawService {
     @Resource
     private ILuckRecharge luckRecharge;
 
+    @Resource
+    private IActivityAssemble activityAssemble;
+
+    @Resource
+    private IStrategyAssemble strategyAssemble;
+
+    @Resource
+    private com.dasi.infrastructure.persistent.redis.IRedisService redisService;
+
+    @Resource
+    private IRedisLock redisLock;
+
     @DCCValue("degradeRaffle:off")
     private String degradeRaffle;
 
@@ -95,7 +109,6 @@ public class LuckyDrawController implements ILuckyDrawService {
 
     /**
      * 查询活动列表
-     * @return activityId, activityName, activityDesc
      */
     @PostMapping("/query/activities")
     @Override
@@ -112,36 +125,7 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询当前活动的充值列表
-     * @param queryActivityRechargeRequest activityId
-     * @return tradeId, tradeMoney, tradeValue, tradeName
-     */
-    @PostMapping("/query/recharge")
-    @Override
-    public Result<List<QueryActivityRechargeResponse>> queryActivityRecharge(@RequestBody QueryActivityRechargeRequest queryActivityRechargeRequest) {
-
-        Long activityId = queryActivityRechargeRequest.getActivityId();
-
-        QueryActivityRechargeContext queryActivityRechargeContext = QueryActivityRechargeContext.builder().activityId(activityId).build();
-        List<QueryActivityRechargeResult> queryActivityRechargeResultList = tradeQuery.queryActivityRechargeList(queryActivityRechargeContext);
-        List<QueryActivityRechargeResponse> queryActivityRechargeResponseList = queryActivityRechargeResultList.stream()
-                .map(result -> QueryActivityRechargeResponse.builder()
-                        .tradeId(result.getTradeId())
-                        .tradeMoney(result.getTradeMoney())
-                        .tradeValue(result.getTradeValue())
-                        .tradeName(result.getTradeName())
-                        .build())
-                .collect(Collectors.toList());
-
-        return Result.success(queryActivityRechargeResponseList);
-    }
-
-
-    /**
-     * 查询用户在当前活动的基本信息
-     *
-     * @param queryActivityAccountRequest activityId, userId
-     * @return accountPoint, totalSurplus, monthSurplus, daySurplus, monthRecharge, dayRecharge
+     * 查询用户的基本信息
      */
     @PostMapping("/query/account")
     @Override
@@ -165,10 +149,31 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询当前活动的积分兑换信息
-     *
-     * @param queryActivityConvertRequest activityId
-     * @return tradeId, tradePoint, tradeName
+     * 查询活动的基本信息
+     */
+    @PostMapping("/query/info")
+    @Override
+    public Result<QueryActivityInfoResponse> queryActivityInfo(@RequestBody QueryActivityInfoRequest activityInfoRequest) {
+
+        Long activityId = activityInfoRequest.getActivityId();
+
+        QueryActivityInfoContext queryActivityInfoContext = QueryActivityInfoContext.builder().activityId(activityId).build();
+        QueryActivityInfoResult activityInfoResult = activityQuery.queryActivityInfo(queryActivityInfoContext);
+        QueryActivityInfoResponse queryActivityInfoResponse = QueryActivityInfoResponse.builder()
+                .activityName(activityInfoResult.getActivityName())
+                .activityDesc(activityInfoResult.getActivityDesc())
+                .activityBeginTime(activityInfoResult.getActivityBeginTime())
+                .activityEndTime(activityInfoResult.getActivityEndTime())
+                .activityAccountCount(activityInfoResult.getActivityAccountCount())
+                .activityAwardCount(activityInfoResult.getActivityAwardCount())
+                .activityRaffleCount(activityInfoResult.getActivityRaffleCount())
+                .build();
+
+        return Result.success(queryActivityInfoResponse);
+    }
+
+    /**
+     * 查询活动的兑换信息
      */
     @PostMapping("/query/convert")
     @Override
@@ -190,9 +195,30 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询用户在当前活动的抽奖奖品列表
-     * @param queryActivityAwardRequest activityId, userId
-     * @return 每个奖品的元信息，以及在策略下的抽奖信息
+     * 查询活动的充值信息
+     */
+    @PostMapping("/query/recharge")
+    @Override
+    public Result<List<QueryActivityRechargeResponse>> queryActivityRecharge(@RequestBody QueryActivityRechargeRequest queryActivityRechargeRequest) {
+
+        Long activityId = queryActivityRechargeRequest.getActivityId();
+
+        QueryActivityRechargeContext queryActivityRechargeContext = QueryActivityRechargeContext.builder().activityId(activityId).build();
+        List<QueryActivityRechargeResult> queryActivityRechargeResultList = tradeQuery.queryActivityRechargeList(queryActivityRechargeContext);
+        List<QueryActivityRechargeResponse> queryActivityRechargeResponseList = queryActivityRechargeResultList.stream()
+                .map(result -> QueryActivityRechargeResponse.builder()
+                        .tradeId(result.getTradeId())
+                        .tradeMoney(result.getTradeMoney())
+                        .tradeValue(result.getTradeValue())
+                        .tradeName(result.getTradeName())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Result.success(queryActivityRechargeResponseList);
+    }
+
+    /**
+     * 查询用户的抽奖信息
      */
     @PostMapping("/query/award")
     @Override
@@ -218,11 +244,9 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询用户在当前活动的获奖信息
-     * @param queryUserAwardRequest activityId, userId
-     * @return awardId, awardName, awardTime
+     * 查询用户的获奖信息
      */
-    @PostMapping("/query/user-award/raffle")
+    @PostMapping("/query/history")
     @Override
     public Result<List<QueryUserAwardResponse>> queryUserAwardRaffle(@RequestBody QueryUserAwardRequest queryUserAwardRequest) {
 
@@ -243,9 +267,7 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询用户在当前活动的互动任务
-     * @param queryActivityBehaviorRequest activityId, userId
-     * @return behaviorName, behaviorType, isDone
+     * 查询用户的互动信息
      */
     @PostMapping("/query/behavior")
     @Override
@@ -269,9 +291,7 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询用户在当前活动的幸运值情况
-     * @param queryActivityLuckRequest activityId, userId
-     * @return accountLuck, luckThreshold
+     * 查询用户的幸运值信息
      */
     @PostMapping("/query/luck")
     @Override
@@ -291,131 +311,24 @@ public class LuckyDrawController implements ILuckyDrawService {
     }
 
     /**
-     * 查询活动信息
-     * @param activityInfoRequest activityId
-     * @return 活动的基本信息和参与情况
+     * 装配活动
      */
-    @PostMapping("/query/info")
+    @PostMapping("/armory")
     @Override
-    public Result<QueryActivityInfoResponse> queryActivityInfo(@RequestBody QueryActivityInfoRequest activityInfoRequest) {
-
-        Long activityId = activityInfoRequest.getActivityId();
-
-        QueryActivityInfoContext queryActivityInfoContext = QueryActivityInfoContext.builder().activityId(activityId).build();
-        QueryActivityInfoResult activityInfoResult = activityQuery.queryActivityInfo(queryActivityInfoContext);
-        QueryActivityInfoResponse queryActivityInfoResponse = QueryActivityInfoResponse.builder()
-                .activityName(activityInfoResult.getActivityName())
-                .activityDesc(activityInfoResult.getActivityDesc())
-                .activityBeginTime(activityInfoResult.getActivityBeginTime())
-                .activityEndTime(activityInfoResult.getActivityEndTime())
-                .activityAccountCount(activityInfoResult.getActivityAccountCount())
-                .activityAwardCount(activityInfoResult.getActivityAwardCount())
-                .activityRaffleCount(activityInfoResult.getActivityRaffleCount())
-                .build();
-
-        return Result.success(queryActivityInfoResponse);
-    }
-
-
-    /**
-     * 执行用户在当前活动的互动行为
-     * @param behaviorRequest userId, activityId, behaviorType
-     * @return rewardDescList
-     */
-    @PostMapping("/behavior")
-    @Override
-    public Result<BehaviorResponse> behavior(@RequestBody BehaviorRequest behaviorRequest) {
-
-        if (degradeBehavior.equals(DefaultValue.TOGGLE_ON)) {
-            return Result.error(ExceptionMessage.DEGRADE_ERROR);
+    public Result<Boolean> armory(@RequestParam Long activityId) {
+        String doneKey = RedisKey.ARMORY_DONE_KEY + activityId;
+        if (redisService.isExists(doneKey)) {
+            log.info("【装配】活动已完成装配，跳过：activityId={}", activityId);
+            return Result.success(true);
         }
 
-        String userId = UserIdContext.getUserId();
-        Long activityId = behaviorRequest.getActivityId();
-        String behaviorType = behaviorRequest.getBehaviorType();
-        String businessNo = TimeUtil.thisDay(false);
-
-        BehaviorContext behaviorContext = BehaviorContext.builder().userId(userId).activityId(activityId).behaviorType(BehaviorType.valueOf(behaviorType)).businessNo(businessNo).build();
-        BehaviorResult behaviorResult = behaviorReward.doBehaviorReward(behaviorContext);
-        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
-
-        return Result.success(behaviorResponse);
+        Boolean b1 = activityAssemble.assembleRechargeSkuStockByActivityId(activityId);
+        Boolean b2 = strategyAssemble.assembleStrategyByActivityId(activityId);
+        return Result.success(b1 && b2);
     }
 
     /**
-     * 执行用户在当前活动的充值
-     * @param tradeRequest userId, activityId, tradeId
-     * @return tradeDesc
-     */
-    @PostMapping("/recharge")
-    @Override
-    public Result<TradeResponse> recharge(@RequestBody TradeRequest tradeRequest) {
-
-        if (degradeRecharge.equals(DefaultValue.TOGGLE_ON)) {
-            return Result.error(ExceptionMessage.DEGRADE_ERROR);
-        }
-
-        String userId = UserIdContext.getUserId();
-        Long tradeId = tradeRequest.getTradeId();
-        Long activityId = tradeRequest.getActivityId();
-        String businessNo = TimeUtil.thisDay(false);
-
-        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).activityId(activityId).businessNo(businessNo).build();
-        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
-        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
-
-        return Result.success(tradeResponse);
-    }
-
-    /**
-     * 执行用户在当前活动的积分兑换
-     * @param tradeRequest userId, activityId, tradeId
-     * @return tradeDesc
-     */
-    @PostMapping("/convert")
-    @Override
-    public Result<TradeResponse> convert(@RequestBody TradeRequest tradeRequest) {
-
-        if (degradeConvert.equals(DefaultValue.TOGGLE_ON)) {
-            return Result.error(ExceptionMessage.DEGRADE_ERROR);
-        }
-
-        String userId = UserIdContext.getUserId();
-        Long tradeId = tradeRequest.getTradeId();
-        Long activityId = tradeRequest.getActivityId();
-        String businessNo = TimeUtil.thisDay(false);
-
-        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).activityId(activityId).businessNo(businessNo).build();
-        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
-        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
-
-        return Result.success(tradeResponse);
-    }
-
-    /**
-     * 增加用户在当前活动的幸运值
-     * @param fortuneRequest userId, activityId, luck
-     * @return accountLuck
-     */
-    @PostMapping("/fortune")
-    @Override
-    public Result<FortuneResponse> fortune(@RequestBody FortuneRequest fortuneRequest) {
-
-        String userId = UserIdContext.getUserId();
-        Long activityId = fortuneRequest.getActivityId();
-        Integer luck = fortuneRequest.getLuck();
-
-        FortuneContext fortuneContext = FortuneContext.builder().userId(userId).activityId(activityId).luck(luck).build();
-        FortuneResult fortuneResult = luckRecharge.addFortune(fortuneContext);
-        FortuneResponse fortuneResponse = FortuneResponse.builder().accountLuck(fortuneResult.getAccountLuck()).build();
-
-        return Result.success(fortuneResponse);
-    }
-
-    /**
-     * 用户在当前活动执行抽奖
-     * @param raffleRequest activityId, userId
-     * @return awardId, isLock, isEmpty
+     * 用户进行抽奖
      */
     @PostMapping("/raffle")
     @RateLimit(fallbackMethod = "raffleRateLimitFallBack")
@@ -448,6 +361,70 @@ public class LuckyDrawController implements ILuckyDrawService {
                 .isLock(lotteryResult.getIsLock())
                 .isEmpty(lotteryResult.getIsEmpty()).build();
         return Result.success(raffleResponse);
+    }
+
+    /**
+     * 用户进行互动
+     */
+    @PostMapping("/behavior")
+    @Override
+    public Result<BehaviorResponse> behavior(@RequestBody BehaviorRequest behaviorRequest) {
+
+        if (degradeBehavior.equals(DefaultValue.TOGGLE_ON)) {
+            return Result.error(ExceptionMessage.DEGRADE_ERROR);
+        }
+
+        String userId = UserIdContext.getUserId();
+        Long activityId = behaviorRequest.getActivityId();
+        String behaviorType = behaviorRequest.getBehaviorType();
+        String businessNo = TimeUtil.thisDay(false);
+
+        BehaviorContext behaviorContext = BehaviorContext.builder().userId(userId).activityId(activityId).behaviorType(BehaviorType.valueOf(behaviorType)).businessNo(businessNo).build();
+        BehaviorResult behaviorResult = behaviorReward.doBehaviorReward(behaviorContext);
+        BehaviorResponse behaviorResponse = BehaviorResponse.builder().rewardDescList(behaviorResult.getRewardDescList()).build();
+
+        return Result.success(behaviorResponse);
+    }
+
+    /**
+     * 用户进行交易
+     */
+    @PostMapping("/trade")
+    @Override
+    public Result<TradeResponse> trade(@RequestBody TradeRequest tradeRequest) {
+
+        if (degradeRecharge.equals(DefaultValue.TOGGLE_ON)) {
+            return Result.error(ExceptionMessage.DEGRADE_ERROR);
+        }
+
+        String userId = UserIdContext.getUserId();
+        Long tradeId = tradeRequest.getTradeId();
+        Long activityId = tradeRequest.getActivityId();
+        String businessNo = TimeUtil.thisDay(false);
+
+        TradeContext tradeContext = TradeContext.builder().userId(userId).tradeId(tradeId).activityId(activityId).businessNo(businessNo).build();
+        TradeResult tradeResult = pointTrade.doPointTrade(tradeContext);
+        TradeResponse tradeResponse = TradeResponse.builder().tradeDesc(tradeResult.getTradeDesc()).build();
+
+        return Result.success(tradeResponse);
+    }
+
+    /**
+     * 用户增加幸运值
+     */
+    @PostMapping("/fortune")
+    @Override
+    public Result<FortuneResponse> fortune(@RequestBody FortuneRequest fortuneRequest) {
+
+        String userId = UserIdContext.getUserId();
+        Long activityId = fortuneRequest.getActivityId();
+        Integer luck = fortuneRequest.getLuck();
+
+        FortuneContext fortuneContext = FortuneContext.builder().userId(userId).activityId(activityId).luck(luck).build();
+        FortuneResult fortuneResult = luckRecharge.addFortune(fortuneContext);
+        FortuneResponse fortuneResponse = FortuneResponse.builder().accountLuck(fortuneResult.getAccountLuck()).build();
+
+        return Result.success(fortuneResponse);
     }
 
     public Result<RaffleResponse> raffleRateLimitFallBack(RaffleRequest raffleRequest) {

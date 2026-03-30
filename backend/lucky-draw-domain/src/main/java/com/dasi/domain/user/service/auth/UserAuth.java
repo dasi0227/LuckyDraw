@@ -6,7 +6,7 @@ import com.dasi.domain.user.model.io.LoginResult;
 import com.dasi.domain.user.model.io.RegisterContext;
 import com.dasi.domain.user.model.io.RegisterResult;
 import com.dasi.domain.user.repository.IUserRepository;
-import com.dasi.domain.user.service.token.IJwtService;
+import com.dasi.domain.user.service.jwt.IJwtService;
 import com.dasi.types.constant.ExceptionMessage;
 import com.dasi.types.exception.AppException;
 import com.dasi.types.exception.BusinessException;

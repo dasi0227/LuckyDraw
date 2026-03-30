@@ -4,6 +4,4 @@ public interface IActivityAssemble {
 
     boolean assembleRechargeSkuStockByActivityId(Long activityId);
 
-    boolean assembleRechargeSkuStockBySkuId(Long skuId);
-
 }

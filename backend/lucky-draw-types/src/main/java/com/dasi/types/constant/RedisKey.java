@@ -36,4 +36,6 @@ public class RedisKey {
     public static final String RATE_LIMIT_KEY                       = "lucky_draw:rate_limit:";
     public static final String CIRCUIT_BREAKER_OPEN_KEY             = "lucky_draw:circuit_breaker:open:";
     public static final String CIRCUIT_BREAKER_FAIL_KEY             = "lucky_draw:circuit_breaker:fail:";
+    public static final String ARMORY_LOCK_KEY                      = "lucky_draw:armory:lock:";
+    public static final String ARMORY_DONE_KEY                      = "lucky_draw:armory:done:";
 }

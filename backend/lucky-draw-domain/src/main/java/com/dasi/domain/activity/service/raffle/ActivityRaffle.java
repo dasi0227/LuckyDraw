@@ -1,12 +1,14 @@
-package com.dasi.domain.activity.service.raffle.impl;
+package com.dasi.domain.activity.service.raffle;
 
+import com.dasi.domain.activity.model.aggregate.ActionChainCheckAggregate;
 import com.dasi.domain.activity.model.entity.ActivityEntity;
 import com.dasi.domain.activity.model.entity.RaffleOrderEntity;
 import com.dasi.domain.activity.model.io.RaffleContext;
 import com.dasi.domain.activity.model.io.RaffleResult;
 import com.dasi.domain.activity.model.type.RaffleState;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.raffle.IActivityRaffle;
+import com.dasi.domain.activity.service.chain.ActivityChainFactory;
+import com.dasi.domain.activity.service.chain.IActivityChain;
 import com.dasi.domain.common.IRedisLock;
 import com.dasi.domain.common.IUniqueIdGenerator;
 import com.dasi.types.constant.Delimiter;
@@ -16,18 +18,20 @@ import com.dasi.types.exception.AppException;
 import com.dasi.types.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 @Slf4j
-public abstract class AbstractActivityRaffle implements IActivityRaffle {
+@Service
+public class ActivityRaffle implements IActivityRaffle {
 
-    protected final IActivityRepository activityRepository;
+    @Resource
+    private ActivityChainFactory activityChainFactory;
 
-    public AbstractActivityRaffle(IActivityRepository activityRepository) {
-        this.activityRepository = activityRepository;
-    }
+    @Resource
+    private IActivityRepository activityRepository;
 
     @Resource
     private IUniqueIdGenerator uniqueIdGenerator;
@@ -55,7 +59,13 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
 
             // 活动与用户校验
             ActivityEntity activityEntity = activityRepository.queryActivityByActivityId(activityId);
-            Boolean available = checkRaffleAvailable(userId, activityEntity);
+            ActionChainCheckAggregate actionChainCheckAggregate = ActionChainCheckAggregate.builder()
+                    .userId(userId)
+                    .activityId(activityEntity.getActivityId())
+                    .activityEntity(activityEntity)
+                    .build();
+            IActivityChain actionChain = activityChainFactory.getRaffleActionChain();
+            Boolean available = actionChain.action(actionChainCheckAggregate);
             if (Boolean.FALSE.equals(available)) {
                 throw new AppException("活动信息校验失败");
             }
@@ -79,7 +89,7 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
             }
 
             // 保存订单
-            saveRaffleOrder(raffleOrderEntity);
+            activityRepository.saveRaffleOrder(raffleOrderEntity);
 
             return RaffleResult.builder()
                     .orderId(raffleOrderEntity.getOrderId())
@@ -91,10 +101,4 @@ public abstract class AbstractActivityRaffle implements IActivityRaffle {
             }
         }
     }
-
-    protected abstract void saveRaffleOrder(RaffleOrderEntity raffleOrderEntity);
-
-    protected abstract Boolean checkRaffleAvailable(String userId, ActivityEntity activityEntity);
-
-
 }

@@ -28,7 +28,7 @@ public abstract class AbstractStrategyLottery implements IStrategyLottery {
         if (StringUtils.isBlank(userId)) throw new AppException("缺少参数 userId");
         if (strategyId == null) throw new AppException("缺少参数 strategyId");
 
-        // 1. 构造输入输出
+        // 1. 构造检查上下文
         RuleCheckContext ruleCheckContext = RuleCheckContext.builder()
                 .userId(lotteryContext.getUserId())
                 .strategyId(lotteryContext.getStrategyId())

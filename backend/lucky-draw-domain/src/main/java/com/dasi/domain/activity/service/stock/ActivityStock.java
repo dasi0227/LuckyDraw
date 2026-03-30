@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-public class DefaultActivityStock implements IActivityStock {
+public class ActivityStock implements IActivityStock {
 
     @Resource
     private IActivityRepository activityRepository;

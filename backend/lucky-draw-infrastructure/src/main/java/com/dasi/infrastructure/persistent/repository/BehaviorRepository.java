@@ -204,21 +204,5 @@ public class BehaviorRepository implements IBehaviorRepository {
         }
     }
 
-    @Override
-    public void updateRewardOrderState(RewardOrderEntity rewardOrderEntity) {
-        try {
-            dbRouterStrategy.doRouter(rewardOrderEntity.getUserId());
-
-            RewardOrder rewardOrder = new RewardOrder();
-            rewardOrder.setOrderId(rewardOrderEntity.getOrderId());
-            rewardOrder.setBizId(rewardOrderEntity.getBizId());
-            rewardOrder.setUserId(rewardOrderEntity.getUserId());
-            rewardOrder.setRewardState(rewardOrderEntity.getRewardState().name());
-            rewardOrderDao.updateRewardOrderStateByBizId(rewardOrder);
-        } finally {
-            dbRouterStrategy.clear();
-        }
-    }
-
 
 }

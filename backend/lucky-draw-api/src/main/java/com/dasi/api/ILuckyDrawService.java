@@ -2,8 +2,6 @@ package com.dasi.api;
 
 import com.dasi.api.dto.*;
 import com.dasi.types.model.Result;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -24,19 +22,17 @@ public interface ILuckyDrawService {
 
     Result<QueryActivityInfoResponse> queryActivityInfo(QueryActivityInfoRequest activityInfoRequest);
 
-    Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
-
-    Result<BehaviorResponse> behavior(BehaviorRequest behaviorRequest);
-
-    @PostMapping("/trade")
-    Result<TradeResponse> recharge(@RequestBody TradeRequest tradeRequest);
-
-    Result<TradeResponse> convert(TradeRequest tradeRequest);
-
-    Result<FortuneResponse> fortune(FortuneRequest fortuneRequest);
-
     Result<List<QueryActivityResponse>> queryActivityList();
 
     Result<List<QueryActivityRechargeResponse>> queryActivityRecharge(QueryActivityRechargeRequest queryActivityRechargeRequest);
 
+    Result<RaffleResponse> raffle(RaffleRequest raffleRequest);
+
+    Result<Boolean> armory(Long activityId);
+
+    Result<BehaviorResponse> behavior(BehaviorRequest behaviorRequest);
+
+    Result<TradeResponse> trade(TradeRequest tradeRequest);
+
+    Result<FortuneResponse> fortune(FortuneRequest fortuneRequest);
 }
