@@ -46,7 +46,7 @@ public class DefaultStrategyTreeEngine implements IStrategyTreeEngine {
             if (ruleCheckResult.getRuleCheckOutcome().equals(RuleCheckOutcome.CAPTURE)) {
                 RuleModel ruleModel = ruleCheckResult.getRuleModel();
                 isLock |= (ruleModel == RuleModel.RULE_LOCK);
-                isEmpty  |= (ruleModel == RuleModel.RULE_STOCK);
+                isEmpty |= (ruleModel == RuleModel.RULE_STOCK);
             }
 
             String nextTreeNode = next(ruleCheckResult.getRuleCheckOutcome(), curTreeNode.getRuleEdgeList());

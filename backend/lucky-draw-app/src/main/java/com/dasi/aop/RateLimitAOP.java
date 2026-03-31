@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Slf4j
+@SuppressWarnings("unused")
 public class RateLimitAOP {
 
     @DCCValue("rateLimitEnable:off")
@@ -43,20 +44,18 @@ public class RateLimitAOP {
             return joinPoint.proceed();
         }
 
-        double apiQpsVal = parseDouble(rateLimitApiQPS);
-        double userQpsVal = parseDouble(rateLimitUserQPS);
-
         String apiKey = RedisKey.RATE_LIMIT_KEY + joinPoint.getSignature().getName();
         String userKey = apiKey + Delimiter.COLON + UserIdContext.getUserId();
 
-
         // 接口级限流
+        double apiQpsVal = Double.parseDouble(rateLimitApiQPS);
         if (!tryAcquire(apiKey, apiQpsVal)) {
             log.warn("【限流】接口级触发 fallback：apiKey={}", apiKey);
             return invokeFallback(joinPoint, rateLimit.fallbackMethod());
         }
 
         // 用户级限流
+        double userQpsVal = Double.parseDouble(rateLimitUserQPS);
         if (!tryAcquire(userKey, userQpsVal)) {
             log.warn("【限流】用户级触发 fallback：userKey={}", userKey);
             return invokeFallback(joinPoint, rateLimit.fallbackMethod());
@@ -67,37 +66,25 @@ public class RateLimitAOP {
     }
 
     private boolean tryAcquire(String key, double qps) {
-        if (qps <= 0) {
-            return true;
-        }
-
         long ratePerSecond = Math.max(1L, Math.round(Math.ceil(qps)));
 
         RRateLimiter limiter = redisService.getRateLimiter(key);
         RateLimiterConfig config = limiter.getConfig();
-        if (config == null) {
-            limiter.trySetRate(RateType.OVERALL, ratePerSecond, 1, RateIntervalUnit.SECONDS);
-        } else if (config.getRate() != ratePerSecond) {
+        if (config == null || config.getRate() != ratePerSecond) {
             limiter.setRate(RateType.OVERALL, ratePerSecond, 1, RateIntervalUnit.SECONDS);
         }
+
         return limiter.tryAcquire();
     }
 
-    private double parseDouble(String value) {
-        try {
-            return Double.parseDouble(value);
-        } catch (Exception e) {
-            return 0D;
-        }
-    }
-
     private Object invokeFallback(ProceedingJoinPoint jp, String fallbackMethod) throws Throwable {
-        MethodSignature ms = (MethodSignature) jp.getSignature();
-        Method method = jp.getTarget()
-                .getClass()
-                .getMethod(fallbackMethod, ms.getParameterTypes());
         try {
-            return method.invoke(jp.getTarget(), jp.getArgs());
+            Object target = jp.getTarget();
+            Object[] args = jp.getArgs();
+            Class<?> clazz = target.getClass();
+            Class[] parameterTypes = ((MethodSignature) jp.getSignature()).getParameterTypes();
+            Method method = clazz.getMethod(fallbackMethod, parameterTypes);
+            return method.invoke(target, args);
         } catch (InvocationTargetException ex) {
             throw ex.getCause();
         }

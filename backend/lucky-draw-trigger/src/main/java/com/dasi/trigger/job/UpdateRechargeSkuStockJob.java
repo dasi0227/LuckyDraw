@@ -23,8 +23,8 @@ public class UpdateRechargeSkuStockJob {
             return;
         }
 
-        Long skuId = activitySkuStock.getSkuId();
         Long activityId = activitySkuStock.getActivityId();
+        Long skuId = activitySkuStock.getSkuId();
 
         try {
             activityStock.updateRechargeSkuStock(skuId);

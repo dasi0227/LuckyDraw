@@ -29,6 +29,7 @@ import com.dasi.domain.strategy.model.io.*;
 import com.dasi.domain.strategy.service.assemble.IStrategyAssemble;
 import com.dasi.domain.strategy.service.lottery.IStrategyLottery;
 import com.dasi.domain.strategy.service.query.IStrategyQuery;
+import com.dasi.infrastructure.persistent.redis.IRedisService;
 import com.dasi.types.annotation.CircuitBreaker;
 import com.dasi.types.annotation.DCCValue;
 import com.dasi.types.annotation.RateLimit;
@@ -90,7 +91,7 @@ public class LuckyDrawController implements ILuckyDrawService {
     private IStrategyAssemble strategyAssemble;
 
     @Resource
-    private com.dasi.infrastructure.persistent.redis.IRedisService redisService;
+    private IRedisService redisService;
 
     @Resource
     private IRedisLock redisLock;

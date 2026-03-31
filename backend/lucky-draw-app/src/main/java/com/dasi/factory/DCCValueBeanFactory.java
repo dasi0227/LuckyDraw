@@ -44,46 +44,39 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
         // 注册监听的回调
         curatorCache.listenable().addListener(((type, oldData, newData) -> {
 
-            // 1. 获取新的配置
-            String key = newData.getPath();
-            String value = new String(newData.getData(), StandardCharsets.UTF_8);
+            try {
+                // 1. 获取新的配置
+                String key = newData.getPath();
+                String oldValue = new String(oldData.getData(), StandardCharsets.UTF_8);
+                String newValue = new String(newData.getData(), StandardCharsets.UTF_8);
 
-            switch (type) {
-                case NODE_CHANGED:
+                switch (type) {
+                    case NODE_CHANGED:
+                        // 2. 从映射表中找到使用该配置的目标对象和类对象
+                        Object objBean = dccObjMap.get(key);
+                        if (objBean == null) {
+                            return;
+                        }
+                        Class<?> clazz = objBean.getClass();
 
-                    // 2. 从映射表中找到使用该配置的 Bean
-                    Object objBean = dccObjMap.get(key);
-                    if (objBean == null) {
-                        return;
-                    }
-
-                    // 3. 处理 AOP 代理，拿到真实类
-                    Class<?> clazz = objBean.getClass();
-                    if (AopUtils.isAopProxy(objBean)) {
-                        clazz = AopUtils.getTargetClass(objBean);
-                    }
-
-                    try {
-                        // 4. 根据节点名反射找到字段，实现热更新
-                        Field field = clazz.getDeclaredField(key.substring(key.lastIndexOf(Delimiter.SLASH) + 1));
+                        // 3. 根据节点名反射找到字段，实现热更新
+                        String fieldName = key.substring(key.lastIndexOf(Delimiter.SLASH) + 1);
+                        Field field = clazz.getDeclaredField(fieldName);
                         field.setAccessible(true);
-                        field.set(objBean, value);
+                        field.set(objBean, newValue);
                         field.setAccessible(false);
 
-                        log.info("【配置】DCC 配置节点值：key={}, value={}", key, value);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    break;
-                case NODE_CREATED:
-                    break;
-                case NODE_DELETED:
-                    break;
-                default:
-                    break;
+                        log.info("【配置】DCC 配置节点值：key={}, oldValue={}, newValue={}", key, oldValue, newValue);
+                    case NODE_CREATED:
+                        break;
+                    case NODE_DELETED:
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-
         }));
 
     }

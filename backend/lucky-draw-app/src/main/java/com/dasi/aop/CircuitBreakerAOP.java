@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 
 @Slf4j
 @Aspect
+@SuppressWarnings("unused")
 public class CircuitBreakerAOP {
 
     @DCCValue("circuitBreakerEnable:off")
@@ -89,12 +90,13 @@ public class CircuitBreakerAOP {
     }
 
     private Object invokeFallback(ProceedingJoinPoint jp, String fallbackMethod) throws Throwable {
-        MethodSignature ms = (MethodSignature) jp.getSignature();
-        Method method = jp.getTarget()
-                .getClass()
-                .getMethod(fallbackMethod, ms.getParameterTypes());
         try {
-            return method.invoke(jp.getTarget(), jp.getArgs());
+            Object target = jp.getTarget();
+            Object[] args = jp.getArgs();
+            Class<?> clazz = target.getClass();
+            Class[] parameterTypes = ((MethodSignature) jp.getSignature()).getParameterTypes();
+            Method method = clazz.getMethod(fallbackMethod, parameterTypes);
+            return method.invoke(target, args);
         } catch (InvocationTargetException ex) {
             throw ex.getCause();
         }
