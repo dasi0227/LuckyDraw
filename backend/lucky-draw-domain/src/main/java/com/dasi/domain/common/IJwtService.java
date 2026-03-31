@@ -1,4 +1,4 @@
-package com.dasi.domain.user.service.jwt;
+package com.dasi.domain.common;
 
 public interface IJwtService {
 

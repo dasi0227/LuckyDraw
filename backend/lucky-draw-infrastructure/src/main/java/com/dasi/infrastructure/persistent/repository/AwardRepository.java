@@ -7,7 +7,7 @@ import com.dasi.domain.award.model.type.AwardState;
 import com.dasi.domain.award.model.type.AwardType;
 import com.dasi.domain.award.model.type.TaskState;
 import com.dasi.domain.award.repository.IAwardRepository;
-import com.dasi.infrastructure.event.EventPublisher;
+import com.dasi.infrastructure.common.EventPublish;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -51,7 +51,7 @@ public class AwardRepository implements IAwardRepository {
     private IDBRouterStrategy dbRouterStrategy;
 
     @Resource
-    private EventPublisher eventPublisher;
+    private EventPublish eventPublish;
 
     @Override
     public List<UserAwardEntity> queryUserAwardRaffleList(String userId, Long activityId) {
@@ -202,7 +202,7 @@ public class AwardRepository implements IAwardRepository {
                 task.setTaskState(TaskState.DISTRIBUTED.name());
                 int rows = taskDao.updateTaskState(task);
                 if (rows == 1) {
-                    eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
+                    eventPublish.publish(taskEntity.getTopic(), taskEntity.getMessage());
                 }
                 log.info("【中奖】保存中奖记录成功：userId={}, activityId={}, awardId={}", userId, activityId, awardId);
                 log.info("【中奖】发送中奖消息成功：messageId={}", taskEntity.getMessageId());
@@ -261,7 +261,7 @@ public class AwardRepository implements IAwardRepository {
 
             Boolean success = transactionTemplate.execute(status -> {
                 try {
-                    activityAward.setAwardState(AwardState.COMPLETED.name());
+                    activityAward.setAwardState(AwardState.USED.name());
                     int rows = activityAwardDao.updateActivityAwardState(activityAward);
 
                     if (rows == 1) {
@@ -284,7 +284,7 @@ public class AwardRepository implements IAwardRepository {
             if (Boolean.TRUE.equals(success)) {
                 log.info("【获奖】使用获奖记录成功：orderId={}", orderId);
             } else {
-                activityAward.setAwardState(AwardState.FAILED.name());
+                activityAward.setAwardState(AwardState.CANCELLED.name());
                 activityAwardDao.updateActivityAwardState(activityAward);
                 log.info("【获奖】使用获奖记录失败：orderId={}", orderId);
             }

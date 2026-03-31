@@ -1,6 +1,7 @@
 package com.dasi.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
+import com.alibaba.fastjson.JSON;
 import com.dasi.domain.activity.event.RechargeSkuStockEmptyEvent;
 import com.dasi.domain.activity.model.entity.*;
 import com.dasi.domain.activity.model.io.ActivitySkuStock;
@@ -11,7 +12,7 @@ import com.dasi.domain.activity.model.type.RewardState;
 import com.dasi.domain.activity.model.vo.AccountSnapshot;
 import com.dasi.domain.activity.model.vo.ActivitySnapshot;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.infrastructure.event.EventPublisher;
+import com.dasi.infrastructure.common.EventPublish;
 import com.dasi.infrastructure.persistent.dao.*;
 import com.dasi.infrastructure.persistent.po.*;
 import com.dasi.infrastructure.persistent.redis.IRedisService;
@@ -75,7 +76,7 @@ public class ActivityRepository implements IActivityRepository {
     private IDBRouterStrategy dbRouterStrategy;
 
     @Resource
-    private EventPublisher eventPublisher;
+    private EventPublish eventPublish;
 
     @Resource
     private RechargeSkuStockEmptyEvent rechargeSkuStockEmptyEvent;
@@ -265,7 +266,8 @@ public class ActivityRepository implements IActivityRepository {
             return -1L;
         }
         if (surplus == 0L) {
-            eventPublisher.publish(rechargeSkuStockEmptyEvent.getTopic(), rechargeSkuStockEmptyEvent.buildEventMessage(skuId));
+            String message = JSON.toJSONString(rechargeSkuStockEmptyEvent.buildEventMessage(skuId));
+            eventPublish.publish(rechargeSkuStockEmptyEvent.getTopic(), message);
             return surplus;
         }
 

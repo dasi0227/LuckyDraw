@@ -4,7 +4,7 @@ import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.dasi.domain.task.model.entity.TaskEntity;
 import com.dasi.domain.task.model.type.TaskState;
 import com.dasi.domain.task.repository.ITaskRepository;
-import com.dasi.infrastructure.event.EventPublisher;
+import com.dasi.infrastructure.common.EventPublish;
 import com.dasi.infrastructure.persistent.dao.ITaskDao;
 import com.dasi.infrastructure.persistent.po.Task;
 import org.springframework.stereotype.Repository;
@@ -20,7 +20,7 @@ public class TaskRepository implements ITaskRepository {
     private ITaskDao taskDao;
 
     @Resource
-    private EventPublisher eventPublisher;
+    private EventPublish eventPublish;
 
     @Resource
     private IDBRouterStrategy dbRouterStrategy;
@@ -55,7 +55,7 @@ public class TaskRepository implements ITaskRepository {
             task.setTaskState(TaskState.DISTRIBUTED.name());
             int rows = taskDao.updateTaskState(task);
             if (rows == 1) {
-                eventPublisher.publish(task.getTopic(), task.getMessage());
+                eventPublish.publish(task.getTopic(), task.getMessage());
             }
         } catch (Exception e) {
             task.setTaskState(TaskState.FAILED.name());

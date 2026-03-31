@@ -12,7 +12,7 @@ public class RedisKey {
     public static final String STRATEGY_ID_KEY                      = "lucky_draw:strategy:entity:strategy_id:";
     public static final String AWARD_MAP_KEY                        = "lucky_draw:strategy:entity:award_map:";
     public static final String RULE_LOCK_LIMIT_MAP_KEY              = "lucky_draw:strategy:entity:rule_lock_limit_map:";
-    public static final String STRATEGY_RATE_TABLE_KEY              = "lucky_draw:strategy:rate:table:";
+    public static final String STRATEGY_RATE_HASH_KEY = "lucky_draw:strategy:rate:table:";
     public static final String STRATEGY_RATE_RANGE_KEY              = "lucky_draw:strategy:rate:range:";
     public static final String STRATEGY_AWARD_STOCK_QUEUE_KEY       = "lucky_draw:strategy:stock:queue:";
     public static final String STRATEGY_AWARD_STOCK_SURPLUS_KEY     = "lucky_draw:strategy:stock:surplus:";

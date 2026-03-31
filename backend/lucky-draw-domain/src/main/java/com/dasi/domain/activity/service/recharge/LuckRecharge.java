@@ -1,10 +1,9 @@
-package com.dasi.domain.activity.service.recharge.impl;
+package com.dasi.domain.activity.service.recharge;
 
 import com.dasi.domain.activity.model.entity.ActivityAccountEntity;
 import com.dasi.domain.activity.model.io.FortuneContext;
 import com.dasi.domain.activity.model.io.FortuneResult;
 import com.dasi.domain.activity.repository.IActivityRepository;
-import com.dasi.domain.activity.service.recharge.ILuckRecharge;
 import com.dasi.types.exception.AppException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

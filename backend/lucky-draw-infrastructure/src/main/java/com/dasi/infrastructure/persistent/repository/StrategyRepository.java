@@ -391,7 +391,7 @@ public class StrategyRepository implements IStrategyRepository {
         redisService.setValue(RedisKey.STRATEGY_RATE_RANGE_KEY + cacheKey, rateRange);
 
         // 2. 存储当前策略对应的概率奖品表
-        RMap<String, String> cacheMap = redisService.getMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey);
+        RMap<String, String> cacheMap = redisService.getMap(RedisKey.STRATEGY_RATE_HASH_KEY + cacheKey);
         cacheMap.putAll(strategyAwardMap);
     }
 
@@ -402,7 +402,7 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Long getRandomStrategyAward(String cacheKey, int randomNum) {
-        return Long.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_TABLE_KEY + cacheKey, String.valueOf(randomNum)));
+        return Long.valueOf(redisService.getFromMap(RedisKey.STRATEGY_RATE_HASH_KEY + cacheKey, String.valueOf(randomNum)));
     }
 
     @Override

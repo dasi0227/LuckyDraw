@@ -55,7 +55,7 @@ public class AwardDispatch implements IAwardDispatch {
         String awardName = awardEntity.getAwardName();
 
         // 处理幂等
-        if (activityAwardEntity.getAwardState().equals(AwardState.COMPLETED)) {
+        if (activityAwardEntity.getAwardState().equals(AwardState.USED)) {
             return DispatchResult.builder()
                     .awardType(awardType)
                     .awardName(awardName)

@@ -10,6 +10,7 @@ import com.dasi.types.constant.RedisKey;
 import com.dasi.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -39,10 +40,16 @@ public class StrategyAssemble implements IStrategyAssemble {
             if (strategyAwardEntityList == null || strategyAwardEntityList.isEmpty()) throw new AppException("当前策略下没有配置奖品：strategyId=" + strategyId);
 
             // 2. 库存装配
-            assembleStrategyAwardStockSurplus(strategyId, strategyAwardEntityList);
+            for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
+                Long awardId = strategyAwardEntity.getAwardId();
+                String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_SURPLUS_KEY + strategyId + Delimiter.UNDERSCORE + awardId;
+                Integer surplus = strategyAwardEntity.getAwardSurplus();
+                strategyRepository.cacheStrategyAwardStock(cacheKey, surplus);
+                log.info("【装配】奖品库存：strategyId={}, awardId={}, surplus={}", strategyId, awardId, surplus);
+            }
 
-            // 3. 幸运值装配
-            assembleStrategyByLuck(strategyId, strategyAwardEntityList);
+            // 3. 概率装配
+            assembleStrategyProbability(strategyId, strategyAwardEntityList);
             return true;
         } catch (Exception e) {
             log.error("【装配】策略奖品：strategyId={}, error={}", strategyId, e.getMessage());
@@ -50,40 +57,43 @@ public class StrategyAssemble implements IStrategyAssemble {
         }
     }
 
-    private void assembleStrategyByLuck(Long strategyId, List<StrategyAwardEntity> strategyAwardEntityList) {
+    private void assembleStrategyProbability(Long strategyId, List<StrategyAwardEntity> strategyAwardEntityList) {
+        // 普通装配
+        log.info("普通装配：strategyId={}", strategyId);
+        assembleStrategyAwardRate(strategyId, null, strategyAwardEntityList);
+
+        // 幸运值装配
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
-
-        // 1. 策略无幸运值规则 → 直接返回
-        if (!strategyEntity.hasRuleLuck()) return;
-
-        // 2. 查询 RULE_LUCK 规则
-        StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_LUCK.name());
-        if (strategyRuleEntity == null) throw new AppException("当前策略下没有配置幸运值规则：strategyId=" + strategyId);
-
-        // 3. 幸运值下概率装配
-        Map<String, List<Long>> ruleLuckMap = strategyRuleEntity.getRuleLuckValue();
-        for (Entry<String, List<Long>> entry : ruleLuckMap.entrySet()) {
-            // 1. 获取数据
-            String luck = entry.getKey();
-            List<Long> awardIdList = entry.getValue();
-            // 2. 过滤掉不在列表里面的
-            List<StrategyAwardEntity> strategyAwardEntityListUnderLuck = strategyAwardEntityList.stream()
-                    .filter(strategyAwardEntity -> awardIdList.contains(strategyAwardEntity.getAwardId()))
-                    .collect(Collectors.toList());
-            // 3. 幸运值装配
-            assembleStrategyAwardRate(strategyId, luck, strategyAwardEntityListUnderLuck);
+        if (strategyEntity.hasRuleLuck()) {
+            StrategyRuleEntity strategyRuleEntity = strategyRepository.queryStrategyRuleByStrategyIDAndRuleModel(strategyId, RuleModel.RULE_LUCK.name());
+            Map<String, List<Long>> ruleLuckMap = strategyRuleEntity.getRuleLuckValue();
+            for (Entry<String, List<Long>> entry : ruleLuckMap.entrySet()) {
+                // 1. 获取数据
+                String luck = entry.getKey();
+                List<Long> awardIdList = entry.getValue();
+                // 2. 过滤掉不在列表里面的
+                List<StrategyAwardEntity> strategyAwardEntityListUnderLuck = strategyAwardEntityList.stream()
+                        .filter(strategyAwardEntity -> awardIdList.contains(strategyAwardEntity.getAwardId()))
+                        .collect(Collectors.toList());
+                // 3. 幸运值装配
+                log.info("幸运值装配装配：strategyId={}, luck={}", strategyId, luck);
+                assembleStrategyAwardRate(strategyId, luck, strategyAwardEntityListUnderLuck);
+            }
         }
     }
 
     private void assembleStrategyAwardRate(Long strategyId, String luck, List<StrategyAwardEntity> strategyAwardEntityList) {
-        if (strategyAwardEntityList.isEmpty()) throw new AppException("当前幸运值下没有配置奖品：strategyId=" + strategyId + ", luck=" + luck);
+        if (strategyAwardEntityList.isEmpty()) throw new AppException("没有配置奖品：strategyId=" + strategyId);
 
         String awardIds = strategyAwardEntityList.stream()
                 .map(entity -> String.valueOf(entity.getAwardId()))
                 .collect(Collectors.joining(","));
-        log.info("【装配】奖品概率：strategyId={}, luck={}, awardIds={}", strategyId, luck, awardIds);
+        log.info("【装配】奖品列表：strategyId={}, awardIds={}", strategyId, awardIds);
 
-        String cacheKey = strategyId + Delimiter.UNDERSCORE + luck;
+        String cacheKey = String.valueOf(strategyId);
+        if (StringUtils.hasText(luck)) {
+            cacheKey = cacheKey + Delimiter.UNDERSCORE + luck;
+        }
 
         // 1. 获取最小概率
         BigDecimal minValue = strategyAwardEntityList.stream()
@@ -119,17 +129,6 @@ public class StrategyAssemble implements IStrategyAssemble {
 
         // 7. 将 Map 存储到 Redis
         strategyRepository.cacheStrategyAwardRate(cacheKey, strategyAwardMap.size(), strategyAwardMap);
-    }
-
-    // 库存装配
-    private void assembleStrategyAwardStockSurplus(Long strategyId, List<StrategyAwardEntity> strategyAwardEntityList) {
-        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntityList) {
-            Long awardId = strategyAwardEntity.getAwardId();
-            String cacheKey = RedisKey.STRATEGY_AWARD_STOCK_SURPLUS_KEY + strategyId + Delimiter.UNDERSCORE + awardId;
-            Integer surplus = strategyAwardEntity.getAwardSurplus();
-            strategyRepository.cacheStrategyAwardStock(cacheKey, surplus);
-            log.info("【装配】奖品库存：strategyId={}, awardId={}, surplus={}", strategyId, awardId, surplus);
-        }
     }
 
 }

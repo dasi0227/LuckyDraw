@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @TradeTypeConfig(tradeType = TradeType.RECHARGE_POINT)
 @Component
-public class RechargePointDispatchHandler implements IPointDispatchHandler {
+public class PurchasePointDispatchHandler implements IPointDispatchHandler {
 
     @Resource
     private IPointRepository pointRepository;

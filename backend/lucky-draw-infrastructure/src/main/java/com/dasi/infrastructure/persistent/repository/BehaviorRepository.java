@@ -9,7 +9,7 @@ import com.dasi.domain.behavior.model.type.BehaviorType;
 import com.dasi.domain.behavior.model.type.RewardType;
 import com.dasi.domain.behavior.model.type.TaskState;
 import com.dasi.domain.behavior.repository.IBehaviorRepository;
-import com.dasi.infrastructure.event.EventPublisher;
+import com.dasi.infrastructure.common.EventPublish;
 import com.dasi.infrastructure.persistent.dao.IBehaviorDao;
 import com.dasi.infrastructure.persistent.dao.IRewardOrderDao;
 import com.dasi.infrastructure.persistent.dao.ITaskDao;
@@ -55,7 +55,7 @@ public class BehaviorRepository implements IBehaviorRepository {
     private TransactionTemplate transactionTemplate;
 
     @Resource
-    private EventPublisher eventPublisher;
+    private EventPublish eventPublish;
 
     @Override
     public List<BehaviorEntity> queryBehaviorListByBehaviorType(Long activityId, BehaviorType behaviorType) {
@@ -188,7 +188,7 @@ public class BehaviorRepository implements IBehaviorRepository {
                     task.setTaskState(TaskState.DISTRIBUTED.name());
                     int rows = taskDao.updateTaskState(task);
                     if (rows == 1) {
-                        eventPublisher.publish(taskEntity.getTopic(), taskEntity.getMessage());
+                        eventPublish.publish(taskEntity.getTopic(), taskEntity.getMessage());
                     }
                     log.info("【返利】保存返利订单成功：orderId={}", orderId);
                     log.info("【返利】发送返利消息成功：messageId={}", messageId);
