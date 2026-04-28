@@ -35,7 +35,7 @@ public class StrategyChainFactory {
         });
     }
 
-    public IStrategyChain getRuleModelChain(Long strategyId) {
+    public IStrategyChain getStrategyChain(Long strategyId) {
         // 查实体中的前置规则
         StrategyEntity strategyEntity = strategyRepository.queryStrategyEntityByStrategyId(strategyId);
         String ruleModelsStr = strategyEntity.getRuleModels();

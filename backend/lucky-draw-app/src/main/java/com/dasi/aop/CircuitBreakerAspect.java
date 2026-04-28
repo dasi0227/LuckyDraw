@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 @Slf4j
 @Aspect
 @SuppressWarnings("unused")
-public class CircuitBreakerAOP {
+public class CircuitBreakerAspect {
 
     @DCCValue("circuitBreakerEnable:off")
     private String circuitBreakerEnable;

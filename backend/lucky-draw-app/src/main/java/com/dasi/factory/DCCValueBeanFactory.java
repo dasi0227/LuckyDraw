@@ -45,18 +45,20 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
         curatorCache.listenable().addListener(((type, oldData, newData) -> {
 
             try {
-                // 1. 获取新的配置
-                String key = newData.getPath();
-                String oldValue = new String(oldData.getData(), StandardCharsets.UTF_8);
-                String newValue = new String(newData.getData(), StandardCharsets.UTF_8);
-
                 switch (type) {
                     case NODE_CHANGED:
-                        // 2. 从映射表中找到使用该配置的目标对象和类对象
-                        Object objBean = dccObjMap.get(key);
-                        if (objBean == null) {
+                        if (oldData == null || newData == null) {
                             return;
                         }
+
+                        // 1. 获取新的配置
+                        String key = newData.getPath();
+                        String oldValue = new String(oldData.getData(), StandardCharsets.UTF_8);
+                        String newValue = new String(newData.getData(), StandardCharsets.UTF_8);
+
+                        // 2. 从映射表中找到使用该配置的目标对象和类对象
+                        Object objBean = dccObjMap.get(key);
+                        if (objBean == null) return;
                         Class<?> clazz = objBean.getClass();
 
                         // 3. 根据节点名反射找到字段，实现热更新
@@ -67,6 +69,7 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
                         field.setAccessible(false);
 
                         log.info("【配置】DCC 配置节点值：key={}, oldValue={}, newValue={}", key, oldValue, newValue);
+                        break;
                     case NODE_CREATED:
                         break;
                     case NODE_DELETED:

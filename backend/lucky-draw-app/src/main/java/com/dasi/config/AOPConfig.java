@@ -1,7 +1,7 @@
 package com.dasi.config;
 
-import com.dasi.aop.CircuitBreakerAOP;
-import com.dasi.aop.RateLimitAOP;
+import com.dasi.aop.CircuitBreakerAspect;
+import com.dasi.aop.RateLimitAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -11,13 +11,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class AOPConfig {
 
     @Bean
-    public RateLimitAOP rateLimitAOP() {
-        return new RateLimitAOP();
+    public RateLimitAspect rateLimitAOP() {
+        return new RateLimitAspect();
     }
 
     @Bean
-    public CircuitBreakerAOP circuitBreakerAOP() {
-        return new CircuitBreakerAOP();
+    public CircuitBreakerAspect circuitBreakerAOP() {
+        return new CircuitBreakerAspect();
     }
 
 }

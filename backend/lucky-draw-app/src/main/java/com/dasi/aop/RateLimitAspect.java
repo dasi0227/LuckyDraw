@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Slf4j
 @SuppressWarnings("unused")
-public class RateLimitAOP {
+public class RateLimitAspect {
 
     @DCCValue("rateLimitEnable:off")
     private String rateLimitEnable;
